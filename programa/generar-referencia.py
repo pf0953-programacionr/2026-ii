@@ -44,12 +44,31 @@ BORDES_TABLA = (
 )
 
 # Dimensiones y posición del logo del SEP, en EMU (1 cm = 360 000 EMU).
-# El logo original mide 792 x 127 px; se escala a 4.5 cm de ancho.
-# Página carta (21.59 cm) - margen derecho (2 cm) - ancho del logo.
-LOGO_CX = 1620000
+# Mismo ancho que el logo de la UCR de los encabezados de la base
+# (1 819 275 x 732 790 EMU); el logo original del SEP mide 792 x 127 px.
+LOGO_CX = 1819275
 LOGO_CY = round(LOGO_CX * 127 / 792)
-LOGO_X = 7772400 - 720000 - LOGO_CX
-LOGO_Y = 400000  # centrado verticalmente respecto al logo de la UCR
+
+# LibreOffice interpreta los posOffset relativos "a la página" desde el
+# origen del área de texto (margen izquierdo, margen del encabezado), así
+# que ambos márgenes se restan como compensación (1 twip = 635 EMU).
+MARGEN_IZQ = 1134 * 635
+MARGEN_DER = 1134 * 635
+MARGEN_ENC = 566 * 635
+PAGINA_ANCHO = 7772400  # carta: 21.59 cm
+
+# Alineado al margen derecho, como el logo de la UCR lo está al izquierdo.
+LOGO_X = PAGINA_ANCHO - MARGEN_DER - LOGO_CX - MARGEN_IZQ
+
+# Centro vertical del logo de la UCR, medido en el PDF renderizado a
+# 100 dpi (1 px = 9144 EMU): 53 px en la primera página (header2) y
+# 79 px en las siguientes (header1). El logo del SEP se centra respecto
+# a ese valor en cada encabezado.
+CENTRO_UCR = {1: 79 * 9144, 2: 53 * 9144}
+
+
+def logo_y(doc_id):
+    return CENTRO_UCR[doc_id] - LOGO_CY // 2 - MARGEN_ENC
 
 REL_LOGO = (
     '<Relationship Id="rIdLogoSEP" '
@@ -67,7 +86,7 @@ def drawing_logo(doc_id):
         f'relativeHeight="{200 + doc_id}">'
         '<wp:simplePos x="0" y="0"/>'
         f'<wp:positionH relativeFrom="page"><wp:posOffset>{LOGO_X}</wp:posOffset></wp:positionH>'
-        f'<wp:positionV relativeFrom="page"><wp:posOffset>{LOGO_Y}</wp:posOffset></wp:positionV>'
+        f'<wp:positionV relativeFrom="page"><wp:posOffset>{logo_y(doc_id)}</wp:posOffset></wp:positionV>'
         f'<wp:extent cx="{LOGO_CX}" cy="{LOGO_CY}"/>'
         '<wp:effectExtent l="0" t="0" r="0" b="0"/>'
         '<wp:wrapNone/>'
