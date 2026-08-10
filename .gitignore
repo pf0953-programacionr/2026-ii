@@ -1,0 +1,33 @@
+# Documentos privados: calificaciones, documentos administrativos recibidos,
+# correspondencia y cualquier material que no debe publicarse.
+privado/
+
+# Derivada del programa del curso 2024-II y de la plantilla oficial.
+# Se genera localmente con generar-referencia.py a partir de privado/.
+programa/referencia.docx
+
+# Quarto
+/.quarto/
+/_site/
+
+# R
+.Rproj.user/
+.Rhistory
+.RData
+.Ruserdata
+
+# Python
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# Archivos temporales de LibreOffice / Word
+.~lock.*
+~$*
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+
+# Configuración personal del editor
+.vscode/
