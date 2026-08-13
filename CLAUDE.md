@@ -15,7 +15,7 @@ Curso del Programa de Posgrado en Geografía (SEP-UCR). Profesor: Manuel Vargas 
 - `programa/programa.md`: fuente de la verdad del programa del curso.
 - `programa/generar.sh`: genera DOCX y PDF (`pf0953-programacionr-g001-2026-ii.*`, versionados).
 - `_quarto.yml`, `index.qmd`, `contenidos/`, `estilos.scss`: sitio web del curso en Quarto (ver sección "Sitio web").
-- `Dockerfile`: entorno de autoría/render del profesor (rocker/geospatial:latest + paquetes en versiones recientes, RStudio Server en el puerto 8787, clave `pf0953`). No es para estudiantes (ellos instalan R/RStudio directamente).
+- `Dockerfile`: entorno de autoría/render del profesor (rocker/geospatial con versión fija —decisión de Manuel: actualizarla es un commit explícito— + paquetes adicionales en versiones recientes, RStudio Server en el puerto 8787, clave `pf0953`). No es para estudiantes (ellos instalan R/RStudio directamente).
 - `privado/`: NO versionado (.gitignore). Contiene `calificaciones/` y `documentos-recibidos/` (nombramiento, circulares, listas de clase, programas de referencia de otros cursos).
 
 ## Sitio web
