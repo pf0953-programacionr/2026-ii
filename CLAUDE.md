@@ -39,6 +39,6 @@ Flujo: `programa.md` → pandoc (gfm→html→docx, por los `<br>` en las celdas
 
 ## Estado y fases pendientes
 
-- PR #1 (rama `programa-curso`): primera versión del programa (ya adaptada a la modalidad completamente virtual), pendiente de revisión de Manuel. Puntos abiertos: adscripción (¿mencionar la Maestría en GIRH como en 2024?), confirmar 3 créditos, confirmar año/edición de *Geocomputation with R* (2.ª ed., 2025).
+- Programa del curso: primera versión mergeada a `main` (PR #1, agosto de 2026), adaptada a la modalidad completamente virtual. Decisiones cerradas: la adscripción menciona el Posgrado en Geografía y la Maestría en GIRH, 3 créditos confirmados por Manuel, *Geocomputation with R* citado como 2.ª ed. (2025, verificado con CRC Press). Trabajo en parejas: pendiente de decisión (por ahora el programa no lo menciona).
 - Sitio web del curso en Quarto (mismo repo, GitHub Actions → GitHub Pages), con logo del curso por crear y vinculación visual con la UCR y el SEP. Contenidos incrementales (lección por lección). Software de estudiantes: instalación directa de R/RStudio, Posit Cloud como respaldo.
 - Entorno virtual en Mediación Virtual (Moodle 4.5): encabezado según VD-12784-2023 (sigla, nombre, grupo, modalidad, ciclo, docente, grado de virtualidad "virtual", descripción, horario de consulta, medios de contacto), subir el PDF del programa, enlaces a las páginas del sitio, entregas y libro de calificaciones. Investigar automatización; consultas solo por soporte.metics@ucr.ac.cr (3 días hábiles de gestión).
