@@ -14,7 +14,29 @@ Curso del Programa de Posgrado en Geografía (SEP-UCR). Profesor: Manuel Vargas 
 
 - `programa/programa.md`: fuente de la verdad del programa del curso.
 - `programa/generar.sh`: genera DOCX y PDF (`pf0953-programacionr-g001-2026-ii.*`, versionados).
+- `_quarto.yml`, `index.qmd`, `contenidos/`, `estilos.scss`: sitio web del curso en Quarto (ver sección "Sitio web").
+- `Dockerfile`: entorno de autoría/render del profesor (rocker/geospatial:latest + paquetes en versiones recientes, RStudio Server en el puerto 8787, clave `pf0953`). No es para estudiantes (ellos instalan R/RStudio directamente).
 - `privado/`: NO versionado (.gitignore). Contiene `calificaciones/` y `documentos-recibidos/` (nombramiento, circulares, listas de clase, programas de referencia de otros cursos).
+
+## Sitio web
+
+Sitio Quarto tipo *website* publicado en GitHub Pages **desde `docs/` en `main`** (sin GitHub Actions, como en GF-0604 2026-I). `execute: freeze: auto`: el código R se ejecuta una vez localmente y `_freeze/` se versiona.
+
+```bash
+# Construir la imagen (una vez, o al cambiar el Dockerfile)
+docker build --pull -t pf0953-2026-ii .
+
+# Renderizar el sitio (ejecuta el código R; requiere red para la API de GBIF)
+docker run --rm -u $(id -u):$(id -g) -e HOME=/tmp -v "$PWD":/work -w /work pf0953-2026-ii quarto render
+
+# RStudio Server para autoría interactiva
+docker run -d --name pf0953-2026-ii -p 8787:8787 -v "$PWD":/home/rstudio pf0953-2026-ii
+```
+
+- Contenidos en `contenidos/<sección>/<nn>-<tema>.qmd`, una sección por parte del cronograma (I a V), adaptados de GF-0657 2026-II (repo `gf0657-programacionsig/2026-ii`, MyST, licencia CC BY-SA 4.0; hay que convertir directivas MyST y traducir el código de Python a R) — Manuel prefiere esos contenidos sobre los de GF-0604 2026-I.
+- El ejemplo de la semana 1 (`02-ejemplo-procesos-ciencia-datos.qmd`) consulta la API de GBIF al renderizar; el "clic y ejecutá" del estudiantado es Posit Cloud (el proyecto lo crea Manuel; el enlace se comparte por Mediación Virtual).
+- No mencionar una aplicación específica de videoconferencia (decisión de Manuel).
+- Identidad visual en `estilos.scss` (azul UCR `#005da4`, verde SEP `#4f7d3a`). Logo del curso: pendiente de crear.
 
 ## Generación del programa
 
@@ -40,5 +62,5 @@ Flujo: `programa.md` → pandoc (gfm→html→docx, por los `<br>` en las celdas
 ## Estado y fases pendientes
 
 - Programa del curso: primera versión mergeada a `main` (PR #1, agosto de 2026), adaptada a la modalidad completamente virtual. Decisiones cerradas: la adscripción menciona el Posgrado en Geografía y la Maestría en GIRH, 3 créditos confirmados por Manuel, *Geocomputation with R* citado como 2.ª ed. (2025, verificado con CRC Press). Trabajo en parejas: pendiente de decisión (por ahora el programa no lo menciona).
-- Sitio web del curso en Quarto (mismo repo, GitHub Actions → GitHub Pages), con logo del curso por crear y vinculación visual con la UCR y el SEP. Contenidos incrementales (lección por lección). Software de estudiantes: instalación directa de R/RStudio, Posit Cloud como respaldo.
+- Sitio web del curso en Quarto: andamiaje y semana 1 en la rama `sitio-web` (PR pendiente). Falta: habilitar GitHub Pages (main, `/docs`), logo del curso, proyecto de Posit Cloud para el ejemplo de la semana 1, y las semanas siguientes (lección por lección, adaptando GF-0657 2026-II). Software de estudiantes: instalación directa de R/RStudio, Posit Cloud como respaldo.
 - Entorno virtual en Mediación Virtual (Moodle 4.5): encabezado según VD-12784-2023 (sigla, nombre, grupo, modalidad, ciclo, docente, grado de virtualidad "virtual", descripción, horario de consulta, medios de contacto), subir el PDF del programa, enlaces a las páginas del sitio, entregas y libro de calificaciones. Investigar automatización; consultas solo por soporte.metics@ucr.ac.cr (3 días hábiles de gestión).

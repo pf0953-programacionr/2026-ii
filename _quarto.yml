@@ -1,0 +1,49 @@
+# Configuración del sitio web del curso.
+# Documentación: https://quarto.org/docs/websites/
+
+project:
+  type: website
+  output-dir: docs
+  render:
+    - index.qmd
+    - contenidos/
+
+# El código R se ejecuta una sola vez y los resultados se congelan
+# (_freeze/, versionado); los render posteriores no requieren ejecutar R.
+execute:
+  freeze: auto
+
+lang: es
+
+website:
+  title: "PF-0953 Programación en R - 2026-II"
+  site-url: https://pf0953-programacionr.github.io/2026-ii/
+  repo-url: https://github.com/pf0953-programacionr/2026-ii
+  search:
+    location: sidebar
+    type: textbox
+  sidebar:
+    style: docked
+    contents:
+      - href: index.qmd
+        text: Inicio
+      - section: "I. Introducción a la ciencia de datos y a la programación de computadoras"
+        contents:
+          - contenidos/i-introduccion-ciencia-datos-programacion/01-introduccion-ciencia-datos.qmd
+          - contenidos/i-introduccion-ciencia-datos-programacion/02-ejemplo-procesos-ciencia-datos.qmd
+  page-footer:
+    center: |
+      Los contenidos de este curso, a menos que se especifique de otra forma,
+      se comparten mediante una [licencia de Creative Commons
+      Reconocimiento-CompartirIgual 4.0 Internacional](https://creativecommons.org/licenses/by-sa/4.0/deed.es).
+
+format:
+  html:
+    theme:
+      - cosmo
+      - estilos.scss
+    toc: true
+    toc-title: "En esta página"
+    code-copy: true
+    code-overflow: wrap
+    fig-align: center
