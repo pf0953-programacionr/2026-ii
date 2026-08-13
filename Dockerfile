@@ -1,8 +1,7 @@
 # Imagen de rocker/geospatial que se utiliza como base.
 # Incluye R, RStudio Server, Quarto, tidyverse, sf, terra y leaflet.
-# La versión de la imagen se fija por reproducibilidad; actualizarla es una
-# decisión explícita. Los paquetes adicionales se instalan en sus versiones
-# más recientes al momento de construir la imagen.
+# Por reproducibilidad, se fijan las versiones de la imagen y de los
+# paquetes adicionales; actualizarlas es una decisión explícita.
 FROM rocker/geospatial:4.6.1
 
 # Clave para ingresar a RStudio Server
@@ -11,5 +10,13 @@ ENV PASSWORD=pf0953
 # Puerto de RStudio Server
 EXPOSE 8787
 
-# Instalación de paquetes adicionales de R, en sus versiones más recientes
-RUN R -e "install.packages(c('here', 'plotly', 'DT', 'rgbif', 'leaflet.extras'), repos = 'https://cloud.r-project.org')"
+# Gestor de paquetes pak, para instalar versiones específicas
+RUN R -e "if (!requireNamespace('pak', quietly = TRUE)) install.packages('pak', repos = 'https://cloud.r-project.org')"
+
+# Instalación de paquetes adicionales de R, con versiones fijas:
+# - here 1.0.2: rutas de archivos relativas al proyecto
+# - plotly 4.12.1: gráficos estadísticos interactivos
+# - DT 0.34.0: tablas interactivas
+# - rgbif 3.8.5: acceso a la API de GBIF
+# - leaflet.extras 2.0.2: complementos para mapas de leaflet
+RUN R -e "pak::pak(c('here@1.0.2', 'plotly@4.12.1', 'DT@0.34.0', 'rgbif@3.8.5', 'leaflet.extras@2.0.2'))"
