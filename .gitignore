@@ -31,3 +31,5 @@ Thumbs.db
 
 # Configuración personal del editor
 .vscode/
+
+**/*.quarto_ipynb

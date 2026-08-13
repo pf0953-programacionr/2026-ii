@@ -1,0 +1,43 @@
+/*-- scss:defaults --*/
+
+// Colores inspirados en la identidad de la UCR (azul) y del SEP (verde).
+$ucr-azul: #005da4;
+$sep-verde: #4f7d3a;
+
+$primary: $ucr-azul;
+$link-color: $ucr-azul;
+$navbar-bg: $ucr-azul;
+
+/*-- scss:rules --*/
+
+// Título del sitio en la barra lateral
+.sidebar-title a {
+  color: $ucr-azul;
+  font-weight: 600;
+}
+
+// Títulos de sección de la barra lateral
+.sidebar-item-section > .sidebar-item-container > a {
+  font-weight: 600;
+}
+
+// Página actual en la barra lateral
+div.sidebar-item-container .active {
+  color: $sep-verde;
+  font-weight: 600;
+}
+
+// Encabezados del contenido
+h1, h2 {
+  color: $ucr-azul;
+}
+
+h3, h4, h5 {
+  color: darken($ucr-azul, 10%);
+}
+
+// Pie de página
+.nav-footer {
+  border-top: 3px solid $sep-verde;
+  font-size: 0.85em;
+}

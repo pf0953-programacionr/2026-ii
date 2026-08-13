@@ -1,0 +1,276 @@
+---
+title: Ejemplo de procesos de ciencia de datos
+format:
+  html:
+    code-tools: true
+---
+
+## Introducción
+
+Este documento computacional ilustra los procesos de ciencia de datos descritos en la lección de [introducción a la ciencia de datos](01-introduccion-ciencia-datos.qmd) —importación, estructuración, transformación y visualización—, aplicados a registros de presencia de la lapa verde (*Ara ambiguus*), especie en peligro crítico de extinción. Se utilizan los paquetes:
+
+- [rgbif](https://docs.ropensci.org/rgbif/): acceso a los datos de [GBIF](https://www.gbif.org/) mediante su [interfaz de programación de aplicaciones (API)](https://es.wikipedia.org/wiki/API).
+- [dplyr](https://dplyr.tidyverse.org/) (parte de [tidyverse](https://www.tidyverse.org/)): estructuración y transformación de datos tabulares.
+- [plotly](https://plotly.com/r/): gráficos estadísticos interactivos.
+- [leaflet](https://rstudio.github.io/leaflet/): mapas interactivos.
+
+Este documento puede leerse en el sitio web del curso o abrirse y ejecutarse en [Posit Cloud](https://posit.cloud/), donde se ejecuta sin instalar nada en la computadora local (el enlace al proyecto del curso se comparte en [Mediación Virtual](https://mv.mediacionvirtual.ucr.ac.cr/course/view.php?id=16311)). El código fuente completo también puede verse y descargarse con el botón `</> Código` que aparece en la parte superior de esta página.
+
+### Instalación y carga de paquetes
+
+```{r}
+#| label: instalacion-paquetes
+#| eval: false
+
+# Instalación de paquetes, necesaria solo si no están ya instalados
+# (el proyecto del curso en Posit Cloud ya los incluye)
+install.packages(c("rgbif", "tidyverse", "plotly", "leaflet"))
+```
+
+```{r}
+#| label: carga-paquetes
+#| message: false
+#| warning: false
+
+# Carga de paquetes
+library(rgbif)
+library(tidyverse) # incluye dplyr
+library(plotly)
+library(leaflet)
+```
+
+### Parámetros generales
+
+```{r}
+#| label: parametros-generales
+
+# Nombre científico de la especie
+especie <- "Ara ambiguus"
+```
+
+## Procesos de ciencia de datos
+
+A continuación se implementan los procesos de importación, estructuración, transformación y visualización descritos en la lección de [introducción a la ciencia de datos](01-introduccion-ciencia-datos.qmd).
+
+### Importación
+
+Los datos de presencia se obtienen por medio de solicitudes (*requests*) a la API de GBIF mediante el paquete rgbif. Como la API entrega los resultados en «páginas» de 300 registros como máximo, se itera hasta recuperarlos todos. Como GBIF recibe registros nuevos continuamente, los resultados varían según la fecha de la consulta (los publicados en el sitio del curso corresponden a agosto de 2026).
+
+```{r}
+#| label: importacion
+#| message: false
+
+limite <- 300 # Límite de registros por solicitud
+inicio <- 0 # Desplazamiento para iniciar la solicitud
+registros_acumulados <- list() # Lista para acumular los resultados
+
+repeat {
+  # Solicitud
+  res <- occ_search(
+    scientificName = especie,
+    hasCoordinate = TRUE,
+    hasGeospatialIssue = FALSE,
+    limit = limite,
+    start = inicio
+  )
+
+  # Extraer resultados
+  registros <- res$data
+
+  # Si ya no hay resultados, se detiene el ciclo
+  if (is.null(registros) || nrow(registros) == 0) {
+    break
+  }
+
+  # Agregar registros nuevos al acumulado
+  registros_acumulados[[length(registros_acumulados) + 1]] <- registros
+
+  # Actualizar el inicio para la siguiente "página"
+  inicio <- inicio + limite
+}
+```
+
+### Estructuración
+
+En este proceso, también llamado *ordenamiento*, los datos se colocan en una estructura rectangular en la que cada fila es una observación y cada columna una variable.
+
+```{r}
+#| label: estructuracion
+
+# Unir los registros acumulados en un data frame (tibble)
+presencia <- bind_rows(registros_acumulados)
+```
+
+```{r}
+#| label: cantidad-registros
+
+# Cantidad de registros de presencia recuperados
+nrow(presencia)
+```
+
+```{r}
+#| label: muestra-registros
+
+# Muestra aleatoria, pero reproducible, de los registros recuperados
+set.seed(42)
+presencia |>
+  select(
+    species, basisOfRecord, countryCode, locality,
+    decimalLongitude, decimalLatitude, eventDate, year
+  ) |>
+  slice_sample(n = 10)
+```
+
+### Transformación
+
+En este proceso se generan subconjuntos de las observaciones o de las variables, se crean variables nuevas o se calculan estadísticas. En este caso, se filtran los registros a partir de un año inicial. Nótese que el filtro también excluye los registros sin valor en `year`: otra manifestación de los valores faltantes en los datos reales.
+
+```{r}
+#| label: transformacion
+
+# Año inicial
+anio_inicial <- 2010
+
+# Filtro por año inicial
+presencia <- presencia |>
+  filter(year >= anio_inicial)
+```
+
+```{r}
+#| label: cantidad-registros-filtro
+
+# Cantidad de registros de presencia después del filtro
+nrow(presencia)
+```
+
+### Visualización
+
+Como se señaló en la lección, la elección del tipo de gráfico depende del tipo de las variables representadas: el gráfico de barras resume una variable categórica nominal (`countryCode`), el gráfico de líneas muestra la evolución a lo largo de la dimensión temporal (`year`) y el mapa despliega la dimensión espacial, construida a partir de las coordenadas de los registros.
+
+#### Gráfico de barras: registros de presencia por país
+
+```{r}
+#| label: grafico-barras
+
+# Agrupar por código de país
+registros_x_pais <- presencia |>
+  filter(!is.na(countryCode)) |>
+  count(countryCode, name = "cantidad") |>
+  arrange(desc(cantidad)) # Ordenar descendentemente por frecuencia
+
+# Crear gráfico de barras
+plot_ly(
+  registros_x_pais,
+  x = ~countryCode,
+  y = ~cantidad,
+  type = "bar",
+  text = ~cantidad,
+  textposition = "outside",
+  marker = list(color = "rgb(55, 83, 109)"),
+  # Personalizar tooltip (hover)
+  hovertemplate = "País: %{x}<br>Cantidad de registros de presencia: %{y}<extra></extra>"
+) |>
+  # Opciones de diseño
+  layout(
+    title = "Cantidad de registros de presencia por país",
+    xaxis = list(
+      title = "País",
+      type = "category",
+      categoryorder = "total descending"
+    ),
+    yaxis = list(title = "Cantidad de registros de presencia"),
+    showlegend = FALSE,
+    annotations = list(
+      text = "Fuente: GBIF",
+      x = 1, y = 1,
+      xref = "paper", yref = "paper",
+      xanchor = "right", yanchor = "bottom",
+      showarrow = FALSE
+    )
+  )
+```
+
+#### Gráfico de líneas: registros de presencia por año
+
+```{r}
+#| label: grafico-lineas
+
+# Agrupar por año
+registros_x_anio <- presencia |>
+  filter(!is.na(year)) |>
+  count(year, name = "cantidad")
+
+# Crear gráfico de líneas
+plot_ly(
+  registros_x_anio,
+  x = ~year,
+  y = ~cantidad,
+  type = "scatter",
+  mode = "lines+markers",
+  # Personalizar tooltip (hover)
+  hovertemplate = "Año: %{x}<br>Cantidad de registros de presencia: %{y}<extra></extra>"
+) |>
+  # Opciones de diseño
+  layout(
+    title = "Cantidad de registros de presencia por año",
+    xaxis = list(title = "Año"),
+    yaxis = list(title = "Cantidad de registros de presencia"),
+    annotations = list(
+      text = "Fuente: GBIF",
+      x = 1, y = 0,
+      xref = "paper", yref = "paper",
+      xanchor = "right", yanchor = "bottom",
+      showarrow = FALSE
+    )
+  )
+```
+
+#### Mapa: ubicación de los registros de presencia
+
+```{r}
+#| label: mapa
+
+# Excluir los registros sin coordenadas válidas
+presencia_mapa <- presencia |>
+  filter(!is.na(decimalLatitude) & !is.na(decimalLongitude))
+
+# Crear el mapa, centrado en el área de distribución de la especie
+leaflet(presencia_mapa) |>
+  setView(lng = -81, lat = 8.5, zoom = 5) |>
+  # Capa base de OpenStreetMap
+  addTiles(group = "Mapa general") |>
+  # Capa de teselas de Esri WorldImagery (imágenes satelitales)
+  addProviderTiles(providers$Esri.WorldImagery, group = "Imágenes satelitales") |>
+  # Capa de teselas de CartoDB positron (mapa en blanco)
+  addProviderTiles(providers$CartoDB.Positron, group = "Mapa en blanco") |>
+  # Marcadores circulares de los registros de presencia, con popup en HTML
+  addCircleMarkers(
+    lng = ~decimalLongitude,
+    lat = ~decimalLatitude,
+    radius = 3,
+    stroke = FALSE,
+    fillColor = "red",
+    fillOpacity = 1,
+    popup = ~ paste0(
+      "<strong>País: </strong>", coalesce(country, ""), "<br/>",
+      "<strong>Localidad: </strong>", coalesce(locality, ""), "<br/>",
+      "<strong>Fecha: </strong>", coalesce(eventDate, ""), "<br/>",
+      "<strong>Fuente: </strong>", coalesce(institutionCode, ""), "<br/>",
+      "<a href='https://www.gbif.org/occurrence/", key,
+      "' target='_blank'>Más información</a>"
+    ),
+    group = "Registros de presencia"
+  ) |>
+  # Control de capas
+  addLayersControl(
+    baseGroups = c("Mapa general", "Imágenes satelitales", "Mapa en blanco"),
+    overlayGroups = "Registros de presencia"
+  )
+```
+
+## Ejercicios
+
+1. Abra el proyecto del curso en [Posit Cloud](https://posit.cloud/) (el enlace se comparte en Mediación Virtual) y, dentro de él, el archivo `02-ejemplo-procesos-ciencia-datos.qmd`. Verifique que puede ejecutarlo completo (botón *Run > Run All* o *Render*); los siguientes ejercicios se realizan sobre esa copia.
+2. En la sección de parámetros generales, cambie el valor de `especie` por el nombre científico de otra especie de su interés y vuelva a ejecutar todo el documento. Antes de elegirla, consulte en [GBIF](https://www.gbif.org/) cuántos registros de presencia tiene: una especie con decenas de miles de registros tardará más en descargarse y producirá un mapa pesado.
+3. Modifique el valor de `anio_inicial` en la sección de transformación y observe el efecto en la cantidad de registros y en las visualizaciones.
+4. Agregue la variable `elevation` a la muestra de registros de la sección de estructuración. ¿Cuántos de los registros de la muestra tienen valores faltantes en esa variable?
