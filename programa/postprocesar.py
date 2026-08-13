@@ -32,7 +32,6 @@ import zipfile
 # GF-0657 2026-II (revisado por la comisión de docencia en agosto 2026).
 ANCHOS_TABLAS = [
     [1994, 4985, 2991],  # contenidos: 20 %, 50 %, 30 %
-    [2375, 2109, 4361],  # evaluación: quices (tabla al 89 % del ancho)
     [1235, 6647, 2080],  # evaluación: tareas
     [1572, 6562, 1828],  # evaluación: componentes de la calificación
 ]
