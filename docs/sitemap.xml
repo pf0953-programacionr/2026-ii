@@ -1,15 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://pf0953-programacionr.github.io/2026-ii/contenidos/software/rstudio.html</loc>
+    <lastmod>2026-08-19T21:45:34.520Z</lastmod>
+  </url>
+  <url>
     <loc>https://pf0953-programacionr.github.io/2026-ii/contenidos/i-introduccion-ciencia-datos-programacion/02-ejemplo-procesos-ciencia-datos.html</loc>
-    <lastmod>2026-08-13T16:17:35.597Z</lastmod>
+    <lastmod>2026-08-13T16:29:46.638Z</lastmod>
+  </url>
+  <url>
+    <loc>https://pf0953-programacionr.github.io/2026-ii/contenidos/i-introduccion-ciencia-datos-programacion/03-markdown.html</loc>
+    <lastmod>2026-08-19T21:47:03.930Z</lastmod>
   </url>
   <url>
     <loc>https://pf0953-programacionr.github.io/2026-ii/index.html</loc>
-    <lastmod>2026-08-13T16:13:42.663Z</lastmod>
+    <lastmod>2026-08-13T16:29:46.670Z</lastmod>
+  </url>
+  <url>
+    <loc>https://pf0953-programacionr.github.io/2026-ii/contenidos/i-introduccion-ciencia-datos-programacion/04-git-github.html</loc>
+    <lastmod>2026-08-19T21:48:16.965Z</lastmod>
   </url>
   <url>
     <loc>https://pf0953-programacionr.github.io/2026-ii/contenidos/i-introduccion-ciencia-datos-programacion/01-introduccion-ciencia-datos.html</loc>
-    <lastmod>2026-08-13T16:16:50.233Z</lastmod>
+    <lastmod>2026-08-13T16:29:46.638Z</lastmod>
+  </url>
+  <url>
+    <loc>https://pf0953-programacionr.github.io/2026-ii/contenidos/i-introduccion-ciencia-datos-programacion/05-asistentes-ia.html</loc>
+    <lastmod>2026-08-19T21:55:08.493Z</lastmod>
   </url>
 </urlset>

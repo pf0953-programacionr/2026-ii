@@ -1,0 +1,373 @@
+---
+title: El lenguaje de marcado Markdown
+---
+
+## Trabajo previo
+
+### Tutoriales
+
+Antes de la clase, complete el siguiente tutorial interactivo, que se realiza directamente en el navegador y practica las marcas principales de Markdown. Además, instale el lenguaje R y el editor RStudio, siguiendo la guía de [RStudio](../software/rstudio.qmd) de la sección de software.
+
+Markdown Tutorial. (s. f.). Recuperado el 19 de agosto de 2026, de <https://www.markdowntutorial.com/>
+
+## Introducción
+
+En la lección de [introducción a la ciencia de datos](01-introduccion-ciencia-datos.qmd) se mencionó que el texto de los documentos computacionales se escribe en Markdown. Este capítulo estudia ese lenguaje: qué es, cuáles variantes existen y cuál es su sintaxis. Markdown acompaña todo el trabajo del curso: además del texto de los documentos de Quarto, con él se escriben los archivos `README` de los repositorios de [GitHub](https://github.com/) y las páginas publicadas con GitHub Pages, que se estudian en la próxima lección, así como la documentación de las tareas y del proyecto final.
+
+## Lenguajes de marcado
+
+Un **lenguaje de marcado** codifica un documento mediante *marcas*: anotaciones intercaladas en el texto que especifican su estructura (ej. títulos, encabezados), su estilo (ej. negritas, itálicas) o su semántica. El ejemplo más conocido es el [Lenguaje de marcado de hipertexto (HTML)](https://es.wikipedia.org/wiki/HTML), con el que se escriben las páginas web.
+
+**Markdown** es un lenguaje de marcado creado en 2004 por John Gruber, en colaboración con Aaron Swartz, con el objetivo de que un documento fuera fácil de escribir y de leer en su forma original, sin marcas aparatosas, y pudiera convertirse a HTML (Gruber, s. f.). Por esa sencillez se le considera un [lenguaje de marcado ligero](https://es.wikipedia.org/wiki/Lenguaje_de_marcas_ligero): sus marcas son signos discretos —numerales, asteriscos, guiones— que no estorban la lectura. Los documentos escritos en Markdown pueden exportarse a una gran variedad de formatos (ej. HTML, DOCX, PDF, LaTeX) para producir páginas web, libros o presentaciones, entre otros.
+
+*Ejercicios de esta sección: [ejercicios sobre lenguajes de marcado](#ejercicios-lenguajes-marcado).*
+
+## Variantes de Markdown
+
+La especificación original de Markdown dejó aspectos sin definir, por lo que surgieron **variantes** (*flavors*): extensiones o modificaciones que agregan elementos como tablas, notación matemática o código con resaltado de sintaxis. Entre las más relevantes para este curso están:
+
+- [CommonMark](https://commonmark.org/): especificación que formaliza y desambigua el Markdown original; sirve de base a muchas otras variantes.
+- [GitHub Flavored Markdown (GFM)](https://github.github.com/gfm/): la variante de GitHub, basada en CommonMark, que agrega tablas y texto tachado, entre otros elementos (GitHub, s. f.). Es la que se usa en los archivos `README` y otros documentos de los repositorios del curso.
+- [Pandoc Markdown](https://pandoc.org/MANUAL.html#pandocs-markdown): la variante de [Pandoc](https://pandoc.org/), un conversor entre formatos de documentos, orientada a la escritura técnica y académica. Es la que usa [Quarto](https://quarto.org/), el sistema de publicación con el que está construido este sitio web y que se estudiará con detalle más adelante en el curso (Quarto, s. f.).
+
+Puede encontrarse una lista más extensa en [Markdown Flavors](https://github.com/commonmark/commonmark-spec/wiki/markdown-flavors). Las diferencias entre variantes son menores: la sintaxis básica que estudia este capítulo funciona en todas las herramientas del curso (RStudio, GitHub y Quarto).
+
+*Ejercicios de esta sección: [ejercicios sobre lenguajes de marcado](#ejercicios-lenguajes-marcado).*
+
+## Ejemplo de documento
+
+El siguiente es un ejemplo de documento en Markdown, con marcas para un encabezado, negritas, itálicas, un hipervínculo y una imagen.
+
+```md
+# Los satélites galileanos
+
+Se llaman **satélites galileanos** los cuatro satélites
+de Júpiter descubiertos en 1610 por
+[Galileo Galilei](https://es.wikipedia.org/wiki/Galileo_Galilei):
+*Ío*, *Europa*, *Ganimedes* y *Calisto*.
+Son los más grandes de los satélites de Júpiter,
+siendo visibles incluso con telescopios de baja potencia.
+
+![Júpiter y los satélites galileanos](img/jupiter-satelites-galileanos.jpg)
+```
+
+El documento se visualiza de la siguiente manera:
+
+<div style="border: 1px solid #ccc; border-radius: 6px; padding: 15px 20px; margin: 20px 0;">
+  <p style="margin-top: 0;"><span style="font-size: 2em; font-weight: bold;">Los satélites galileanos</span></p>
+  <p>Se llaman <strong>satélites galileanos</strong> los cuatro satélites de Júpiter descubiertos en 1610 por <a href="https://es.wikipedia.org/wiki/Galileo_Galilei">Galileo Galilei</a>: <em>Ío</em>, <em>Europa</em>, <em>Ganimedes</em> y <em>Calisto</em>. Son los más grandes de los satélites de Júpiter, siendo visibles incluso con telescopios de baja potencia.</p>
+  <img src="img/jupiter-satelites-galileanos.jpg" alt="Júpiter y los satélites galileanos" height="240">
+</div>
+
+El contenido de este ejemplo está basado en el artículo [Satélite galileano](https://es.wikipedia.org/wiki/Sat%C3%A9lite_galileano) de Wikipedia; la imagen, tomada del mismo artículo, es un montaje de la misión Galileo (NASA/JPL/DLR, dominio público).
+
+## Sintaxis
+
+En esta sección se explican los principales elementos de la sintaxis de Markdown y se muestran sus salidas. Una referencia completa puede consultarse en *Markdown Guide* (s. f.).
+
+### Encabezados
+
+Hay seis niveles de encabezados, del 1 (letras más grandes) al 6 (letras más pequeñas). Se especifican con símbolos de numeral (`#`) antes del texto (note el espacio entre el último numeral y el inicio del texto). La tabla 1 muestra los seis niveles.
+
+<figure style="text-align: center; margin: 20px 0;">
+    <figcaption><strong>Tabla 1</strong>. Sintaxis y salida de los encabezados. Elaboración propia.</figcaption>
+    <table class="table table-bordered table-striped" style="margin: 0 auto;">
+    <thead>
+      <tr>
+        <th>Sintaxis Markdown</th>
+        <th>Salida</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code># Encabezado de nivel 1</code></td>
+        <td><span style="font-size: 2em; font-weight: bold;">Encabezado de nivel 1</span></td>
+      </tr>
+      <tr>
+        <td><code>## Encabezado de nivel 2</code></td>
+        <td><span style="font-size: 1.5em; font-weight: bold;">Encabezado de nivel 2</span></td>
+      </tr>
+      <tr>
+        <td><code>### Encabezado de nivel 3</code></td>
+        <td><span style="font-size: 1.17em; font-weight: bold;">Encabezado de nivel 3</span></td>
+      </tr>
+      <tr>
+        <td><code>#### Encabezado de nivel 4</code></td>
+        <td><span style="font-size: 1em; font-weight: bold;">Encabezado de nivel 4</span></td>
+      </tr>
+      <tr>
+        <td><code>##### Encabezado de nivel 5</code></td>
+        <td><span style="font-size: 0.83em; font-weight: bold;">Encabezado de nivel 5</span></td>
+      </tr>
+      <tr>
+        <td><code>###### Encabezado de nivel 6</code></td>
+        <td><span style="font-size: 0.67em; font-weight: bold;">Encabezado de nivel 6</span></td>
+      </tr>
+    </tbody>
+    </table>
+</figure>
+
+Para los niveles 1 y 2 existe una sintaxis alterna: una línea de símbolos de igual (`===`) o de guiones (`---`) bajo el texto del encabezado.
+
+### Párrafos y cambios de línea
+
+Los párrafos se separan con al menos una línea en blanco; un simple cambio de línea no genera un párrafo nuevo. Si se requiere un cambio de línea sin separar párrafos, se agregan dos espacios al final de la línea o una barra invertida (`\`).
+
+```md
+Este es el primer párrafo de un documento.
+
+Este es el segundo párrafo,
+escrito en dos líneas que forman un solo párrafo.
+```
+
+### Negrita, itálica y tachado
+
+La negrita se marca con dos asteriscos (`**`) o dos guiones bajos (`__`) antes y después del texto; la itálica, con un asterisco (`*`) o un guion bajo (`_`); y el tachado —una extensión de GFM— con dos virgulillas (`~~`). La tabla 2 resume estas marcas.
+
+<figure style="text-align: center; margin: 20px 0;">
+    <figcaption><strong>Tabla 2</strong>. Sintaxis y salida de los formatos de texto. Elaboración propia.</figcaption>
+    <table class="table table-bordered table-striped" style="margin: 0 auto;">
+    <thead>
+      <tr>
+        <th>Sintaxis Markdown</th>
+        <th>Salida</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>**Texto en negrita**</code></td>
+        <td><strong>Texto en negrita</strong></td>
+      </tr>
+      <tr>
+        <td><code>__Otro texto en negrita__</code></td>
+        <td><strong>Otro texto en negrita</strong></td>
+      </tr>
+      <tr>
+        <td><code>*Texto en itálica*</code></td>
+        <td><em>Texto en itálica</em></td>
+      </tr>
+      <tr>
+        <td><code>_Otro texto en itálica_</code></td>
+        <td><em>Otro texto en itálica</em></td>
+      </tr>
+      <tr>
+        <td><code>***Texto en negrita e itálica***</code></td>
+        <td><strong><em>Texto en negrita e itálica</em></strong></td>
+      </tr>
+      <tr>
+        <td><code>~~Texto tachado~~</code></td>
+        <td><s>Texto tachado</s></td>
+      </tr>
+    </tbody>
+    </table>
+</figure>
+
+### Listas
+
+Las listas numeradas se definen con números seguidos de punto (`1.`, `2.`, `3.`, …) antes de cada elemento; las no numeradas, con guiones (`-`) o asteriscos (`*`). Un elemento se anida dentro de otro sangrándolo con espacios. Las listas deben separarse del párrafo anterior con una línea en blanco; de lo contrario, algunos renderizadores —como el de GitHub— las muestran como texto corrido, uno de los errores más frecuentes al empezar a usar Markdown. La tabla 3 muestra ambos tipos de lista.
+
+<figure style="text-align: center; margin: 20px 0;">
+    <figcaption><strong>Tabla 3</strong>. Sintaxis y salida de las listas. Elaboración propia.</figcaption>
+    <table class="table table-bordered table-striped" style="margin: 0 auto;">
+    <thead>
+      <tr>
+        <th>Sintaxis Markdown</th>
+        <th>Salida</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="text-align: left;">
+          <code>1. Primer elemento.</code><br>
+          <code>2. Segundo elemento.</code><br>
+          <code>3. Tercer elemento.</code>
+        </td>
+        <td style="text-align: left;">
+          <ol>
+            <li>Primer elemento.</li>
+            <li>Segundo elemento.</li>
+            <li>Tercer elemento.</li>
+          </ol>
+        </td>
+      </tr>
+      <tr>
+        <td style="text-align: left;">
+          <code>- Un elemento.</code><br>
+          <code>- Otro elemento.</code><br>
+          <code>&nbsp;&nbsp;&nbsp;&nbsp;- Un elemento anidado.</code>
+        </td>
+        <td style="text-align: left;">
+          <ul>
+            <li>Un elemento.</li>
+            <li>Otro elemento.
+              <ul>
+                <li>Un elemento anidado.</li>
+              </ul>
+            </li>
+          </ul>
+        </td>
+      </tr>
+    </tbody>
+    </table>
+</figure>
+
+En GFM, una lista no numerada se convierte en **lista de tareas** agregando corchetes después del guion: `- [ ]` marca una tarea pendiente y `- [x]` una completada. GitHub las muestra como casillas de verificación; son comunes en los archivos `README` y en el seguimiento de trabajo pendiente.
+
+### Enlaces e imágenes
+
+Un enlace (hipervínculo) se define con paréntesis cuadrados (`[]`), que contienen el texto del enlace, seguidos de paréntesis redondos (`()`), que contienen la dirección del documento al que conduce. Una imagen usa la misma sintaxis precedida por un signo de admiración de cierre (`!`); los paréntesis cuadrados contienen entonces un texto alternativo, que se muestra cuando la imagen no puede desplegarse y que utilizan los lectores de pantalla para describirla, por lo que conviene redactarlo siempre. La tabla 4 muestra ambos elementos.
+
+<figure style="text-align: center; margin: 20px 0;">
+    <figcaption><strong>Tabla 4</strong>. Sintaxis y salida de los enlaces y las imágenes. Elaboración propia.</figcaption>
+    <table class="table table-bordered table-striped" style="margin: 0 auto;">
+    <thead>
+      <tr>
+        <th>Sintaxis Markdown</th>
+        <th>Salida</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>[Proyecto Gutenberg](https://www.gutenberg.org/)</code></td>
+        <td><a href="https://www.gutenberg.org/">Proyecto Gutenberg</a></td>
+      </tr>
+      <tr>
+        <td><code>![Júpiter y sus satélites](img/jupiter-satelites-galileanos.jpg)</code></td>
+        <td><img src="img/jupiter-satelites-galileanos.jpg" alt="Júpiter y sus satélites" height="120"></td>
+      </tr>
+    </tbody>
+    </table>
+</figure>
+
+La dirección de una imagen puede ser **local** —un archivo en la misma computadora que el documento, como `img/mapa.png`— o **remota** —un archivo en otra computadora, al que se accede mediante una URL—. En los repositorios del curso, las imágenes se guardan como archivos locales junto al documento que las usa.
+
+### Citas textuales
+
+Se especifican con un símbolo de «mayor que» (`>`) antes de cada línea.
+
+```md
+> Caminante, no hay camino,
+> se hace camino al andar.
+```
+
+El texto anterior se visualiza así:
+
+> Caminante, no hay camino,
+> se hace camino al andar.
+
+### Código
+
+El código se distingue del resto del texto con **acentos graves** (*backticks*, `` ` ``). Un fragmento dentro de un renglón se delimita con un acento grave a cada lado; por ejemplo, `` `print()` `` se visualiza como `print()`. Un **bloque de código** se delimita con líneas de tres acentos graves; en la primera puede indicarse el lenguaje, para que el código se muestre con resaltado de sintaxis:
+
+````md
+```r
+dias <- 7
+horas <- dias * 24
+print(horas)
+```
+````
+
+El bloque anterior se visualiza así:
+
+```r
+dias <- 7
+horas <- dias * 24
+print(horas)
+```
+
+El texto dentro de las marcas de código se muestra tal cual, sin interpretar otras marcas de Markdown: por eso este capítulo las usa para mostrar la sintaxis sin que se convierta en salida.
+
+### Tablas
+
+Las tablas —una extensión de GFM— se construyen con barras verticales (`|`) que separan las columnas y una línea de guiones que separa el encabezado del resto de las filas (GitHub, s. f.):
+
+```md
+| Provincia | Capital  |
+|-----------|----------|
+| San José  | San José |
+| Alajuela  | Alajuela |
+| Cartago   | Cartago  |
+```
+
+La tabla se visualiza de la siguiente manera:
+
+| Provincia | Capital  |
+|-----------|----------|
+| San José  | San José |
+| Alajuela  | Alajuela |
+| Cartago   | Cartago  |
+
+Con dos puntos en la línea de guiones se controla la alineación de cada columna: `:---` a la izquierda, `:---:` al centro y `---:` a la derecha.
+
+### Notación matemática
+
+Muchas variantes de Markdown —entre ellas las de GitHub y de Quarto (este sitio)— permiten escribir expresiones matemáticas con la sintaxis de [LaTeX](https://www.latex-project.org/), delimitadas con un símbolo de dólar (`$`) si van dentro de un renglón o con dos (`$$`) si van en su propio bloque. Por ejemplo, la sintaxis:
+
+```md
+La densidad de población se calcula como:
+
+$$d = \frac{P}{A}$$
+
+donde $P$ es la población y $A$ el área.
+```
+
+se visualiza así:
+
+La densidad de población se calcula como:
+
+$$d = \frac{P}{A}$$
+
+donde $P$ es la población y $A$ el área.
+
+Los detalles de la sintaxis de las expresiones pueden consultarse en el wikilibro *LaTeX/Mathematics* (s. f.).
+
+### HTML dentro de Markdown
+
+Markdown acepta HTML intercalado en el documento, lo que permite lograr efectos para los que no tiene marcas propias. Tres usos frecuentes en este curso:
+
+- **Superíndices y subíndices**, con los elementos `<sup>` y `<sub>`: `km<sup>2</sup>` se visualiza como km<sup>2</sup>, y `CO<sub>2</sub>` como CO<sub>2</sub>.
+- **Comentarios**, con la marca `<!-- ... -->`: el texto que contiene no aparece en la salida, lo que permite dejar notas o recordatorios en la fuente del documento. Por ejemplo: `<!-- Pendiente: actualizar la tabla -->`.
+- **Tamaño de las imágenes**, con los atributos `height` y `width` del elemento [img](https://developer.mozilla.org/es/docs/Web/HTML/Element/img), que especifican la altura y el ancho en pixeles; si se usa solo uno, el otro se ajusta automáticamente para conservar las proporciones. Por ejemplo: `<img src="jupiter.jpg" height="50" alt="Júpiter y sus satélites">`.
+
+### Otros elementos
+
+- Una **línea horizontal** se genera con una línea de tres o más guiones (`---`) o asteriscos (`***`), separada del texto por líneas en blanco.
+- Para mostrar literalmente un carácter que Markdown interpretaría como marca, se antepone una barra invertida: `\*asteriscos visibles\*` se visualiza como \*asteriscos visibles\*.
+- Los diagramas de este sitio web —como los de las lecciones de [introducción a la ciencia de datos](01-introduccion-ciencia-datos.qmd) y de [Git, GitHub y GitHub Pages](04-git-github.qmd)— se escriben dentro del propio Markdown, como bloques de código en el lenguaje de [Mermaid](https://mermaid.js.org/), una extensión que GitHub y Quarto convierten en diagramas.
+
+*Ejercicios de esta sección: [ejercicios sobre la sintaxis](#ejercicios-sintaxis).*
+
+## Resumen
+
+- Un **lenguaje de marcado** codifica la estructura, el estilo y la semántica de un documento mediante marcas intercaladas en el texto; **Markdown** es un lenguaje de marcado ligero, diseñado para que el documento sea legible aun en su forma original.
+- Sus **variantes** extienden la especificación original; la sintaxis básica es común a las herramientas del curso: los documentos de GitHub (GFM) y los documentos de Quarto (Pandoc Markdown), como los de este sitio web.
+- Las marcas principales cubren encabezados (`#`), negrita (`**`), itálica (`*`), listas (`1.`, `-`), enlaces (`[]()`), imágenes (`![]()`), citas (`>`), código (`` ` ``), tablas (`|`) y notación matemática (`$`).
+- El **HTML** intercalado complementa a Markdown en lo que este no cubre, como superíndices y subíndices o el tamaño de las imágenes.
+
+## Ejercicios
+
+Los ejercicios se agrupan según la sección del capítulo a la que corresponden; se recomienda realizarlos al concluir la sección respectiva.
+
+### Lenguajes de marcado y variantes {#ejercicios-lenguajes-marcado}
+
+1. Este sitio web está escrito en Markdown, en documentos de Quarto. En el [repositorio del curso en GitHub](https://github.com/pf0953-programacionr/2026-ii), abra el archivo fuente de esta lección (`contenidos/i-introduccion-ciencia-datos-programacion/03-markdown.qmd`) con la vista *Raw* y compárelo con esta página: identifique al menos cinco marcas estudiadas en la lección y localice su salida.
+
+### Sintaxis {#ejercicios-sintaxis}
+
+2. En RStudio, cree un archivo con extensión `.md` (*File > New File > Markdown File*) y redacte en Markdown un documento de una página sobre un tema geográfico de su interés —idealmente, el que considera explorar en el proyecto del curso—. Active la vista previa (botón **Preview** o `Ctrl + Shift + K`) y verifique que el documento incluya, al menos: un título y dos encabezados de sección, negritas e itálicas, una lista, un enlace, una imagen remota, una tabla y un bloque de código (puede copiar el de esta lección). Escriba primero en el modo *Source*, para practicar la sintaxis, y pruebe luego el modo *Visual*, según se explica en la guía de [RStudio](../software/rstudio.qmd). Conserve el archivo: se usará en los ejercicios de la próxima lección.
+
+3. Agregue al documento anterior una expresión matemática propia de la geografía (ej. la densidad de población de un cantón, con valores reales) en su propio bloque, y un superíndice con HTML (ej. la extensión de Costa Rica: 51 100 km<sup>2</sup>). Verifique ambos en la vista previa.
+
+## Referencias bibliográficas
+
+GitHub. (s. f.). *Basic writing and formatting syntax*. GitHub Docs. Recuperado el 19 de agosto de 2026, de <https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax>
+
+Gruber, J. (s. f.). *Markdown*. Daring Fireball. Recuperado el 19 de agosto de 2026, de <https://daringfireball.net/projects/markdown/>
+
+LaTeX/Mathematics. (s. f.). En *Wikibooks*. Recuperado el 19 de agosto de 2026, de <https://en.wikibooks.org/wiki/LaTeX/Mathematics>
+
+Markdown Guide. (s. f.). Recuperado el 19 de agosto de 2026, de <https://www.markdownguide.org/>
+
+Markdown Tutorial. (s. f.). Recuperado el 19 de agosto de 2026, de <https://www.markdowntutorial.com/>
+
+Quarto. (s. f.). *Markdown basics*. Recuperado el 19 de agosto de 2026, de <https://quarto.org/docs/authoring/markdown-basics.html>

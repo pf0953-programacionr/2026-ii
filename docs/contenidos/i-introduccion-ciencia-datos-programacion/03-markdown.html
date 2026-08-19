@@ -1,0 +1,1159 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>El lenguaje de marcado Markdown – PF-0953 Programación en R - 2026-II</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-6ac05ee021531a7a20f29fe5a12dad4c.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "language": {
+    "search-no-results-text": "No se han encontrado resultados",
+    "search-matching-documents-text": "documentos encontrados",
+    "search-copy-link-title": "Copiar el enlace en la búsqueda",
+    "search-hide-matches-text": "Ocultar resultados adicionales",
+    "search-more-match-text": "resultado adicional en este documento",
+    "search-more-matches-text": "resultados adicionales en este documento",
+    "search-clear-button-title": "Borrar",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancelar",
+    "search-submit-button-title": "Enviar",
+    "search-label": "Buscar"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar docked quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../contenidos/i-introduccion-ciencia-datos-programacion/01-introduccion-ciencia-datos.html">I. Introducción a la ciencia de datos y a la programación de computadoras</a></li><li class="breadcrumb-item"><a href="../../contenidos/i-introduccion-ciencia-datos-programacion/03-markdown.html">El lenguaje de marcado Markdown</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Buscar" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../../">PF-0953 Programación en R - 2026-II</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Buscar"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Inicio</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">I. Introducción a la ciencia de datos y a la programación de computadoras</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../contenidos/i-introduccion-ciencia-datos-programacion/01-introduccion-ciencia-datos.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introducción a la ciencia de datos</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../contenidos/i-introduccion-ciencia-datos-programacion/02-ejemplo-procesos-ciencia-datos.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Ejemplo de procesos de ciencia de datos</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../contenidos/i-introduccion-ciencia-datos-programacion/03-markdown.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">El lenguaje de marcado Markdown</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../contenidos/i-introduccion-ciencia-datos-programacion/04-git-github.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Git, GitHub y GitHub Pages</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../contenidos/i-introduccion-ciencia-datos-programacion/05-asistentes-ia.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Asistentes de programación basados en inteligencia artificial</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Software</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../contenidos/software/rstudio.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">RStudio</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">En esta página</h2>
+   
+  <ul>
+  <li><a href="#trabajo-previo" id="toc-trabajo-previo" class="nav-link active" data-scroll-target="#trabajo-previo">Trabajo previo</a>
+  <ul class="collapse">
+  <li><a href="#tutoriales" id="toc-tutoriales" class="nav-link" data-scroll-target="#tutoriales">Tutoriales</a></li>
+  </ul></li>
+  <li><a href="#introducción" id="toc-introducción" class="nav-link" data-scroll-target="#introducción">Introducción</a></li>
+  <li><a href="#lenguajes-de-marcado" id="toc-lenguajes-de-marcado" class="nav-link" data-scroll-target="#lenguajes-de-marcado">Lenguajes de marcado</a></li>
+  <li><a href="#variantes-de-markdown" id="toc-variantes-de-markdown" class="nav-link" data-scroll-target="#variantes-de-markdown">Variantes de Markdown</a></li>
+  <li><a href="#ejemplo-de-documento" id="toc-ejemplo-de-documento" class="nav-link" data-scroll-target="#ejemplo-de-documento">Ejemplo de documento</a></li>
+  <li><a href="#sintaxis" id="toc-sintaxis" class="nav-link" data-scroll-target="#sintaxis">Sintaxis</a>
+  <ul class="collapse">
+  <li><a href="#encabezados" id="toc-encabezados" class="nav-link" data-scroll-target="#encabezados">Encabezados</a></li>
+  <li><a href="#párrafos-y-cambios-de-línea" id="toc-párrafos-y-cambios-de-línea" class="nav-link" data-scroll-target="#párrafos-y-cambios-de-línea">Párrafos y cambios de línea</a></li>
+  <li><a href="#negrita-itálica-y-tachado" id="toc-negrita-itálica-y-tachado" class="nav-link" data-scroll-target="#negrita-itálica-y-tachado">Negrita, itálica y tachado</a></li>
+  <li><a href="#listas" id="toc-listas" class="nav-link" data-scroll-target="#listas">Listas</a></li>
+  <li><a href="#enlaces-e-imágenes" id="toc-enlaces-e-imágenes" class="nav-link" data-scroll-target="#enlaces-e-imágenes">Enlaces e imágenes</a></li>
+  <li><a href="#citas-textuales" id="toc-citas-textuales" class="nav-link" data-scroll-target="#citas-textuales">Citas textuales</a></li>
+  <li><a href="#código" id="toc-código" class="nav-link" data-scroll-target="#código">Código</a></li>
+  <li><a href="#tablas" id="toc-tablas" class="nav-link" data-scroll-target="#tablas">Tablas</a></li>
+  <li><a href="#notación-matemática" id="toc-notación-matemática" class="nav-link" data-scroll-target="#notación-matemática">Notación matemática</a></li>
+  <li><a href="#html-dentro-de-markdown" id="toc-html-dentro-de-markdown" class="nav-link" data-scroll-target="#html-dentro-de-markdown">HTML dentro de Markdown</a></li>
+  <li><a href="#otros-elementos" id="toc-otros-elementos" class="nav-link" data-scroll-target="#otros-elementos">Otros elementos</a></li>
+  </ul></li>
+  <li><a href="#resumen" id="toc-resumen" class="nav-link" data-scroll-target="#resumen">Resumen</a></li>
+  <li><a href="#ejercicios" id="toc-ejercicios" class="nav-link" data-scroll-target="#ejercicios">Ejercicios</a>
+  <ul class="collapse">
+  <li><a href="#ejercicios-lenguajes-marcado" id="toc-ejercicios-lenguajes-marcado" class="nav-link" data-scroll-target="#ejercicios-lenguajes-marcado">Lenguajes de marcado y variantes</a></li>
+  <li><a href="#ejercicios-sintaxis" id="toc-ejercicios-sintaxis" class="nav-link" data-scroll-target="#ejercicios-sintaxis">Sintaxis</a></li>
+  </ul></li>
+  <li><a href="#referencias-bibliográficas" id="toc-referencias-bibliográficas" class="nav-link" data-scroll-target="#referencias-bibliográficas">Referencias bibliográficas</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../contenidos/i-introduccion-ciencia-datos-programacion/01-introduccion-ciencia-datos.html">I. Introducción a la ciencia de datos y a la programación de computadoras</a></li><li class="breadcrumb-item"><a href="../../contenidos/i-introduccion-ciencia-datos-programacion/03-markdown.html">El lenguaje de marcado Markdown</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">El lenguaje de marcado Markdown</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="trabajo-previo" class="level2">
+<h2 class="anchored" data-anchor-id="trabajo-previo">Trabajo previo</h2>
+<section id="tutoriales" class="level3">
+<h3 class="anchored" data-anchor-id="tutoriales">Tutoriales</h3>
+<p>Antes de la clase, complete el siguiente tutorial interactivo, que se realiza directamente en el navegador y practica las marcas principales de Markdown. Además, instale el lenguaje R y el editor RStudio, siguiendo la guía de <a href="../../contenidos/software/rstudio.html">RStudio</a> de la sección de software.</p>
+<p>Markdown Tutorial. (s. f.). Recuperado el 19 de agosto de 2026, de <a href="https://www.markdowntutorial.com/" class="uri">https://www.markdowntutorial.com/</a></p>
+</section>
+</section>
+<section id="introducción" class="level2">
+<h2 class="anchored" data-anchor-id="introducción">Introducción</h2>
+<p>En la lección de <a href="../../contenidos/i-introduccion-ciencia-datos-programacion/01-introduccion-ciencia-datos.html">introducción a la ciencia de datos</a> se mencionó que el texto de los documentos computacionales se escribe en Markdown. Este capítulo estudia ese lenguaje: qué es, cuáles variantes existen y cuál es su sintaxis. Markdown acompaña todo el trabajo del curso: además del texto de los documentos de Quarto, con él se escriben los archivos <code>README</code> de los repositorios de <a href="https://github.com/">GitHub</a> y las páginas publicadas con GitHub Pages, que se estudian en la próxima lección, así como la documentación de las tareas y del proyecto final.</p>
+</section>
+<section id="lenguajes-de-marcado" class="level2">
+<h2 class="anchored" data-anchor-id="lenguajes-de-marcado">Lenguajes de marcado</h2>
+<p>Un <strong>lenguaje de marcado</strong> codifica un documento mediante <em>marcas</em>: anotaciones intercaladas en el texto que especifican su estructura (ej. títulos, encabezados), su estilo (ej. negritas, itálicas) o su semántica. El ejemplo más conocido es el <a href="https://es.wikipedia.org/wiki/HTML">Lenguaje de marcado de hipertexto (HTML)</a>, con el que se escriben las páginas web.</p>
+<p><strong>Markdown</strong> es un lenguaje de marcado creado en 2004 por John Gruber, en colaboración con Aaron Swartz, con el objetivo de que un documento fuera fácil de escribir y de leer en su forma original, sin marcas aparatosas, y pudiera convertirse a HTML (Gruber, s. f.). Por esa sencillez se le considera un <a href="https://es.wikipedia.org/wiki/Lenguaje_de_marcas_ligero">lenguaje de marcado ligero</a>: sus marcas son signos discretos —numerales, asteriscos, guiones— que no estorban la lectura. Los documentos escritos en Markdown pueden exportarse a una gran variedad de formatos (ej. HTML, DOCX, PDF, LaTeX) para producir páginas web, libros o presentaciones, entre otros.</p>
+<p><em>Ejercicios de esta sección: <a href="#ejercicios-lenguajes-marcado">ejercicios sobre lenguajes de marcado</a>.</em></p>
+</section>
+<section id="variantes-de-markdown" class="level2">
+<h2 class="anchored" data-anchor-id="variantes-de-markdown">Variantes de Markdown</h2>
+<p>La especificación original de Markdown dejó aspectos sin definir, por lo que surgieron <strong>variantes</strong> (<em>flavors</em>): extensiones o modificaciones que agregan elementos como tablas, notación matemática o código con resaltado de sintaxis. Entre las más relevantes para este curso están:</p>
+<ul>
+<li><a href="https://commonmark.org/">CommonMark</a>: especificación que formaliza y desambigua el Markdown original; sirve de base a muchas otras variantes.</li>
+<li><a href="https://github.github.com/gfm/">GitHub Flavored Markdown (GFM)</a>: la variante de GitHub, basada en CommonMark, que agrega tablas y texto tachado, entre otros elementos (GitHub, s. f.). Es la que se usa en los archivos <code>README</code> y otros documentos de los repositorios del curso.</li>
+<li><a href="https://pandoc.org/MANUAL.html#pandocs-markdown">Pandoc Markdown</a>: la variante de <a href="https://pandoc.org/">Pandoc</a>, un conversor entre formatos de documentos, orientada a la escritura técnica y académica. Es la que usa <a href="https://quarto.org/">Quarto</a>, el sistema de publicación con el que está construido este sitio web y que se estudiará con detalle más adelante en el curso (Quarto, s. f.).</li>
+</ul>
+<p>Puede encontrarse una lista más extensa en <a href="https://github.com/commonmark/commonmark-spec/wiki/markdown-flavors">Markdown Flavors</a>. Las diferencias entre variantes son menores: la sintaxis básica que estudia este capítulo funciona en todas las herramientas del curso (RStudio, GitHub y Quarto).</p>
+<p><em>Ejercicios de esta sección: <a href="#ejercicios-lenguajes-marcado">ejercicios sobre lenguajes de marcado</a>.</em></p>
+</section>
+<section id="ejemplo-de-documento" class="level2">
+<h2 class="anchored" data-anchor-id="ejemplo-de-documento">Ejemplo de documento</h2>
+<p>El siguiente es un ejemplo de documento en Markdown, con marcas para un encabezado, negritas, itálicas, un hipervínculo y una imagen.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode md code-with-copy"><code class="sourceCode markdown"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu"># Los satélites galileanos</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>Se llaman **satélites galileanos** los cuatro satélites</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>de Júpiter descubiertos en 1610 por</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co">[</span><span class="ot">Galileo Galilei</span><span class="co">](https://es.wikipedia.org/wiki/Galileo_Galilei)</span>:</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>*Ío*, *Europa*, *Ganimedes* y *Calisto*.</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>Son los más grandes de los satélites de Júpiter,</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>siendo visibles incluso con telescopios de baja potencia.</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="al">![Júpiter y los satélites galileanos](img/jupiter-satelites-galileanos.jpg)</span></span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<p>El documento se visualiza de la siguiente manera:</p>
+<div style="border: 1px solid #ccc; border-radius: 6px; padding: 15px 20px; margin: 20px 0;">
+<p style="margin-top: 0;">
+<span style="font-size: 2em; font-weight: bold;">Los satélites galileanos</span>
+</p>
+<p>
+Se llaman <strong>satélites galileanos</strong> los cuatro satélites de Júpiter descubiertos en 1610 por <a href="https://es.wikipedia.org/wiki/Galileo_Galilei">Galileo Galilei</a>: <em>Ío</em>, <em>Europa</em>, <em>Ganimedes</em> y <em>Calisto</em>. Son los más grandes de los satélites de Júpiter, siendo visibles incluso con telescopios de baja potencia.
+</p>
+<p><img src="img/jupiter-satelites-galileanos.jpg" alt="Júpiter y los satélites galileanos" height="240"></p>
+</div>
+<p>El contenido de este ejemplo está basado en el artículo <a href="https://es.wikipedia.org/wiki/Sat%C3%A9lite_galileano">Satélite galileano</a> de Wikipedia; la imagen, tomada del mismo artículo, es un montaje de la misión Galileo (NASA/JPL/DLR, dominio público).</p>
+</section>
+<section id="sintaxis" class="level2">
+<h2 class="anchored" data-anchor-id="sintaxis">Sintaxis</h2>
+<p>En esta sección se explican los principales elementos de la sintaxis de Markdown y se muestran sus salidas. Una referencia completa puede consultarse en <em>Markdown Guide</em> (s. f.).</p>
+<section id="encabezados" class="level3">
+<h3 class="anchored" data-anchor-id="encabezados">Encabezados</h3>
+<p>Hay seis niveles de encabezados, del 1 (letras más grandes) al 6 (letras más pequeñas). Se especifican con símbolos de numeral (<code>#</code>) antes del texto (note el espacio entre el último numeral y el inicio del texto). La tabla 1 muestra los seis niveles.</p>
+<figure style="text-align: center; margin: 20px 0;" class="figure">
+<figcaption>
+<strong>Tabla 1</strong>. Sintaxis y salida de los encabezados. Elaboración propia.
+</figcaption>
+<table class="table table-bordered table-striped" style="margin: 0 auto;">
+<thead>
+<tr>
+<th>
+Sintaxis Markdown
+</th>
+<th>
+Salida
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<code># Encabezado de nivel 1</code>
+</td>
+<td>
+<span style="font-size: 2em; font-weight: bold;">Encabezado de nivel 1</span>
+</td>
+</tr>
+<tr>
+<td>
+<code>## Encabezado de nivel 2</code>
+</td>
+<td>
+<span style="font-size: 1.5em; font-weight: bold;">Encabezado de nivel 2</span>
+</td>
+</tr>
+<tr>
+<td>
+<code>### Encabezado de nivel 3</code>
+</td>
+<td>
+<span style="font-size: 1.17em; font-weight: bold;">Encabezado de nivel 3</span>
+</td>
+</tr>
+<tr>
+<td>
+<code>#### Encabezado de nivel 4</code>
+</td>
+<td>
+<span style="font-size: 1em; font-weight: bold;">Encabezado de nivel 4</span>
+</td>
+</tr>
+<tr>
+<td>
+<code>##### Encabezado de nivel 5</code>
+</td>
+<td>
+<span style="font-size: 0.83em; font-weight: bold;">Encabezado de nivel 5</span>
+</td>
+</tr>
+<tr>
+<td>
+<code>###### Encabezado de nivel 6</code>
+</td>
+<td>
+<span style="font-size: 0.67em; font-weight: bold;">Encabezado de nivel 6</span>
+</td>
+</tr>
+</tbody>
+</table>
+</figure>
+<p>Para los niveles 1 y 2 existe una sintaxis alterna: una línea de símbolos de igual (<code>===</code>) o de guiones (<code>---</code>) bajo el texto del encabezado.</p>
+</section>
+<section id="párrafos-y-cambios-de-línea" class="level3">
+<h3 class="anchored" data-anchor-id="párrafos-y-cambios-de-línea">Párrafos y cambios de línea</h3>
+<p>Los párrafos se separan con al menos una línea en blanco; un simple cambio de línea no genera un párrafo nuevo. Si se requiere un cambio de línea sin separar párrafos, se agregan dos espacios al final de la línea o una barra invertida (<code>\</code>).</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode md code-with-copy"><code class="sourceCode markdown"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>Este es el primer párrafo de un documento.</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>Este es el segundo párrafo,</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>escrito en dos líneas que forman un solo párrafo.</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="negrita-itálica-y-tachado" class="level3">
+<h3 class="anchored" data-anchor-id="negrita-itálica-y-tachado">Negrita, itálica y tachado</h3>
+<p>La negrita se marca con dos asteriscos (<code>**</code>) o dos guiones bajos (<code>__</code>) antes y después del texto; la itálica, con un asterisco (<code>*</code>) o un guion bajo (<code>_</code>); y el tachado —una extensión de GFM— con dos virgulillas (<code>~~</code>). La tabla 2 resume estas marcas.</p>
+<figure style="text-align: center; margin: 20px 0;" class="figure">
+<figcaption>
+<strong>Tabla 2</strong>. Sintaxis y salida de los formatos de texto. Elaboración propia.
+</figcaption>
+<table class="table table-bordered table-striped" style="margin: 0 auto;">
+<thead>
+<tr>
+<th>
+Sintaxis Markdown
+</th>
+<th>
+Salida
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<code><strong>Texto en negrita</strong></code>
+</td>
+<td>
+<strong>Texto en negrita</strong>
+</td>
+</tr>
+<tr>
+<td>
+<code><strong>Otro texto en negrita</strong></code>
+</td>
+<td>
+<strong>Otro texto en negrita</strong>
+</td>
+</tr>
+<tr>
+<td>
+<code><em>Texto en itálica</em></code>
+</td>
+<td>
+<em>Texto en itálica</em>
+</td>
+</tr>
+<tr>
+<td>
+<code><em>Otro texto en itálica</em></code>
+</td>
+<td>
+<em>Otro texto en itálica</em>
+</td>
+</tr>
+<tr>
+<td>
+<code><strong><em>Texto en negrita e itálica</em></strong></code>
+</td>
+<td>
+<strong><em>Texto en negrita e itálica</em></strong>
+</td>
+</tr>
+<tr>
+<td>
+<code><del>Texto tachado</del></code>
+</td>
+<td>
+<s>Texto tachado</s>
+</td>
+</tr>
+</tbody>
+</table>
+</figure>
+</section>
+<section id="listas" class="level3">
+<h3 class="anchored">Listas</h3>
+<p>Las listas numeradas se definen con números seguidos de punto (<code>1.</code>, <code>2.</code>, <code>3.</code>, …) antes de cada elemento; las no numeradas, con guiones (<code>-</code>) o asteriscos (<code>*</code>). Un elemento se anida dentro de otro sangrándolo con espacios. Las listas deben separarse del párrafo anterior con una línea en blanco; de lo contrario, algunos renderizadores —como el de GitHub— las muestran como texto corrido, uno de los errores más frecuentes al empezar a usar Markdown. La tabla 3 muestra ambos tipos de lista.</p>
+<figure style="text-align: center; margin: 20px 0;" class="figure">
+<figcaption>
+<strong>Tabla 3</strong>. Sintaxis y salida de las listas. Elaboración propia.
+</figcaption>
+<table class="table table-bordered table-striped" style="margin: 0 auto;">
+<thead>
+<tr>
+<th>
+Sintaxis Markdown
+</th>
+<th>
+Salida
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">
+<code>1. Primer elemento.</code><br> <code>2. Segundo elemento.</code><br> <code>3. Tercer elemento.</code>
+</td>
+<td style="text-align: left;">
+<ol>
+<li>
+Primer elemento.
+</li>
+<li>
+Segundo elemento.
+</li>
+<li>
+Tercer elemento.
+</li>
+</ol>
+</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+<code>- Un elemento.</code><br> <code>- Otro elemento.</code><br> <code>&nbsp;&nbsp;&nbsp;&nbsp;- Un elemento anidado.</code>
+</td>
+<td style="text-align: left;">
+<ul>
+<li>
+Un elemento.
+</li>
+<li>
+Otro elemento.
+<ul>
+<li>
+Un elemento anidado.
+</li>
+</ul>
+<pre><code>        &lt;/li&gt;
+      &lt;/ul&gt;
+    &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;</code></pre>
+
+<p>En GFM, una lista no numerada se convierte en <strong>lista de tareas</strong> agregando corchetes después del guion: <code>- [ ]</code> marca una tarea pendiente y <code>- [x]</code> una completada. GitHub las muestra como casillas de verificación; son comunes en los archivos <code>README</code> y en el seguimiento de trabajo pendiente.</p>
+
+<section id="enlaces-e-imágenes" class="level3">
+<h3 class="anchored" data-anchor-id="enlaces-e-imágenes">Enlaces e imágenes</h3>
+<p>Un enlace (hipervínculo) se define con paréntesis cuadrados (<code>[]</code>), que contienen el texto del enlace, seguidos de paréntesis redondos (<code>()</code>), que contienen la dirección del documento al que conduce. Una imagen usa la misma sintaxis precedida por un signo de admiración de cierre (<code>!</code>); los paréntesis cuadrados contienen entonces un texto alternativo, que se muestra cuando la imagen no puede desplegarse y que utilizan los lectores de pantalla para describirla, por lo que conviene redactarlo siempre. La tabla 4 muestra ambos elementos.</p>
+<figure style="text-align: center; margin: 20px 0;" class="figure">
+<figcaption>
+<strong>Tabla 4</strong>. Sintaxis y salida de los enlaces y las imágenes. Elaboración propia.
+</figcaption>
+<table class="table table-bordered table-striped" style="margin: 0 auto;">
+<thead>
+<tr>
+<th>
+Sintaxis Markdown
+</th>
+<th>
+Salida
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<code><a href="https://www.gutenberg.org/">Proyecto Gutenberg</a></code>
+</td>
+<td>
+<a href="https://www.gutenberg.org/">Proyecto Gutenberg</a>
+</td>
+</tr>
+<tr>
+<td>
+<code><img src="img/jupiter-satelites-galileanos.jpg" class="img-fluid figure-img" alt="Júpiter y sus satélites"></code>
+</td>
+<td>
+<img src="img/jupiter-satelites-galileanos.jpg" alt="Júpiter y sus satélites" height="120" class="figure-img">
+</td>
+</tr>
+</tbody>
+</table>
+</figure>
+<p>La dirección de una imagen puede ser <strong>local</strong> —un archivo en la misma computadora que el documento, como <code>img/mapa.png</code>— o <strong>remota</strong> —un archivo en otra computadora, al que se accede mediante una URL—. En los repositorios del curso, las imágenes se guardan como archivos locales junto al documento que las usa.</p>
+</section>
+<section id="citas-textuales" class="level3">
+<h3 class="anchored" data-anchor-id="citas-textuales">Citas textuales</h3>
+<p>Se especifican con un símbolo de «mayor que» (<code>&gt;</code>) antes de cada línea.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode md code-with-copy"><code class="sourceCode markdown"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; Caminante, no hay camino,</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; se hace camino al andar.</span></span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<p>El texto anterior se visualiza así:</p>
+<blockquote class="blockquote">
+<p>Caminante, no hay camino, se hace camino al andar.</p>
+</blockquote>
+</section>
+<section id="código" class="level3">
+<h3 class="anchored" data-anchor-id="código">Código</h3>
+<p>El código se distingue del resto del texto con <strong>acentos graves</strong> (<em>backticks</em>, <code>`</code>). Un fragmento dentro de un renglón se delimita con un acento grave a cada lado; por ejemplo, <code>`print()`</code> se visualiza como <code>print()</code>. Un <strong>bloque de código</strong> se delimita con líneas de tres acentos graves; en la primera puede indicarse el lenguaje, para que el código se muestre con resaltado de sintaxis:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode md code-with-copy"><code class="sourceCode markdown"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="in">```r</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>dias <span class="ot">&lt;-</span> <span class="dv">7</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>horas <span class="ot">&lt;-</span> dias <span class="sc">*</span> <span class="dv">24</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(horas)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<p>El bloque anterior se visualiza así:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>dias <span class="ot">&lt;-</span> <span class="dv">7</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>horas <span class="ot">&lt;-</span> dias <span class="sc">*</span> <span class="dv">24</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(horas)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<p>El texto dentro de las marcas de código se muestra tal cual, sin interpretar otras marcas de Markdown: por eso este capítulo las usa para mostrar la sintaxis sin que se convierta en salida.</p>
+</section>
+<section id="tablas" class="level3">
+<h3 class="anchored" data-anchor-id="tablas">Tablas</h3>
+<p>Las tablas —una extensión de GFM— se construyen con barras verticales (<code>|</code>) que separan las columnas y una línea de guiones que separa el encabezado del resto de las filas (GitHub, s. f.):</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode md code-with-copy"><code class="sourceCode markdown"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Provincia <span class="pp">|</span> Capital  <span class="pp">|</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="pp">|-----------|----------|</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> San José  <span class="pp">|</span> San José <span class="pp">|</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Alajuela  <span class="pp">|</span> Alajuela <span class="pp">|</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Cartago   <span class="pp">|</span> Cartago  <span class="pp">|</span></span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<p>La tabla se visualiza de la siguiente manera:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Provincia</th>
+<th>Capital</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>San José</td>
+<td>San José</td>
+</tr>
+<tr class="even">
+<td>Alajuela</td>
+<td>Alajuela</td>
+</tr>
+<tr class="odd">
+<td>Cartago</td>
+<td>Cartago</td>
+</tr>
+</tbody>
+</table>
+<p>Con dos puntos en la línea de guiones se controla la alineación de cada columna: <code>:---</code> a la izquierda, <code>:---:</code> al centro y <code>---:</code> a la derecha.</p>
+</section>
+<section id="notación-matemática" class="level3">
+<h3 class="anchored" data-anchor-id="notación-matemática">Notación matemática</h3>
+<p>Muchas variantes de Markdown —entre ellas las de GitHub y de Quarto (este sitio)— permiten escribir expresiones matemáticas con la sintaxis de <a href="https://www.latex-project.org/">LaTeX</a>, delimitadas con un símbolo de dólar (<code>$</code>) si van dentro de un renglón o con dos (<code>$$</code>) si van en su propio bloque. Por ejemplo, la sintaxis:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode md code-with-copy"><code class="sourceCode markdown"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="an">La densidad de población se calcula como:</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>$$d = \frac{P}{A}$$</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>donde $P$ es la población y $A$ el área.</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<p>se visualiza así:</p>
+<p>La densidad de población se calcula como:</p>
+<p><span class="math display">\[d = \frac{P}{A}\]</span></p>
+<p>donde <span class="math inline">\(P\)</span> es la población y <span class="math inline">\(A\)</span> el área.</p>
+<p>Los detalles de la sintaxis de las expresiones pueden consultarse en el wikilibro <em>LaTeX/Mathematics</em> (s. f.).</p>
+</section>
+<section id="html-dentro-de-markdown" class="level3">
+<h3 class="anchored" data-anchor-id="html-dentro-de-markdown">HTML dentro de Markdown</h3>
+<p>Markdown acepta HTML intercalado en el documento, lo que permite lograr efectos para los que no tiene marcas propias. Tres usos frecuentes en este curso:</p>
+<ul>
+<li><strong>Superíndices y subíndices</strong>, con los elementos <code>&lt;sup&gt;</code> y <code>&lt;sub&gt;</code>: <code>km&lt;sup&gt;2&lt;/sup&gt;</code> se visualiza como km<sup>2</sup>, y <code>CO&lt;sub&gt;2&lt;/sub&gt;</code> como CO<sub>2</sub>.</li>
+<li><strong>Comentarios</strong>, con la marca <code>&lt;!-- ... --&gt;</code>: el texto que contiene no aparece en la salida, lo que permite dejar notas o recordatorios en la fuente del documento. Por ejemplo: <code>&lt;!-- Pendiente: actualizar la tabla --&gt;</code>.</li>
+<li><strong>Tamaño de las imágenes</strong>, con los atributos <code>height</code> y <code>width</code> del elemento <a href="https://developer.mozilla.org/es/docs/Web/HTML/Element/img">img</a>, que especifican la altura y el ancho en pixeles; si se usa solo uno, el otro se ajusta automáticamente para conservar las proporciones. Por ejemplo: <code>&lt;img src="jupiter.jpg" height="50" alt="Júpiter y sus satélites"&gt;</code>.</li>
+</ul>
+</section>
+<section id="otros-elementos" class="level3">
+<h3 class="anchored" data-anchor-id="otros-elementos">Otros elementos</h3>
+<ul>
+<li>Una <strong>línea horizontal</strong> se genera con una línea de tres o más guiones (<code>---</code>) o asteriscos (<code>***</code>), separada del texto por líneas en blanco.</li>
+<li>Para mostrar literalmente un carácter que Markdown interpretaría como marca, se antepone una barra invertida: <code>\*asteriscos visibles\*</code> se visualiza como *asteriscos visibles*.</li>
+<li>Los diagramas de este sitio web —como los de las lecciones de <a href="../../contenidos/i-introduccion-ciencia-datos-programacion/01-introduccion-ciencia-datos.html">introducción a la ciencia de datos</a> y de <a href="../../contenidos/i-introduccion-ciencia-datos-programacion/04-git-github.html">Git, GitHub y GitHub Pages</a>— se escriben dentro del propio Markdown, como bloques de código en el lenguaje de <a href="https://mermaid.js.org/">Mermaid</a>, una extensión que GitHub y Quarto convierten en diagramas.</li>
+</ul>
+<p><em>Ejercicios de esta sección: <a href="#ejercicios-sintaxis">ejercicios sobre la sintaxis</a>.</em></p>
+</section>
+
+<section id="resumen" class="level2">
+<h2 class="anchored" data-anchor-id="resumen">Resumen</h2>
+<ul>
+<li>Un <strong>lenguaje de marcado</strong> codifica la estructura, el estilo y la semántica de un documento mediante marcas intercaladas en el texto; <strong>Markdown</strong> es un lenguaje de marcado ligero, diseñado para que el documento sea legible aun en su forma original.</li>
+<li>Sus <strong>variantes</strong> extienden la especificación original; la sintaxis básica es común a las herramientas del curso: los documentos de GitHub (GFM) y los documentos de Quarto (Pandoc Markdown), como los de este sitio web.</li>
+<li>Las marcas principales cubren encabezados (<code>#</code>), negrita (<code>**</code>), itálica (<code>*</code>), listas (<code>1.</code>, <code>-</code>), enlaces (<code>[]()</code>), imágenes (<code>![]()</code>), citas (<code>&gt;</code>), código (<code>`</code>), tablas (<code>|</code>) y notación matemática (<code>$</code>).</li>
+<li>El <strong>HTML</strong> intercalado complementa a Markdown en lo que este no cubre, como superíndices y subíndices o el tamaño de las imágenes.</li>
+</ul>
+</section>
+<section id="ejercicios" class="level2">
+<h2 class="anchored" data-anchor-id="ejercicios">Ejercicios</h2>
+<p>Los ejercicios se agrupan según la sección del capítulo a la que corresponden; se recomienda realizarlos al concluir la sección respectiva.</p>
+<section id="ejercicios-lenguajes-marcado" class="level3">
+<h3 class="anchored" data-anchor-id="ejercicios-lenguajes-marcado">Lenguajes de marcado y variantes</h3>
+<ol type="1">
+<li>Este sitio web está escrito en Markdown, en documentos de Quarto. En el <a href="https://github.com/pf0953-programacionr/2026-ii">repositorio del curso en GitHub</a>, abra el archivo fuente de esta lección (<code>contenidos/i-introduccion-ciencia-datos-programacion/03-markdown.qmd</code>) con la vista <em>Raw</em> y compárelo con esta página: identifique al menos cinco marcas estudiadas en la lección y localice su salida.</li>
+</ol>
+</section>
+<section id="ejercicios-sintaxis" class="level3">
+<h3 class="anchored" data-anchor-id="ejercicios-sintaxis">Sintaxis</h3>
+<ol start="2" type="1">
+<li><p>En RStudio, cree un archivo con extensión <code>.md</code> (<em>File &gt; New File &gt; Markdown File</em>) y redacte en Markdown un documento de una página sobre un tema geográfico de su interés —idealmente, el que considera explorar en el proyecto del curso—. Active la vista previa (botón <strong>Preview</strong> o <code>Ctrl + Shift + K</code>) y verifique que el documento incluya, al menos: un título y dos encabezados de sección, negritas e itálicas, una lista, un enlace, una imagen remota, una tabla y un bloque de código (puede copiar el de esta lección). Escriba primero en el modo <em>Source</em>, para practicar la sintaxis, y pruebe luego el modo <em>Visual</em>, según se explica en la guía de <a href="../../contenidos/software/rstudio.html">RStudio</a>. Conserve el archivo: se usará en los ejercicios de la próxima lección.</p></li>
+<li><p>Agregue al documento anterior una expresión matemática propia de la geografía (ej. la densidad de población de un cantón, con valores reales) en su propio bloque, y un superíndice con HTML (ej. la extensión de Costa Rica: 51 100 km<sup>2</sup>). Verifique ambos en la vista previa.</p></li>
+</ol>
+</section>
+</section>
+<section id="referencias-bibliográficas" class="level2">
+<h2 class="anchored" data-anchor-id="referencias-bibliográficas">Referencias bibliográficas</h2>
+<p>GitHub. (s. f.). <em>Basic writing and formatting syntax</em>. GitHub Docs. Recuperado el 19 de agosto de 2026, de <a href="https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax" class="uri">https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax</a></p>
+<p>Gruber, J. (s. f.). <em>Markdown</em>. Daring Fireball. Recuperado el 19 de agosto de 2026, de <a href="https://daringfireball.net/projects/markdown/" class="uri">https://daringfireball.net/projects/markdown/</a></p>
+<p>LaTeX/Mathematics. (s. f.). En <em>Wikibooks</em>. Recuperado el 19 de agosto de 2026, de <a href="https://en.wikibooks.org/wiki/LaTeX/Mathematics" class="uri">https://en.wikibooks.org/wiki/LaTeX/Mathematics</a></p>
+<p>Markdown Guide. (s. f.). Recuperado el 19 de agosto de 2026, de <a href="https://www.markdownguide.org/" class="uri">https://www.markdownguide.org/</a></p>
+<p>Markdown Tutorial. (s. f.). Recuperado el 19 de agosto de 2026, de <a href="https://www.markdowntutorial.com/" class="uri">https://www.markdowntutorial.com/</a></p>
+<p>Quarto. (s. f.). <em>Markdown basics</em>. Recuperado el 19 de agosto de 2026, de <a href="https://quarto.org/docs/authoring/markdown-basics.html" class="uri">https://quarto.org/docs/authoring/markdown-basics.html</a></p>
+
+
+</section>
+
+ <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copiado");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copiado");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/pf0953-programacionr\.github\.io\/2026-ii\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+ <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>Los contenidos de este curso, a menos que se especifique de otra forma, se comparten mediante una <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.es">licencia de Creative Commons Reconocimiento-CompartirIgual 4.0 Internacional</a>.</p>
+</div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+</li></ul></td></tr></tbody></table></figure></section></section></main></div></body></html>
