@@ -31,6 +31,11 @@ website:
         contents:
           - contenidos/i-introduccion-ciencia-datos-programacion/01-introduccion-ciencia-datos.qmd
           - contenidos/i-introduccion-ciencia-datos-programacion/02-ejemplo-procesos-ciencia-datos.qmd
+          - contenidos/i-introduccion-ciencia-datos-programacion/03-markdown.qmd
+          - contenidos/i-introduccion-ciencia-datos-programacion/04-git-github.qmd
+      - section: "Software"
+        contents:
+          - contenidos/software/rstudio.qmd
   page-footer:
     center: |
       Los contenidos de este curso, a menos que se especifique de otra forma,
