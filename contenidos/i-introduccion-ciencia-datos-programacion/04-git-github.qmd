@@ -123,7 +123,7 @@ Si dos ramas —o dos personas— modifican las mismas líneas de un archivo, al
 
 En esta lección, Git se practica desde el navegador, a través de GitHub, que ejecuta las operaciones por nosotros. La línea de comandos y la integración de Git en [RStudio](../software/rstudio.qmd) —que permite clonar repositorios y realizar las operaciones esenciales desde la pestaña *Git*— se retomarán más adelante, cuando se trabaje con repositorios en la computadora local.
 
-Un buen mensaje de *commit* es breve y describe el cambio de forma específica ("Corrige la fórmula de densidad de población", no "cambios"). Como referencia, los mensajes del [repositorio de este curso](https://github.com/pf0953-programacionr/2026-ii) siguen una convención de ese tipo: en español y en tercera persona ("Agrega…", "Corrige…", "Actualiza…").
+Un buen mensaje de *commit* es breve y describe el cambio de forma específica ("Corrige la fórmula de densidad de población", no "cambios"). Como referencia, las convenciones que siguen los materiales de este curso están documentadas en el archivo [CONTRIBUTING](https://github.com/pf0953-programacionr/2026-ii/blob/main/CONTRIBUTING.md) de su repositorio.
 
 *Ejercicios de esta sección: [ejercicios sobre control de versiones, Git y GitHub](#ejercicios-github).*
 
@@ -170,7 +170,7 @@ Los ejercicios se agrupan según la sección del capítulo a la que corresponden
 
 1. En su cuenta de GitHub, cree un repositorio público llamado `practica-markdown`, marcando la opción *Add a README file*. Edite el `README.md` desde el navegador (ícono de lápiz), reemplace su contenido con el documento Markdown que elaboró en los [ejercicios de la lección anterior](03-markdown.qmd), escriba un mensaje de *commit* que describa el cambio y confírmelo (*Commit changes*). Verifique que el documento se muestre renderizado en la página principal del repositorio.
 2. Realice un segundo cambio —por ejemplo, agregue una sección con una tabla o corrija un texto— con su propio mensaje de *commit*. Abra el historial del archivo (*History*), compare las dos versiones y observe cómo se señalan las líneas agregadas y eliminadas. Abra también la vista *Raw* y compare la fuente Markdown con la versión renderizada.
-3. Observe Git "en producción" en el [repositorio de este curso](https://github.com/pf0953-programacionr/2026-ii): abra el historial del archivo de esta lección (`contenidos/i-introduccion-ciencia-datos-programacion/04-git-github.qmd`) y examine el diff de alguno de sus *commits*. Luego, en la pestaña *Pull requests* (filtro *Closed*), elija una solicitud de cambios fusionada e identifique la rama en que se preparó, los *commits* que la componen y el momento de la fusión. Compare los mensajes de *commit* que encuentre con la convención mencionada en la sección de Git.
+3. Observe Git "en producción" en el [repositorio de este curso](https://github.com/pf0953-programacionr/2026-ii): abra el historial del archivo de esta lección (`contenidos/i-introduccion-ciencia-datos-programacion/04-git-github.qmd`) y examine el diff de alguno de sus *commits*. Luego, en la pestaña *Pull requests* (filtro *Closed*), elija una solicitud de cambios fusionada e identifique la rama en que se preparó, los *commits* que la componen y el momento de la fusión. Compare los mensajes de *commit* que encuentre con las convenciones del archivo [CONTRIBUTING](https://github.com/pf0953-programacionr/2026-ii/blob/main/CONTRIBUTING.md).
 
 ### GitHub Pages {#ejercicios-pages}
 
