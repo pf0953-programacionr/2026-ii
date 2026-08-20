@@ -48,7 +48,7 @@ de Júpiter descubiertos en 1610 por
 Son los más grandes de los satélites de Júpiter,
 siendo visibles incluso con telescopios de baja potencia.
 
-![Júpiter y los satélites galileanos](img/jupiter-satelites-galileanos.jpg)
+![Júpiter y los satélites galileanos](https://upload.wikimedia.org/wikipedia/commons/f/fe/Jupiter_and_the_Galilean_Satellites.jpg)
 ```
 
 El documento se visualiza de la siguiente manera:
@@ -56,10 +56,10 @@ El documento se visualiza de la siguiente manera:
 <div style="border: 1px solid #ccc; border-radius: 6px; padding: 15px 20px; margin: 20px 0;">
   <p style="margin-top: 0;"><span style="font-size: 2em; font-weight: bold;">Los satélites galileanos</span></p>
   <p>Se llaman <strong>satélites galileanos</strong> los cuatro satélites de Júpiter descubiertos en 1610 por <a href="https://es.wikipedia.org/wiki/Galileo_Galilei">Galileo Galilei</a>: <em>Ío</em>, <em>Europa</em>, <em>Ganimedes</em> y <em>Calisto</em>. Son los más grandes de los satélites de Júpiter, siendo visibles incluso con telescopios de baja potencia.</p>
-  <img src="img/jupiter-satelites-galileanos.jpg" alt="Júpiter y los satélites galileanos" height="240">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/f/fe/Jupiter_and_the_Galilean_Satellites.jpg" alt="Júpiter y los satélites galileanos" height="240">
 </div>
 
-El contenido de este ejemplo está basado en el artículo [Satélite galileano](https://es.wikipedia.org/wiki/Sat%C3%A9lite_galileano) de Wikipedia; la imagen, tomada del mismo artículo, es un montaje de la misión Galileo (NASA/JPL/DLR, dominio público).
+El contenido de este ejemplo está basado en el artículo [Satélite galileano](https://es.wikipedia.org/wiki/Sat%C3%A9lite_galileano) de Wikipedia; la imagen, referenciada directamente desde [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Jupiter_and_the_Galilean_Satellites.jpg), es un montaje de la misión Galileo (NASA/JPL/DLR, dominio público).
 
 ## Sintaxis
 
@@ -232,14 +232,14 @@ Un enlace (hipervínculo) se define con paréntesis cuadrados (`[]`), que contie
         <td><a href="https://www.gutenberg.org/">Proyecto Gutenberg</a></td>
       </tr>
       <tr>
-        <td><code>![Júpiter y sus satélites](img/jupiter-satelites-galileanos.jpg)</code></td>
-        <td><img src="img/jupiter-satelites-galileanos.jpg" alt="Júpiter y sus satélites" height="120"></td>
+        <td><code>![Júpiter y sus satélites](https://upload.wikimedia.org/wikipedia/commons/f/fe/Jupiter_and_the_Galilean_Satellites.jpg)</code></td>
+        <td><img src="https://upload.wikimedia.org/wikipedia/commons/f/fe/Jupiter_and_the_Galilean_Satellites.jpg" alt="Júpiter y sus satélites" height="120"></td>
       </tr>
     </tbody>
     </table>
 </figure>
 
-La dirección de una imagen puede ser **local** —un archivo en la misma computadora que el documento, como `img/mapa.png`— o **remota** —un archivo en otra computadora, al que se accede mediante una URL—. En los repositorios del curso, las imágenes se guardan como archivos locales junto al documento que las usa.
+La dirección de una imagen puede ser **local** —un archivo en la misma computadora que el documento, como `img/mapa.png`— o **remota** —un archivo en otra computadora, al que se accede mediante una URL, como la imagen de Júpiter de los ejemplos, que se carga directamente desde Wikimedia Commons—. Una imagen local requiere que el archivo acompañe siempre al documento; una remota depende de que el sitio que la aloja se mantenga disponible.
 
 ### Citas textuales
 
