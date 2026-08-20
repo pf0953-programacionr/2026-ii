@@ -508,7 +508,7 @@ Salida
 </figure>
 </section>
 <section id="listas" class="level3">
-<h3 class="anchored">Listas</h3>
+<h3 class="anchored" data-anchor-id="listas">Listas</h3>
 <p>Las listas numeradas se definen con números seguidos de punto (<code>1.</code>, <code>2.</code>, <code>3.</code>, …) antes de cada elemento; las no numeradas, con guiones (<code>-</code>) o asteriscos (<code>*</code>). Un elemento se anida dentro de otro sangrándolo con espacios. Las listas deben separarse del párrafo anterior con una línea en blanco; de lo contrario, algunos renderizadores —como el de GitHub— las muestran como texto corrido, uno de los errores más frecuentes al empezar a usar Markdown. La tabla 3 muestra ambos tipos de lista.</p>
 <figure style="text-align: center; margin: 20px 0;" class="figure">
 <figcaption>
@@ -560,15 +560,15 @@ Otro elemento.
 Un elemento anidado.
 </li>
 </ul>
-<pre><code>        &lt;/li&gt;
-      &lt;/ul&gt;
-    &lt;/td&gt;
-  &lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;</code></pre>
-
+</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</figure>
 <p>En GFM, una lista no numerada se convierte en <strong>lista de tareas</strong> agregando corchetes después del guion: <code>- [ ]</code> marca una tarea pendiente y <code>- [x]</code> una completada. GitHub las muestra como casillas de verificación; son comunes en los archivos <code>README</code> y en el seguimiento de trabajo pendiente.</p>
-
+</section>
 <section id="enlaces-e-imágenes" class="level3">
 <h3 class="anchored" data-anchor-id="enlaces-e-imágenes">Enlaces e imágenes</h3>
 <p>Un enlace (hipervínculo) se define con paréntesis cuadrados (<code>[]</code>), que contienen el texto del enlace, seguidos de paréntesis redondos (<code>()</code>), que contienen la dirección del documento al que conduce. Una imagen usa la misma sintaxis precedida por un signo de admiración de cierre (<code>!</code>); los paréntesis cuadrados contienen entonces un texto alternativo, que se muestra cuando la imagen no puede desplegarse y que utilizan los lectores de pantalla para describirla, por lo que conviene redactarlo siempre. La tabla 4 muestra ambos elementos.</p>
@@ -612,8 +612,8 @@ Salida
 <section id="citas-textuales" class="level3">
 <h3 class="anchored" data-anchor-id="citas-textuales">Citas textuales</h3>
 <p>Se especifican con un símbolo de «mayor que» (<code>&gt;</code>) antes de cada línea.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode md code-with-copy"><code class="sourceCode markdown"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; Caminante, no hay camino,</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; se hace camino al andar.</span></span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode md code-with-copy"><code class="sourceCode markdown"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; Caminante, no hay camino,</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; se hace camino al andar.</span></span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <p>El texto anterior se visualiza así:</p>
 <blockquote class="blockquote">
 <p>Caminante, no hay camino, se hace camino al andar.</p>
@@ -622,25 +622,25 @@ Salida
 <section id="código" class="level3">
 <h3 class="anchored" data-anchor-id="código">Código</h3>
 <p>El código se distingue del resto del texto con <strong>acentos graves</strong> (<em>backticks</em>, <code>`</code>). Un fragmento dentro de un renglón se delimita con un acento grave a cada lado; por ejemplo, <code>`print()`</code> se visualiza como <code>print()</code>. Un <strong>bloque de código</strong> se delimita con líneas de tres acentos graves; en la primera puede indicarse el lenguaje, para que el código se muestre con resaltado de sintaxis:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode md code-with-copy"><code class="sourceCode markdown"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="in">```r</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>dias <span class="ot">&lt;-</span> <span class="dv">7</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>horas <span class="ot">&lt;-</span> dias <span class="sc">*</span> <span class="dv">24</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(horas)</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode md code-with-copy"><code class="sourceCode markdown"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="in">```r</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>dias <span class="ot">&lt;-</span> <span class="dv">7</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>horas <span class="ot">&lt;-</span> dias <span class="sc">*</span> <span class="dv">24</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(horas)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <p>El bloque anterior se visualiza así:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>dias <span class="ot">&lt;-</span> <span class="dv">7</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>horas <span class="ot">&lt;-</span> dias <span class="sc">*</span> <span class="dv">24</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(horas)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>dias <span class="ot">&lt;-</span> <span class="dv">7</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>horas <span class="ot">&lt;-</span> dias <span class="sc">*</span> <span class="dv">24</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(horas)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <p>El texto dentro de las marcas de código se muestra tal cual, sin interpretar otras marcas de Markdown: por eso este capítulo las usa para mostrar la sintaxis sin que se convierta en salida.</p>
 </section>
 <section id="tablas" class="level3">
 <h3 class="anchored" data-anchor-id="tablas">Tablas</h3>
 <p>Las tablas —una extensión de GFM— se construyen con barras verticales (<code>|</code>) que separan las columnas y una línea de guiones que separa el encabezado del resto de las filas (GitHub, s. f.):</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode md code-with-copy"><code class="sourceCode markdown"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Provincia <span class="pp">|</span> Capital  <span class="pp">|</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="pp">|-----------|----------|</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> San José  <span class="pp">|</span> San José <span class="pp">|</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Alajuela  <span class="pp">|</span> Alajuela <span class="pp">|</span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Cartago   <span class="pp">|</span> Cartago  <span class="pp">|</span></span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode md code-with-copy"><code class="sourceCode markdown"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Provincia <span class="pp">|</span> Capital  <span class="pp">|</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="pp">|-----------|----------|</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> San José  <span class="pp">|</span> San José <span class="pp">|</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Alajuela  <span class="pp">|</span> Alajuela <span class="pp">|</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Cartago   <span class="pp">|</span> Cartago  <span class="pp">|</span></span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <p>La tabla se visualiza de la siguiente manera:</p>
 <table class="caption-top table">
 <thead>
@@ -669,11 +669,11 @@ Salida
 <section id="notación-matemática" class="level3">
 <h3 class="anchored" data-anchor-id="notación-matemática">Notación matemática</h3>
 <p>Muchas variantes de Markdown —entre ellas las de GitHub y de Quarto (este sitio)— permiten escribir expresiones matemáticas con la sintaxis de <a href="https://www.latex-project.org/">LaTeX</a>, delimitadas con un símbolo de dólar (<code>$</code>) si van dentro de un renglón o con dos (<code>$$</code>) si van en su propio bloque. Por ejemplo, la sintaxis:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode md code-with-copy"><code class="sourceCode markdown"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="an">La densidad de población se calcula como:</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>$$d = \frac{P}{A}$$</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>donde $P$ es la población y $A$ el área.</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode md code-with-copy"><code class="sourceCode markdown"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="an">La densidad de población se calcula como:</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>$$d = \frac{P}{A}$$</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>donde $P$ es la población y $A$ el área.</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <p>se visualiza así:</p>
 <p>La densidad de población se calcula como:</p>
 <p><span class="math display">\[d = \frac{P}{A}\]</span></p>
@@ -698,7 +698,7 @@ Salida
 </ul>
 <p><em>Ejercicios de esta sección: <a href="#ejercicios-sintaxis">ejercicios sobre la sintaxis</a>.</em></p>
 </section>
-
+</section>
 <section id="resumen" class="level2">
 <h2 class="anchored" data-anchor-id="resumen">Resumen</h2>
 <ul>
@@ -737,7 +737,7 @@ Salida
 
 </section>
 
- <!-- /main -->
+</main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";
@@ -1138,7 +1138,7 @@ Salida
     }
   });
   </script>
- <!-- /content -->
+</div> <!-- /content -->
 <footer class="footer">
   <div class="nav-footer">
     <div class="nav-footer-left">
@@ -1156,4 +1156,4 @@ Salida
 
 
 
-</li></ul></td></tr></tbody></table></figure></section></section></main></div></body></html>
+</body></html>

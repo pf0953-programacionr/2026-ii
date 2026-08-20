@@ -199,11 +199,7 @@ Las listas numeradas se definen con números seguidos de punto (`1.`, `2.`, `3.`
         <td style="text-align: left;">
           <ul>
             <li>Un elemento.</li>
-            <li>Otro elemento.
-              <ul>
-                <li>Un elemento anidado.</li>
-              </ul>
-            </li>
+            <li>Otro elemento.<ul><li>Un elemento anidado.</li></ul></li>
           </ul>
         </td>
       </tr>
