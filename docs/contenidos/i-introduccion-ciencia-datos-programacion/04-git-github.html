@@ -42,7 +42,7 @@ ul.task-list li input[type="checkbox"] {
 <link href="../../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-6ac05ee021531a7a20f29fe5a12dad4c.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-fc9b44f92aa3007febb5d05fd91de1c3.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -394,7 +394,7 @@ Muestra el historial de <em>commits</em>.
 </p>
 <p>Si dos ramas —o dos personas— modifican las mismas líneas de un archivo, al fusionar se produce un <strong>conflicto</strong>: Git no decide por su cuenta cuál versión conservar, sino que marca en el archivo los fragmentos en disputa para que alguien los revise, elija o combine las versiones y confirme el resultado. Los conflictos no dañan el repositorio; son la forma en que el sistema pide criterio humano.</p>
 <p>En esta lección, Git se practica desde el navegador, a través de GitHub, que ejecuta las operaciones por nosotros. La línea de comandos y la integración de Git en <a href="../../contenidos/software/rstudio.html">RStudio</a> —que permite clonar repositorios y realizar las operaciones esenciales desde la pestaña <em>Git</em>— se retomarán más adelante, cuando se trabaje con repositorios en la computadora local.</p>
-<p>Un buen mensaje de <em>commit</em> es breve y describe el cambio de forma específica (“Corrige la fórmula de densidad de población”, no “cambios”). Como referencia, los mensajes del <a href="https://github.com/pf0953-programacionr/2026-ii">repositorio de este curso</a> siguen una convención de ese tipo: en español y en tercera persona (“Agrega…”, “Corrige…”, “Actualiza…”).</p>
+<p>Un buen mensaje de <em>commit</em> es breve y describe el cambio de forma específica (“Corrige la fórmula de densidad de población”, no “cambios”). Como referencia, las convenciones que siguen los materiales de este curso están documentadas en el archivo <a href="https://github.com/pf0953-programacionr/2026-ii/blob/main/CONTRIBUTING.md">CONTRIBUTING</a> de su repositorio.</p>
 <p><em>Ejercicios de esta sección: <a href="#ejercicios-github">ejercicios sobre control de versiones, Git y GitHub</a>.</em></p>
 </section>
 <section id="github" class="level2">
@@ -431,7 +431,7 @@ Muestra el historial de <em>commits</em>.
 <ol type="1">
 <li>En su cuenta de GitHub, cree un repositorio público llamado <code>practica-markdown</code>, marcando la opción <em>Add a README file</em>. Edite el <code>README.md</code> desde el navegador (ícono de lápiz), reemplace su contenido con el documento Markdown que elaboró en los <a href="../../contenidos/i-introduccion-ciencia-datos-programacion/03-markdown.html">ejercicios de la lección anterior</a>, escriba un mensaje de <em>commit</em> que describa el cambio y confírmelo (<em>Commit changes</em>). Verifique que el documento se muestre renderizado en la página principal del repositorio.</li>
 <li>Realice un segundo cambio —por ejemplo, agregue una sección con una tabla o corrija un texto— con su propio mensaje de <em>commit</em>. Abra el historial del archivo (<em>History</em>), compare las dos versiones y observe cómo se señalan las líneas agregadas y eliminadas. Abra también la vista <em>Raw</em> y compare la fuente Markdown con la versión renderizada.</li>
-<li>Observe Git “en producción” en el <a href="https://github.com/pf0953-programacionr/2026-ii">repositorio de este curso</a>: abra el historial del archivo de esta lección (<code>contenidos/i-introduccion-ciencia-datos-programacion/04-git-github.qmd</code>) y examine el diff de alguno de sus <em>commits</em>. Luego, en la pestaña <em>Pull requests</em> (filtro <em>Closed</em>), elija una solicitud de cambios fusionada e identifique la rama en que se preparó, los <em>commits</em> que la componen y el momento de la fusión. Compare los mensajes de <em>commit</em> que encuentre con la convención mencionada en la sección de Git.</li>
+<li>Observe Git “en producción” en el <a href="https://github.com/pf0953-programacionr/2026-ii">repositorio de este curso</a>: abra el historial del archivo de esta lección (<code>contenidos/i-introduccion-ciencia-datos-programacion/04-git-github.qmd</code>) y examine el diff de alguno de sus <em>commits</em>. Luego, en la pestaña <em>Pull requests</em> (filtro <em>Closed</em>), elija una solicitud de cambios fusionada e identifique la rama en que se preparó, los <em>commits</em> que la componen y el momento de la fusión. Compare los mensajes de <em>commit</em> que encuentre con las convenciones del archivo <a href="https://github.com/pf0953-programacionr/2026-ii/blob/main/CONTRIBUTING.md">CONTRIBUTING</a>.</li>
 </ol>
 </section>
 <section id="ejercicios-pages" class="level3">
