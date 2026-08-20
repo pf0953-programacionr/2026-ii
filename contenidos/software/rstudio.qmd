@@ -14,7 +14,7 @@ RStudio requiere que R esté instalado previamente, por lo que la instalación c
     - **Windows**: haga clic en *Download R for Windows*, luego en *base* y descargue el instalador. Ejecútelo y acepte las opciones predeterminadas.
     - **macOS**: haga clic en *Download R for macOS* y descargue el paquete correspondiente a su procesador (Apple Silicon o Intel). Ábralo y siga las instrucciones.
     - **Linux**: siga las instrucciones para su distribución.
-2. **Instale RStudio Desktop** desde [posit.co/download/rstudio-desktop](https://posit.co/download/rstudio-desktop/) (la página detecta el sistema operativo y ofrece el instalador apropiado):
+2. **Instale RStudio Desktop** desde la sección [*Install Links*](https://docs.posit.co/ide/user/#install-links) de la guía de usuario de RStudio: haga clic en *RStudio Desktop download* y, en la tabla de descargas, elija el instalador correspondiente a su sistema operativo:
     - **Windows**: ejecute el instalador y siga las instrucciones.
     - **macOS**: abra el archivo descargado y arrastre la aplicación **RStudio** a la carpeta **Applications**.
     - **Linux**: descargue el paquete `.deb` o `.rpm` según su distribución e instálelo con el gestor de paquetes.
