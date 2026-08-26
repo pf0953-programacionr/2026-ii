@@ -1,0 +1,39 @@
+/*-- scss:defaults --*/
+
+// Tema oscuro: se aplica sobre cosmo + estilos.scss y solo redefine la
+// paleta. Los colores de la marca se aclaran para que contrasten sobre
+// el fondo oscuro (los mismos de logo-oscuro.svg).
+$ucr-azul: #5fa8e6;
+$sep-verde: #7fb069;
+$titulos-secundarios: lighten($ucr-azul, 8%);
+
+$body-bg: #1b1f23;
+$body-color: #e8eef4;
+$headings-color: $ucr-azul;
+$border-color: #3a4149;
+
+$input-bg: #2b3137;
+$input-color: $body-color;
+$input-border-color: $border-color;
+
+$code-bg: #2b3137;
+$code-color: #f1a7c0;
+$code-block-bg: #23282d;
+$code-block-border-left: #3a4149;
+
+$table-color: $body-color;
+$table-border-color: $border-color;
+$table-striped-bg: #23282d;
+
+$popover-bg: #2b3137;
+$dropdown-bg: #2b3137;
+$dropdown-link-color: $body-color;
+$dropdown-link-hover-bg: #3a4149;
+
+$sidebar-bg: #23282d;
+$sidebar-fg: $body-color;
+$toc-color: $ucr-azul;
+$footer-bg: #23282d;
+$footer-fg: #afbec9;
+
+$callout-color-note: $ucr-azul;

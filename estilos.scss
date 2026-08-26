@@ -1,12 +1,15 @@
 /*-- scss:defaults --*/
 
 // Colores inspirados en la identidad de la UCR (azul) y del SEP (verde).
-$ucr-azul: #005da4;
-$sep-verde: #4f7d3a;
+// Se declaran con !default para que estilos-oscuro.scss pueda redefinirlos
+// (Quarto da precedencia a los archivos posteriores de la lista de temas).
+$ucr-azul: #005da4 !default;
+$sep-verde: #4f7d3a !default;
+$titulos-secundarios: darken($ucr-azul, 10%) !default;
 
-$primary: $ucr-azul;
-$link-color: $ucr-azul;
-$navbar-bg: $ucr-azul;
+$primary: $ucr-azul !default;
+$link-color: $ucr-azul !default;
+$navbar-bg: $ucr-azul !default;
 
 /*-- scss:rules --*/
 
@@ -56,7 +59,7 @@ h1, h2 {
 }
 
 h3, h4, h5 {
-  color: darken($ucr-azul, 10%);
+  color: $titulos-secundarios;
 }
 
 // Pie de página
