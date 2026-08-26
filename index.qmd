@@ -13,7 +13,7 @@ El curso se imparte en el [Programa de Posgrado en Geografía](https://www.sep.u
 
 El curso es completamente virtual: las lecciones se imparten de manera sincrónica por videoconferencia, en el horario del curso. Los contenidos y los recursos relacionados se comparten en este sitio web, así como en la plataforma [Mediación Virtual](https://mv.mediacionvirtual.ucr.ac.cr/course/view.php?id=16311) de la Universidad de Costa Rica, en la que también se publican los enlaces a las sesiones por videoconferencia.
 
-El [programa del curso](https://github.com/pf0953-programacionr/2026-ii/blob/main/programa/pf0953-programacionr-g001-2026-ii.pdf) detalla los objetivos, los contenidos, la metodología, la evaluación y la bibliografía.
+El [programa del curso](programa/programa.md) detalla los objetivos, los contenidos, la metodología, la evaluación y la bibliografía; también está disponible su [versión oficial en PDF](https://github.com/pf0953-programacionr/2026-ii/blob/main/programa/pf0953-programacionr-g001-2026-ii.pdf).
 
 Si tiene alguna pregunta o comentario sobre este curso, por favor contacte a:
 
