@@ -21,18 +21,24 @@ website:
   repo-url: https://github.com/pf0953-programacionr/2026-ii
   repo-actions: [source, edit]
   favicon: favicon.ico
-  search:
-    location: sidebar
-    type: textbox
-  sidebar:
-    style: docked
-    # El logo horizontal ya incluye el nombre del curso (ver marca/), por lo
-    # que se omite el título de la barra lateral.
+  # Cabecera como la del sitio de GF-0657: barra superior con el logo del
+  # curso a la izquierda (el logo horizontal ya incluye el nombre, ver
+  # marca/) y el buscador y el conmutador claro/oscuro a la derecha; la
+  # barra lateral con los contenidos va debajo.
+  navbar:
     logo:
       light: logo.svg
       dark: logo-oscuro.svg
     logo-alt: "PF-0953 Programación en R · 2026-II"
     title: false
+    search: true
+  search:
+    location: navbar
+    type: textbox
+  sidebar:
+    style: docked
+    title: false
+    search: false
     contents:
       - href: index.qmd
         text: Inicio
