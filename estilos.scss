@@ -26,6 +26,45 @@ $navbar-bg: $ucr-azul !default;
   padding: 0.25rem 0;
 }
 
+// Conmutador claro/oscuro: botón circular con ícono de sol (modo claro) o
+// de luna (modo oscuro), como en el sitio de GF-0657, en lugar del
+// interruptor predeterminado de Quarto. Usa la fuente de Bootstrap Icons.
+.sidebar-tools-main {
+  margin-top: 0.5rem;
+}
+
+a.quarto-color-scheme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  padding: 0;
+  border: 1px solid $border-color;
+  border-radius: 50%;
+  background-color: $body-bg;
+  color: $body-color;
+
+  &:hover {
+    border-color: $ucr-azul;
+    color: $ucr-azul;
+  }
+
+  .bi::before {
+    background-image: none !important;
+    height: auto;
+    width: auto;
+    font-family: "bootstrap-icons";
+    font-size: 1.25rem;
+    line-height: 1;
+    content: "\f5a2"; // bi-sun
+  }
+
+  &.alternate .bi::before {
+    content: "\f496"; // bi-moon-stars
+  }
+}
+
 // Logos institucionales de la página principal
 .logos-institucionales {
   display: flex;
