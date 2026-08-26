@@ -91,12 +91,17 @@ a.quarto-color-scheme-toggle {
 
 // Logos institucionales de la página principal
 .logos-institucionales {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-around;
-  gap: 1.5rem 3rem;
-  margin: 1.5rem 0 2rem;
+  margin: 0.5rem 0 1rem;
+
+  // Las imágenes van dentro de un mismo párrafo, que es el contenedor flex
+  p {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem 7rem;
+    margin: 0;
+  }
 
   img {
     background-color: #ffffff;
