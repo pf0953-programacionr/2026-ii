@@ -1,0 +1,14 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <title>PF-0953 Programación en R</title>
+  <rect width="512" height="512" rx="96" fill="#F4F8FB"/>
+  <!-- Brújula (anillo verde SEP, marcas cardinales y N) con una R en azul UCR
+       cuya pata es la aguja, con la punta roja -->
+  <g>
+    <circle cx="256" cy="276" r="164" fill="none" stroke="#4F7D3A" stroke-width="12"/>
+    <path d="M256,96 V128 M256,424 V456 M76,276 H108 M404,276 H436" stroke="#4F7D3A" stroke-width="12" stroke-linecap="round"/>
+    <text x="256" y="78" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-weight="bold" font-size="58" fill="#14324F">N</text>
+    <path d="M196,372 V180 H256 A50,50 0 0 1 256,280 H196" fill="none" stroke="#005DA4" stroke-width="40" stroke-linecap="round" stroke-linejoin="round"/>
+    <polygon points="223.4,294.9 256.6,269.1 306.5,356.8 295.9,365" fill="#005DA4"/>
+    <polygon points="295.9,365 306.5,356.8 330,398" fill="#E4572E"/>
+  </g>
+</svg>

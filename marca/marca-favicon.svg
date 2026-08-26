@@ -1,0 +1,8 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <title>PF-0953 Programación en R</title>
+  <g transform="translate(256,256) scale(1.9) translate(-253,-279)">
+    <path d="M196,372 V180 H256 A50,50 0 0 1 256,280 H196" fill="none" stroke="#005DA4" stroke-width="40" stroke-linecap="round" stroke-linejoin="round"/>
+    <polygon points="223.4,294.9 256.6,269.1 306.5,356.8 295.9,365" fill="#005DA4"/>
+    <polygon points="295.9,365 306.5,356.8 330,398" fill="#E4572E"/>
+  </g>
+</svg>
