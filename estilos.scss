@@ -110,8 +110,9 @@ a.quarto-color-scheme-toggle {
   }
 }
 
-// Títulos de sección de la barra lateral
-.sidebar-item-section > .sidebar-item-container > a {
+// Elementos de primer nivel de la barra lateral (secciones y enlaces
+// sueltos, como «Programa del curso») en negrita
+.sidebar-menu-container > ul > li.sidebar-item > .sidebar-item-container > a {
   font-weight: 600;
 }
 
