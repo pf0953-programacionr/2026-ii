@@ -27,13 +27,14 @@ $navbar-bg: $ucr-azul !default;
 }
 
 // Conmutador claro/oscuro: botón circular con ícono de sol (modo claro) o
-// de luna (modo oscuro), como en el sitio de GF-0657, en lugar del
-// interruptor predeterminado de Quarto. Usa la fuente de Bootstrap Icons.
-.sidebar-tools-main {
-  margin-top: 0.5rem;
-}
-
+// de luna (modo oscuro), fijo en la esquina superior derecha de la ventana,
+// como en el sitio de GF-0657, en lugar del interruptor predeterminado de
+// Quarto (que va en la barra lateral). Usa la fuente de Bootstrap Icons.
 a.quarto-color-scheme-toggle {
+  position: fixed;
+  top: 0.75rem;
+  right: 1.25rem;
+  z-index: 1030;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -44,6 +45,13 @@ a.quarto-color-scheme-toggle {
   border-radius: 50%;
   background-color: $body-bg;
   color: $body-color;
+
+  // En pantallas pequeñas la barra lateral se pliega y el botón vuelve a
+  // su lugar dentro de ella, para no tapar la cabecera móvil.
+  @media (max-width: 991.98px) {
+    position: static;
+    margin: 0.5rem 0;
+  }
 
   &:hover {
     border-color: $ucr-azul;
