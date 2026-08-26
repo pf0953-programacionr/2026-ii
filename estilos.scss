@@ -9,7 +9,11 @@ $titulos-secundarios: darken($ucr-azul, 10%) !default;
 
 $primary: $ucr-azul !default;
 $link-color: $ucr-azul !default;
-$navbar-bg: $ucr-azul !default;
+
+// Barra superior del mismo color que el fondo de la página (como en
+// GF-0657); estilos-oscuro.scss la redefine para el tema oscuro.
+$navbar-bg: #ffffff !default;
+$navbar-fg: #212529 !default;
 
 /*-- scss:rules --*/
 
@@ -19,21 +23,41 @@ $navbar-bg: $ucr-azul !default;
   font-weight: 600;
 }
 
-// Logo del curso en la barra lateral (logo.svg, generado a partir de marca/)
-.sidebar-logo {
-  width: 100%;
-  max-width: 100%;
-  padding: 0.25rem 0;
+// Barra superior: borde inferior y logo del curso más grande (Quarto lo
+// limita a 24 px de alto).
+.navbar {
+  border-bottom: 1px solid $border-color;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+
+  .navbar-logo {
+    max-height: 52px;
+    padding-right: 0;
+  }
+
+  .navbar-brand {
+    padding: 0;
+  }
+
+  // Buscador y conmutador juntos a la derecha, en ese orden (Quarto pone
+  // el conmutador antes del buscador y le da margen automático).
+  .navbar-container > #quarto-search {
+    order: 4;
+    margin-left: auto;
+  }
+
+  .navbar-container > .quarto-navbar-tools.tools-end {
+    order: 5;
+    margin-left: 0.75rem !important;
+  }
 }
 
-// Conmutador claro/oscuro: botón circular con ícono de sol (modo claro) o
-// de luna (modo oscuro), como en el sitio de GF-0657, en lugar del
-// interruptor predeterminado de Quarto. Usa la fuente de Bootstrap Icons.
-.sidebar-tools-main {
-  margin-top: 0.5rem;
-}
-
+// Conmutador claro/oscuro en la barra superior: botón circular con ícono
+// de sol (modo claro) o de luna (modo oscuro), como en el sitio de
+// GF-0657, en lugar del interruptor predeterminado de Quarto. Usa la
+// fuente de Bootstrap Icons.
 a.quarto-color-scheme-toggle {
+  margin-left: 0.75rem;
   display: inline-flex;
   align-items: center;
   justify-content: center;
