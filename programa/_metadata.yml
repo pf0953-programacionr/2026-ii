@@ -1,0 +1,6 @@
+# Metadatos de Quarto para programa.md como página del sitio web (el
+# archivo se mantiene sin encabezado YAML porque también es la fuente
+# del DOCX/PDF que genera generar.sh). pagetitle fija el <title> del HTML
+# sin agregar un bloque de título: el propio documento ya empieza con
+# el encabezado "PF-0953 Programación en R".
+pagetitle: "Programa del curso"

@@ -6,6 +6,7 @@ project:
   output-dir: docs
   render:
     - index.qmd
+    - programa/programa.md
     - contenidos/
 
 # El código R se ejecuta una sola vez y los resultados se congelan
@@ -40,8 +41,8 @@ website:
     title: false
     search: false
     contents:
-      - href: index.qmd
-        text: Inicio
+      - href: programa/programa.md
+        text: Programa del curso
       - section: "I. Introducción a la ciencia de datos y a la programación de computadoras"
         contents:
           - contenidos/i-introduccion-ciencia-datos-programacion/01-introduccion-ciencia-datos.qmd
