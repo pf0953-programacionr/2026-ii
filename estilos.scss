@@ -16,6 +16,29 @@ $navbar-bg: $ucr-azul;
   font-weight: 600;
 }
 
+// Logo del curso en la barra lateral (logo.svg, generado a partir de marca/)
+.sidebar-logo {
+  width: 100%;
+  max-width: 100%;
+  padding: 0.25rem 0;
+}
+
+// Logos institucionales de la página principal
+.logos-institucionales {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-around;
+  gap: 1.5rem 3rem;
+  margin: 1.5rem 0 2rem;
+
+  img {
+    background-color: #ffffff;
+    padding: 10px 18px;
+    border-radius: 8px;
+  }
+}
+
 // Títulos de sección de la barra lateral
 .sidebar-item-section > .sidebar-item-container > a {
   font-weight: 600;
