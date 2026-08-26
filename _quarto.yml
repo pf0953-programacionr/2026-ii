@@ -28,7 +28,9 @@ website:
     style: docked
     # El logo horizontal ya incluye el nombre del curso (ver marca/), por lo
     # que se omite el título de la barra lateral.
-    logo: logo.svg
+    logo:
+      light: logo.svg
+      dark: logo-oscuro.svg
     logo-alt: "PF-0953 Programación en R · 2026-II"
     title: false
     contents:
@@ -52,9 +54,16 @@ website:
 
 format:
   html:
+    # Tema claro (predeterminado) y oscuro; el conmutador aparece en la
+    # barra lateral.
     theme:
-      - cosmo
-      - estilos.scss
+      light:
+        - cosmo
+        - estilos.scss
+      dark:
+        - cosmo
+        - estilos.scss
+        - estilos-oscuro.scss
     toc: true
     toc-title: "En esta página"
     code-copy: true
