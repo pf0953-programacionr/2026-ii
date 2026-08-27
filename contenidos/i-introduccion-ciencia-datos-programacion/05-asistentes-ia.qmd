@@ -70,7 +70,7 @@ Los asistentes de programación se presentan en tres modalidades principales, qu
       </tr>
       <tr>
         <td>Asistentes integrados en editores de código</td>
-        <td><a href="https://github.com/features/copilot">GitHub Copilot</a> en <a href="../software/rstudio.qmd">RStudio</a> y en otros editores</td>
+        <td><a href="https://github.com/features/copilot">GitHub Copilot</a> en <a href="../software/r-rstudio.qmd">RStudio</a> y en otros editores</td>
         <td>Autocompletado y chat dentro del editor, con acceso al código en el que se trabaja.</td>
       </tr>
       <tr>
@@ -160,7 +160,7 @@ Los ejercicios se agrupan según la sección del capítulo a la que corresponden
 
 4. Este ejercicio practica el ciclo completo de uso responsable: generar, comprender, verificar y criticar.
     - Pida a un asistente un programa corto en R que calcule la densidad de población de un cantón a partir de dos variables, `poblacion` y `area`, y muestre el resultado.
-    - Ejecute el programa generado en la consola de [RStudio](../software/rstudio.qmd) —instalado en la lección de [Markdown](03-markdown.qmd)— o en Posit Cloud, con valores reales de un cantón, y verifique que el resultado sea correcto.
+    - Ejecute el programa generado en la consola de [RStudio](../software/r-rstudio.qmd) —instalado en la lección de [Markdown](03-markdown.qmd)— o en Posit Cloud, con valores reales de un cantón, y verifique que el resultado sea correcto.
     - Pida al asistente que explique el programa línea por línea. Anote los elementos del lenguaje que reconozca: R se empieza a estudiar formalmente la próxima semana y podrá contrastar entonces estas explicaciones.
     - Pregunte al asistente si el programa tiene errores o limitaciones (ej. ¿qué sucede si `area` es cero?) y evalúe críticamente la respuesta.
 

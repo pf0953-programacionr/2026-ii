@@ -6,7 +6,7 @@ title: El lenguaje de marcado Markdown
 
 ### Tutoriales
 
-Antes de la clase, complete el siguiente tutorial interactivo, que se realiza directamente en el navegador y practica las marcas principales de Markdown. Además, instale el lenguaje R y el editor RStudio, siguiendo la guía de [RStudio](../software/rstudio.qmd) de la sección de software.
+Antes de la clase, complete el siguiente tutorial interactivo, que se realiza directamente en el navegador y practica las marcas principales de Markdown. Además, instale el lenguaje R y el editor RStudio, siguiendo la guía de [R y RStudio](../software/r-rstudio.qmd) de la sección de software.
 
 Markdown Tutorial. (s. f.). Recuperado el 19 de agosto de 2026, de <https://www.markdowntutorial.com/>
 
@@ -350,7 +350,7 @@ Los ejercicios se agrupan según la sección del capítulo a la que corresponden
 
 ### Sintaxis {#ejercicios-sintaxis}
 
-2. En RStudio, cree un archivo con extensión `.md` (*File > New File > Markdown File*) y redacte en Markdown un documento de una página sobre un tema geográfico de su interés —idealmente, el que considera explorar en el proyecto del curso—. Active la vista previa (botón **Preview** o `Ctrl + Shift + K`) y verifique que el documento incluya, al menos: un título y dos encabezados de sección, negritas e itálicas, una lista, un enlace, una imagen remota, una tabla y un bloque de código (puede copiar el de esta lección). Escriba primero en el modo *Source*, para practicar la sintaxis, y pruebe luego el modo *Visual*, según se explica en la guía de [RStudio](../software/rstudio.qmd). Conserve el archivo: se usará en los ejercicios de la próxima lección.
+2. En RStudio, cree un archivo con extensión `.md` (*File > New File > Markdown File*) y redacte en Markdown un documento de una página sobre un tema geográfico de su interés —idealmente, el que considera explorar en el proyecto del curso—. Active la vista previa (botón **Preview** o `Ctrl + Shift + K`) y verifique que el documento incluya, al menos: un título y dos encabezados de sección, negritas e itálicas, una lista, un enlace, una imagen remota, una tabla y un bloque de código (puede copiar el de esta lección). Escriba primero en el modo *Source*, para practicar la sintaxis, y pruebe luego el modo *Visual*, según se explica en la guía de [R y RStudio](../software/r-rstudio.qmd). Conserve el archivo: se usará en los ejercicios de la próxima lección.
 
 3. Agregue al documento anterior una expresión matemática propia de la geografía (ej. la densidad de población de un cantón, con valores reales) en su propio bloque, y un superíndice con HTML (ej. la extensión de Costa Rica: 51 100 km<sup>2</sup>). Verifique ambos en la vista previa.
 
