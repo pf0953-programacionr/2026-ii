@@ -50,6 +50,10 @@ website:
           - contenidos/i-introduccion-ciencia-datos-programacion/03-markdown.qmd
           - contenidos/i-introduccion-ciencia-datos-programacion/04-git-github.qmd
           - contenidos/i-introduccion-ciencia-datos-programacion/05-asistentes-ia.qmd
+      - section: "II. El lenguaje de programación R"
+        contents:
+          - contenidos/ii-lenguaje-programacion-r/06-introduccion-r.qmd
+          - contenidos/ii-lenguaje-programacion-r/07-fundamentos-r-i.qmd
       - section: "Software"
         contents:
           - contenidos/software/r-rstudio.qmd

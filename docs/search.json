@@ -99,6 +99,171 @@
     ]
   },
   {
+    "objectID": "contenidos/ii-lenguaje-programacion-r/07-fundamentos-r-i.html",
+    "href": "contenidos/ii-lenguaje-programacion-r/07-fundamentos-r-i.html",
+    "title": "Fundamentos de R I: objetos, vectores y data frames",
+    "section": "",
+    "text": "Antes de la clase, revise las siguientes lecturas. La primera es la lectura obligatoria de esta semana según el programa del curso; si dispone de poco tiempo, concéntrese en los capítulos 1, 2, 4 y 5, que corresponden a los temas de este capítulo. La segunda es breve y presenta la forma de trabajar en la consola y en los programas de R.\nGrolemund, G. (2014). Hands-on programming with R: Write your own functions and simulations (capítulos 1 al 8). O’Reilly Media. https://rstudio-education.github.io/hopr/\nWickham, H., Çetinkaya-Rundel, M., y Grolemund, G. (2023). Workflow: Basics. En R for data science: Import, tidy, transform, visualize, and model data (2.ª ed.). O’Reilly Media. https://r4ds.hadley.nz/workflow-basics.html\n\n\n\nTenga a mano el proyecto pf0953 y el programa introduccion.R creados en los ejercicios del capítulo de introducción a R: los ejercicios de este capítulo continúan ahí. Elija también un cantón de Costa Rica —idealmente el relacionado con el tema que considera para su proyecto—, que usará como ejemplo propio a lo largo de la sección.",
+    "crumbs": [
+      "II. El lenguaje de programación R",
+      "Fundamentos de R I: objetos, vectores y data frames"
+    ]
+  },
+  {
+    "objectID": "contenidos/ii-lenguaje-programacion-r/07-fundamentos-r-i.html#trabajo-previo",
+    "href": "contenidos/ii-lenguaje-programacion-r/07-fundamentos-r-i.html#trabajo-previo",
+    "title": "Fundamentos de R I: objetos, vectores y data frames",
+    "section": "",
+    "text": "Antes de la clase, revise las siguientes lecturas. La primera es la lectura obligatoria de esta semana según el programa del curso; si dispone de poco tiempo, concéntrese en los capítulos 1, 2, 4 y 5, que corresponden a los temas de este capítulo. La segunda es breve y presenta la forma de trabajar en la consola y en los programas de R.\nGrolemund, G. (2014). Hands-on programming with R: Write your own functions and simulations (capítulos 1 al 8). O’Reilly Media. https://rstudio-education.github.io/hopr/\nWickham, H., Çetinkaya-Rundel, M., y Grolemund, G. (2023). Workflow: Basics. En R for data science: Import, tidy, transform, visualize, and model data (2.ª ed.). O’Reilly Media. https://r4ds.hadley.nz/workflow-basics.html\n\n\n\nTenga a mano el proyecto pf0953 y el programa introduccion.R creados en los ejercicios del capítulo de introducción a R: los ejercicios de este capítulo continúan ahí. Elija también un cantón de Costa Rica —idealmente el relacionado con el tema que considera para su proyecto—, que usará como ejemplo propio a lo largo de la sección.",
+    "crumbs": [
+      "II. El lenguaje de programación R",
+      "Fundamentos de R I: objetos, vectores y data frames"
+    ]
+  },
+  {
+    "objectID": "contenidos/ii-lenguaje-programacion-r/07-fundamentos-r-i.html#introducción",
+    "href": "contenidos/ii-lenguaje-programacion-r/07-fundamentos-r-i.html#introducción",
+    "title": "Fundamentos de R I: objetos, vectores y data frames",
+    "section": "Introducción",
+    "text": "Introducción\nEste capítulo abre la serie Fundamentos de R, que continúa en la parte II con los condicionales, los ciclos y las funciones definidas por el usuario. Aquí se presentan los elementos con los que se construye cualquier programa en R: las expresiones que se escriben en la consola, los objetos que guardan valores, las funciones y los paquetes, los tipos de datos y, sobre todo, las estructuras que los organizan: los vectores —la unidad básica de R— y los data frames, las tablas de datos con las que se trabaja durante el resto del curso.\nComo hilo conductor se usan datos reales de Costa Rica: la población y la extensión de sus siete provincias y de sus 84 cantones, según la Estimación de Población y Vivienda 2022 del Instituto Nacional de Estadística y Censos (INEC) (INEC, 2023). Se recomienda ejecutar cada bloque de código en RStudio, a medida que se lee, y experimentar modificándolo.",
+    "crumbs": [
+      "II. El lenguaje de programación R",
+      "Fundamentos de R I: objetos, vectores y data frames"
+    ]
+  },
+  {
+    "objectID": "contenidos/ii-lenguaje-programacion-r/07-fundamentos-r-i.html#r-como-calculadora",
+    "href": "contenidos/ii-lenguaje-programacion-r/07-fundamentos-r-i.html#r-como-calculadora",
+    "title": "Fundamentos de R I: objetos, vectores y data frames",
+    "section": "R como calculadora",
+    "text": "R como calculadora\nLa forma más simple de usar R es escribir una expresión en la consola —el panel inferior izquierdo de RStudio— y presionar Enter: R la evalúa y muestra el resultado.\n\n2 + 3\n\n[1] 5\n\n352381 / 44.62\n\n[1] 7897.378\n\n\nEl [1] que precede a cada resultado indica la posición del primer elemento mostrado; su sentido quedará claro al estudiar los vectores. Los operadores aritméticos son los habituales: +, -, *, / y ^ (potencia), más %% (residuo de la división entera) y %/% (cociente entero). El punto es el separador decimal.\n\n2^10\n\n[1] 1024\n\n17 %% 5\n\n[1] 2\n\n17 %/% 5\n\n[1] 3\n\n\nTodo lo que sigue a # en una línea es un comentario: R lo ignora, pero sirve para explicar el código a quien lo lea, incluido su propio autor semanas después.\n\n# Densidad de población del cantón de San José en 2022 (hab./km²)\n352381 / 44.62  # población entre área\n\n[1] 7897.378\n\n\nLa consola es útil para probar ideas, pero el trabajo se escribe en programas (scripts): archivos de texto con extensión .R, que se editan en el panel superior izquierdo de RStudio. Desde ahí, Ctrl + Enter ejecuta en la consola la línea en la que está el cursor (o las líneas seleccionadas) y el botón Source ejecuta el programa completo. Un programa se puede guardar, corregir y volver a ejecutar; la consola, no.\nEjercicios de esta sección: ejercicios sobre R como calculadora.",
+    "crumbs": [
+      "II. El lenguaje de programación R",
+      "Fundamentos de R I: objetos, vectores y data frames"
+    ]
+  },
+  {
+    "objectID": "contenidos/ii-lenguaje-programacion-r/07-fundamentos-r-i.html#objetos-y-asignación",
+    "href": "contenidos/ii-lenguaje-programacion-r/07-fundamentos-r-i.html#objetos-y-asignación",
+    "title": "Fundamentos de R I: objetos, vectores y data frames",
+    "section": "Objetos y asignación",
+    "text": "Objetos y asignación\nPara reutilizar un valor, se guarda en un objeto mediante el operador de asignación &lt;- (RStudio lo escribe con Alt + -). El nombre del objeto va a la izquierda y el valor, o la expresión que lo calcula, a la derecha.\n\npoblacion_sj &lt;- 352381\narea_sj &lt;- 44.62\ndensidad_sj &lt;- poblacion_sj / area_sj\n\nLa asignación no muestra nada; para ver el valor de un objeto se escribe su nombre (o se usa la función print()).\n\ndensidad_sj\n\n[1] 7897.378\n\n\nLos objetos creados aparecen en el panel Environment de RStudio (superior derecho). Un objeto conserva su valor hasta que se le asigna otro; asignar de nuevo lo sobrescribe sin aviso.\n\npoblacion_sj &lt;- poblacion_sj + 1000\npoblacion_sj\n\n[1] 353381\n\n\nLos nombres de objetos pueden contener letras, números, puntos y guiones bajos, pero deben empezar con una letra; R distingue mayúsculas de minúsculas (area y Area son objetos distintos). Según la guía de estilo del curso, se escriben en minúsculas y snake case, sin tildes ni eñes: poblacion_sj. En R también es posible asignar con =, pero por convención se reserva = para los argumentos de las funciones.\nEjercicios de esta sección: ejercicios sobre objetos.",
+    "crumbs": [
+      "II. El lenguaje de programación R",
+      "Fundamentos de R I: objetos, vectores y data frames"
+    ]
+  },
+  {
+    "objectID": "contenidos/ii-lenguaje-programacion-r/07-fundamentos-r-i.html#funciones-y-paquetes",
+    "href": "contenidos/ii-lenguaje-programacion-r/07-fundamentos-r-i.html#funciones-y-paquetes",
+    "title": "Fundamentos de R I: objetos, vectores y data frames",
+    "section": "Funciones y paquetes",
+    "text": "Funciones y paquetes\nUna función es un bloque de código con nombre que realiza una tarea; se llama escribiendo su nombre seguido de paréntesis con los argumentos que necesita. Casi todo lo que se hace en R es llamar funciones: la instalación base incluye miles, y los paquetes agregan más.\n\nsqrt(144)\n\n[1] 12\n\nround(densidad_sj)\n\n[1] 7897\n\n\nLos argumentos pueden pasarse por posición o por nombre. round() tiene un segundo argumento, digits, con el número de decimales; su valor por defecto es 0, por lo que puede omitirse.\n\nround(densidad_sj, digits = 1)  # por nombre\n\n[1] 7897.4\n\nround(densidad_sj, 1)           # por posición\n\n[1] 7897.4\n\n\nPara saber qué argumentos tiene una función y qué hace cada uno, se consulta su documentación con ?, que la abre en el panel Help de RStudio; la función args() muestra solo los argumentos y sus valores por defecto.\n\n?round\n\n\nargs(round)\n\nfunction (x, digits = 0, ...) \nNULL\n\n\nLos paquetes se instalan una sola vez, con install.packages(), y se cargan en cada sesión en la que se usen, con library(). Por ejemplo, para el paquete leaflet, de mapas interactivos, que se usará más adelante en el curso:\n\ninstall.packages(\"leaflet\")  # una vez; el nombre va entre comillas\nlibrary(leaflet)             # en cada sesión; sin comillas\n\nTambién puede llamarse una función de un paquete sin cargarlo, con la notación paquete::función(), que además deja claro de dónde proviene: leaflet::leaflet(). Esta notación aparece con frecuencia en la documentación y en el código de otras personas.\nEjercicios de esta sección: ejercicios sobre funciones y paquetes.",
+    "crumbs": [
+      "II. El lenguaje de programación R",
+      "Fundamentos de R I: objetos, vectores y data frames"
+    ]
+  },
+  {
+    "objectID": "contenidos/ii-lenguaje-programacion-r/07-fundamentos-r-i.html#tipos-de-datos",
+    "href": "contenidos/ii-lenguaje-programacion-r/07-fundamentos-r-i.html#tipos-de-datos",
+    "title": "Fundamentos de R I: objetos, vectores y data frames",
+    "section": "Tipos de datos",
+    "text": "Tipos de datos\nCada valor en R tiene un tipo de dato, que determina qué operaciones admite. Los tipos básicos —llamados atómicos— que se usan en el curso son tres:\n\nNumérico: números con o sin decimales (44.62, 352381); R los almacena como numeric (en su forma double). Los enteros pueden distinguirse con el sufijo L (5L, tipo integer), aunque rara vez es necesario.\nCarácter (character): texto, entre comillas dobles o simples (\"San José\"). También se les llama hileras de caracteres (strings).\nLógico: los valores TRUE y FALSE, resultado de las comparaciones.\n\nLa función class() indica el tipo de un valor.\n\nclass(44.62)\n\n[1] \"numeric\"\n\nclass(\"San José\")\n\n[1] \"character\"\n\nclass(TRUE)\n\n[1] \"logical\"\n\n\nR convierte entre tipos cuando puede, con las funciones as.numeric(), as.character() y as.logical(). Si la conversión no es posible, el resultado es NA (not available), el valor con el que R representa los datos faltantes, acompañado de una advertencia (warning). Un caso frecuente en Costa Rica: los números escritos con coma decimal.\n\nas.numeric(\"44.62\")\n\n[1] 44.62\n\nas.numeric(\"44,62\")\n\nWarning: NAs introduced by coercion\n\n\n[1] NA\n\n\nNA se propaga en los cálculos —cualquier operación con NA da NA— y se detecta con is.na(), no con ==. Su manejo es parte del trabajo diario con datos reales.\nEjercicios de esta sección: ejercicios sobre tipos de datos.",
+    "crumbs": [
+      "II. El lenguaje de programación R",
+      "Fundamentos de R I: objetos, vectores y data frames"
+    ]
+  },
+  {
+    "objectID": "contenidos/ii-lenguaje-programacion-r/07-fundamentos-r-i.html#vectores",
+    "href": "contenidos/ii-lenguaje-programacion-r/07-fundamentos-r-i.html#vectores",
+    "title": "Fundamentos de R I: objetos, vectores y data frames",
+    "section": "Vectores",
+    "text": "Vectores\nUn vector es una secuencia ordenada de valores del mismo tipo y es la estructura fundamental de R: incluso un número solo es un vector de longitud 1 (de ahí el [1] de la consola). Los vectores se crean con la función c() (combine):\n\nprovincias &lt;- c(\"San José\", \"Alajuela\", \"Cartago\", \"Heredia\", \"Guanacaste\", \"Puntarenas\", \"Limón\")\npoblaciones &lt;- c(1601167, 1035464, 545092, 479117, 412808, 500166, 470383)\nareas &lt;- c(4969.80, 9772.12, 3093.24, 2663.30, 10196.29, 11275.00, 9176.88)\nprovincias\n\n[1] \"San José\"   \"Alajuela\"   \"Cartago\"    \"Heredia\"    \"Guanacaste\"\n[6] \"Puntarenas\" \"Limón\"     \n\nlength(poblaciones)\n\n[1] 7\n\n\nOtras formas de crear vectores son el operador :, para secuencias de enteros, y las funciones seq() y rep().\n\n1:7\n\n[1] 1 2 3 4 5 6 7\n\nseq(0, 100, by = 25)\n\n[1]   0  25  50  75 100\n\nrep(\"CR\", 3)\n\n[1] \"CR\" \"CR\" \"CR\"\n\n\n\nVectorización\nLa característica que distingue a R es que las operaciones actúan sobre todos los elementos de un vector a la vez: están vectorizadas. Para calcular la densidad de las siete provincias no hace falta un ciclo; basta dividir los dos vectores, elemento por elemento.\n\ndensidades &lt;- poblaciones / areas\nround(densidades, 1)\n\n[1] 322.2 106.0 176.2 179.9  40.5  44.4  51.3\n\n\nLo mismo ocurre al operar un vector con un solo número, que se recicla para cada elemento; y las funciones matemáticas, como round() en el ejemplo anterior, también actúan sobre cada elemento.\n\npoblaciones / 1000000  # población en millones\n\n[1] 1.601167 1.035464 0.545092 0.479117 0.412808 0.500166 0.470383\n\n\nMuchas funciones, en cambio, resumen un vector en un valor: sum(), mean(), max(), min(), length(), entre otras. sort() lo ordena y which.max() indica la posición del mayor valor.\n\nsum(poblaciones)               # población del país\n\n[1] 5044197\n\nmean(densidades)\n\n[1] 131.4801\n\nmax(densidades)\n\n[1] 322.1794\n\nwhich.max(densidades)\n\n[1] 1\n\nsort(areas, decreasing = TRUE)\n\n[1] 11275.00 10196.29  9772.12  9176.88  4969.80  3093.24  2663.30\n\n\n\n\nIndexación\nPara extraer elementos de un vector se usa el operador [ ] con las posiciones deseadas, que empiezan en 1. Una posición negativa excluye ese elemento.\n\nprovincias[1]\n\n[1] \"San José\"\n\nprovincias[c(1, 3)]\n\n[1] \"San José\" \"Cartago\" \n\nprovincias[2:4]\n\n[1] \"Alajuela\" \"Cartago\"  \"Heredia\" \n\nprovincias[-1]\n\n[1] \"Alajuela\"   \"Cartago\"    \"Heredia\"    \"Guanacaste\" \"Puntarenas\"\n[6] \"Limón\"     \n\nprovincias[which.max(densidades)]  # la provincia más densa\n\n[1] \"San José\"\n\n\nLos elementos de un vector pueden tener nombres, que también sirven para indexar:\n\nnames(densidades) &lt;- provincias\nround(densidades)\n\n  San José   Alajuela    Cartago    Heredia Guanacaste Puntarenas      Limón \n       322        106        176        180         40         44         51 \n\ndensidades[\"Heredia\"]\n\nHeredia \n179.896 \n\n\n\n\nComparaciones y filtrado\nLos operadores de comparación (==, !=, &lt;, &gt;, &lt;=, &gt;=) también están vectorizados y producen vectores lógicos. Nótese que la igualdad se escribe con ==: un solo = es una asignación.\n\ndensidades &gt; 100\n\n  San José   Alajuela    Cartago    Heredia Guanacaste Puntarenas      Limón \n      TRUE       TRUE       TRUE       TRUE      FALSE      FALSE      FALSE \n\n\nUn vector lógico dentro de [ ] selecciona los elementos para los que la condición es TRUE: esta es la forma más común de filtrar en R base, y la base de lo que hace dplyr en la sección III. Las condiciones se combinan con & (y), | (o) y ! (no), y %in% comprueba la pertenencia a un conjunto.\n\nprovincias[densidades &gt; 100]\n\n[1] \"San José\" \"Alajuela\" \"Cartago\"  \"Heredia\" \n\nprovincias[areas &gt; 9000 & poblaciones &lt; 500000]\n\n[1] \"Guanacaste\" \"Limón\"     \n\nprovincias[provincias %in% c(\"Heredia\", \"Cartago\")]\n\n[1] \"Cartago\" \"Heredia\"\n\n\nComo TRUE vale 1 y FALSE vale 0, sum() de un vector lógico cuenta cuántos elementos cumplen la condición y mean() calcula la proporción.\n\nsum(densidades &gt; 100)\n\n[1] 4\n\nmean(densidades &gt; 100)\n\n[1] 0.5714286\n\n\n\n\nValores faltantes\nUn NA en un vector hace que las funciones de resumen devuelvan NA, para no ocultar que faltan datos; el argumento na.rm = TRUE (remove NA) les indica que lo ignoren.\n\nlluvia &lt;- c(12.5, NA, 30.1, 8.4)\nmean(lluvia)\n\n[1] NA\n\nmean(lluvia, na.rm = TRUE)\n\n[1] 17\n\nis.na(lluvia)\n\n[1] FALSE  TRUE FALSE FALSE\n\n\n\n\nVectores de caracteres\nLos vectores de texto tienen sus propias funciones: paste() une textos, nchar() cuenta caracteres, toupper() y tolower() cambian mayúsculas y minúsculas. Si se combinan tipos distintos en un vector, R los convierte todos al más general, que es el carácter.\n\npaste(\"Provincia de\", provincias[1:3])\n\n[1] \"Provincia de San José\" \"Provincia de Alajuela\" \"Provincia de Cartago\" \n\nnchar(provincias)\n\n[1]  8  8  7  7 10 10  5\n\nc(1, \"dos\", TRUE)\n\n[1] \"1\"    \"dos\"  \"TRUE\"\n\n\nEjercicios de esta sección: ejercicios sobre vectores.",
+    "crumbs": [
+      "II. El lenguaje de programación R",
+      "Fundamentos de R I: objetos, vectores y data frames"
+    ]
+  },
+  {
+    "objectID": "contenidos/ii-lenguaje-programacion-r/07-fundamentos-r-i.html#factores",
+    "href": "contenidos/ii-lenguaje-programacion-r/07-fundamentos-r-i.html#factores",
+    "title": "Fundamentos de R I: objetos, vectores y data frames",
+    "section": "Factores",
+    "text": "Factores\nUn factor es un vector para variables categóricas con un conjunto fijo de valores posibles, llamados niveles. Se crea con factor(); si los niveles tienen un orden natural, se indica con el argumento levels. table() cuenta los elementos de cada nivel.\n\nclima &lt;- factor(c(\"seco\", \"húmedo\", \"húmedo\", \"muy húmedo\", \"seco\"),\n                levels = c(\"seco\", \"húmedo\", \"muy húmedo\"))\nlevels(clima)\n\n[1] \"seco\"       \"húmedo\"     \"muy húmedo\"\n\ntable(clima)\n\nclima\n      seco     húmedo muy húmedo \n         2          2          1 \n\n\nLos factores importan sobre todo al graficar y al modelar: ggplot2, por ejemplo, ordena las categorías de un gráfico según los niveles del factor.\nEjercicios de esta sección: ejercicios sobre factores y listas.",
+    "crumbs": [
+      "II. El lenguaje de programación R",
+      "Fundamentos de R I: objetos, vectores y data frames"
+    ]
+  },
+  {
+    "objectID": "contenidos/ii-lenguaje-programacion-r/07-fundamentos-r-i.html#listas",
+    "href": "contenidos/ii-lenguaje-programacion-r/07-fundamentos-r-i.html#listas",
+    "title": "Fundamentos de R I: objetos, vectores y data frames",
+    "section": "Listas",
+    "text": "Listas\nA diferencia de un vector, una lista puede contener elementos de distintos tipos y longitudes, incluidos otros vectores y otras listas. Se crea con list(), normalmente con nombres, y sus elementos se extraen con $ o con [[ ]].\n\ncanton &lt;- list(nombre = \"Montes de Oca\",\n               poblacion = 53862,\n               distritos = c(\"San Pedro\", \"Sabanilla\", \"Mercedes\", \"San Rafael\"))\ncanton$poblacion\n\n[1] 53862\n\ncanton[[\"distritos\"]]\n\n[1] \"San Pedro\"  \"Sabanilla\"  \"Mercedes\"   \"San Rafael\"\n\nlength(canton$distritos)\n\n[1] 4\n\n\nLas listas están por todas partes en R, aunque no siempre a la vista: un data frame es una lista de columnas, los resultados de muchas funciones son listas y, en shiny (sección V), los valores que el usuario ingresa en una aplicación se leen de una lista con input$nombre. La función str() muestra la estructura de cualquier objeto y es la mejor forma de examinar una lista.\n\nstr(canton)\n\nList of 3\n $ nombre   : chr \"Montes de Oca\"\n $ poblacion: num 53862\n $ distritos: chr [1:4] \"San Pedro\" \"Sabanilla\" \"Mercedes\" \"San Rafael\"\n\n\nEjercicios de esta sección: ejercicios sobre factores y listas.",
+    "crumbs": [
+      "II. El lenguaje de programación R",
+      "Fundamentos de R I: objetos, vectores y data frames"
+    ]
+  },
+  {
+    "objectID": "contenidos/ii-lenguaje-programacion-r/07-fundamentos-r-i.html#data-frames",
+    "href": "contenidos/ii-lenguaje-programacion-r/07-fundamentos-r-i.html#data-frames",
+    "title": "Fundamentos de R I: objetos, vectores y data frames",
+    "section": "Data frames",
+    "text": "Data frames\nUn data frame es la estructura de R para datos tabulares: una lista de vectores de igual longitud —las columnas o variables— en la que cada posición corresponde a una fila u observación. Puede construirse con data.frame() a partir de vectores:\n\nprovincias_df &lt;- data.frame(provincia = provincias,\n                            poblacion = poblaciones,\n                            area_km2 = areas)\nprovincias_df\n\n   provincia poblacion area_km2\n1   San José   1601167  4969.80\n2   Alajuela   1035464  9772.12\n3    Cartago    545092  3093.24\n4    Heredia    479117  2663.30\n5 Guanacaste    412808 10196.29\n6 Puntarenas    500166 11275.00\n7      Limón    470383  9176.88\n\n\n\nImportación\nLo habitual, sin embargo, es importar los datos de un archivo. La función read.csv() lee un archivo CSV —desde la computadora o directamente desde una URL— y devuelve un data frame. El archivo cantones.csv del repositorio del curso contiene la provincia, la población y el área de los 84 cantones, derivados de los cuadros del INEC (véase el README de los datos).\n\ncantones &lt;- read.csv(\"https://raw.githubusercontent.com/pf0953-programacionr/2026-ii/main/datos/cantones.csv\")\n\nLas primeras funciones que se aplican a un data frame recién importado sirven para conocerlo: str() muestra su estructura (número de filas y columnas, y el tipo de cada columna), head() las primeras filas, nrow() y ncol() sus dimensiones, names() los nombres de las columnas y summary() un resumen estadístico de cada una. En RStudio, View(cantones) lo abre en una pestaña con formato de hoja de cálculo.\n\nstr(cantones)\n\n'data.frame':   84 obs. of  4 variables:\n $ provincia: chr  \"San José\" \"San José\" \"San José\" \"San José\" ...\n $ canton   : chr  \"San José\" \"Escazú\" \"Desamparados\" \"Puriscal\" ...\n $ poblacion: int  352381 71500 223226 38525 17810 59588 32348 132104 58020 81012 ...\n $ area_km2 : num  44.6 34.5 118.9 555 291.3 ...\n\nhead(cantones)\n\n  provincia       canton poblacion area_km2\n1  San José     San José    352381    44.62\n2  San José       Escazú     71500    34.53\n3  San José Desamparados    223226   118.89\n4  San José     Puriscal     38525   555.04\n5  San José      Tarrazú     17810   291.27\n6  San José       Aserrí     59588   168.26\n\nnrow(cantones)\n\n[1] 84\n\nsummary(cantones)\n\n     provincia        canton     poblacion         area_km2      \n Length   :84   Length   :84   Min.   :  5386   Min.   :   6.75  \n N.unique : 7   N.unique :84   1st Qu.: 22740   1st Qu.:  78.01  \n N.blank  : 0   N.blank  : 0   Median : 46142   Median : 280.89  \n Min.nchar: 5   Min.nchar: 3   Mean   : 60050   Mean   : 608.89  \n Max.nchar:10   Max.nchar:19   3rd Qu.: 68121   3rd Qu.: 814.96  \n                               Max.   :352381   Max.   :3352.14  \n\n\n\n\nColumnas\nEl operador $ extrae una columna como vector, sobre el que se puede aplicar todo lo visto en la sección anterior; y, con una asignación, crea o modifica una columna. Como las operaciones están vectorizadas, la nueva columna se calcula para las 84 filas a la vez.\n\nsum(cantones$poblacion)\n\n[1] 5044197\n\ncantones$densidad &lt;- cantones$poblacion / cantones$area_km2\nhead(cantones)\n\n  provincia       canton poblacion area_km2   densidad\n1  San José     San José    352381    44.62 7897.37786\n2  San José       Escazú     71500    34.53 2070.66319\n3  San José Desamparados    223226   118.89 1877.58432\n4  San José     Puriscal     38525   555.04   69.40941\n5  San José      Tarrazú     17810   291.27   61.14602\n6  San José       Aserrí     59588   168.26  354.14240\n\n\n\n\nFilas y columnas con [ , ]\nEl operador [ ] de los data frames tiene dos posiciones separadas por coma: [filas, columnas]. Cada una puede ser un vector de posiciones, de nombres o de valores lógicos, y si se deja vacía se toman todas las filas o todas las columnas.\n\ncantones[1, ]                                # primera fila\n\n  provincia   canton poblacion area_km2 densidad\n1  San José San José    352381    44.62 7897.378\n\ncantones[1:3, c(\"canton\", \"poblacion\")]      # tres filas, dos columnas\n\n        canton poblacion\n1     San José    352381\n2       Escazú     71500\n3 Desamparados    223226\n\n\nEl filtrado de filas se hace con un vector lógico construido a partir de una o más columnas: es la misma idea que en los vectores, aplicada a la tabla completa.\n\ncantones[cantones$provincia == \"Heredia\", ]\n\n   provincia        canton poblacion area_km2   densidad\n45   Heredia       Heredia    131901   283.12  465.88372\n46   Heredia         Barva     47699    56.02  851.46376\n47   Heredia Santo Domingo     45932    25.40 1808.34646\n48   Heredia Santa Bárbara     39133    52.10  751.11324\n49   Heredia    San Rafael     48848    48.31 1011.13641\n50   Heredia    San Isidro     22806    26.67  855.11811\n51   Heredia         Belén     23759    12.38 1919.14378\n52   Heredia        Flores     22026     6.75 3263.11111\n53   Heredia     San Pablo     29860     8.34 3580.33573\n54   Heredia     Sarapiquí     67153  2144.22   31.31815\n\ncantones[cantones$densidad &gt; 3000 & cantones$area_km2 &lt; 20, c(\"canton\", \"densidad\")]\n\n          canton densidad\n13         Tibás 9019.589\n15 Montes de Oca 3413.308\n18    Curridabat 4422.540\n52        Flores 3263.111\n53     San Pablo 3580.336\n\n\n\n\nOrdenamiento\nLa función order() devuelve las posiciones que ordenarían un vector; usada en la posición de las filas, ordena el data frame. Un signo - invierte el orden de una columna numérica.\n\nmas_densos &lt;- cantones[order(-cantones$densidad), ]\nhead(mas_densos, 5)\n\n   provincia     canton poblacion area_km2 densidad\n13  San José      Tibás     74592     8.27 9019.589\n1   San José   San José    352381    44.62 7897.378\n18  San José Curridabat     71026    16.06 4422.540\n8   San José Goicoechea    132104    31.70 4167.319\n10  San José Alajuelita     81012    21.47 3773.265\n\n\n\n\nAgrupación y sumarización\nDos funciones de R base permiten resumir un data frame por grupos: table() cuenta las filas de cada categoría y aggregate() aplica una función de resumen a una columna, por los grupos de otra, con la notación de fórmula valor ~ grupo.\n\ntable(cantones$provincia)\n\n\n  Alajuela    Cartago Guanacaste    Heredia      Limón Puntarenas   San José \n        16          8         11         10          6         13         20 \n\naggregate(poblacion ~ provincia, data = cantones, FUN = sum)\n\n   provincia poblacion\n1   Alajuela   1035464\n2    Cartago    545092\n3 Guanacaste    412808\n4    Heredia    479117\n5      Limón    470383\n6 Puntarenas    500166\n7   San José   1601167\n\n\nEstas operaciones —seleccionar, filtrar, ordenar, crear columnas, agrupar y resumir— son las que el paquete dplyr, en la sección III, expresa con una sintaxis más legible y encadenable; conocer su versión en R base ayuda a entender qué hace dplyr y a leer código que no lo usa.\nPor último, write.csv() guarda un data frame en un archivo CSV; row.names = FALSE evita que se escriba una columna con los números de fila.\n\nwrite.csv(mas_densos, \"cantones-densidad.csv\", row.names = FALSE)\n\nEjercicios de esta sección: ejercicios sobre data frames.",
+    "crumbs": [
+      "II. El lenguaje de programación R",
+      "Fundamentos de R I: objetos, vectores y data frames"
+    ]
+  },
+  {
+    "objectID": "contenidos/ii-lenguaje-programacion-r/07-fundamentos-r-i.html#clínica-de-errores",
+    "href": "contenidos/ii-lenguaje-programacion-r/07-fundamentos-r-i.html#clínica-de-errores",
+    "title": "Fundamentos de R I: objetos, vectores y data frames",
+    "section": "Clínica de errores",
+    "text": "Clínica de errores\nLos mensajes de error de R son escuetos, pero informativos una vez que se aprende a leerlos. Los siguientes son los más frecuentes al comenzar; cada bloque se ejecuta a propósito con un error.\nEl objeto no existe, casi siempre por un error de escritura (recuérdese que R distingue mayúsculas):\n\nPoblacion_sj * 2\n\nError:\n! object 'Poblacion_sj' not found\n\n\nLa función no existe o pertenece a un paquete que no se ha cargado con library():\n\nleaflet()\n\nError in `leaflet()`:\n! could not find function \"leaflet\"\n\n\nUn símbolo inesperado: suele faltar una coma, un operador o unas comillas, o sobra un paréntesis. R señala el punto donde dejó de entender:\n\nc(1, 2 3)\n\nError in parse(text = input): &lt;text&gt;:1:8: unexpected numeric constant\n1: c(1, 2 3\n           ^\n\n\nUna operación aritmética con un valor que no es numérico, por ejemplo un texto (la conversión implícita no se hace en las operaciones):\n\n\"5\" + 5\n\nError in `\"5\" + 5`:\n! non-numeric argument to binary operator\n\n\nDos situaciones más no producen un mensaje de error, pero desconciertan: si se usa = en lugar de == en una comparación, R interpreta una asignación o un nombre de argumento; y si en la consola aparece el símbolo + en lugar de &gt;, R está esperando el final de una expresión incompleta (un paréntesis o unas comillas sin cerrar): Esc la cancela.\nEjercicios de esta sección: ejercicios sobre errores.",
+    "crumbs": [
+      "II. El lenguaje de programación R",
+      "Fundamentos de R I: objetos, vectores y data frames"
+    ]
+  },
+  {
+    "objectID": "contenidos/ii-lenguaje-programacion-r/07-fundamentos-r-i.html#resumen",
+    "href": "contenidos/ii-lenguaje-programacion-r/07-fundamentos-r-i.html#resumen",
+    "title": "Fundamentos de R I: objetos, vectores y data frames",
+    "section": "Resumen",
+    "text": "Resumen\n\nR evalúa expresiones en la consola; el trabajo se guarda en programas (.R), que se ejecutan línea por línea (Ctrl + Enter) o completos (Source).\nLos objetos guardan valores mediante la asignación &lt;-; los nombres siguen la guía de estilo (snake case).\nLas funciones se llaman con argumentos por posición o por nombre, con valores por defecto documentados en ?función; los paquetes se instalan una vez (install.packages()) y se cargan en cada sesión (library()).\nLos tipos atómicos son numérico, carácter y lógico; NA representa los datos faltantes.\nEl vector es la estructura básica: las operaciones están vectorizadas, se indexa con [ ] por posición, por nombre o con un vector lógico (filtrado), y na.rm = TRUE ignora los NA en los resúmenes.\nLos factores representan variables categóricas con niveles; las listas agrupan elementos heterogéneos ($, [[ ]]).\nEl data frame es la tabla de datos: se importa con read.csv(), se explora con str(), head() y summary(), se accede a sus columnas con $, se filtra y selecciona con [filas, columnas], se ordena con order() y se resume con table() y aggregate().",
+    "crumbs": [
+      "II. El lenguaje de programación R",
+      "Fundamentos de R I: objetos, vectores y data frames"
+    ]
+  },
+  {
+    "objectID": "contenidos/ii-lenguaje-programacion-r/07-fundamentos-r-i.html#ejercicios",
+    "href": "contenidos/ii-lenguaje-programacion-r/07-fundamentos-r-i.html#ejercicios",
+    "title": "Fundamentos de R I: objetos, vectores y data frames",
+    "section": "Ejercicios",
+    "text": "Ejercicios\nLos ejercicios se agrupan según la sección del capítulo a la que corresponden; se recomienda realizarlos al concluir la sección respectiva, en el programa introduccion.R del proyecto pf0953 o en uno nuevo, fundamentos-1.R. Varios usan el cantón que eligió en el trabajo previo: su población y su área están en el archivo cantones.csv.\n\nR como calculadora\n\nEn la consola, calcule la densidad de población de su cantón (población entre área) y el porcentaje de la población del país (5 044 197 habitantes) que vive en él. Luego copie ambas expresiones al programa, con un comentario que indique el cantón y la fuente de los datos, y ejecútelas con Ctrl + Enter.\n\n\n\nObjetos\n\nGuarde el nombre, la población y el área de su cantón en los objetos canton, poblacion_canton y area_canton, y calcule densidad_canton a partir de ellos. Después ejecute poblacion_canton &lt;- poblacion_canton * 2 y, antes de ejecutar densidad_canton, prediga si su valor cambió.\n\n\nDespués de ejecutar, haga clic aquí para ver la explicación\n\nNo cambió. La asignación guardó en densidad_canton el resultado del cálculo, no la fórmula: para actualizarlo hay que volver a ejecutar la línea que lo calcula. Esta es una diferencia importante con una hoja de cálculo, en la que las celdas se recalculan solas.\n\n\n\n\nFunciones y paquetes\n\nConsulte la documentación de mean() con ?mean y responda: ¿qué hace el argumento na.rm y cuál es su valor por defecto? Luego redondee densidad_canton a un decimal, una vez pasando digits por nombre y otra por posición.\nCargue el paquete tidyverse con library(tidyverse) (está instalado en el proyecto de Posit Cloud del curso; si trabaja localmente y no lo tiene, instálelo primero) y lea el mensaje que muestra: ¿cuántos paquetes carga? Ese conjunto es el tema de la sección III.\n\n\n\nTipos de datos\n\nPrediga antes de ejecutar el resultado —valor y tipo— de cada expresión; anote sus predicciones en comentarios y luego ejecútelas:\nTRUE + TRUE\nclass(1:3)\nas.numeric(\"3,5\")\n\"5\" == 5\n\n\nDespués de ejecutar, haga clic aquí para ver la explicación\n\nTRUE + TRUE es 2: los lógicos se convierten en 1 y 0 al operar con ellos. class(1:3) es \"integer\", porque : produce enteros. as.numeric(\"3,5\") es NA con una advertencia, porque R solo reconoce el punto decimal. \"5\" == 5 es TRUE: para comparar, R convierte el número a texto; en cambio \"5\" + 5 es un error, porque la suma no convierte.\n\n\n\n\nVectores\n\nCon los vectores provincias, poblaciones y areas del capítulo, calcule el porcentaje de la población del país que vive en cada provincia (redondeado a un decimal), asígnele los nombres de las provincias y muéstrelo ordenado de mayor a menor. Después obtenga, con un filtro lógico, los nombres de las provincias cuya densidad supera la del país (población total entre área total).\nPrediga antes de ejecutar el resultado de cada línea, anote las predicciones y luego ejecútelas:\nx &lt;- c(10, 20, 30, NA)\nx &gt; 15\nsum(x &gt; 15)\nsum(x &gt; 15, na.rm = TRUE)\nx[x &gt; 15]\n\n\nDespués de ejecutar, haga clic aquí para ver la explicación\n\nLa comparación con NA da NA (no se sabe si un valor desconocido es mayor que 15), por lo que x &gt; 15 es FALSE TRUE TRUE NA. sum() de un vector con NA es NA, salvo con na.rm = TRUE, que da 2. Al indexar con un vector lógico que contiene NA, R devuelve NA en esa posición: 20 30 NA. Por eso, al filtrar datos reales, conviene combinar la condición con !is.na().\n\n\n\n\nFactores y listas\n\nCree una lista con el nombre de su cantón, su provincia y un vector con los nombres de al menos tres de sus distritos (puede consultarlos en Wikipedia). Extraiga el vector de distritos con $ y con [[ ]], cuente cuántos son con length() y examine la lista con str().\n\n\n\nData frames\n\nA partir del data frame cantones (con la columna densidad ya calculada), obtenga los cantones de su provincia ordenados por área, de mayor a menor, mostrando solo las columnas canton y area_km2. ¿En qué posición queda su cantón?\nObtenga los diez cantones más densos del país. Luego determine la posición de su cantón en el ranking nacional de densidad: ordene el data frame completo por densidad decreciente, guárdelo en un objeto y use which() sobre la columna canton. Compare el resultado con el de sus compañeros.\nCon aggregate(), calcule el área total de cada provincia y determine cuál es la mayor. Con table(), verifique cuántos cantones tiene su provincia. Finalmente, guarde en un archivo CSV, dentro de su proyecto, el data frame de su provincia ordenado por densidad, y ábralo en RStudio o en una hoja de cálculo para comprobarlo.\n\n\n\nErrores\n\nProvoque a propósito, en la consola, los cuatro errores de la clínica con código propio (un objeto mal escrito, una función de un paquete no cargado, una coma faltante y una operación con texto) y anote en comentarios la primera línea de cada mensaje. Luego escriba mean(c(1, 2 y presione Enter: observe el símbolo + y cancele con Esc.",
+    "crumbs": [
+      "II. El lenguaje de programación R",
+      "Fundamentos de R I: objetos, vectores y data frames"
+    ]
+  },
+  {
+    "objectID": "contenidos/ii-lenguaje-programacion-r/07-fundamentos-r-i.html#referencias-bibliográficas",
+    "href": "contenidos/ii-lenguaje-programacion-r/07-fundamentos-r-i.html#referencias-bibliográficas",
+    "title": "Fundamentos de R I: objetos, vectores y data frames",
+    "section": "Referencias bibliográficas",
+    "text": "Referencias bibliográficas\nGrolemund, G. (2014). Hands-on programming with R: Write your own functions and simulations. O’Reilly Media. https://rstudio-education.github.io/hopr/\nInstituto Nacional de Estadística y Censos. (2023). Resultados de la Estimación de Población y Vivienda 2022 [archivo XLSX]. https://admin.inec.cr/sites/default/files/2023-11/reResultadosEstimacionPoblacionVivienda2022_3.xlsx\nR Core Team. (2026). An introduction to R. R Foundation for Statistical Computing. https://cran.r-project.org/doc/manuals/r-release/R-intro.html\nWickham, H., Çetinkaya-Rundel, M., y Grolemund, G. (2023). R for data science: Import, tidy, transform, visualize, and model data (2.ª ed.). O’Reilly Media. https://r4ds.hadley.nz/",
+    "crumbs": [
+      "II. El lenguaje de programación R",
+      "Fundamentos de R I: objetos, vectores y data frames"
+    ]
+  },
+  {
     "objectID": "contenidos/i-introduccion-ciencia-datos-programacion/02-ejemplo-procesos-ciencia-datos.html",
     "href": "contenidos/i-introduccion-ciencia-datos-programacion/02-ejemplo-procesos-ciencia-datos.html",
     "title": "Ejemplo de procesos de ciencia de datos",
@@ -607,6 +772,138 @@
     "crumbs": [
       "I. Introducción a la ciencia de datos y a la programación de computadoras",
       "Asistentes de programación basados en inteligencia artificial"
+    ]
+  },
+  {
+    "objectID": "contenidos/ii-lenguaje-programacion-r/06-introduccion-r.html",
+    "href": "contenidos/ii-lenguaje-programacion-r/06-introduccion-r.html",
+    "title": "Introducción a R",
+    "section": "",
+    "text": "Antes de la clase, revise las siguientes lecturas. La primera es la presentación oficial de R, breve y en inglés; la segunda corresponde a los capítulos iniciales del libro de referencia de esta sección del curso, que también es la lectura obligatoria de las semanas 3 y 4 (capítulos 1 al 8 y 9 al 12, respectivamente): los capítulos 1 y 2 pueden leerse en menos de una hora y conviene tenerlos frescos para la clase.\nThe R Foundation. (s. f.). What is R? Recuperado el 26 de agosto de 2026, de https://www.r-project.org/about.html\nGrolemund, G. (2014). Hands-on programming with R: Write your own functions and simulations (capítulos 1 y 2). O’Reilly Media. https://rstudio-education.github.io/hopr/\n\n\n\nLlegue a la clase con R y RStudio instalados en su computadora, según la guía de R y RStudio de la sección de software, o con una cuenta en Posit Cloud, que ofrece la misma interfaz en el navegador. Buena parte de la clase se dedica a escribir y ejecutar código.",
+    "crumbs": [
+      "II. El lenguaje de programación R",
+      "Introducción a R"
+    ]
+  },
+  {
+    "objectID": "contenidos/ii-lenguaje-programacion-r/06-introduccion-r.html#trabajo-previo",
+    "href": "contenidos/ii-lenguaje-programacion-r/06-introduccion-r.html#trabajo-previo",
+    "title": "Introducción a R",
+    "section": "",
+    "text": "Antes de la clase, revise las siguientes lecturas. La primera es la presentación oficial de R, breve y en inglés; la segunda corresponde a los capítulos iniciales del libro de referencia de esta sección del curso, que también es la lectura obligatoria de las semanas 3 y 4 (capítulos 1 al 8 y 9 al 12, respectivamente): los capítulos 1 y 2 pueden leerse en menos de una hora y conviene tenerlos frescos para la clase.\nThe R Foundation. (s. f.). What is R? Recuperado el 26 de agosto de 2026, de https://www.r-project.org/about.html\nGrolemund, G. (2014). Hands-on programming with R: Write your own functions and simulations (capítulos 1 y 2). O’Reilly Media. https://rstudio-education.github.io/hopr/\n\n\n\nLlegue a la clase con R y RStudio instalados en su computadora, según la guía de R y RStudio de la sección de software, o con una cuenta en Posit Cloud, que ofrece la misma interfaz en el navegador. Buena parte de la clase se dedica a escribir y ejecutar código.",
+    "crumbs": [
+      "II. El lenguaje de programación R",
+      "Introducción a R"
+    ]
+  },
+  {
+    "objectID": "contenidos/ii-lenguaje-programacion-r/06-introduccion-r.html#introducción",
+    "href": "contenidos/ii-lenguaje-programacion-r/06-introduccion-r.html#introducción",
+    "title": "Introducción a R",
+    "section": "Introducción",
+    "text": "Introducción\nLas lecciones de la sección anterior presentaron los procesos de la ciencia de datos y las herramientas para documentarlos y compartirlos: Markdown, Git y GitHub. Este capítulo abre la sección dedicada al lenguaje de programación elegido en este curso: R. Presenta su historia, sus características, la comunidad que lo desarrolla y las razones de su importancia en la geografía y en los sistemas de información geográfica (SIG), y concluye con la forma en que se ejecuta en el curso. Los dos capítulos siguientes, Fundamentos de R I y II, enseñan a programar en el lenguaje.",
+    "crumbs": [
+      "II. El lenguaje de programación R",
+      "Introducción a R"
+    ]
+  },
+  {
+    "objectID": "contenidos/ii-lenguaje-programacion-r/06-introduccion-r.html#historia",
+    "href": "contenidos/ii-lenguaje-programacion-r/06-introduccion-r.html#historia",
+    "title": "Introducción a R",
+    "section": "Historia",
+    "text": "Historia\nR desciende de S, un lenguaje para análisis estadístico creado en 1976 por John Chambers y sus colegas en los Laboratorios Bell, en Estados Unidos, con la idea de convertir las ideas estadísticas en programas de manera rápida y fiel (Chambers, 2020). S se difundió sobre todo mediante una versión comercial, S-PLUS.\nEn 1993, Ross Ihaka y Robert Gentleman, profesores del Departamento de Estadística de la Universidad de Auckland, Nueva Zelanda, anunciaron una implementación propia de un lenguaje muy parecido a S, que bautizaron R: por las iniciales de sus nombres y como juego de palabras con el de S (Ihaka y Gentleman, 1996). En 1995 lo publicaron como software libre, bajo la licencia GNU GPL, y en 1997 se formó el R Core Team, el grupo de desarrolladores que mantiene el lenguaje hasta hoy, y se creó CRAN, el repositorio de paquetes que se describe más adelante. La versión 1.0.0 apareció el 29 de febrero de 2000.\nDesde entonces, R se ha desarrollado en dos frentes: el lenguaje y su instalación base, a cargo del R Core Team y de la R Foundation, y un ecosistema de paquetes creados por la comunidad. Algunos hitos de ese ecosistema son ggplot2 (2007) y el conjunto de paquetes tidyverse (2016), ambos liderados por Hadley Wickham; el ambiente de desarrollo RStudio (2011), de la empresa del mismo nombre, rebautizada Posit en 2022; y, en el ámbito geoespacial, los paquetes sf (2016) y terra (2020), que se estudian en la sección IV del curso. La versión de R que se usa en el curso pertenece a la serie 4.x, iniciada en 2020.\n\n\n\n\n\ntimeline\n    title Hitos de la historia de R\n    1976 : S, en los Laboratorios Bell\n    1993 : Ihaka y Gentleman anuncian R\n    1995 : R se publica como software libre (GNU GPL)\n    1997 : R Core Team y CRAN\n    2000 : R 1.0.0\n    2007 : ggplot2\n    2011 : RStudio\n    2016 : tidyverse y sf\n    2020 : R 4.0 y terra\n    2022 : RStudio pasa a llamarse Posit",
+    "crumbs": [
+      "II. El lenguaje de programación R",
+      "Introducción a R"
+    ]
+  },
+  {
+    "objectID": "contenidos/ii-lenguaje-programacion-r/06-introduccion-r.html#características",
+    "href": "contenidos/ii-lenguaje-programacion-r/06-introduccion-r.html#características",
+    "title": "Introducción a R",
+    "section": "Características",
+    "text": "Características\nR es, a la vez, un lenguaje de programación y un entorno para el análisis de datos y la graficación: además del lenguaje, la instalación base incluye funciones estadísticas y gráficas, un sistema de ayuda y las herramientas para ejecutar programas e instalar paquetes (The R Foundation, s. f.). Entre sus características principales están:\n\nEs un lenguaje interpretado: las instrucciones se ejecutan una a una, en el momento en que se escriben, sin una etapa previa de compilación. Esto permite trabajar de manera interactiva, en una consola, y probar cada paso de un análisis de inmediato.\nTiene tipado dinámico: no es necesario declarar el tipo de dato de una variable; R lo deduce del valor que se le asigna, y una misma variable puede cambiar de tipo durante la ejecución.\nEs vectorizado: la unidad básica de datos no es el valor individual, sino el vector, y la mayoría de las operaciones y funciones actúan sobre todos los elementos de un vector a la vez. Como se verá en el próximo capítulo, esta característica permite expresar en una línea cálculos que en otros lenguajes requieren un ciclo.\nAdmite varios paradigmas de programación: el estilo predominante es el de la programación funcional, en el que los programas se construyen combinando funciones, pero también tiene sistemas de programación orientada a objetos.\nEs multiplataforma: funciona en Windows, macOS y Linux.\nEs software libre, distribuido bajo la licencia GNU GPL: puede usarse, estudiarse, modificarse y redistribuirse sin costo, lo que explica en buena medida el tamaño de su comunidad.\n\nR fue diseñado por estadísticos y para el análisis de datos. Ese origen le da fortalezas —estructuras de datos pensadas para tablas de observaciones, funciones estadísticas y gráficas maduras, manejo explícito de los valores faltantes— y también algunas peculiaridades respecto de lenguajes de propósito general como Python, que se irán señalando a lo largo de la sección.\nEjercicios de esta sección: ejercicios sobre características.",
+    "crumbs": [
+      "II. El lenguaje de programación R",
+      "Introducción a R"
+    ]
+  },
+  {
+    "objectID": "contenidos/ii-lenguaje-programacion-r/06-introduccion-r.html#comunidad-y-paquetes",
+    "href": "contenidos/ii-lenguaje-programacion-r/06-introduccion-r.html#comunidad-y-paquetes",
+    "title": "Introducción a R",
+    "section": "Comunidad y paquetes",
+    "text": "Comunidad y paquetes\nLa funcionalidad de R se amplía mediante paquetes: colecciones de funciones, datos y documentación, desarrolladas por la comunidad, que se instalan y cargan cuando se necesitan. El repositorio oficial es la Comprehensive R Archive Network (CRAN), una red de servidores que distribuye el código fuente de R, sus instaladores y más de veinte mil paquetes, revisados antes de publicarse. Para orientarse en esa cantidad, CRAN mantiene las task views: listas comentadas de paquetes por área temática; la de análisis espacial es la más relevante para este curso. Otros repositorios son Bioconductor, especializado en bioinformática, y GitHub, donde se desarrollan la mayoría de los paquetes antes de llegar a CRAN.\nDentro del ecosistema destaca el tidyverse, un conjunto de paquetes para ciencia de datos que comparten una misma filosofía de diseño y que se estudian en la sección III: dplyr para transformar datos, ggplot2 para graficarlos, readr para importarlos, entre otros. Su libro de referencia, R for data science (Wickham et al., 2023), es también lectura obligatoria del curso.\nLa comunidad de R es amplia y activa: la R Foundation coordina el proyecto y organiza la conferencia anual useR!; Posit desarrolla RStudio, Quarto, shiny y buena parte del tidyverse; y existen foros como Posit Community y Stack Overflow, grupos de usuarios locales, la organización R-Ladies y numerosos libros publicados gratuitamente en línea, como los que se citan en este curso.\nEjercicios de esta sección: ejercicios sobre comunidad y paquetes.",
+    "crumbs": [
+      "II. El lenguaje de programación R",
+      "Introducción a R"
+    ]
+  },
+  {
+    "objectID": "contenidos/ii-lenguaje-programacion-r/06-introduccion-r.html#r-en-la-geografía-y-los-sig",
+    "href": "contenidos/ii-lenguaje-programacion-r/06-introduccion-r.html#r-en-la-geografía-y-los-sig",
+    "title": "Introducción a R",
+    "section": "R en la geografía y los SIG",
+    "text": "R en la geografía y los SIG\nAunque nació para la estadística, R es hoy una de las principales plataformas para el procesamiento de datos geoespaciales, gracias a un conjunto de paquetes que cubren el flujo de trabajo completo de un SIG:\n\nsf representa datos vectoriales —puntos, líneas y polígonos con sus atributos— en data frames, la estructura de datos tabular de R, e implementa las operaciones geométricas del estándar simple features.\nterra maneja datos raster (imágenes satelitales, modelos de elevación) y también vectoriales.\nleaflet y tmap producen mapas interactivos y estáticos.\nshiny permite construir aplicaciones web interactivas, como la del proyecto final de este curso.\n\nEstos paquetes son el tema de las secciones IV y V del curso, y su libro de referencia, Geocomputation with R (Lovelace et al., 2025), es lectura obligatoria de la sección IV. Además, R se integra con los SIG de escritorio: QGIS ejecuta programas de R desde su caja de herramientas de procesamiento mediante el complemento Processing R Provider, y ArcGIS lo hace mediante R-ArcGIS Bridge. En la práctica profesional y de investigación, R se usa para automatizar análisis que en un SIG de escritorio requerirían muchas operaciones manuales, para reproducirlos exactamente y para comunicar sus resultados en documentos, tableros de control y aplicaciones.\nEjercicios de esta sección: ejercicios sobre R en los SIG.",
+    "crumbs": [
+      "II. El lenguaje de programación R",
+      "Introducción a R"
+    ]
+  },
+  {
+    "objectID": "contenidos/ii-lenguaje-programacion-r/06-introduccion-r.html#estilo-de-código",
+    "href": "contenidos/ii-lenguaje-programacion-r/06-introduccion-r.html#estilo-de-código",
+    "title": "Introducción a R",
+    "section": "Estilo de código",
+    "text": "Estilo de código\nEl código de R puede escribirse de muchas maneras, pero la comunidad ha convergido en un conjunto de convenciones, recogidas en la guía de estilo de tidyverse (Wickham, s. f.), que se adoptan en este curso desde el primer programa:\n\nNombres de objetos en minúsculas, con palabras separadas por guion bajo (snake case): poblacion_canton, no PoblacionCanton ni poblacion.canton. Se prefieren nombres significativos y sin tildes ni eñes.\nAsignación con &lt;-, no con =; espacios alrededor de los operadores (x + y, x &lt;- 5) y después de las comas (c(1, 2, 3)).\nSangría de dos espacios dentro de bloques y llamadas de varias líneas.\nComentarios que explican el porqué del código, no lo que es evidente, precedidos de #.\n\nRStudio ayuda a seguir estas convenciones: la combinación Ctrl + Shift + A reformatea el código seleccionado y el paquete styler lo hace automáticamente. Escribir código con un estilo consistente facilita leerlo —propio y ajeno— y es uno de los criterios de evaluación de las tareas del curso.\nEjercicios de esta sección: ejercicios sobre estilo.",
+    "crumbs": [
+      "II. El lenguaje de programación R",
+      "Introducción a R"
+    ]
+  },
+  {
+    "objectID": "contenidos/ii-lenguaje-programacion-r/06-introduccion-r.html#ejecución-de-r-en-el-curso",
+    "href": "contenidos/ii-lenguaje-programacion-r/06-introduccion-r.html#ejecución-de-r-en-el-curso",
+    "title": "Introducción a R",
+    "section": "Ejecución de R en el curso",
+    "text": "Ejecución de R en el curso\nHay dos formas de ejecutar R en el curso, ambas con la misma interfaz:\n\nEn la computadora local, con R y RStudio instalados según la guía de R y RStudio. Es la forma principal.\nEn la nube, con Posit Cloud, que ejecuta RStudio en el navegador sin instalar nada. Es el respaldo si la instalación local presenta problemas, y la forma en que se ejecutó el ejemplo de la semana 1.\n\nEn ambos casos, el trabajo se organiza en proyectos de RStudio: carpetas que agrupan los programas, los datos y los resultados de un análisis, y que fijan el directorio de trabajo, como se explica en la guía. Durante esta sección, el código se escribe en programas (scripts) de R, archivos de texto con extensión .R; a partir de la semana 5 se escribe en documentos de Quarto, que combinan el código con texto en Markdown.\nEjercicios de esta sección: ejercicios sobre ejecución.",
+    "crumbs": [
+      "II. El lenguaje de programación R",
+      "Introducción a R"
+    ]
+  },
+  {
+    "objectID": "contenidos/ii-lenguaje-programacion-r/06-introduccion-r.html#resumen",
+    "href": "contenidos/ii-lenguaje-programacion-r/06-introduccion-r.html#resumen",
+    "title": "Introducción a R",
+    "section": "Resumen",
+    "text": "Resumen\n\nR es un lenguaje de programación y un entorno para el análisis de datos y la graficación, creado en 1993 por Ross Ihaka y Robert Gentleman como implementación libre del lenguaje S; lo mantiene el R Core Team y lo amplía una comunidad numerosa.\nEs interpretado, de tipado dinámico, vectorizado, multiparadigma, multiplataforma y software libre.\nLos paquetes extienden su funcionalidad; se distribuyen sobre todo en CRAN, cuyas task views orientan por temas. El tidyverse es el conjunto de paquetes para ciencia de datos que se estudia en la sección III.\nR es una plataforma completa para datos geoespaciales —sf, terra, leaflet, shiny— y se integra con QGIS y ArcGIS.\nEl curso sigue la guía de estilo de tidyverse y ejecuta R en RStudio, localmente o en Posit Cloud, organizando el trabajo en proyectos.",
+    "crumbs": [
+      "II. El lenguaje de programación R",
+      "Introducción a R"
+    ]
+  },
+  {
+    "objectID": "contenidos/ii-lenguaje-programacion-r/06-introduccion-r.html#ejercicios",
+    "href": "contenidos/ii-lenguaje-programacion-r/06-introduccion-r.html#ejercicios",
+    "title": "Introducción a R",
+    "section": "Ejercicios",
+    "text": "Ejercicios\nLos ejercicios se agrupan según la sección del capítulo a la que corresponden; se recomienda realizarlos al concluir la sección respectiva.\n\nCaracterísticas\n\nEn la consola de RStudio, ejecute R.version.string para conocer la versión de R instalada y demo(graphics) para ver, con Enter, una muestra de los gráficos que produce la instalación base (Esc para salir). Anote un tipo de gráfico que podría ser útil en su tema de proyecto.\n\n\n\nComunidad y paquetes\n\nAbra la task view de análisis espacial de CRAN y localice las secciones sobre lectura y escritura de datos y sobre visualización. Anote el nombre de un paquete —distinto de los mencionados en este capítulo— que podría ser útil para el tema que considera explorar en el proyecto del curso, y qué hace, según su descripción.\n\n\n\nR en los SIG\n\nSi tiene QGIS instalado, abra el administrador de complementos (Plugins &gt; Manage and Install Plugins), busque Processing R Provider y lea su descripción. Si no lo tiene, revise la documentación del complemento. ¿Qué necesita el complemento para funcionar?\n\n\n\nEstilo\n\nReescriba las siguientes instrucciones según la guía de estilo del curso (nombres, asignación, espacios):\nPoblacionSJ=352381\nAreaSJ=44.62\nDensidadSJ=PoblacionSJ/AreaSJ\n\n\n\nEjecución\n\nCree un proyecto de RStudio llamado pf0953 (File &gt; New Project &gt; New Directory &gt; New Project), que usará durante toda la sección. Dentro del proyecto, cree un programa de R (File &gt; New File &gt; R Script) llamado introduccion.R, escriba en él las instrucciones corregidas del ejercicio anterior más una línea que muestre la densidad (densidad_sj), y ejecútelo completo con el botón Source. Guarde el archivo: los ejercicios del próximo capítulo continúan en él.",
+    "crumbs": [
+      "II. El lenguaje de programación R",
+      "Introducción a R"
+    ]
+  },
+  {
+    "objectID": "contenidos/ii-lenguaje-programacion-r/06-introduccion-r.html#referencias-bibliográficas",
+    "href": "contenidos/ii-lenguaje-programacion-r/06-introduccion-r.html#referencias-bibliográficas",
+    "title": "Introducción a R",
+    "section": "Referencias bibliográficas",
+    "text": "Referencias bibliográficas\nChambers, J. M. (2020). S, R, and data science. Proceedings of the ACM on Programming Languages, 4(HOPL), 1–17. https://doi.org/10.1145/3386334\nGrolemund, G. (2014). Hands-on programming with R: Write your own functions and simulations. O’Reilly Media. https://rstudio-education.github.io/hopr/\nIhaka, R., y Gentleman, R. (1996). R: A language for data analysis and graphics. Journal of Computational and Graphical Statistics, 5(3), 299–314. https://doi.org/10.1080/10618600.1996.10474713\nLovelace, R., Nowosad, J., y Münchow, J. (2025). Geocomputation with R (2.ª ed.). Chapman and Hall/CRC. https://r.geocompx.org/\nThe R Foundation. (s. f.). What is R? Recuperado el 26 de agosto de 2026, de https://www.r-project.org/about.html\nWickham, H. (s. f.). The tidyverse style guide. Recuperado el 26 de agosto de 2026, de https://style.tidyverse.org/\nWickham, H., Çetinkaya-Rundel, M., y Grolemund, G. (2023). R for data science: Import, tidy, transform, visualize, and model data (2.ª ed.). O’Reilly Media. https://r4ds.hadley.nz/",
+    "crumbs": [
+      "II. El lenguaje de programación R",
+      "Introducción a R"
     ]
   }
 ]

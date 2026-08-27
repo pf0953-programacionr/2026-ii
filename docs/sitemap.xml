@@ -2,7 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://pf0953-programacionr.github.io/2026-ii/contenidos/software/r-rstudio.html</loc>
-    <lastmod>2026-08-27T00:16:44.235Z</lastmod>
+    <lastmod>2026-08-27T00:18:02.390Z</lastmod>
+  </url>
+  <url>
+    <loc>https://pf0953-programacionr.github.io/2026-ii/contenidos/ii-lenguaje-programacion-r/07-fundamentos-r-i.html</loc>
+    <lastmod>2026-08-27T01:12:27.962Z</lastmod>
   </url>
   <url>
     <loc>https://pf0953-programacionr.github.io/2026-ii/contenidos/i-introduccion-ciencia-datos-programacion/02-ejemplo-procesos-ciencia-datos.html</loc>
@@ -31,5 +35,9 @@
   <url>
     <loc>https://pf0953-programacionr.github.io/2026-ii/contenidos/i-introduccion-ciencia-datos-programacion/05-asistentes-ia.html</loc>
     <lastmod>2026-08-27T00:07:51.079Z</lastmod>
+  </url>
+  <url>
+    <loc>https://pf0953-programacionr.github.io/2026-ii/contenidos/ii-lenguaje-programacion-r/06-introduccion-r.html</loc>
+    <lastmod>2026-08-27T01:12:27.962Z</lastmod>
   </url>
 </urlset>
