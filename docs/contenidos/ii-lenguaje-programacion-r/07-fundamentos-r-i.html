@@ -1,0 +1,1634 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Fundamentos de R I: objetos, vectores y data frames – PF-0953 Programación en R - 2026-II</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../favicon.ico" rel="icon">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark-0a6b7249c26820e032cb0bd839ff02b1.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-4f3632f0866db833f55d269f2223b949.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark-acda045fd7e50dbf0b610784e976f157.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../../site_libs/bootstrap/bootstrap-4f3632f0866db833f55d269f2223b949.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "language": {
+    "search-no-results-text": "No se han encontrado resultados",
+    "search-matching-documents-text": "documentos encontrados",
+    "search-copy-link-title": "Copiar el enlace en la búsqueda",
+    "search-hide-matches-text": "Ocultar resultados adicionales",
+    "search-more-match-text": "resultado adicional en este documento",
+    "search-more-matches-text": "resultados adicionales en este documento",
+    "search-clear-button-title": "Borrar",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancelar",
+    "search-submit-button-title": "Enviar",
+    "search-label": "Buscar"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-sidebar docked nav-fixed quarto-light"><script id="quarto-html-before-body" type="application/javascript">
+    const toggleBodyColorMode = (bsSheetEl) => {
+      const mode = bsSheetEl.getAttribute("data-mode");
+      const bodyEl = window.document.querySelector("body");
+      if (mode === "dark") {
+        bodyEl.classList.add("quarto-dark");
+        bodyEl.classList.remove("quarto-light");
+      } else {
+        bodyEl.classList.add("quarto-light");
+        bodyEl.classList.remove("quarto-dark");
+      }
+    }
+    const toggleBodyColorPrimary = () => {
+      const bsSheetEl = window.document.querySelector("link#quarto-bootstrap:not([rel=disabled-stylesheet])");
+      if (bsSheetEl) {
+        toggleBodyColorMode(bsSheetEl);
+      }
+    }
+    const setColorSchemeToggle = (alternate) => {
+      const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+      for (let i=0; i < toggles.length; i++) {
+        const toggle = toggles[i];
+        if (toggle) {
+          if (alternate) {
+            toggle.classList.add("alternate");
+          } else {
+            toggle.classList.remove("alternate");
+          }
+        }
+      }
+    };
+    const toggleColorMode = (alternate) => {
+      // Switch the stylesheets
+      const primaryStylesheets = window.document.querySelectorAll('link.quarto-color-scheme:not(.quarto-color-alternate)');
+      const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+      manageTransitions('#quarto-margin-sidebar .nav-link', false);
+      if (alternate) {
+        // note: dark is layered on light, we don't disable primary!
+        enableStylesheet(alternateStylesheets);
+        for (const sheetNode of alternateStylesheets) {
+          if (sheetNode.id === "quarto-bootstrap") {
+            toggleBodyColorMode(sheetNode);
+          }
+        }
+      } else {
+        disableStylesheet(alternateStylesheets);
+        enableStylesheet(primaryStylesheets)
+        toggleBodyColorPrimary();
+      }
+      manageTransitions('#quarto-margin-sidebar .nav-link', true);
+      // Switch the toggles
+      setColorSchemeToggle(alternate)
+      // Hack to workaround the fact that safari doesn't
+      // properly recolor the scrollbar when toggling (#1455)
+      if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+        manageTransitions("body", false);
+        window.scrollTo(0, 1);
+        setTimeout(() => {
+          window.scrollTo(0, 0);
+          manageTransitions("body", true);
+        }, 40);
+      }
+    }
+    const disableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        stylesheet.rel = 'disabled-stylesheet';
+      }
+    }
+    const enableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        if(stylesheet.rel !== 'stylesheet') { // for Chrome, which will still FOUC without this check
+          stylesheet.rel = 'stylesheet';
+        }
+      }
+    }
+    const manageTransitions = (selector, allowTransitions) => {
+      const els = window.document.querySelectorAll(selector);
+      for (let i=0; i < els.length; i++) {
+        const el = els[i];
+        if (allowTransitions) {
+          el.classList.remove('notransition');
+        } else {
+          el.classList.add('notransition');
+        }
+      }
+    }
+    const isFileUrl = () => {
+      return window.location.protocol === 'file:';
+    }
+    const hasAlternateSentinel = () => {
+      let styleSentinel = getColorSchemeSentinel();
+      if (styleSentinel !== null) {
+        return styleSentinel === "alternate";
+      } else {
+        return false;
+      }
+    }
+    const setStyleSentinel = (alternate) => {
+      const value = alternate ? "alternate" : "default";
+      if (!isFileUrl()) {
+        window.localStorage.setItem("quarto-color-scheme", value);
+      } else {
+        localAlternateSentinel = value;
+      }
+    }
+    const getColorSchemeSentinel = () => {
+      if (!isFileUrl()) {
+        const storageValue = window.localStorage.getItem("quarto-color-scheme");
+        return storageValue != null ? storageValue : localAlternateSentinel;
+      } else {
+        return localAlternateSentinel;
+      }
+    }
+    const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+      const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+      const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+      let newTheme = '';
+      if(authorPrefersDark) {
+        newTheme = isAlternate ? baseTheme : alternateTheme;
+      } else {
+        newTheme = isAlternate ? alternateTheme : baseTheme;
+      }
+      const changeGiscusTheme = () => {
+        // From: https://github.com/giscus/giscus/issues/336
+        const sendMessage = (message) => {
+          const iframe = document.querySelector('iframe.giscus-frame');
+          if (!iframe) return;
+          iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+        }
+        sendMessage({
+          setConfig: {
+            theme: newTheme
+          }
+        });
+      }
+      const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+      if (isGiscussLoaded) {
+        changeGiscusTheme();
+      }
+    };
+    const authorPrefersDark = false;
+    const darkModeDefault = authorPrefersDark;
+      document.querySelector('link#quarto-text-highlighting-styles.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+      document.querySelector('link#quarto-bootstrap.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+    let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+    // Dark / light mode switch
+    window.quartoToggleColorScheme = () => {
+      // Read the current dark / light value
+      let toAlternate = !hasAlternateSentinel();
+      toggleColorMode(toAlternate);
+      setStyleSentinel(toAlternate);
+      toggleGiscusIfUsed(toAlternate, darkModeDefault);
+      window.dispatchEvent(new Event('resize'));
+    };
+    // Switch to dark mode if need be
+    if (hasAlternateSentinel()) {
+      toggleColorMode(true);
+    } else {
+      toggleColorMode(false);
+    }
+  </script>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../logo.svg" alt="" class="navbar-logo light-content">
+    <img src="../../logo-oscuro.svg" alt="" class="navbar-logo dark-content">
+    </a>
+  </div>
+        <div class="quarto-navbar-tools tools-end">
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Alternar modo oscuro"><i class="bi"></i></a>
+</div>
+          <div id="quarto-search" class="" title="Buscar"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../contenidos/ii-lenguaje-programacion-r/06-introduccion-r.html">II. El lenguaje de programación R</a></li><li class="breadcrumb-item"><a href="../../contenidos/ii-lenguaje-programacion-r/07-fundamentos-r-i.html">Fundamentos de R I: objetos, vectores y data frames</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../programa/programa.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Programa del curso</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">I. Introducción a la ciencia de datos y a la programación de computadoras</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../contenidos/i-introduccion-ciencia-datos-programacion/01-introduccion-ciencia-datos.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introducción a la ciencia de datos</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../contenidos/i-introduccion-ciencia-datos-programacion/02-ejemplo-procesos-ciencia-datos.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Ejemplo de procesos de ciencia de datos</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../contenidos/i-introduccion-ciencia-datos-programacion/03-markdown.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">El lenguaje de marcado Markdown</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../contenidos/i-introduccion-ciencia-datos-programacion/04-git-github.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Git, GitHub y GitHub Pages</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../contenidos/i-introduccion-ciencia-datos-programacion/05-asistentes-ia.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Asistentes de programación basados en inteligencia artificial</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">II. El lenguaje de programación R</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../contenidos/ii-lenguaje-programacion-r/06-introduccion-r.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introducción a R</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../contenidos/ii-lenguaje-programacion-r/07-fundamentos-r-i.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Fundamentos de R I: objetos, vectores y data frames</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">Software</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../contenidos/software/r-rstudio.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">R y RStudio</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">En esta página</h2>
+   
+  <ul>
+  <li><a href="#trabajo-previo" id="toc-trabajo-previo" class="nav-link active" data-scroll-target="#trabajo-previo">Trabajo previo</a>
+  <ul class="collapse">
+  <li><a href="#lecturas" id="toc-lecturas" class="nav-link" data-scroll-target="#lecturas">Lecturas</a></li>
+  <li><a href="#otros-recursos" id="toc-otros-recursos" class="nav-link" data-scroll-target="#otros-recursos">Otros recursos</a></li>
+  </ul></li>
+  <li><a href="#introducción" id="toc-introducción" class="nav-link" data-scroll-target="#introducción">Introducción</a></li>
+  <li><a href="#r-como-calculadora" id="toc-r-como-calculadora" class="nav-link" data-scroll-target="#r-como-calculadora">R como calculadora</a></li>
+  <li><a href="#objetos-y-asignación" id="toc-objetos-y-asignación" class="nav-link" data-scroll-target="#objetos-y-asignación">Objetos y asignación</a></li>
+  <li><a href="#funciones-y-paquetes" id="toc-funciones-y-paquetes" class="nav-link" data-scroll-target="#funciones-y-paquetes">Funciones y paquetes</a></li>
+  <li><a href="#tipos-de-datos" id="toc-tipos-de-datos" class="nav-link" data-scroll-target="#tipos-de-datos">Tipos de datos</a></li>
+  <li><a href="#vectores" id="toc-vectores" class="nav-link" data-scroll-target="#vectores">Vectores</a>
+  <ul class="collapse">
+  <li><a href="#vectorización" id="toc-vectorización" class="nav-link" data-scroll-target="#vectorización">Vectorización</a></li>
+  <li><a href="#indexación" id="toc-indexación" class="nav-link" data-scroll-target="#indexación">Indexación</a></li>
+  <li><a href="#comparaciones-y-filtrado" id="toc-comparaciones-y-filtrado" class="nav-link" data-scroll-target="#comparaciones-y-filtrado">Comparaciones y filtrado</a></li>
+  <li><a href="#valores-faltantes" id="toc-valores-faltantes" class="nav-link" data-scroll-target="#valores-faltantes">Valores faltantes</a></li>
+  <li><a href="#vectores-de-caracteres" id="toc-vectores-de-caracteres" class="nav-link" data-scroll-target="#vectores-de-caracteres">Vectores de caracteres</a></li>
+  </ul></li>
+  <li><a href="#factores" id="toc-factores" class="nav-link" data-scroll-target="#factores">Factores</a></li>
+  <li><a href="#listas" id="toc-listas" class="nav-link" data-scroll-target="#listas">Listas</a></li>
+  <li><a href="#data-frames" id="toc-data-frames" class="nav-link" data-scroll-target="#data-frames">Data frames</a>
+  <ul class="collapse">
+  <li><a href="#importación" id="toc-importación" class="nav-link" data-scroll-target="#importación">Importación</a></li>
+  <li><a href="#columnas" id="toc-columnas" class="nav-link" data-scroll-target="#columnas">Columnas</a></li>
+  <li><a href="#filas-y-columnas-con" id="toc-filas-y-columnas-con" class="nav-link" data-scroll-target="#filas-y-columnas-con">Filas y columnas con <code>[ , ]</code></a></li>
+  <li><a href="#ordenamiento" id="toc-ordenamiento" class="nav-link" data-scroll-target="#ordenamiento">Ordenamiento</a></li>
+  <li><a href="#agrupación-y-sumarización" id="toc-agrupación-y-sumarización" class="nav-link" data-scroll-target="#agrupación-y-sumarización">Agrupación y sumarización</a></li>
+  </ul></li>
+  <li><a href="#clínica-de-errores" id="toc-clínica-de-errores" class="nav-link" data-scroll-target="#clínica-de-errores">Clínica de errores</a></li>
+  <li><a href="#resumen" id="toc-resumen" class="nav-link" data-scroll-target="#resumen">Resumen</a></li>
+  <li><a href="#ejercicios" id="toc-ejercicios" class="nav-link" data-scroll-target="#ejercicios">Ejercicios</a>
+  <ul class="collapse">
+  <li><a href="#ejercicios-calculadora" id="toc-ejercicios-calculadora" class="nav-link" data-scroll-target="#ejercicios-calculadora">R como calculadora</a></li>
+  <li><a href="#ejercicios-objetos" id="toc-ejercicios-objetos" class="nav-link" data-scroll-target="#ejercicios-objetos">Objetos</a></li>
+  <li><a href="#ejercicios-funciones" id="toc-ejercicios-funciones" class="nav-link" data-scroll-target="#ejercicios-funciones">Funciones y paquetes</a></li>
+  <li><a href="#ejercicios-tipos" id="toc-ejercicios-tipos" class="nav-link" data-scroll-target="#ejercicios-tipos">Tipos de datos</a></li>
+  <li><a href="#ejercicios-vectores" id="toc-ejercicios-vectores" class="nav-link" data-scroll-target="#ejercicios-vectores">Vectores</a></li>
+  <li><a href="#ejercicios-factores-listas" id="toc-ejercicios-factores-listas" class="nav-link" data-scroll-target="#ejercicios-factores-listas">Factores y listas</a></li>
+  <li><a href="#ejercicios-data-frames" id="toc-ejercicios-data-frames" class="nav-link" data-scroll-target="#ejercicios-data-frames">Data frames</a></li>
+  <li><a href="#ejercicios-errores" id="toc-ejercicios-errores" class="nav-link" data-scroll-target="#ejercicios-errores">Errores</a></li>
+  </ul></li>
+  <li><a href="#referencias-bibliográficas" id="toc-referencias-bibliográficas" class="nav-link" data-scroll-target="#referencias-bibliográficas">Referencias bibliográficas</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/pf0953-programacionr/2026-ii/blob/main/contenidos/ii-lenguaje-programacion-r/07-fundamentos-r-i.qmd" class="toc-action"><i class="bi bi-github"></i>Ver el código</a></li><li><a href="https://github.com/pf0953-programacionr/2026-ii/edit/main/contenidos/ii-lenguaje-programacion-r/07-fundamentos-r-i.qmd" class="toc-action"><i class="bi empty"></i>Editar esta página</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../contenidos/ii-lenguaje-programacion-r/06-introduccion-r.html">II. El lenguaje de programación R</a></li><li class="breadcrumb-item"><a href="../../contenidos/ii-lenguaje-programacion-r/07-fundamentos-r-i.html">Fundamentos de R I: objetos, vectores y data frames</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">Fundamentos de R I: objetos, vectores y data frames</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="trabajo-previo" class="level2">
+<h2 class="anchored" data-anchor-id="trabajo-previo">Trabajo previo</h2>
+<section id="lecturas" class="level3">
+<h3 class="anchored" data-anchor-id="lecturas">Lecturas</h3>
+<p>Antes de la clase, revise las siguientes lecturas. La primera es la lectura obligatoria de esta semana según el programa del curso; si dispone de poco tiempo, concéntrese en los capítulos 1, 2, 4 y 5, que corresponden a los temas de este capítulo. La segunda es breve y presenta la forma de trabajar en la consola y en los programas de R.</p>
+<p>Grolemund, G. (2014). <em>Hands-on programming with R: Write your own functions and simulations</em> (capítulos 1 al 8). O’Reilly Media. <a href="https://rstudio-education.github.io/hopr/" class="uri">https://rstudio-education.github.io/hopr/</a></p>
+<p>Wickham, H., Çetinkaya-Rundel, M., y Grolemund, G. (2023). Workflow: Basics. En <em>R for data science: Import, tidy, transform, visualize, and model data</em> (2.ª ed.). O’Reilly Media. <a href="https://r4ds.hadley.nz/workflow-basics.html" class="uri">https://r4ds.hadley.nz/workflow-basics.html</a></p>
+</section>
+<section id="otros-recursos" class="level3">
+<h3 class="anchored" data-anchor-id="otros-recursos">Otros recursos</h3>
+<p>Tenga a mano el proyecto <code>pf0953</code> y el programa <code>introduccion.R</code> creados en los ejercicios del capítulo de <a href="../../contenidos/ii-lenguaje-programacion-r/06-introduccion-r.html">introducción a R</a>: los ejercicios de este capítulo continúan ahí. Elija también un <strong>cantón de Costa Rica</strong> —idealmente el relacionado con el tema que considera para su proyecto—, que usará como ejemplo propio a lo largo de la sección.</p>
+</section>
+</section>
+<section id="introducción" class="level2">
+<h2 class="anchored" data-anchor-id="introducción">Introducción</h2>
+<p>Este capítulo abre la serie <em>Fundamentos de R</em>, que continúa en la parte II con los condicionales, los ciclos y las funciones definidas por el usuario. Aquí se presentan los elementos con los que se construye cualquier programa en R: las expresiones que se escriben en la consola, los objetos que guardan valores, las funciones y los paquetes, los tipos de datos y, sobre todo, las estructuras que los organizan: los <strong>vectores</strong> —la unidad básica de R— y los <strong>data frames</strong>, las tablas de datos con las que se trabaja durante el resto del curso.</p>
+<p>Como hilo conductor se usan datos reales de Costa Rica: la población y la extensión de sus siete provincias y de sus 84 cantones, según la Estimación de Población y Vivienda 2022 del <a href="https://inec.cr/">Instituto Nacional de Estadística y Censos (INEC)</a> (INEC, 2023). Se recomienda ejecutar cada bloque de código en RStudio, a medida que se lee, y experimentar modificándolo.</p>
+</section>
+<section id="r-como-calculadora" class="level2">
+<h2 class="anchored" data-anchor-id="r-como-calculadora">R como calculadora</h2>
+<p>La forma más simple de usar R es escribir una <strong>expresión</strong> en la <strong>consola</strong> —el panel inferior izquierdo de RStudio— y presionar <code>Enter</code>: R la evalúa y muestra el resultado.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="dv">2</span> <span class="sc">+</span> <span class="dv">3</span></span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 5</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="dv">352381</span> <span class="sc">/</span> <span class="fl">44.62</span></span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 7897.378</code></pre>
+</div>
+</div>
+<p>El <code>[1]</code> que precede a cada resultado indica la posición del primer elemento mostrado; su sentido quedará claro al estudiar los vectores. Los operadores aritméticos son los habituales: <code>+</code>, <code>-</code>, <code>*</code>, <code>/</code> y <code>^</code> (potencia), más <code>%%</code> (residuo de la división entera) y <code>%/%</code> (cociente entero). El punto es el separador decimal.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="dv">2</span><span class="sc">^</span><span class="dv">10</span></span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1024</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="dv">17</span> <span class="sc">%%</span> <span class="dv">5</span></span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 2</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="dv">17</span> <span class="sc">%/%</span> <span class="dv">5</span></span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 3</code></pre>
+</div>
+</div>
+<p>Todo lo que sigue a <code>#</code> en una línea es un <strong>comentario</strong>: R lo ignora, pero sirve para explicar el código a quien lo lea, incluido su propio autor semanas después.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Densidad de población del cantón de San José en 2022 (hab./km²)</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="dv">352381</span> <span class="sc">/</span> <span class="fl">44.62</span>  <span class="co"># población entre área</span></span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 7897.378</code></pre>
+</div>
+</div>
+<p>La consola es útil para probar ideas, pero el trabajo se escribe en <strong>programas</strong> (<em>scripts</em>): archivos de texto con extensión <code>.R</code>, que se editan en el panel superior izquierdo de RStudio. Desde ahí, <code>Ctrl + Enter</code> ejecuta en la consola la línea en la que está el cursor (o las líneas seleccionadas) y el botón <strong>Source</strong> ejecuta el programa completo. Un programa se puede guardar, corregir y volver a ejecutar; la consola, no.</p>
+<p><em>Ejercicios de esta sección: <a href="#ejercicios-calculadora">ejercicios sobre R como calculadora</a>.</em></p>
+</section>
+<section id="objetos-y-asignación" class="level2">
+<h2 class="anchored" data-anchor-id="objetos-y-asignación">Objetos y asignación</h2>
+<p>Para reutilizar un valor, se guarda en un <strong>objeto</strong> mediante el operador de <strong>asignación</strong> <code>&lt;-</code> (RStudio lo escribe con <code>Alt + -</code>). El nombre del objeto va a la izquierda y el valor, o la expresión que lo calcula, a la derecha.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>poblacion_sj <span class="ot">&lt;-</span> <span class="dv">352381</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>area_sj <span class="ot">&lt;-</span> <span class="fl">44.62</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>densidad_sj <span class="ot">&lt;-</span> poblacion_sj <span class="sc">/</span> area_sj</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>La asignación no muestra nada; para ver el valor de un objeto se escribe su nombre (o se usa la función <code>print()</code>).</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>densidad_sj</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 7897.378</code></pre>
+</div>
+</div>
+<p>Los objetos creados aparecen en el panel <em>Environment</em> de RStudio (superior derecho). Un objeto conserva su valor hasta que se le asigna otro; asignar de nuevo lo sobrescribe sin aviso.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>poblacion_sj <span class="ot">&lt;-</span> poblacion_sj <span class="sc">+</span> <span class="dv">1000</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>poblacion_sj</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 353381</code></pre>
+</div>
+</div>
+<p>Los nombres de objetos pueden contener letras, números, puntos y guiones bajos, pero deben empezar con una letra; R distingue mayúsculas de minúsculas (<code>area</code> y <code>Area</code> son objetos distintos). Según la guía de estilo del curso, se escriben en minúsculas y <em>snake case</em>, sin tildes ni eñes: <code>poblacion_sj</code>. En R también es posible asignar con <code>=</code>, pero por convención se reserva <code>=</code> para los argumentos de las funciones.</p>
+<p><em>Ejercicios de esta sección: <a href="#ejercicios-objetos">ejercicios sobre objetos</a>.</em></p>
+</section>
+<section id="funciones-y-paquetes" class="level2">
+<h2 class="anchored" data-anchor-id="funciones-y-paquetes">Funciones y paquetes</h2>
+<p>Una <strong>función</strong> es un bloque de código con nombre que realiza una tarea; se <strong>llama</strong> escribiendo su nombre seguido de paréntesis con los <strong>argumentos</strong> que necesita. Casi todo lo que se hace en R es llamar funciones: la instalación base incluye miles, y los paquetes agregan más.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sqrt</span>(<span class="dv">144</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 12</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(densidad_sj)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 7897</code></pre>
+</div>
+</div>
+<p>Los argumentos pueden pasarse por posición o por nombre. <code>round()</code> tiene un segundo argumento, <code>digits</code>, con el número de decimales; su valor <strong>por defecto</strong> es 0, por lo que puede omitirse.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(densidad_sj, <span class="at">digits =</span> <span class="dv">1</span>)  <span class="co"># por nombre</span></span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 7897.4</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(densidad_sj, <span class="dv">1</span>)           <span class="co"># por posición</span></span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 7897.4</code></pre>
+</div>
+</div>
+<p>Para saber qué argumentos tiene una función y qué hace cada uno, se consulta su <strong>documentación</strong> con <code>?</code>, que la abre en el panel <em>Help</em> de RStudio; la función <code>args()</code> muestra solo los argumentos y sus valores por defecto.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>?round</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">args</span>(round)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>function (x, digits = 0, ...) 
+NULL</code></pre>
+</div>
+</div>
+<p>Los <strong>paquetes</strong> se instalan una sola vez, con <code>install.packages()</code>, y se cargan en cada sesión en la que se usen, con <code>library()</code>. Por ejemplo, para el paquete leaflet, de mapas interactivos, que se usará más adelante en el curso:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"leaflet"</span>)  <span class="co"># una vez; el nombre va entre comillas</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(leaflet)             <span class="co"># en cada sesión; sin comillas</span></span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>También puede llamarse una función de un paquete sin cargarlo, con la notación <code>paquete::función()</code>, que además deja claro de dónde proviene: <code>leaflet::leaflet()</code>. Esta notación aparece con frecuencia en la documentación y en el código de otras personas.</p>
+<p><em>Ejercicios de esta sección: <a href="#ejercicios-funciones">ejercicios sobre funciones y paquetes</a>.</em></p>
+</section>
+<section id="tipos-de-datos" class="level2">
+<h2 class="anchored" data-anchor-id="tipos-de-datos">Tipos de datos</h2>
+<p>Cada valor en R tiene un <strong>tipo de dato</strong>, que determina qué operaciones admite. Los tipos básicos —llamados <em>atómicos</em>— que se usan en el curso son tres:</p>
+<ul>
+<li><strong>Numérico</strong>: números con o sin decimales (<code>44.62</code>, <code>352381</code>); R los almacena como <code>numeric</code> (en su forma <em>double</em>). Los enteros pueden distinguirse con el sufijo <code>L</code> (<code>5L</code>, tipo <code>integer</code>), aunque rara vez es necesario.</li>
+<li><strong>Carácter</strong> (<em>character</em>): texto, entre comillas dobles o simples (<code>"San José"</code>). También se les llama hileras de caracteres (<em>strings</em>).</li>
+<li><strong>Lógico</strong>: los valores <code>TRUE</code> y <code>FALSE</code>, resultado de las comparaciones.</li>
+</ul>
+<p>La función <code>class()</code> indica el tipo de un valor.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(<span class="fl">44.62</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "numeric"</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(<span class="st">"San José"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "character"</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(<span class="cn">TRUE</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "logical"</code></pre>
+</div>
+</div>
+<p>R convierte entre tipos cuando puede, con las funciones <code>as.numeric()</code>, <code>as.character()</code> y <code>as.logical()</code>. Si la conversión no es posible, el resultado es <strong><code>NA</code></strong> (<em>not available</em>), el valor con el que R representa los datos faltantes, acompañado de una advertencia (<em>warning</em>). Un caso frecuente en Costa Rica: los números escritos con coma decimal.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">as.numeric</span>(<span class="st">"44.62"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 44.62</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">as.numeric</span>(<span class="st">"44,62"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: NAs introduced by coercion</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] NA</code></pre>
+</div>
+</div>
+<p><code>NA</code> se propaga en los cálculos —cualquier operación con <code>NA</code> da <code>NA</code>— y se detecta con <code>is.na()</code>, no con <code>==</code>. Su manejo es parte del trabajo diario con datos reales.</p>
+<p><em>Ejercicios de esta sección: <a href="#ejercicios-tipos">ejercicios sobre tipos de datos</a>.</em></p>
+</section>
+<section id="vectores" class="level2">
+<h2 class="anchored" data-anchor-id="vectores">Vectores</h2>
+<p>Un <strong>vector</strong> es una secuencia ordenada de valores del mismo tipo y es la estructura fundamental de R: incluso un número solo es un vector de longitud 1 (de ahí el <code>[1]</code> de la consola). Los vectores se crean con la función <code>c()</code> (<em>combine</em>):</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>provincias <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"San José"</span>, <span class="st">"Alajuela"</span>, <span class="st">"Cartago"</span>, <span class="st">"Heredia"</span>, <span class="st">"Guanacaste"</span>, <span class="st">"Puntarenas"</span>, <span class="st">"Limón"</span>)</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>poblaciones <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1601167</span>, <span class="dv">1035464</span>, <span class="dv">545092</span>, <span class="dv">479117</span>, <span class="dv">412808</span>, <span class="dv">500166</span>, <span class="dv">470383</span>)</span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>areas <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">4969.80</span>, <span class="fl">9772.12</span>, <span class="fl">3093.24</span>, <span class="fl">2663.30</span>, <span class="fl">10196.29</span>, <span class="fl">11275.00</span>, <span class="fl">9176.88</span>)</span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>provincias</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "San José"   "Alajuela"   "Cartago"    "Heredia"    "Guanacaste"
+[6] "Puntarenas" "Limón"     </code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(poblaciones)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 7</code></pre>
+</div>
+</div>
+<p>Otras formas de crear vectores son el operador <code>:</code>, para secuencias de enteros, y las funciones <code>seq()</code> y <code>rep()</code>.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span><span class="sc">:</span><span class="dv">7</span></span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1 2 3 4 5 6 7</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">100</span>, <span class="at">by =</span> <span class="dv">25</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1]   0  25  50  75 100</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rep</span>(<span class="st">"CR"</span>, <span class="dv">3</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "CR" "CR" "CR"</code></pre>
+</div>
+</div>
+<section id="vectorización" class="level3">
+<h3 class="anchored" data-anchor-id="vectorización">Vectorización</h3>
+<p>La característica que distingue a R es que las operaciones actúan sobre todos los elementos de un vector a la vez: están <strong>vectorizadas</strong>. Para calcular la densidad de las siete provincias no hace falta un ciclo; basta dividir los dos vectores, elemento por elemento.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>densidades <span class="ot">&lt;-</span> poblaciones <span class="sc">/</span> areas</span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(densidades, <span class="dv">1</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 322.2 106.0 176.2 179.9  40.5  44.4  51.3</code></pre>
+</div>
+</div>
+<p>Lo mismo ocurre al operar un vector con un solo número, que se <strong>recicla</strong> para cada elemento; y las funciones matemáticas, como <code>round()</code> en el ejemplo anterior, también actúan sobre cada elemento.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>poblaciones <span class="sc">/</span> <span class="dv">1000000</span>  <span class="co"># población en millones</span></span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1.601167 1.035464 0.545092 0.479117 0.412808 0.500166 0.470383</code></pre>
+</div>
+</div>
+<p>Muchas funciones, en cambio, <strong>resumen</strong> un vector en un valor: <code>sum()</code>, <code>mean()</code>, <code>max()</code>, <code>min()</code>, <code>length()</code>, entre otras. <code>sort()</code> lo ordena y <code>which.max()</code> indica la posición del mayor valor.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(poblaciones)               <span class="co"># población del país</span></span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 5044197</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(densidades)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 131.4801</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="fu">max</span>(densidades)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 322.1794</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="fu">which.max</span>(densidades)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sort</span>(areas, <span class="at">decreasing =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 11275.00 10196.29  9772.12  9176.88  4969.80  3093.24  2663.30</code></pre>
+</div>
+</div>
+</section>
+<section id="indexación" class="level3">
+<h3 class="anchored" data-anchor-id="indexación">Indexación</h3>
+<p>Para extraer elementos de un vector se usa el operador <code>[ ]</code> con las posiciones deseadas, que empiezan en 1. Una posición negativa excluye ese elemento.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a>provincias[<span class="dv">1</span>]</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "San José"</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a>provincias[<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">3</span>)]</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "San José" "Cartago" </code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a>provincias[<span class="dv">2</span><span class="sc">:</span><span class="dv">4</span>]</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Alajuela" "Cartago"  "Heredia" </code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a>provincias[<span class="sc">-</span><span class="dv">1</span>]</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Alajuela"   "Cartago"    "Heredia"    "Guanacaste" "Puntarenas"
+[6] "Limón"     </code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb73"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a>provincias[<span class="fu">which.max</span>(densidades)]  <span class="co"># la provincia más densa</span></span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "San José"</code></pre>
+</div>
+</div>
+<p>Los elementos de un vector pueden tener <strong>nombres</strong>, que también sirven para indexar:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb75"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(densidades) <span class="ot">&lt;-</span> provincias</span>
+<span id="cb75-2"><a href="#cb75-2" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(densidades)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  San José   Alajuela    Cartago    Heredia Guanacaste Puntarenas      Limón 
+       322        106        176        180         40         44         51 </code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb77"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a>densidades[<span class="st">"Heredia"</span>]</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Heredia 
+179.896 </code></pre>
+</div>
+</div>
+</section>
+<section id="comparaciones-y-filtrado" class="level3">
+<h3 class="anchored" data-anchor-id="comparaciones-y-filtrado">Comparaciones y filtrado</h3>
+<p>Los operadores de comparación (<code>==</code>, <code>!=</code>, <code>&lt;</code>, <code>&gt;</code>, <code>&lt;=</code>, <code>&gt;=</code>) también están vectorizados y producen vectores lógicos. Nótese que la igualdad se escribe con <code>==</code>: un solo <code>=</code> es una asignación.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb79"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a>densidades <span class="sc">&gt;</span> <span class="dv">100</span></span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  San José   Alajuela    Cartago    Heredia Guanacaste Puntarenas      Limón 
+      TRUE       TRUE       TRUE       TRUE      FALSE      FALSE      FALSE </code></pre>
+</div>
+</div>
+<p>Un vector lógico dentro de <code>[ ]</code> selecciona los elementos para los que la condición es <code>TRUE</code>: esta es la forma más común de <strong>filtrar</strong> en R base, y la base de lo que hace dplyr en la sección III. Las condiciones se combinan con <code>&amp;</code> (y), <code>|</code> (o) y <code>!</code> (no), y <code>%in%</code> comprueba la pertenencia a un conjunto.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb81"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb81-1"><a href="#cb81-1" aria-hidden="true" tabindex="-1"></a>provincias[densidades <span class="sc">&gt;</span> <span class="dv">100</span>]</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "San José" "Alajuela" "Cartago"  "Heredia" </code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb83"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb83-1"><a href="#cb83-1" aria-hidden="true" tabindex="-1"></a>provincias[areas <span class="sc">&gt;</span> <span class="dv">9000</span> <span class="sc">&amp;</span> poblaciones <span class="sc">&lt;</span> <span class="dv">500000</span>]</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Guanacaste" "Limón"     </code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb85"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb85-1"><a href="#cb85-1" aria-hidden="true" tabindex="-1"></a>provincias[provincias <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Heredia"</span>, <span class="st">"Cartago"</span>)]</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Cartago" "Heredia"</code></pre>
+</div>
+</div>
+<p>Como <code>TRUE</code> vale 1 y <code>FALSE</code> vale 0, <code>sum()</code> de un vector lógico cuenta cuántos elementos cumplen la condición y <code>mean()</code> calcula la proporción.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb87"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb87-1"><a href="#cb87-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(densidades <span class="sc">&gt;</span> <span class="dv">100</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 4</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb89"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb89-1"><a href="#cb89-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(densidades <span class="sc">&gt;</span> <span class="dv">100</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.5714286</code></pre>
+</div>
+</div>
+</section>
+<section id="valores-faltantes" class="level3">
+<h3 class="anchored" data-anchor-id="valores-faltantes">Valores faltantes</h3>
+<p>Un <code>NA</code> en un vector hace que las funciones de resumen devuelvan <code>NA</code>, para no ocultar que faltan datos; el argumento <code>na.rm = TRUE</code> (<em>remove NA</em>) les indica que lo ignoren.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb91"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb91-1"><a href="#cb91-1" aria-hidden="true" tabindex="-1"></a>lluvia <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">12.5</span>, <span class="cn">NA</span>, <span class="fl">30.1</span>, <span class="fl">8.4</span>)</span>
+<span id="cb91-2"><a href="#cb91-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(lluvia)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] NA</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb93"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb93-1"><a href="#cb93-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(lluvia, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 17</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb95"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb95-1"><a href="#cb95-1" aria-hidden="true" tabindex="-1"></a><span class="fu">is.na</span>(lluvia)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] FALSE  TRUE FALSE FALSE</code></pre>
+</div>
+</div>
+</section>
+<section id="vectores-de-caracteres" class="level3">
+<h3 class="anchored" data-anchor-id="vectores-de-caracteres">Vectores de caracteres</h3>
+<p>Los vectores de texto tienen sus propias funciones: <code>paste()</code> une textos, <code>nchar()</code> cuenta caracteres, <code>toupper()</code> y <code>tolower()</code> cambian mayúsculas y minúsculas. Si se combinan tipos distintos en un vector, R los convierte todos al más general, que es el carácter.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb97"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb97-1"><a href="#cb97-1" aria-hidden="true" tabindex="-1"></a><span class="fu">paste</span>(<span class="st">"Provincia de"</span>, provincias[<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>])</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Provincia de San José" "Provincia de Alajuela" "Provincia de Cartago" </code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb99"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb99-1"><a href="#cb99-1" aria-hidden="true" tabindex="-1"></a><span class="fu">nchar</span>(provincias)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1]  8  8  7  7 10 10  5</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb101"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb101-1"><a href="#cb101-1" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="dv">1</span>, <span class="st">"dos"</span>, <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "1"    "dos"  "TRUE"</code></pre>
+</div>
+</div>
+<p><em>Ejercicios de esta sección: <a href="#ejercicios-vectores">ejercicios sobre vectores</a>.</em></p>
+</section>
+</section>
+<section id="factores" class="level2">
+<h2 class="anchored" data-anchor-id="factores">Factores</h2>
+<p>Un <strong>factor</strong> es un vector para variables categóricas con un conjunto fijo de valores posibles, llamados <strong>niveles</strong>. Se crea con <code>factor()</code>; si los niveles tienen un orden natural, se indica con el argumento <code>levels</code>. <code>table()</code> cuenta los elementos de cada nivel.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb103"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb103-1"><a href="#cb103-1" aria-hidden="true" tabindex="-1"></a>clima <span class="ot">&lt;-</span> <span class="fu">factor</span>(<span class="fu">c</span>(<span class="st">"seco"</span>, <span class="st">"húmedo"</span>, <span class="st">"húmedo"</span>, <span class="st">"muy húmedo"</span>, <span class="st">"seco"</span>),</span>
+<span id="cb103-2"><a href="#cb103-2" aria-hidden="true" tabindex="-1"></a>                <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"seco"</span>, <span class="st">"húmedo"</span>, <span class="st">"muy húmedo"</span>))</span>
+<span id="cb103-3"><a href="#cb103-3" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(clima)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "seco"       "húmedo"     "muy húmedo"</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb105"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb105-1"><a href="#cb105-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(clima)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>clima
+      seco     húmedo muy húmedo 
+         2          2          1 </code></pre>
+</div>
+</div>
+<p>Los factores importan sobre todo al graficar y al modelar: ggplot2, por ejemplo, ordena las categorías de un gráfico según los niveles del factor.</p>
+<p><em>Ejercicios de esta sección: <a href="#ejercicios-factores-listas">ejercicios sobre factores y listas</a>.</em></p>
+</section>
+<section id="listas" class="level2">
+<h2 class="anchored" data-anchor-id="listas">Listas</h2>
+<p>A diferencia de un vector, una <strong>lista</strong> puede contener elementos de distintos tipos y longitudes, incluidos otros vectores y otras listas. Se crea con <code>list()</code>, normalmente con nombres, y sus elementos se extraen con <code>$</code> o con <code>[[ ]]</code>.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb107"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb107-1"><a href="#cb107-1" aria-hidden="true" tabindex="-1"></a>canton <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">nombre =</span> <span class="st">"Montes de Oca"</span>,</span>
+<span id="cb107-2"><a href="#cb107-2" aria-hidden="true" tabindex="-1"></a>               <span class="at">poblacion =</span> <span class="dv">53862</span>,</span>
+<span id="cb107-3"><a href="#cb107-3" aria-hidden="true" tabindex="-1"></a>               <span class="at">distritos =</span> <span class="fu">c</span>(<span class="st">"San Pedro"</span>, <span class="st">"Sabanilla"</span>, <span class="st">"Mercedes"</span>, <span class="st">"San Rafael"</span>))</span>
+<span id="cb107-4"><a href="#cb107-4" aria-hidden="true" tabindex="-1"></a>canton<span class="sc">$</span>poblacion</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 53862</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb109"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb109-1"><a href="#cb109-1" aria-hidden="true" tabindex="-1"></a>canton[[<span class="st">"distritos"</span>]]</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "San Pedro"  "Sabanilla"  "Mercedes"   "San Rafael"</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb111"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb111-1"><a href="#cb111-1" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(canton<span class="sc">$</span>distritos)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 4</code></pre>
+</div>
+</div>
+<p>Las listas están por todas partes en R, aunque no siempre a la vista: un data frame es una lista de columnas, los resultados de muchas funciones son listas y, en shiny (sección V), los valores que el usuario ingresa en una aplicación se leen de una lista con <code>input$nombre</code>. La función <code>str()</code> muestra la estructura de cualquier objeto y es la mejor forma de examinar una lista.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb113"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb113-1"><a href="#cb113-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(canton)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>List of 3
+ $ nombre   : chr "Montes de Oca"
+ $ poblacion: num 53862
+ $ distritos: chr [1:4] "San Pedro" "Sabanilla" "Mercedes" "San Rafael"</code></pre>
+</div>
+</div>
+<p><em>Ejercicios de esta sección: <a href="#ejercicios-factores-listas">ejercicios sobre factores y listas</a>.</em></p>
+</section>
+<section id="data-frames" class="level2">
+<h2 class="anchored" data-anchor-id="data-frames">Data frames</h2>
+<p>Un <strong>data frame</strong> es la estructura de R para datos tabulares: una lista de vectores de igual longitud —las <strong>columnas</strong> o variables— en la que cada posición corresponde a una <strong>fila</strong> u observación. Puede construirse con <code>data.frame()</code> a partir de vectores:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb115"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb115-1"><a href="#cb115-1" aria-hidden="true" tabindex="-1"></a>provincias_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">provincia =</span> provincias,</span>
+<span id="cb115-2"><a href="#cb115-2" aria-hidden="true" tabindex="-1"></a>                            <span class="at">poblacion =</span> poblaciones,</span>
+<span id="cb115-3"><a href="#cb115-3" aria-hidden="true" tabindex="-1"></a>                            <span class="at">area_km2 =</span> areas)</span>
+<span id="cb115-4"><a href="#cb115-4" aria-hidden="true" tabindex="-1"></a>provincias_df</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   provincia poblacion area_km2
+1   San José   1601167  4969.80
+2   Alajuela   1035464  9772.12
+3    Cartago    545092  3093.24
+4    Heredia    479117  2663.30
+5 Guanacaste    412808 10196.29
+6 Puntarenas    500166 11275.00
+7      Limón    470383  9176.88</code></pre>
+</div>
+</div>
+<section id="importación" class="level3">
+<h3 class="anchored" data-anchor-id="importación">Importación</h3>
+<p>Lo habitual, sin embargo, es importar los datos de un archivo. La función <code>read.csv()</code> lee un archivo CSV —desde la computadora o directamente desde una URL— y devuelve un data frame. El archivo <a href="https://github.com/pf0953-programacionr/2026-ii/blob/main/datos/cantones.csv"><code>cantones.csv</code></a> del repositorio del curso contiene la provincia, la población y el área de los 84 cantones, derivados de los cuadros del INEC (véase el <a href="https://github.com/pf0953-programacionr/2026-ii/blob/main/datos/README.md">README</a> de los datos).</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb117"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb117-1"><a href="#cb117-1" aria-hidden="true" tabindex="-1"></a>cantones <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"https://raw.githubusercontent.com/pf0953-programacionr/2026-ii/main/datos/cantones.csv"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Las primeras funciones que se aplican a un data frame recién importado sirven para conocerlo: <code>str()</code> muestra su estructura (número de filas y columnas, y el tipo de cada columna), <code>head()</code> las primeras filas, <code>nrow()</code> y <code>ncol()</code> sus dimensiones, <code>names()</code> los nombres de las columnas y <code>summary()</code> un resumen estadístico de cada una. En RStudio, <code>View(cantones)</code> lo abre en una pestaña con formato de hoja de cálculo.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb118"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb118-1"><a href="#cb118-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(cantones)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>'data.frame':   84 obs. of  4 variables:
+ $ provincia: chr  "San José" "San José" "San José" "San José" ...
+ $ canton   : chr  "San José" "Escazú" "Desamparados" "Puriscal" ...
+ $ poblacion: int  352381 71500 223226 38525 17810 59588 32348 132104 58020 81012 ...
+ $ area_km2 : num  44.6 34.5 118.9 555 291.3 ...</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb120"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb120-1"><a href="#cb120-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(cantones)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  provincia       canton poblacion area_km2
+1  San José     San José    352381    44.62
+2  San José       Escazú     71500    34.53
+3  San José Desamparados    223226   118.89
+4  San José     Puriscal     38525   555.04
+5  San José      Tarrazú     17810   291.27
+6  San José       Aserrí     59588   168.26</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb122"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb122-1"><a href="#cb122-1" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(cantones)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 84</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb124"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb124-1"><a href="#cb124-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(cantones)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     provincia        canton     poblacion         area_km2      
+ Length   :84   Length   :84   Min.   :  5386   Min.   :   6.75  
+ N.unique : 7   N.unique :84   1st Qu.: 22740   1st Qu.:  78.01  
+ N.blank  : 0   N.blank  : 0   Median : 46142   Median : 280.89  
+ Min.nchar: 5   Min.nchar: 3   Mean   : 60050   Mean   : 608.89  
+ Max.nchar:10   Max.nchar:19   3rd Qu.: 68121   3rd Qu.: 814.96  
+                               Max.   :352381   Max.   :3352.14  </code></pre>
+</div>
+</div>
+</section>
+<section id="columnas" class="level3">
+<h3 class="anchored" data-anchor-id="columnas">Columnas</h3>
+<p>El operador <code>$</code> extrae una columna como vector, sobre el que se puede aplicar todo lo visto en la sección anterior; y, con una asignación, <strong>crea o modifica</strong> una columna. Como las operaciones están vectorizadas, la nueva columna se calcula para las 84 filas a la vez.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb126"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb126-1"><a href="#cb126-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(cantones<span class="sc">$</span>poblacion)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 5044197</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb128"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb128-1"><a href="#cb128-1" aria-hidden="true" tabindex="-1"></a>cantones<span class="sc">$</span>densidad <span class="ot">&lt;-</span> cantones<span class="sc">$</span>poblacion <span class="sc">/</span> cantones<span class="sc">$</span>area_km2</span>
+<span id="cb128-2"><a href="#cb128-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(cantones)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  provincia       canton poblacion area_km2   densidad
+1  San José     San José    352381    44.62 7897.37786
+2  San José       Escazú     71500    34.53 2070.66319
+3  San José Desamparados    223226   118.89 1877.58432
+4  San José     Puriscal     38525   555.04   69.40941
+5  San José      Tarrazú     17810   291.27   61.14602
+6  San José       Aserrí     59588   168.26  354.14240</code></pre>
+</div>
+</div>
+</section>
+<section id="filas-y-columnas-con" class="level3">
+<h3 class="anchored" data-anchor-id="filas-y-columnas-con">Filas y columnas con <code>[ , ]</code></h3>
+<p>El operador <code>[ ]</code> de los data frames tiene dos posiciones separadas por coma: <code>[filas, columnas]</code>. Cada una puede ser un vector de posiciones, de nombres o de valores lógicos, y si se deja vacía se toman todas las filas o todas las columnas.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb130"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb130-1"><a href="#cb130-1" aria-hidden="true" tabindex="-1"></a>cantones[<span class="dv">1</span>, ]                                <span class="co"># primera fila</span></span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  provincia   canton poblacion area_km2 densidad
+1  San José San José    352381    44.62 7897.378</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb132"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb132-1"><a href="#cb132-1" aria-hidden="true" tabindex="-1"></a>cantones[<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, <span class="fu">c</span>(<span class="st">"canton"</span>, <span class="st">"poblacion"</span>)]      <span class="co"># tres filas, dos columnas</span></span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>        canton poblacion
+1     San José    352381
+2       Escazú     71500
+3 Desamparados    223226</code></pre>
+</div>
+</div>
+<p>El <strong>filtrado</strong> de filas se hace con un vector lógico construido a partir de una o más columnas: es la misma idea que en los vectores, aplicada a la tabla completa.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb134"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb134-1"><a href="#cb134-1" aria-hidden="true" tabindex="-1"></a>cantones[cantones<span class="sc">$</span>provincia <span class="sc">==</span> <span class="st">"Heredia"</span>, ]</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   provincia        canton poblacion area_km2   densidad
+45   Heredia       Heredia    131901   283.12  465.88372
+46   Heredia         Barva     47699    56.02  851.46376
+47   Heredia Santo Domingo     45932    25.40 1808.34646
+48   Heredia Santa Bárbara     39133    52.10  751.11324
+49   Heredia    San Rafael     48848    48.31 1011.13641
+50   Heredia    San Isidro     22806    26.67  855.11811
+51   Heredia         Belén     23759    12.38 1919.14378
+52   Heredia        Flores     22026     6.75 3263.11111
+53   Heredia     San Pablo     29860     8.34 3580.33573
+54   Heredia     Sarapiquí     67153  2144.22   31.31815</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb136"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb136-1"><a href="#cb136-1" aria-hidden="true" tabindex="-1"></a>cantones[cantones<span class="sc">$</span>densidad <span class="sc">&gt;</span> <span class="dv">3000</span> <span class="sc">&amp;</span> cantones<span class="sc">$</span>area_km2 <span class="sc">&lt;</span> <span class="dv">20</span>, <span class="fu">c</span>(<span class="st">"canton"</span>, <span class="st">"densidad"</span>)]</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>          canton densidad
+13         Tibás 9019.589
+15 Montes de Oca 3413.308
+18    Curridabat 4422.540
+52        Flores 3263.111
+53     San Pablo 3580.336</code></pre>
+</div>
+</div>
+</section>
+<section id="ordenamiento" class="level3">
+<h3 class="anchored" data-anchor-id="ordenamiento">Ordenamiento</h3>
+<p>La función <code>order()</code> devuelve las posiciones que ordenarían un vector; usada en la posición de las filas, ordena el data frame. Un signo <code>-</code> invierte el orden de una columna numérica.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb138"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb138-1"><a href="#cb138-1" aria-hidden="true" tabindex="-1"></a>mas_densos <span class="ot">&lt;-</span> cantones[<span class="fu">order</span>(<span class="sc">-</span>cantones<span class="sc">$</span>densidad), ]</span>
+<span id="cb138-2"><a href="#cb138-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(mas_densos, <span class="dv">5</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   provincia     canton poblacion area_km2 densidad
+13  San José      Tibás     74592     8.27 9019.589
+1   San José   San José    352381    44.62 7897.378
+18  San José Curridabat     71026    16.06 4422.540
+8   San José Goicoechea    132104    31.70 4167.319
+10  San José Alajuelita     81012    21.47 3773.265</code></pre>
+</div>
+</div>
+</section>
+<section id="agrupación-y-sumarización" class="level3">
+<h3 class="anchored" data-anchor-id="agrupación-y-sumarización">Agrupación y sumarización</h3>
+<p>Dos funciones de R base permiten resumir un data frame por grupos: <code>table()</code> cuenta las filas de cada categoría y <code>aggregate()</code> aplica una función de resumen a una columna, por los grupos de otra, con la notación de fórmula <code>valor ~ grupo</code>.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb140"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb140-1"><a href="#cb140-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(cantones<span class="sc">$</span>provincia)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+  Alajuela    Cartago Guanacaste    Heredia      Limón Puntarenas   San José 
+        16          8         11         10          6         13         20 </code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb142"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb142-1"><a href="#cb142-1" aria-hidden="true" tabindex="-1"></a><span class="fu">aggregate</span>(poblacion <span class="sc">~</span> provincia, <span class="at">data =</span> cantones, <span class="at">FUN =</span> sum)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   provincia poblacion
+1   Alajuela   1035464
+2    Cartago    545092
+3 Guanacaste    412808
+4    Heredia    479117
+5      Limón    470383
+6 Puntarenas    500166
+7   San José   1601167</code></pre>
+</div>
+</div>
+<p>Estas operaciones —seleccionar, filtrar, ordenar, crear columnas, agrupar y resumir— son las que el paquete dplyr, en la sección III, expresa con una sintaxis más legible y encadenable; conocer su versión en R base ayuda a entender qué hace dplyr y a leer código que no lo usa.</p>
+<p>Por último, <code>write.csv()</code> guarda un data frame en un archivo CSV; <code>row.names = FALSE</code> evita que se escriba una columna con los números de fila.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb144"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb144-1"><a href="#cb144-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(mas_densos, <span class="st">"cantones-densidad.csv"</span>, <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><em>Ejercicios de esta sección: <a href="#ejercicios-data-frames">ejercicios sobre data frames</a>.</em></p>
+</section>
+</section>
+<section id="clínica-de-errores" class="level2">
+<h2 class="anchored" data-anchor-id="clínica-de-errores">Clínica de errores</h2>
+<p>Los mensajes de error de R son escuetos, pero informativos una vez que se aprende a leerlos. Los siguientes son los más frecuentes al comenzar; cada bloque se ejecuta a propósito con un error.</p>
+<p>El objeto no existe, casi siempre por un error de escritura (recuérdese que R distingue mayúsculas):</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb145"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb145-1"><a href="#cb145-1" aria-hidden="true" tabindex="-1"></a>Poblacion_sj <span class="sc">*</span> <span class="dv">2</span></span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-error">
+<pre><code>Error:
+! object 'Poblacion_sj' not found</code></pre>
+</div>
+</div>
+<p>La función no existe o pertenece a un paquete que no se ha cargado con <code>library()</code>:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb147"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb147-1"><a href="#cb147-1" aria-hidden="true" tabindex="-1"></a><span class="fu">leaflet</span>()</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-error">
+<pre><code>Error in `leaflet()`:
+! could not find function "leaflet"</code></pre>
+</div>
+</div>
+<p>Un símbolo inesperado: suele faltar una coma, un operador o unas comillas, o sobra un paréntesis. R señala el punto donde dejó de entender:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb149"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb149-1"><a href="#cb149-1" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span> <span class="dv">3</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-error">
+<pre><code>Error in parse(text = input): &lt;text&gt;:1:8: unexpected numeric constant
+1: c(1, 2 3
+           ^</code></pre>
+</div>
+</div>
+<p>Una operación aritmética con un valor que no es numérico, por ejemplo un texto (la conversión implícita no se hace en las operaciones):</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb151"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb151-1"><a href="#cb151-1" aria-hidden="true" tabindex="-1"></a><span class="st">"5"</span> <span class="sc">+</span> <span class="dv">5</span></span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-error">
+<pre><code>Error in `"5" + 5`:
+! non-numeric argument to binary operator</code></pre>
+</div>
+</div>
+<p>Dos situaciones más no producen un mensaje de error, pero desconciertan: si se usa <code>=</code> en lugar de <code>==</code> en una comparación, R interpreta una asignación o un nombre de argumento; y si en la consola aparece el símbolo <code>+</code> en lugar de <code>&gt;</code>, R está esperando el final de una expresión incompleta (un paréntesis o unas comillas sin cerrar): <code>Esc</code> la cancela.</p>
+<p><em>Ejercicios de esta sección: <a href="#ejercicios-errores">ejercicios sobre errores</a>.</em></p>
+</section>
+<section id="resumen" class="level2">
+<h2 class="anchored" data-anchor-id="resumen">Resumen</h2>
+<ul>
+<li>R evalúa <strong>expresiones</strong> en la <strong>consola</strong>; el trabajo se guarda en <strong>programas</strong> (<code>.R</code>), que se ejecutan línea por línea (<code>Ctrl + Enter</code>) o completos (<strong>Source</strong>).</li>
+<li>Los <strong>objetos</strong> guardan valores mediante la <strong>asignación</strong> <code>&lt;-</code>; los nombres siguen la guía de estilo (<em>snake case</em>).</li>
+<li>Las <strong>funciones</strong> se llaman con argumentos por posición o por nombre, con valores por defecto documentados en <code>?función</code>; los <strong>paquetes</strong> se instalan una vez (<code>install.packages()</code>) y se cargan en cada sesión (<code>library()</code>).</li>
+<li>Los tipos atómicos son <strong>numérico</strong>, <strong>carácter</strong> y <strong>lógico</strong>; <strong><code>NA</code></strong> representa los datos faltantes.</li>
+<li>El <strong>vector</strong> es la estructura básica: las operaciones están <strong>vectorizadas</strong>, se indexa con <code>[ ]</code> por posición, por nombre o con un vector lógico (<strong>filtrado</strong>), y <code>na.rm = TRUE</code> ignora los <code>NA</code> en los resúmenes.</li>
+<li>Los <strong>factores</strong> representan variables categóricas con <strong>niveles</strong>; las <strong>listas</strong> agrupan elementos heterogéneos (<code>$</code>, <code>[[ ]]</code>).</li>
+<li>El <strong>data frame</strong> es la tabla de datos: se importa con <code>read.csv()</code>, se explora con <code>str()</code>, <code>head()</code> y <code>summary()</code>, se accede a sus columnas con <code>$</code>, se filtra y selecciona con <code>[filas, columnas]</code>, se ordena con <code>order()</code> y se resume con <code>table()</code> y <code>aggregate()</code>.</li>
+</ul>
+</section>
+<section id="ejercicios" class="level2">
+<h2 class="anchored" data-anchor-id="ejercicios">Ejercicios</h2>
+<p>Los ejercicios se agrupan según la sección del capítulo a la que corresponden; se recomienda realizarlos al concluir la sección respectiva, en el programa <code>introduccion.R</code> del proyecto <code>pf0953</code> o en uno nuevo, <code>fundamentos-1.R</code>. Varios usan el cantón que eligió en el trabajo previo: su población y su área están en el archivo <a href="https://github.com/pf0953-programacionr/2026-ii/blob/main/datos/cantones.csv"><code>cantones.csv</code></a>.</p>
+<section id="ejercicios-calculadora" class="level3">
+<h3 class="anchored" data-anchor-id="ejercicios-calculadora">R como calculadora</h3>
+<ol type="1">
+<li>En la consola, calcule la densidad de población de su cantón (población entre área) y el porcentaje de la población del país (5 044 197 habitantes) que vive en él. Luego copie ambas expresiones al programa, con un comentario que indique el cantón y la fuente de los datos, y ejecútelas con <code>Ctrl + Enter</code>.</li>
+</ol>
+</section>
+<section id="ejercicios-objetos" class="level3">
+<h3 class="anchored" data-anchor-id="ejercicios-objetos">Objetos</h3>
+<ol start="2" type="1">
+<li><p>Guarde el nombre, la población y el área de su cantón en los objetos <code>canton</code>, <code>poblacion_canton</code> y <code>area_canton</code>, y calcule <code>densidad_canton</code> a partir de ellos. Después ejecute <code>poblacion_canton &lt;- poblacion_canton * 2</code> y, <strong>antes de ejecutar</strong> <code>densidad_canton</code>, prediga si su valor cambió.</p>
+<details>
+<summary>
+<p>Después de ejecutar, haga clic aquí para ver la explicación</p>
+</summary>
+<p>No cambió. La asignación guardó en <code>densidad_canton</code> el <em>resultado</em> del cálculo, no la fórmula: para actualizarlo hay que volver a ejecutar la línea que lo calcula. Esta es una diferencia importante con una hoja de cálculo, en la que las celdas se recalculan solas.</p>
+</details></li>
+</ol>
+</section>
+<section id="ejercicios-funciones" class="level3">
+<h3 class="anchored" data-anchor-id="ejercicios-funciones">Funciones y paquetes</h3>
+<ol start="3" type="1">
+<li><p>Consulte la documentación de <code>mean()</code> con <code>?mean</code> y responda: ¿qué hace el argumento <code>na.rm</code> y cuál es su valor por defecto? Luego redondee <code>densidad_canton</code> a un decimal, una vez pasando <code>digits</code> por nombre y otra por posición.</p></li>
+<li><p>Cargue el paquete tidyverse con <code>library(tidyverse)</code> (está instalado en el proyecto de Posit Cloud del curso; si trabaja localmente y no lo tiene, instálelo primero) y lea el mensaje que muestra: ¿cuántos paquetes carga? Ese conjunto es el tema de la sección III.</p></li>
+</ol>
+</section>
+<section id="ejercicios-tipos" class="level3">
+<h3 class="anchored" data-anchor-id="ejercicios-tipos">Tipos de datos</h3>
+<ol start="5" type="1">
+<li><p><strong>Prediga antes de ejecutar</strong> el resultado —valor y tipo— de cada expresión; anote sus predicciones en comentarios y luego ejecútelas:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb153"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb153-1"><a href="#cb153-1" aria-hidden="true" tabindex="-1"></a><span class="cn">TRUE</span> <span class="sc">+</span> <span class="cn">TRUE</span></span>
+<span id="cb153-2"><a href="#cb153-2" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>)</span>
+<span id="cb153-3"><a href="#cb153-3" aria-hidden="true" tabindex="-1"></a><span class="fu">as.numeric</span>(<span class="st">"3,5"</span>)</span>
+<span id="cb153-4"><a href="#cb153-4" aria-hidden="true" tabindex="-1"></a><span class="st">"5"</span> <span class="sc">==</span> <span class="dv">5</span></span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<details>
+<summary>
+<p>Después de ejecutar, haga clic aquí para ver la explicación</p>
+</summary>
+<p><code>TRUE + TRUE</code> es <code>2</code>: los lógicos se convierten en 1 y 0 al operar con ellos. <code>class(1:3)</code> es <code>"integer"</code>, porque <code>:</code> produce enteros. <code>as.numeric("3,5")</code> es <code>NA</code> con una advertencia, porque R solo reconoce el punto decimal. <code>"5" == 5</code> es <code>TRUE</code>: para comparar, R convierte el número a texto; en cambio <code>"5" + 5</code> es un error, porque la suma no convierte.</p>
+</details></li>
+</ol>
+</section>
+<section id="ejercicios-vectores" class="level3">
+<h3 class="anchored" data-anchor-id="ejercicios-vectores">Vectores</h3>
+<ol start="6" type="1">
+<li><p>Con los vectores <code>provincias</code>, <code>poblaciones</code> y <code>areas</code> del capítulo, calcule el porcentaje de la población del país que vive en cada provincia (redondeado a un decimal), asígnele los nombres de las provincias y muéstrelo ordenado de mayor a menor. Después obtenga, con un filtro lógico, los nombres de las provincias cuya densidad supera la del país (población total entre área total).</p></li>
+<li><p><strong>Prediga antes de ejecutar</strong> el resultado de cada línea, anote las predicciones y luego ejecútelas:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb154"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb154-1"><a href="#cb154-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">10</span>, <span class="dv">20</span>, <span class="dv">30</span>, <span class="cn">NA</span>)</span>
+<span id="cb154-2"><a href="#cb154-2" aria-hidden="true" tabindex="-1"></a>x <span class="sc">&gt;</span> <span class="dv">15</span></span>
+<span id="cb154-3"><a href="#cb154-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(x <span class="sc">&gt;</span> <span class="dv">15</span>)</span>
+<span id="cb154-4"><a href="#cb154-4" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(x <span class="sc">&gt;</span> <span class="dv">15</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb154-5"><a href="#cb154-5" aria-hidden="true" tabindex="-1"></a>x[x <span class="sc">&gt;</span> <span class="dv">15</span>]</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<details>
+<summary>
+<p>Después de ejecutar, haga clic aquí para ver la explicación</p>
+</summary>
+<p>La comparación con <code>NA</code> da <code>NA</code> (no se sabe si un valor desconocido es mayor que 15), por lo que <code>x &gt; 15</code> es <code>FALSE TRUE TRUE NA</code>. <code>sum()</code> de un vector con <code>NA</code> es <code>NA</code>, salvo con <code>na.rm = TRUE</code>, que da <code>2</code>. Al indexar con un vector lógico que contiene <code>NA</code>, R devuelve <code>NA</code> en esa posición: <code>20 30 NA</code>. Por eso, al filtrar datos reales, conviene combinar la condición con <code>!is.na()</code>.</p>
+</details></li>
+</ol>
+</section>
+<section id="ejercicios-factores-listas" class="level3">
+<h3 class="anchored" data-anchor-id="ejercicios-factores-listas">Factores y listas</h3>
+<ol start="8" type="1">
+<li>Cree una lista con el nombre de su cantón, su provincia y un vector con los nombres de al menos tres de sus distritos (puede consultarlos en <a href="https://es.wikipedia.org/wiki/Cantones_de_Costa_Rica">Wikipedia</a>). Extraiga el vector de distritos con <code>$</code> y con <code>[[ ]]</code>, cuente cuántos son con <code>length()</code> y examine la lista con <code>str()</code>.</li>
+</ol>
+</section>
+<section id="ejercicios-data-frames" class="level3">
+<h3 class="anchored" data-anchor-id="ejercicios-data-frames">Data frames</h3>
+<ol start="9" type="1">
+<li><p>A partir del data frame <code>cantones</code> (con la columna <code>densidad</code> ya calculada), obtenga los cantones de su provincia ordenados por área, de mayor a menor, mostrando solo las columnas <code>canton</code> y <code>area_km2</code>. ¿En qué posición queda su cantón?</p></li>
+<li><p>Obtenga los diez cantones más densos del país. Luego determine la posición de su cantón en el ranking nacional de densidad: ordene el data frame completo por densidad decreciente, guárdelo en un objeto y use <code>which()</code> sobre la columna <code>canton</code>. Compare el resultado con el de sus compañeros.</p></li>
+<li><p>Con <code>aggregate()</code>, calcule el área total de cada provincia y determine cuál es la mayor. Con <code>table()</code>, verifique cuántos cantones tiene su provincia. Finalmente, guarde en un archivo CSV, dentro de su proyecto, el data frame de su provincia ordenado por densidad, y ábralo en RStudio o en una hoja de cálculo para comprobarlo.</p></li>
+</ol>
+</section>
+<section id="ejercicios-errores" class="level3">
+<h3 class="anchored" data-anchor-id="ejercicios-errores">Errores</h3>
+<ol start="12" type="1">
+<li>Provoque a propósito, en la consola, los cuatro errores de la clínica con código propio (un objeto mal escrito, una función de un paquete no cargado, una coma faltante y una operación con texto) y anote en comentarios la primera línea de cada mensaje. Luego escriba <code>mean(c(1, 2</code> y presione <code>Enter</code>: observe el símbolo <code>+</code> y cancele con <code>Esc</code>.</li>
+</ol>
+</section>
+</section>
+<section id="referencias-bibliográficas" class="level2">
+<h2 class="anchored" data-anchor-id="referencias-bibliográficas">Referencias bibliográficas</h2>
+<p>Grolemund, G. (2014). <em>Hands-on programming with R: Write your own functions and simulations</em>. O’Reilly Media. <a href="https://rstudio-education.github.io/hopr/" class="uri">https://rstudio-education.github.io/hopr/</a></p>
+<p>Instituto Nacional de Estadística y Censos. (2023). <em>Resultados de la Estimación de Población y Vivienda 2022</em> [archivo XLSX]. <a href="https://admin.inec.cr/sites/default/files/2023-11/reResultadosEstimacionPoblacionVivienda2022_3.xlsx" class="uri">https://admin.inec.cr/sites/default/files/2023-11/reResultadosEstimacionPoblacionVivienda2022_3.xlsx</a></p>
+<p>R Core Team. (2026). <em>An introduction to R</em>. R Foundation for Statistical Computing. <a href="https://cran.r-project.org/doc/manuals/r-release/R-intro.html" class="uri">https://cran.r-project.org/doc/manuals/r-release/R-intro.html</a></p>
+<p>Wickham, H., Çetinkaya-Rundel, M., y Grolemund, G. (2023). <em>R for data science: Import, tidy, transform, visualize, and model data</em> (2.ª ed.). O’Reilly Media. <a href="https://r4ds.hadley.nz/" class="uri">https://r4ds.hadley.nz/</a></p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    // Ensure there is a toggle, if there isn't float one in the top right
+    if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+      const a = window.document.createElement('a');
+      a.classList.add('top-right');
+      a.classList.add('quarto-color-scheme-toggle');
+      a.href = "";
+      a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+      const i = window.document.createElement("i");
+      i.classList.add('bi');
+      a.appendChild(i);
+      window.document.body.appendChild(a);
+    }
+    setColorSchemeToggle(hasAlternateSentinel())
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copiado");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copiado");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/pf0953-programacionr\.github\.io\/2026-ii\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>Los contenidos de este curso, a menos que se especifique de otra forma, se comparten mediante una <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.es">licencia de Creative Commons Reconocimiento-CompartirIgual 4.0 Internacional</a>.</p>
+<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/pf0953-programacionr/2026-ii/blob/main/contenidos/ii-lenguaje-programacion-r/07-fundamentos-r-i.qmd" class="toc-action"><i class="bi bi-github"></i>Ver el código</a></li><li><a href="https://github.com/pf0953-programacionr/2026-ii/edit/main/contenidos/ii-lenguaje-programacion-r/07-fundamentos-r-i.qmd" class="toc-action"><i class="bi empty"></i>Editar esta página</a></li></ul></div></div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>
