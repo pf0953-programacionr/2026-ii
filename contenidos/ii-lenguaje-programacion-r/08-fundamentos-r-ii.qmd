@@ -1,0 +1,397 @@
+---
+title: "Fundamentos de R II: condicionales, ciclos y funciones"
+---
+
+## Trabajo previo
+
+### Lecturas
+
+Antes de la clase, revise la lectura obligatoria de esta semana según el programa del curso; si dispone de poco tiempo, concéntrese en los capítulos 9 y 11, que corresponden a los temas de este capítulo. Los dos capítulos de *R for data science* son una lectura complementaria, más orientada al trabajo con datos.
+
+Grolemund, G. (2014). *Hands-on programming with R: Write your own functions and simulations* (capítulos 9 al 12). O'Reilly Media. <https://rstudio-education.github.io/hopr/>
+
+Wickham, H., Çetinkaya-Rundel, M., y Grolemund, G. (2023). Functions; Iteration. En *R for data science: Import, tidy, transform, visualize, and model data* (2.ª ed.). O'Reilly Media. <https://r4ds.hadley.nz/functions.html>
+
+### Otros recursos
+
+Tenga a mano el proyecto `pf0953` y los objetos de su cantón creados en los ejercicios de la [parte I](07-fundamentos-r-i.qmd), que se reutilizan aquí.
+
+## Introducción
+
+Este capítulo es la segunda y última parte de la serie *Fundamentos de R*. La [primera parte](07-fundamentos-r-i.qmd) presentó los objetos, los tipos de datos, los vectores y los data frames; esta introduce las **estructuras de control** con las que un programa decide y repite —los condicionales y los ciclos— y el mecanismo para organizar el código y reutilizarlo: las **funciones definidas por el usuario**. Los tres se combinan al final en un ejemplo con los datos de los cantones, y una clínica de errores recoge los mensajes más comunes al programar con ellos.
+
+En R, gracias a la vectorización, los ciclos se usan menos que en otros lenguajes, y las funciones propias, en cambio, son esenciales: los paquetes que se estudian en las próximas secciones se construyen combinando funciones, y en shiny (sección V) buena parte de una aplicación consiste en definirlas.
+
+## Condicionales
+
+Un **condicional** ejecuta un bloque de código solo si se cumple una condición. En R se escribe con `if`, seguido de la condición entre paréntesis y del bloque entre llaves. La condición debe ser un único valor lógico.
+
+```{r}
+#| label: if
+densidad_sj <- 352381 / 44.62
+
+if (densidad_sj > 1000) {
+  print("Cantón muy denso")
+}
+```
+
+La cláusula `else` indica qué hacer cuando la condición es falsa, y `else if` encadena condiciones adicionales, que se evalúan en orden hasta que una se cumple. Por convención, `else` se escribe en la misma línea que la llave que cierra el bloque anterior: si se escribe en una línea nueva, R considera terminado el `if` y `else` produce un error.
+
+```{r}
+#| label: else-if
+densidad_sarapiqui <- 67153 / 2144.22
+
+if (densidad_sarapiqui > 1000) {
+  print("Cantón muy denso")
+} else if (densidad_sarapiqui > 100) {
+  print("Cantón de densidad media")
+} else {
+  print("Cantón poco denso")
+}
+```
+
+### Condiciones vectorizadas: `ifelse()`
+
+`if` evalúa una sola condición, por lo que no sirve para clasificar todos los elementos de un vector a la vez. Para eso está la función **`ifelse()`**, vectorizada: recibe un vector lógico, un valor para los `TRUE` y otro para los `FALSE`, y devuelve un vector de la misma longitud. Con los datos de los cantones, clasifica los 84 en una línea y el resultado puede guardarse como una columna nueva.
+
+```{r}
+#| label: ifelse
+cantones <- read.csv("https://raw.githubusercontent.com/pf0953-programacionr/2026-ii/main/datos/cantones.csv")
+cantones$densidad <- cantones$poblacion / cantones$area_km2
+
+cantones$tipo <- ifelse(cantones$densidad > 100, "urbano", "rural")
+table(cantones$tipo)
+```
+
+Para más de dos categorías, los `ifelse()` pueden anidarse, aunque el paquete dplyr ofrece una alternativa más legible, `case_when()`, que se estudia en la sección III.
+
+*Ejercicios de esta sección: [ejercicios sobre condicionales](#ejercicios-condicionales).*
+
+## Ciclos
+
+Un **ciclo** repite un bloque de código. El ciclo `for` lo ejecuta una vez por cada elemento de un vector, asignando ese elemento a una variable:
+
+```{r}
+#| label: for
+provincias <- c("San José", "Alajuela", "Cartago", "Heredia", "Guanacaste", "Puntarenas", "Limón")
+
+for (provincia in provincias) {
+  print(paste("Provincia de", provincia))
+}
+```
+
+Cuando se necesitan las posiciones, por ejemplo para recorrer en paralelo varios vectores, se itera sobre `seq_along()`, que genera las posiciones de un vector (`1:length(x)`, pero seguro incluso si el vector está vacío):
+
+```{r}
+#| label: for-indices
+poblaciones <- c(1601167, 1035464, 545092, 479117, 412808, 500166, 470383)
+areas <- c(4969.80, 9772.12, 3093.24, 2663.30, 10196.29, 11275.00, 9176.88)
+
+for (i in seq_along(provincias)) {
+  densidad <- poblaciones[i] / areas[i]
+  print(paste(provincias[i], round(densidad)))
+}
+```
+
+### El patrón del acumulador
+
+Un uso clásico de los ciclos es el **acumulador**: una variable que se inicializa antes del ciclo y se actualiza en cada iteración, por ejemplo para sumar, contar o encontrar un máximo.
+
+```{r}
+#| label: acumulador
+total <- 0
+for (p in poblaciones) {
+  total <- total + p
+}
+total
+
+mayor <- ""
+densidad_mayor <- 0
+for (i in seq_along(provincias)) {
+  densidad <- poblaciones[i] / areas[i]
+  if (densidad > densidad_mayor) {
+    mayor <- provincias[i]
+    densidad_mayor <- densidad
+  }
+}
+mayor
+```
+
+El ciclo `while` repite mientras una condición sea verdadera; se usa cuando no se sabe de antemano cuántas iteraciones harán falta. Hay que asegurarse de que la condición deje de cumplirse en algún momento; si no, el ciclo es infinito (el botón **Stop** de la consola lo interrumpe).
+
+```{r}
+#| label: while
+anio <- 2022
+poblacion <- 5044197
+while (poblacion < 6000000) {
+  poblacion <- poblacion * 1.0145  # crecimiento anual de 1,45 % (INEC, 2023)
+  anio <- anio + 1
+}
+anio
+```
+
+### Ciclos y vectorización
+
+Los dos primeros ejemplos del acumulador se resuelven en R sin ciclo, con las operaciones vectorizadas de la parte I:
+
+```{r}
+#| label: vectorizado
+sum(poblaciones)
+provincias[which.max(poblaciones / areas)]
+```
+
+Esta es la razón por la que los ciclos son menos frecuentes en R que en otros lenguajes: la mayoría de las tareas sobre vectores y data frames —calcular una columna, filtrar, resumir— ya están vectorizadas, y las que no lo están suelen resolverse con funciones que aplican otra función a cada elemento, como `sapply()` en R base o las de purrr en tidyverse. La recomendación práctica es usar primero la operación vectorizada, si existe, y reservar los ciclos para lo que no puede expresarse de otra forma: repetir un procedimiento completo para cada archivo de una carpeta, cada año de una serie o cada especie de una lista.
+
+*Ejercicios de esta sección: [ejercicios sobre ciclos](#ejercicios-ciclos).*
+
+## Funciones definidas por el usuario
+
+Cuando un cálculo se repite con distintos valores, conviene convertirlo en una **función**: se define una vez, con un nombre, y se llama tantas veces como haga falta. Esto evita duplicar código, facilita corregirlo en un solo lugar y hace los programas más legibles, porque cada función expresa una idea.
+
+Una función se crea con `function`, seguida de los **argumentos** entre paréntesis y del **cuerpo** entre llaves, y se asigna a un nombre como cualquier otro objeto. El valor de la última expresión del cuerpo es el **valor de retorno**; también puede indicarse explícitamente con `return()`.
+
+```{r}
+#| label: funcion
+# Densidad de población (hab./km²) a partir de la población y el área
+densidad <- function(poblacion, area_km2) {
+  poblacion / area_km2
+}
+
+densidad(352381, 44.62)
+densidad(poblacion = 67153, area_km2 = 2144.22)
+```
+
+Como el cuerpo usa operaciones vectorizadas, la función también lo es: acepta vectores y devuelve un vector.
+
+```{r}
+#| label: funcion-vectorizada
+round(densidad(poblaciones, areas))
+```
+
+### Argumentos con valores por defecto
+
+Un argumento puede tener un **valor por defecto**, que se usa cuando no se especifica. La función `clasificar_densidad()` clasifica un vector de densidades según un umbral que, si no se indica, es 100.
+
+```{r}
+#| label: valores-defecto
+clasificar_densidad <- function(densidad, umbral = 100) {
+  ifelse(densidad > umbral, "urbano", "rural")
+}
+
+clasificar_densidad(c(50, 150, 3000))
+clasificar_densidad(c(50, 150, 3000), umbral = 1000)
+```
+
+### Ámbito de las variables
+
+Los objetos creados dentro de una función —los argumentos y las variables del cuerpo— son **locales**: existen solo mientras la función se ejecuta y no aparecen en el panel *Environment*. La función se comunica con el exterior a través de sus argumentos y de su valor de retorno, lo que la hace predecible: siempre produce el mismo resultado con los mismos argumentos.
+
+```{r}
+#| label: ambito
+#| error: true
+porcentaje <- function(parte, total) {
+  proporcion <- parte / total
+  proporcion * 100
+}
+
+porcentaje(1601167, 5044197)
+proporcion  # no existe fuera de la función
+```
+
+### Retornar no es imprimir
+
+Una confusión frecuente es *mostrar* el resultado dentro de una función, con `cat()` o `print()`, en lugar de retornarlo. Mostrarlo solo lo escribe en la consola: `cat()` retorna `NULL`, por lo que el resultado no puede usarse en un cálculo posterior, y `print()`, aunque retorna el valor, lo escribe en la consola en cada llamada, se necesite o no. Una función debe retornar su resultado y dejar que quien la llama decida si lo muestra.
+
+```{r}
+#| label: print-vs-return
+densidad_mostrada <- function(poblacion, area_km2) {
+  cat(poblacion / area_km2, "\n")
+}
+
+resultado <- densidad_mostrada(352381, 44.62)
+resultado * 2
+```
+
+### Un ejemplo geográfico: la distancia entre dos puntos
+
+Las funciones propias permiten encapsular cálculos más largos. La **fórmula de haversine** calcula la distancia sobre la superficie terrestre entre dos puntos dados por su latitud y longitud, en grados decimales. La función de abajo la implementa; obsérvese que su cuerpo se documenta con comentarios y que los pasos intermedios se guardan en variables locales con nombres claros.
+
+```{r}
+#| label: haversine
+# Distancia (km) entre dos puntos por la fórmula de haversine
+distancia_km <- function(lat1, lon1, lat2, lon2) {
+  radio_tierra <- 6371  # km
+  # Conversión de grados a radianes
+  lat1 <- lat1 * pi / 180
+  lon1 <- lon1 * pi / 180
+  lat2 <- lat2 * pi / 180
+  lon2 <- lon2 * pi / 180
+  # Fórmula de haversine
+  a <- sin((lat2 - lat1) / 2)^2 + cos(lat1) * cos(lat2) * sin((lon2 - lon1) / 2)^2
+  2 * radio_tierra * asin(sqrt(a))
+}
+
+# De San José (9.93, -84.08) a Limón (9.99, -83.03)
+distancia_km(9.93, -84.08, 9.99, -83.03)
+```
+
+Más adelante en el curso, el paquete sf calcula distancias, áreas y muchas otras operaciones geométricas con funciones ya escritas y probadas; el punto de este ejemplo es mostrar cómo se construye una función a partir de un procedimiento conocido.
+
+*Ejercicios de esta sección: [ejercicios sobre funciones](#ejercicios-funciones).*
+
+## Ejemplo integrador
+
+Las tres herramientas del capítulo se combinan para responder una pregunta con el data frame de los cantones: ¿cuántos cantones de cada tipo hay en cada provincia? La función definida arriba clasifica los cantones, `ifelse()` lo hace para las 84 filas a la vez, y `table()` cruza las dos variables categóricas. Un ciclo, por último, imprime un resumen por provincia.
+
+```{r}
+#| label: integrador
+cantones$tipo <- clasificar_densidad(cantones$densidad, umbral = 100)
+table(cantones$provincia, cantones$tipo)
+
+for (provincia in unique(cantones$provincia)) {
+  filas <- cantones$provincia == provincia
+  urbanos <- sum(cantones$tipo[filas] == "urbano")
+  print(paste0(provincia, ": ", urbanos, " de ", sum(filas), " cantones urbanos"))
+}
+```
+
+## Clínica de errores
+
+Falta un argumento sin valor por defecto: la función no puede ejecutarse.
+
+```{r}
+#| label: error-argumento
+#| error: true
+densidad(352381)
+```
+
+La condición de un `if` tiene más de un valor: desde R 4.2 es un error, y la solución suele ser `ifelse()` o resumir la condición con `any()` o `all()`.
+
+```{r}
+#| label: error-condicion
+#| error: true
+if (cantones$densidad > 100) {
+  print("urbano")
+}
+```
+
+`else` en una línea nueva, fuera de un bloque, es un error de sintaxis: R ya había dado por terminado el `if`.
+
+```{r}
+#| label: error-else
+#| error: true
+if (densidad_sj > 1000) {
+  print("muy denso")
+}
+else {
+  print("poco denso")
+}
+```
+
+Una variable local no existe fuera de la función, como se vio en la sección de ámbito; si un cálculo la necesita, la función debe retornarla. Y una llave `{` o un paréntesis sin cerrar deja la consola esperando, con el símbolo `+`: `Esc` cancela.
+
+*Ejercicios de esta sección: [ejercicios sobre errores](#ejercicios-errores).*
+
+## Resumen
+
+- Los **condicionales** (`if`, `else if`, `else`) ejecutan bloques según una condición de un solo valor; **`ifelse()`** clasifica vectores completos.
+- Los **ciclos** `for` recorren un vector (o sus posiciones, con `seq_along()`), a menudo con el patrón del **acumulador**; `while` repite mientras se cumpla una condición. En R se prefieren las **operaciones vectorizadas** y los ciclos se reservan para lo que no puede expresarse con ellas.
+- Las **funciones definidas por el usuario** se crean con `function`, tienen **argumentos** (con posibles **valores por defecto**) y un **valor de retorno** (la última expresión o `return()`); sus variables son **locales**. Retornar un valor no es lo mismo que imprimirlo.
+- Funciones, `ifelse()` y data frames se combinan para clasificar y resumir datos; la **clínica de errores** recoge los mensajes más comunes: argumento faltante, condición de longitud mayor que 1 y `else` fuera de lugar.
+
+## Ejercicios
+
+Los ejercicios se agrupan según la sección del capítulo a la que corresponden; se recomienda realizarlos al concluir la sección respectiva, en un programa `fundamentos-2.R` del proyecto `pf0953`. Varios continúan con el cantón elegido en la parte I.
+
+### Condicionales {#ejercicios-condicionales}
+
+1. Escriba un condicional que, a partir de `densidad_canton` (parte I), imprima si su cantón es «muy denso» (más de 1000 hab./km²), «de densidad media» (entre 100 y 1000) o «poco denso». Cambie el valor de `densidad_canton` para probar las tres ramas.
+
+2. Con `ifelse()`, agregue al data frame `cantones` una columna `tamano` con el valor `"grande"` si el área supera los 1000 km² y `"pequeño"` en caso contrario, y cuente cuántos cantones hay de cada tamaño en su provincia (recuerde el filtrado de la parte I).
+
+### Ciclos {#ejercicios-ciclos}
+
+3. **Reordene** las siguientes líneas —están desordenadas y mal sangradas— para obtener un programa que calcule, con un ciclo `for` y el patrón del acumulador, la provincia de mayor área. Compruébelo con `provincias[which.max(areas)]`.
+
+    ```r
+    }
+    area_mayor <- areas[i]
+    for (i in seq_along(provincias)) {
+    mayor <- ""
+    mayor <- provincias[i]
+    if (areas[i] > area_mayor) {
+    area_mayor <- 0
+    mayor
+    }
+    ```
+
+4. Escriba un ciclo `for` que recorra las provincias e imprima, para cada una, cuántos cantones tiene (use el data frame `cantones` y `sum()` sobre una comparación). Luego obtenga el mismo resultado sin ciclo, con `table()`.
+
+5. **Prediga antes de ejecutar** cuántas líneas imprime el siguiente ciclo y cuál es el último valor de `n`; luego ejecútelo.
+
+    ```r
+    n <- 1
+    while (n < 100) {
+      n <- n * 3
+      print(n)
+    }
+    ```
+
+    <details>
+    <summary>Después de ejecutar, haga clic aquí para ver la explicación</summary>
+    Imprime cinco líneas: 3, 9, 27, 81 y 243. Cuando `n` vale 81 la condición `n < 100` todavía se cumple, así que el cuerpo se ejecuta una vez más y `n` pasa a 243; la condición se comprueba solo al inicio de cada iteración, no después de cada instrucción.
+    </details>
+
+### Funciones {#ejercicios-funciones}
+
+6. Defina una función `celsius_a_fahrenheit()` que reciba una temperatura en grados Celsius y retorne su equivalente en Fahrenheit ($F = C \times 9/5 + 32$), y pruébela con un valor y con un vector de valores. Defina luego la función inversa.
+
+7. Convierta el condicional del ejercicio 1 en una función `describir_densidad()` que reciba una densidad y **retorne** (no imprima) la descripción. Pruébela con la densidad de su cantón y con las de las siete provincias; en este último caso, ¿qué ocurre y por qué? Reescríbala con `ifelse()` anidado para que acepte vectores.
+
+8. Defina una función `resumen_canton()` que reciba el nombre de un cantón y el data frame `cantones`, y retorne una hilera de caracteres como `"Montes de Oca (San José): 53862 habitantes, 3413 hab./km²"`. Use `paste0()` y `round()`. Pruébela con su cantón y con dos más.
+
+9. **Prediga antes de ejecutar** qué muestra cada una de las cuatro llamadas; luego ejecute:
+
+    ```r
+    f <- function(x) {
+      y <- x * 2
+    }
+    f(5)
+    resultado <- f(5)
+    resultado
+
+    g <- function(x) {
+      y <- x * 2
+      y
+    }
+    g(5)
+    ```
+
+    <details>
+    <summary>Después de ejecutar, haga clic aquí para ver la explicación</summary>
+    `f(5)` no muestra nada, pero `resultado` vale 10: la última expresión de `f()` es una asignación, que retorna su valor de forma *invisible*. En `g()`, la última expresión es `y`, que se retorna y se muestra. Por claridad, conviene que la última línea de una función sea el valor que retorna, o usar `return()`.
+    </details>
+
+### Errores {#ejercicios-errores}
+
+10. El siguiente programa debería imprimir la densidad de cada provincia con su clasificación, pero tiene **dos errores**: uno detiene la ejecución con un mensaje y el otro es silencioso (el programa corre, pero el resultado es incorrecto). Encuéntrelos y corríjalos; primero por su cuenta y, si se atasca, pidiendo a un asistente de IA que le *explique* el mensaje de error, no que le resuelva el ejercicio.
+
+    ```r
+    clasificar <- function(densidad, umbral) {
+      ifelse(densidad > umbral, "urbano", "rural")
+    }
+
+    for (i in seq_along(provincias)) {
+      densidad <- poblaciones[i] / areas
+      tipo <- clasificar(densidad)
+      print(paste(provincias[i], round(densidad), tipo))
+    }
+    ```
+
+## Referencias bibliográficas
+
+Grolemund, G. (2014). *Hands-on programming with R: Write your own functions and simulations*. O'Reilly Media. <https://rstudio-education.github.io/hopr/>
+
+Instituto Nacional de Estadística y Censos. (2023). *Resultados de la Estimación de Población y Vivienda 2022* [archivo XLSX]. <https://admin.inec.cr/sites/default/files/2023-11/reResultadosEstimacionPoblacionVivienda2022_3.xlsx>
+
+Wickham, H., Çetinkaya-Rundel, M., y Grolemund, G. (2023). *R for data science: Import, tidy, transform, visualize, and model data* (2.ª ed.). O'Reilly Media. <https://r4ds.hadley.nz/>
