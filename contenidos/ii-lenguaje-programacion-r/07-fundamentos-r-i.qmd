@@ -18,7 +18,7 @@ Tenga a mano el proyecto `pf0953` y el programa `introduccion.R` creados en los 
 
 ## Introducción
 
-Este capítulo abre la serie *Fundamentos de R*, que continúa en la [parte II](08-fundamentos-r-ii.qmd) con los condicionales, los ciclos y las funciones definidas por el usuario. Aquí se presentan los elementos con los que se construye cualquier programa en R: las expresiones que se escriben en la consola, los objetos que guardan valores, las funciones y los paquetes, los tipos de datos y, sobre todo, las estructuras que los organizan: los **vectores** —la unidad básica de R— y los **data frames**, las tablas de datos con las que se trabaja durante el resto del curso.
+Este capítulo abre la serie *Fundamentos de R*, que continúa en la parte II con los condicionales, los ciclos y las funciones definidas por el usuario. Aquí se presentan los elementos con los que se construye cualquier programa en R: las expresiones que se escriben en la consola, los objetos que guardan valores, las funciones y los paquetes, los tipos de datos y, sobre todo, las estructuras que los organizan: los **vectores** —la unidad básica de R— y los **data frames**, las tablas de datos con las que se trabaja durante el resto del curso.
 
 Como hilo conductor se usan datos reales de Costa Rica: la población y la extensión de sus siete provincias y de sus 84 cantones, según la Estimación de Población y Vivienda 2022 del [Instituto Nacional de Estadística y Censos (INEC)](https://inec.cr/) (INEC, 2023). Se recomienda ejecutar cada bloque de código en RStudio, a medida que se lee, y experimentar modificándolo.
 
