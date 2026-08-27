@@ -1,0 +1,160 @@
+---
+title: Introducción a R
+---
+
+## Trabajo previo
+
+### Lecturas
+
+Antes de la clase, revise las siguientes lecturas. La primera es la presentación oficial de R, breve y en inglés; la segunda corresponde a los capítulos iniciales del libro de referencia de esta sección del curso, que también es la lectura obligatoria de las semanas 3 y 4 (capítulos 1 al 8 y 9 al 12, respectivamente): los capítulos 1 y 2 pueden leerse en menos de una hora y conviene tenerlos frescos para la clase.
+
+The R Foundation. (s. f.). *What is R?* Recuperado el 26 de agosto de 2026, de <https://www.r-project.org/about.html>
+
+Grolemund, G. (2014). *Hands-on programming with R: Write your own functions and simulations* (capítulos 1 y 2). O'Reilly Media. <https://rstudio-education.github.io/hopr/>
+
+### Otros recursos
+
+Llegue a la clase con R y RStudio instalados en su computadora, según la guía de [R y RStudio](../software/r-rstudio.qmd) de la sección de software, o con una cuenta en [Posit Cloud](https://posit.cloud/), que ofrece la misma interfaz en el navegador. Buena parte de la clase se dedica a escribir y ejecutar código.
+
+## Introducción
+
+Las lecciones de la sección anterior presentaron los procesos de la ciencia de datos y las herramientas para documentarlos y compartirlos: Markdown, Git y GitHub. Este capítulo abre la sección dedicada al lenguaje de programación elegido en este curso: [R](https://www.r-project.org/). Presenta su historia, sus características, la comunidad que lo desarrolla y las razones de su importancia en la geografía y en los sistemas de información geográfica (SIG), y concluye con la forma en que se ejecuta en el curso. Los dos capítulos siguientes, [Fundamentos de R I](07-fundamentos-r-i.qmd) y [II](08-fundamentos-r-ii.qmd), enseñan a programar en el lenguaje.
+
+## Historia
+
+R desciende de **S**, un lenguaje para análisis estadístico creado en 1976 por John Chambers y sus colegas en los Laboratorios Bell, en Estados Unidos, con la idea de convertir las ideas estadísticas en programas de manera rápida y fiel (Chambers, 2020). S se difundió sobre todo mediante una versión comercial, S-PLUS.
+
+En 1993, [Ross Ihaka](https://es.wikipedia.org/wiki/Ross_Ihaka) y [Robert Gentleman](https://es.wikipedia.org/wiki/Robert_Gentleman), profesores del Departamento de Estadística de la Universidad de Auckland, Nueva Zelanda, anunciaron una implementación propia de un lenguaje muy parecido a S, que bautizaron **R**: por las iniciales de sus nombres y como juego de palabras con el de S (Ihaka y Gentleman, 1996). En 1995 lo publicaron como software libre, bajo la licencia GNU GPL, y en 1997 se formó el **R Core Team**, el grupo de desarrolladores que mantiene el lenguaje hasta hoy, y se creó CRAN, el repositorio de paquetes que se describe más adelante. La versión 1.0.0 apareció el 29 de febrero de 2000.
+
+Desde entonces, R se ha desarrollado en dos frentes: el lenguaje y su instalación base, a cargo del R Core Team y de la R Foundation, y un ecosistema de paquetes creados por la comunidad. Algunos hitos de ese ecosistema son ggplot2 (2007) y el conjunto de paquetes tidyverse (2016), ambos liderados por Hadley Wickham; el ambiente de desarrollo RStudio (2011), de la empresa del mismo nombre, rebautizada Posit en 2022; y, en el ámbito geoespacial, los paquetes sf (2016) y terra (2020), que se estudian en la sección IV del curso. La versión de R que se usa en el curso pertenece a la serie 4.x, iniciada en 2020.
+
+```{mermaid}
+timeline
+    title Hitos de la historia de R
+    1976 : S, en los Laboratorios Bell
+    1993 : Ihaka y Gentleman anuncian R
+    1995 : R se publica como software libre (GNU GPL)
+    1997 : R Core Team y CRAN
+    2000 : R 1.0.0
+    2007 : ggplot2
+    2011 : RStudio
+    2016 : tidyverse y sf
+    2020 : R 4.0 y terra
+    2022 : RStudio pasa a llamarse Posit
+```
+
+## Características
+
+R es, a la vez, un **lenguaje de programación** y un **entorno** para el análisis de datos y la graficación: además del lenguaje, la instalación base incluye funciones estadísticas y gráficas, un sistema de ayuda y las herramientas para ejecutar programas e instalar paquetes (The R Foundation, s. f.). Entre sus características principales están:
+
+- Es un lenguaje [interpretado](https://es.wikipedia.org/wiki/Int%C3%A9rprete_(inform%C3%A1tica)): las instrucciones se ejecutan una a una, en el momento en que se escriben, sin una etapa previa de compilación. Esto permite trabajar de manera interactiva, en una consola, y probar cada paso de un análisis de inmediato.
+- Tiene [tipado dinámico](https://es.wikipedia.org/wiki/Sistema_de_tipos#Tipado_din%C3%A1mico): no es necesario declarar el tipo de dato de una variable; R lo deduce del valor que se le asigna, y una misma variable puede cambiar de tipo durante la ejecución.
+- Es **vectorizado**: la unidad básica de datos no es el valor individual, sino el vector, y la mayoría de las operaciones y funciones actúan sobre todos los elementos de un vector a la vez. Como se verá en el próximo capítulo, esta característica permite expresar en una línea cálculos que en otros lenguajes requieren un ciclo.
+- Admite varios [paradigmas de programación](https://es.wikipedia.org/wiki/Paradigma_de_programaci%C3%B3n): el estilo predominante es el de la [programación funcional](https://es.wikipedia.org/wiki/Programaci%C3%B3n_funcional), en el que los programas se construyen combinando funciones, pero también tiene sistemas de [programación orientada a objetos](https://es.wikipedia.org/wiki/Programaci%C3%B3n_orientada_a_objetos).
+- Es multiplataforma: funciona en Windows, macOS y Linux.
+- Es [software libre](https://es.wikipedia.org/wiki/Software_libre), distribuido bajo la [licencia GNU GPL](https://www.gnu.org/licenses/gpl-3.0.html): puede usarse, estudiarse, modificarse y redistribuirse sin costo, lo que explica en buena medida el tamaño de su comunidad.
+
+R fue diseñado por estadísticos y para el análisis de datos. Ese origen le da fortalezas —estructuras de datos pensadas para tablas de observaciones, funciones estadísticas y gráficas maduras, manejo explícito de los valores faltantes— y también algunas peculiaridades respecto de lenguajes de propósito general como Python, que se irán señalando a lo largo de la sección.
+
+*Ejercicios de esta sección: [ejercicios sobre características](#ejercicios-caracteristicas).*
+
+## Comunidad y paquetes
+
+La funcionalidad de R se amplía mediante **paquetes**: colecciones de funciones, datos y documentación, desarrolladas por la comunidad, que se instalan y cargan cuando se necesitan. El repositorio oficial es la [Comprehensive R Archive Network (CRAN)](https://cran.r-project.org/), una red de servidores que distribuye el código fuente de R, sus instaladores y más de veinte mil paquetes, revisados antes de publicarse. Para orientarse en esa cantidad, CRAN mantiene las [*task views*](https://cran.r-project.org/web/views/): listas comentadas de paquetes por área temática; la de [análisis espacial](https://cran.r-project.org/view=Spatial) es la más relevante para este curso. Otros repositorios son [Bioconductor](https://www.bioconductor.org/), especializado en bioinformática, y [GitHub](https://github.com/), donde se desarrollan la mayoría de los paquetes antes de llegar a CRAN.
+
+Dentro del ecosistema destaca el [tidyverse](https://www.tidyverse.org/), un conjunto de paquetes para ciencia de datos que comparten una misma filosofía de diseño y que se estudian en la sección III: dplyr para transformar datos, ggplot2 para graficarlos, readr para importarlos, entre otros. Su libro de referencia, *R for data science* (Wickham et al., 2023), es también lectura obligatoria del curso.
+
+La comunidad de R es amplia y activa: la [R Foundation](https://www.r-project.org/foundation/) coordina el proyecto y organiza la conferencia anual useR!; [Posit](https://posit.co/) desarrolla RStudio, Quarto, shiny y buena parte del tidyverse; y existen foros como [Posit Community](https://forum.posit.co/) y [Stack Overflow](https://stackoverflow.com/questions/tagged/r), grupos de usuarios locales, la organización [R-Ladies](https://rladies.org/) y numerosos libros publicados gratuitamente en línea, como los que se citan en este curso.
+
+*Ejercicios de esta sección: [ejercicios sobre comunidad y paquetes](#ejercicios-comunidad).*
+
+## R en la geografía y los SIG
+
+Aunque nació para la estadística, R es hoy una de las principales plataformas para el procesamiento de datos geoespaciales, gracias a un conjunto de paquetes que cubren el flujo de trabajo completo de un SIG:
+
+- [sf](https://r-spatial.github.io/sf/) representa datos vectoriales —puntos, líneas y polígonos con sus atributos— en data frames, la estructura de datos tabular de R, e implementa las operaciones geométricas del estándar *simple features*.
+- [terra](https://rspatial.org/) maneja datos raster (imágenes satelitales, modelos de elevación) y también vectoriales.
+- [leaflet](https://rstudio.github.io/leaflet/) y [tmap](https://r-tmap.github.io/tmap/) producen mapas interactivos y estáticos.
+- [shiny](https://shiny.posit.co/) permite construir aplicaciones web interactivas, como la del proyecto final de este curso.
+
+Estos paquetes son el tema de las secciones IV y V del curso, y su libro de referencia, *Geocomputation with R* (Lovelace et al., 2025), es lectura obligatoria de la sección IV. Además, R se integra con los SIG de escritorio: QGIS ejecuta programas de R desde su caja de herramientas de procesamiento mediante el complemento [Processing R Provider](https://north-road.github.io/qgis-processing-r/), y ArcGIS lo hace mediante [R-ArcGIS Bridge](https://www.esri.com/en-us/arcgis/products/r-arcgis-bridge/overview). En la práctica profesional y de investigación, R se usa para automatizar análisis que en un SIG de escritorio requerirían muchas operaciones manuales, para reproducirlos exactamente y para comunicar sus resultados en documentos, tableros de control y aplicaciones.
+
+*Ejercicios de esta sección: [ejercicios sobre R en los SIG](#ejercicios-sig).*
+
+## Estilo de código
+
+El código de R puede escribirse de muchas maneras, pero la comunidad ha convergido en un conjunto de convenciones, recogidas en la [guía de estilo de tidyverse](https://style.tidyverse.org/) (Wickham, s. f.), que se adoptan en este curso desde el primer programa:
+
+- Nombres de objetos en minúsculas, con palabras separadas por guion bajo (*snake case*): `poblacion_canton`, no `PoblacionCanton` ni `poblacion.canton`. Se prefieren nombres significativos y sin tildes ni eñes.
+- Asignación con `<-`, no con `=`; espacios alrededor de los operadores (`x + y`, `x <- 5`) y después de las comas (`c(1, 2, 3)`).
+- Sangría de dos espacios dentro de bloques y llamadas de varias líneas.
+- Comentarios que explican el *porqué* del código, no lo que es evidente, precedidos de `#`.
+
+RStudio ayuda a seguir estas convenciones: la combinación `Ctrl + Shift + A` reformatea el código seleccionado y el paquete [styler](https://styler.r-lib.org/) lo hace automáticamente. Escribir código con un estilo consistente facilita leerlo —propio y ajeno— y es uno de los criterios de evaluación de las tareas del curso.
+
+*Ejercicios de esta sección: [ejercicios sobre estilo](#ejercicios-estilo).*
+
+## Ejecución de R en el curso
+
+Hay dos formas de ejecutar R en el curso, ambas con la misma interfaz:
+
+- **En la computadora local**, con R y RStudio instalados según la guía de [R y RStudio](../software/r-rstudio.qmd). Es la forma principal.
+- **En la nube**, con [Posit Cloud](https://posit.cloud/), que ejecuta RStudio en el navegador sin instalar nada. Es el respaldo si la instalación local presenta problemas, y la forma en que se ejecutó el ejemplo de la semana 1.
+
+En ambos casos, el trabajo se organiza en **proyectos** de RStudio: carpetas que agrupan los programas, los datos y los resultados de un análisis, y que fijan el directorio de trabajo, como se explica en la guía. Durante esta sección, el código se escribe en programas (*scripts*) de R, archivos de texto con extensión `.R`; a partir de la semana 5 se escribe en documentos de Quarto, que combinan el código con texto en Markdown.
+
+*Ejercicios de esta sección: [ejercicios sobre ejecución](#ejercicios-ejecucion).*
+
+## Resumen
+
+- **R** es un lenguaje de programación y un entorno para el análisis de datos y la graficación, creado en 1993 por Ross Ihaka y Robert Gentleman como implementación libre del lenguaje S; lo mantiene el R Core Team y lo amplía una comunidad numerosa.
+- Es interpretado, de tipado dinámico, **vectorizado**, multiparadigma, multiplataforma y **software libre**.
+- Los **paquetes** extienden su funcionalidad; se distribuyen sobre todo en **CRAN**, cuyas *task views* orientan por temas. El **tidyverse** es el conjunto de paquetes para ciencia de datos que se estudia en la sección III.
+- R es una plataforma completa para datos geoespaciales —**sf**, **terra**, **leaflet**, **shiny**— y se integra con QGIS y ArcGIS.
+- El curso sigue la **guía de estilo de tidyverse** y ejecuta R en RStudio, localmente o en Posit Cloud, organizando el trabajo en proyectos.
+
+## Ejercicios
+
+Los ejercicios se agrupan según la sección del capítulo a la que corresponden; se recomienda realizarlos al concluir la sección respectiva.
+
+### Características {#ejercicios-caracteristicas}
+
+1. En la consola de RStudio, ejecute `R.version.string` para conocer la versión de R instalada y `demo(graphics)` para ver, con `Enter`, una muestra de los gráficos que produce la instalación base (`Esc` para salir). Anote un tipo de gráfico que podría ser útil en su tema de proyecto.
+
+### Comunidad y paquetes {#ejercicios-comunidad}
+
+2. Abra la [*task view* de análisis espacial](https://cran.r-project.org/view=Spatial) de CRAN y localice las secciones sobre lectura y escritura de datos y sobre visualización. Anote el nombre de un paquete —distinto de los mencionados en este capítulo— que podría ser útil para el tema que considera explorar en el proyecto del curso, y qué hace, según su descripción.
+
+### R en los SIG {#ejercicios-sig}
+
+3. Si tiene QGIS instalado, abra el administrador de complementos (*Plugins > Manage and Install Plugins*), busque *Processing R Provider* y lea su descripción. Si no lo tiene, revise la [documentación del complemento](https://north-road.github.io/qgis-processing-r/). ¿Qué necesita el complemento para funcionar?
+
+### Estilo {#ejercicios-estilo}
+
+4. Reescriba las siguientes instrucciones según la guía de estilo del curso (nombres, asignación, espacios):
+
+    ```r
+    PoblacionSJ=352381
+    AreaSJ=44.62
+    DensidadSJ=PoblacionSJ/AreaSJ
+    ```
+
+### Ejecución {#ejercicios-ejecucion}
+
+5. Cree un proyecto de RStudio llamado `pf0953` (*File > New Project > New Directory > New Project*), que usará durante toda la sección. Dentro del proyecto, cree un programa de R (*File > New File > R Script*) llamado `introduccion.R`, escriba en él las instrucciones corregidas del ejercicio anterior más una línea que muestre la densidad (`densidad_sj`), y ejecútelo completo con el botón **Source**. Guarde el archivo: los ejercicios del próximo capítulo continúan en él.
+
+## Referencias bibliográficas
+
+Chambers, J. M. (2020). S, R, and data science. *Proceedings of the ACM on Programming Languages, 4*(HOPL), 1–17. <https://doi.org/10.1145/3386334>
+
+Grolemund, G. (2014). *Hands-on programming with R: Write your own functions and simulations*. O'Reilly Media. <https://rstudio-education.github.io/hopr/>
+
+Ihaka, R., y Gentleman, R. (1996). R: A language for data analysis and graphics. *Journal of Computational and Graphical Statistics, 5*(3), 299–314. <https://doi.org/10.1080/10618600.1996.10474713>
+
+Lovelace, R., Nowosad, J., y Münchow, J. (2025). *Geocomputation with R* (2.ª ed.). Chapman and Hall/CRC. <https://r.geocompx.org/>
+
+The R Foundation. (s. f.). *What is R?* Recuperado el 26 de agosto de 2026, de <https://www.r-project.org/about.html>
+
+Wickham, H. (s. f.). *The tidyverse style guide*. Recuperado el 26 de agosto de 2026, de <https://style.tidyverse.org/>
+
+Wickham, H., Çetinkaya-Rundel, M., y Grolemund, G. (2023). *R for data science: Import, tidy, transform, visualize, and model data* (2.ª ed.). O'Reilly Media. <https://r4ds.hadley.nz/>
