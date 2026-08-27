@@ -1,7 +1,7 @@
 [
   {
-    "objectID": "contenidos/software/rstudio.html",
-    "href": "contenidos/software/rstudio.html",
+    "objectID": "contenidos/software/r-rstudio.html",
+    "href": "contenidos/software/r-rstudio.html",
     "title": "R y RStudio",
     "section": "",
     "text": "RStudio es un ambiente de desarrollo integrado (IDE, por sus siglas en inglés) para el lenguaje de programación R, gratuito y de código abierto, desarrollado por la empresa Posit (antes llamada RStudio). Es el ambiente de trabajo principal de este curso: se usa para editar documentos Markdown y, a partir de la semana 3, para programar en R y elaborar documentos computacionales de Quarto y aplicaciones interactivas. Esta guía explica cómo instalar R y RStudio, y presenta los componentes principales de RStudio; como referencia general puede consultarse la guía de usuario de RStudio, de Posit.\nLa misma interfaz de RStudio está disponible en el navegador mediante Posit Cloud, el servicio en la nube utilizado en el ejemplo de la semana 1, por lo que lo descrito en esta guía aplica también ahí.",
@@ -11,8 +11,8 @@
     ]
   },
   {
-    "objectID": "contenidos/software/rstudio.html#instalación",
-    "href": "contenidos/software/rstudio.html#instalación",
+    "objectID": "contenidos/software/r-rstudio.html#instalación",
+    "href": "contenidos/software/r-rstudio.html#instalación",
     "title": "R y RStudio",
     "section": "Instalación",
     "text": "Instalación\nRStudio requiere que R esté instalado previamente, por lo que la instalación consta de dos pasos, en este orden:\n\nInstale R desde CRAN, eligiendo el instalador correspondiente a su sistema operativo:\n\nWindows: haga clic en Download R for Windows, luego en base y descargue el instalador. Ejecútelo y acepte las opciones predeterminadas.\nmacOS: haga clic en Download R for macOS y descargue el paquete correspondiente a su procesador (Apple Silicon o Intel). Ábralo y siga las instrucciones.\nLinux: siga las instrucciones para su distribución.\n\nInstale RStudio Desktop desde la sección Install Links de la guía de usuario de RStudio: haga clic en RStudio Desktop download y, en la tabla de descargas, elija el instalador correspondiente a su sistema operativo:\n\nWindows: ejecute el instalador y siga las instrucciones.\nmacOS: abra el archivo descargado y arrastre la aplicación RStudio a la carpeta Applications.\nLinux: descargue el paquete .deb o .rpm según su distribución e instálelo con el gestor de paquetes.\n\nAl finalizar, abra RStudio (no la aplicación “R” que también quedó instalada: RStudio encuentra la instalación de R automáticamente y ofrece una interfaz mucho más completa). Si en la consola aparece el mensaje de inicio de R con su número de versión, la instalación fue exitosa.\n\nLa interfaz de RStudio está en inglés y esta guía usa los nombres de menús y botones en ese idioma.",
@@ -22,8 +22,8 @@
     ]
   },
   {
-    "objectID": "contenidos/software/rstudio.html#la-interfaz",
-    "href": "contenidos/software/rstudio.html#la-interfaz",
+    "objectID": "contenidos/software/r-rstudio.html#la-interfaz",
+    "href": "contenidos/software/r-rstudio.html#la-interfaz",
     "title": "R y RStudio",
     "section": "La interfaz",
     "text": "La interfaz\nLa ventana de RStudio se divide en cuatro paneles:\n\nSource (arriba a la izquierda): el editor, donde se abren y editan los archivos. Este panel solo aparece cuando hay un archivo abierto.\nConsole (abajo a la izquierda): donde se ejecutan interactivamente las instrucciones de R. Junto a ella está la pestaña Terminal, descrita más adelante.\nEnvironment (arriba a la derecha): muestra los objetos en memoria durante una sesión de R; incluye también el historial de comandos (History).\nFiles / Plots / Packages / Help / Viewer (abajo a la derecha): explorador de archivos, gráficos generados, paquetes instalados, documentación de ayuda y vista de contenido web.\n\nLos paneles asociados a la programación en R se estudiarán a partir de la semana 3; para el trabajo con Markdown de esta semana bastan el editor y el explorador de archivos.",
@@ -33,8 +33,8 @@
     ]
   },
   {
-    "objectID": "contenidos/software/rstudio.html#proyectos",
-    "href": "contenidos/software/rstudio.html#proyectos",
+    "objectID": "contenidos/software/r-rstudio.html#proyectos",
+    "href": "contenidos/software/r-rstudio.html#proyectos",
     "title": "R y RStudio",
     "section": "Proyectos",
     "text": "Proyectos\nRStudio puede abrir archivos individuales (File &gt; Open File), pero la forma habitual de trabajar es mediante proyectos (File &gt; New Project): cada proyecto está asociado a una carpeta, que el panel Files muestra y en la que queda establecido el directorio de trabajo. Así, los archivos de un mismo trabajo —documentos, código, datos, imágenes— se mantienen organizados y las rutas relativas entre ellos funcionan de manera consistente. Esta forma de trabajo es la apropiada para los repositorios de Git que se usan en el curso: un proyecto puede crearse desde cero (New Directory) o a partir de un repositorio remoto (Version Control), como se hará más adelante.\nMientras se edita un archivo, un asterisco y el color rojo en el título de su pestaña indican que hay cambios sin guardar; los cambios se guardan con Ctrl + S.",
@@ -44,8 +44,8 @@
     ]
   },
   {
-    "objectID": "contenidos/software/rstudio.html#edición-de-markdown",
-    "href": "contenidos/software/rstudio.html#edición-de-markdown",
+    "objectID": "contenidos/software/r-rstudio.html#edición-de-markdown",
+    "href": "contenidos/software/r-rstudio.html#edición-de-markdown",
     "title": "R y RStudio",
     "section": "Edición de Markdown",
     "text": "Edición de Markdown\nPara crear un documento Markdown, seleccione File &gt; New File &gt; Markdown File y guárdelo con la extensión .md. El editor ofrece dos modos, que se alternan con los botones Source y Visual, en la esquina superior izquierda del panel del editor:\n\nEn el modo Source se edita la fuente del documento, con las marcas de Markdown visibles.\nEn el modo Visual el documento se muestra con su formato (negritas, encabezados, tablas, imágenes) mientras se escribe, y una barra de herramientas permite insertar los elementos sin escribir sus marcas, de manera similar a un procesador de texto. El archivo se sigue guardando como Markdown: puede cambiarse de un modo al otro en cualquier momento, lo que además es una buena forma de aprender la sintaxis. El modo visual es especialmente útil para editar tablas.\n\nEl botón Preview (Ctrl + Shift + K) genera una vista previa del documento completo en HTML.\nLos documentos computacionales de Quarto (archivos .qmd), que combinan Markdown con código de R, se editan de la misma forma y se estudiarán más adelante en el curso; RStudio incluye Quarto integrado.",
@@ -55,8 +55,8 @@
     ]
   },
   {
-    "objectID": "contenidos/software/rstudio.html#terminal-integrada",
-    "href": "contenidos/software/rstudio.html#terminal-integrada",
+    "objectID": "contenidos/software/r-rstudio.html#terminal-integrada",
+    "href": "contenidos/software/r-rstudio.html#terminal-integrada",
     "title": "R y RStudio",
     "section": "Terminal integrada",
     "text": "Terminal integrada\nRStudio incluye una terminal, en la pestaña Terminal del panel de la consola (si no está visible, Tools &gt; Terminal &gt; New Terminal). En ella pueden ejecutarse comandos del sistema operativo sin salir de RStudio; en el curso se usará más adelante, entre otras cosas, para ejecutar comandos de Git.",
@@ -66,8 +66,8 @@
     ]
   },
   {
-    "objectID": "contenidos/software/rstudio.html#integración-con-git",
-    "href": "contenidos/software/rstudio.html#integración-con-git",
+    "objectID": "contenidos/software/r-rstudio.html#integración-con-git",
+    "href": "contenidos/software/r-rstudio.html#integración-con-git",
     "title": "R y RStudio",
     "section": "Integración con Git",
     "text": "Integración con Git\nCuando un proyecto de RStudio está bajo control de versiones, el panel superior derecho muestra una pestaña Git con las operaciones esenciales —preparar cambios, confirmarlos (commit), enviarlos (push) y traerlos (pull)—, y al crear un proyecto con la opción Version Control se puede clonar un repositorio remoto, por ejemplo de GitHub. Esta integración requiere que Git esté instalado en la computadora, lo que se hará cuando se trabaje con repositorios locales; en la lección de Git, GitHub y GitHub Pages, las operaciones se realizan desde el navegador.",
@@ -77,8 +77,8 @@
     ]
   },
   {
-    "objectID": "contenidos/software/rstudio.html#asistente-de-inteligencia-artificial-github-copilot",
-    "href": "contenidos/software/rstudio.html#asistente-de-inteligencia-artificial-github-copilot",
+    "objectID": "contenidos/software/r-rstudio.html#asistente-de-inteligencia-artificial-github-copilot",
+    "href": "contenidos/software/r-rstudio.html#asistente-de-inteligencia-artificial-github-copilot",
     "title": "R y RStudio",
     "section": "Asistente de inteligencia artificial (GitHub Copilot)",
     "text": "Asistente de inteligencia artificial (GitHub Copilot)\nGitHub Copilot es un asistente de IA integrado en RStudio: sugiere autocompletados de código y de texto mientras se escribe. Para activarlo, abra Tools &gt; Global Options &gt; Copilot, marque la casilla de habilitación e inicie sesión con la cuenta de GitHub creada en la lección de Git, GitHub y GitHub Pages. El plan gratuito para cuentas personales tiene límites mensuales de uso; además, GitHub Education ofrece el plan Copilot Pro sin costo a estudiantes verificados con su correo institucional.\nLas sugerencias pueden desactivarse desde el mismo cuadro de opciones. Se recomienda mantenerlas desactivadas mientras se aprende un tema nuevo: primero intente resolver los ejercicios por su cuenta y use el asistente para pedir explicaciones o revisar su solución, según los lineamientos de uso de IA del curso (declarar el uso, comprender y verificar todo el código que entregue).",
@@ -88,8 +88,8 @@
     ]
   },
   {
-    "objectID": "contenidos/software/rstudio.html#teclas-rápidas-recomendadas",
-    "href": "contenidos/software/rstudio.html#teclas-rápidas-recomendadas",
+    "objectID": "contenidos/software/r-rstudio.html#teclas-rápidas-recomendadas",
+    "href": "contenidos/software/r-rstudio.html#teclas-rápidas-recomendadas",
     "title": "R y RStudio",
     "section": "Teclas rápidas recomendadas",
     "text": "Teclas rápidas recomendadas\nEn macOS, sustituya Ctrl por Cmd en las combinaciones siguientes.\n\nPaleta de comandos: Ctrl + Shift + P\nGuardar un archivo: Ctrl + S\nVista previa de un documento Markdown: Ctrl + Shift + K\nEjecutar en la consola la línea o la selección actual (en archivos de código R): Ctrl + Enter\nInsertar el operador de asignación de R (&lt;-): Alt + - (guion)\nInsertar el operador pipe (|&gt;): Ctrl + Shift + M\nAyuda de teclas rápidas: Alt + Shift + K\n\nLa lista completa está disponible en el menú Help &gt; Keyboard Shortcuts Help y en la hoja de referencia del IDE de RStudio, de Posit.",

@@ -52,7 +52,7 @@ website:
           - contenidos/i-introduccion-ciencia-datos-programacion/05-asistentes-ia.qmd
       - section: "Software"
         contents:
-          - contenidos/software/rstudio.qmd
+          - contenidos/software/r-rstudio.qmd
   page-footer:
     center: |
       Los contenidos de este curso, a menos que se especifique de otra forma,
