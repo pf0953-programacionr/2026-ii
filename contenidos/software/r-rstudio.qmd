@@ -2,7 +2,7 @@
 title: R y RStudio
 ---
 
-[RStudio](https://posit.co/products/open-source/rstudio/) es un ambiente de desarrollo integrado (IDE, por sus siglas en inglés) para el lenguaje de programación R, gratuito y de código abierto, desarrollado por la empresa [Posit](https://posit.co/) (antes llamada RStudio). Es el ambiente de trabajo principal de este curso: se usa para editar documentos Markdown y, a partir de la semana 3, para programar en R y elaborar documentos computacionales de [Quarto](https://quarto.org/) y aplicaciones interactivas. Esta guía explica cómo instalar R y RStudio, y presenta los componentes principales de RStudio; como referencia general puede consultarse la [guía de usuario de RStudio](https://docs.posit.co/ide/user/), de Posit.
+[RStudio](https://posit.co/products/open-source/rstudio/) es un ambiente de desarrollo integrado (IDE, por sus siglas en inglés) para el lenguaje de programación [R](https://www.r-project.org/), gratuito y de código abierto, desarrollado por la empresa [Posit](https://posit.co/) (antes llamada RStudio). Es el ambiente de trabajo principal de este curso: se usa para editar documentos Markdown y, a partir de la semana 3, para programar en R y elaborar documentos computacionales de [Quarto](https://quarto.org/) y aplicaciones interactivas. Esta guía explica cómo instalar R y RStudio, y presenta los componentes principales de RStudio; como referencia general puede consultarse la [guía de usuario de RStudio](https://docs.posit.co/ide/user/), de Posit.
 
 La misma interfaz de RStudio está disponible en el navegador mediante [Posit Cloud](https://posit.cloud/), el servicio en la nube utilizado en el ejemplo de la semana 1, por lo que lo descrito en esta guía aplica también ahí.
 
