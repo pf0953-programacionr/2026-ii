@@ -18,7 +18,7 @@ Llegue a la clase con R y RStudio instalados en su computadora, según la guía 
 
 ## Introducción
 
-Las lecciones de la sección anterior presentaron los procesos de la ciencia de datos y las herramientas para documentarlos y compartirlos: Markdown, Git y GitHub. Este capítulo abre la sección dedicada al lenguaje de programación elegido en este curso: [R](https://www.r-project.org/). Presenta su historia, sus características, la comunidad que lo desarrolla y las razones de su importancia en la geografía y en los sistemas de información geográfica (SIG), y concluye con la forma en que se ejecuta en el curso. Los dos capítulos siguientes, [Fundamentos de R I](07-fundamentos-r-i.qmd) y II, enseñan a programar en el lenguaje.
+Las lecciones de la sección anterior presentaron los procesos de la ciencia de datos y las herramientas para documentarlos y compartirlos: Markdown, Git y GitHub. Este capítulo abre la sección dedicada al lenguaje de programación elegido en este curso: [R](https://www.r-project.org/). Presenta su historia, sus características, la comunidad que lo desarrolla y las razones de su importancia en la geografía y en los sistemas de información geográfica (SIG), y concluye con la forma en que se ejecuta en el curso. Los dos capítulos siguientes, [Fundamentos de R I](07-fundamentos-r-i.qmd) y [II](08-fundamentos-r-ii.qmd), enseñan a programar en el lenguaje.
 
 ## Historia
 

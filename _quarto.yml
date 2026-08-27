@@ -54,6 +54,7 @@ website:
         contents:
           - contenidos/ii-lenguaje-programacion-r/06-introduccion-r.qmd
           - contenidos/ii-lenguaje-programacion-r/07-fundamentos-r-i.qmd
+          - contenidos/ii-lenguaje-programacion-r/08-fundamentos-r-ii.qmd
       - section: "Software"
         contents:
           - contenidos/software/r-rstudio.qmd
