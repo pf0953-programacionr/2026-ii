@@ -18,7 +18,7 @@ Tenga a mano el proyecto `pf0953` y los objetos de su cantón creados en los eje
 
 ## Introducción
 
-Este capítulo es la segunda y última parte de la serie *Fundamentos de R*. La [primera parte](07-fundamentos-r-i.qmd) presentó los objetos, los tipos de datos, los vectores y los data frames; esta introduce las **estructuras de control** con las que un programa decide y repite —los condicionales y los ciclos— y el mecanismo para organizar el código y reutilizarlo: las **funciones definidas por el usuario**. Los tres se combinan al final en un ejemplo con los datos de los cantones, y una clínica de errores recoge los mensajes más comunes al programar con ellos.
+Este capítulo es la segunda y última parte de la serie *Fundamentos de R*. La [primera parte](07-fundamentos-r-i.qmd) presentó los objetos, los tipos de datos, los vectores y los data frames; esta introduce las **estructuras de control** con las que un programa decide y repite —los condicionales y los ciclos—, completa el repertorio de estructuras de datos con los **factores** y las **listas**, y presenta el mecanismo para organizar el código y reutilizarlo: las **funciones definidas por el usuario**. Todo se combina al final en un ejemplo con los datos de los cantones, y una clínica de errores recoge los mensajes más comunes al programar con estas herramientas.
 
 En R, gracias a la vectorización, los ciclos se usan menos que en otros lenguajes, y las funciones propias, en cambio, son esenciales: los paquetes que se estudian en las próximas secciones se construyen combinando funciones, y en shiny (sección V) buena parte de una aplicación consiste en definirlas.
 
@@ -69,7 +69,7 @@ Para más de dos categorías, los `ifelse()` pueden anidarse, aunque el paquete 
 
 ## Ciclos
 
-Un **ciclo** repite un bloque de código. El ciclo `for` lo ejecuta una vez por cada elemento de un vector, asignando ese elemento a una variable:
+Un **ciclo** repite un bloque de código. El ciclo `for` lo ejecuta una vez por cada elemento de un vector, asignando ese elemento a una variable (`paste()`, en el ejemplo, une textos en una sola hilera):
 
 ```{r}
 #| label: for
@@ -143,6 +143,47 @@ provincias[which.max(poblaciones / areas)]
 Esta es la razón por la que los ciclos son menos frecuentes en R que en otros lenguajes: la mayoría de las tareas sobre vectores y data frames —calcular una columna, filtrar, resumir— ya están vectorizadas, y las que no lo están suelen resolverse con funciones que aplican otra función a cada elemento, como `sapply()` en R base o las de purrr en tidyverse. La recomendación práctica es usar primero la operación vectorizada, si existe, y reservar los ciclos para lo que no puede expresarse de otra forma: repetir un procedimiento completo para cada archivo de una carpeta, cada año de una serie o cada especie de una lista.
 
 *Ejercicios de esta sección: [ejercicios sobre ciclos](#ejercicios-ciclos).*
+
+## Otras estructuras: factores y listas
+
+Antes de pasar a las funciones, conviene conocer dos estructuras de datos que complementan a los vectores y los data frames de la parte I.
+
+### Factores
+
+Un **factor** es un vector para variables categóricas con un conjunto fijo de valores posibles, llamados **niveles**. Se crea con `factor()`; si los niveles tienen un orden natural, se indica con el argumento `levels`. `table()` cuenta los elementos de cada nivel.
+
+```{r}
+#| label: factores
+clima <- factor(c("seco", "húmedo", "húmedo", "muy húmedo", "seco"),
+                levels = c("seco", "húmedo", "muy húmedo"))
+levels(clima)
+table(clima)
+```
+
+Los factores importan sobre todo al graficar y al modelar: ggplot2 (sección III), por ejemplo, ordena las categorías de un gráfico según los niveles del factor.
+
+### Listas
+
+A diferencia de un vector, una **lista** puede contener elementos de distintos tipos y longitudes, incluidos otros vectores y otras listas. Se crea con `list()`, normalmente con nombres, y sus elementos se extraen con `$` o con `[[ ]]`.
+
+```{r}
+#| label: listas
+canton <- list(nombre = "Montes de Oca",
+               poblacion = 53862,
+               distritos = c("San Pedro", "Sabanilla", "Mercedes", "San Rafael"))
+canton$poblacion
+canton[["distritos"]]
+length(canton$distritos)
+```
+
+Las listas están por todas partes en R, aunque no siempre a la vista: un data frame es, de hecho, una lista de columnas de igual longitud (de ahí que sus columnas se extraigan con `$`), los resultados de muchas funciones son listas y, en shiny (sección V), los valores que el usuario ingresa en una aplicación se leen de una lista con `input$nombre`. La función `str()` muestra la estructura de cualquier objeto y es la mejor forma de examinar una lista.
+
+```{r}
+#| label: str-lista
+str(canton)
+```
+
+*Ejercicios de esta sección: [ejercicios sobre factores y listas](#ejercicios-factores-listas).*
 
 ## Funciones definidas por el usuario
 
@@ -296,6 +337,7 @@ Una variable local no existe fuera de la función, como se vio en la sección de
 
 - Los **condicionales** (`if`, `else if`, `else`) ejecutan bloques según una condición de un solo valor; **`ifelse()`** clasifica vectores completos.
 - Los **ciclos** `for` recorren un vector (o sus posiciones, con `seq_along()`), a menudo con el patrón del **acumulador**; `while` repite mientras se cumpla una condición. En R se prefieren las **operaciones vectorizadas** y los ciclos se reservan para lo que no puede expresarse con ellas.
+- Los **factores** representan variables categóricas con **niveles** fijos (`factor()`, `table()`); las **listas** agrupan elementos heterogéneos, que se extraen con `$` y `[[ ]]` — un data frame es una lista de columnas.
 - Las **funciones definidas por el usuario** se crean con `function`, tienen **argumentos** (con posibles **valores por defecto**) y un **valor de retorno** (la última expresión o `return()`); sus variables son **locales**. Retornar un valor no es lo mismo que imprimirlo.
 - Funciones, `ifelse()` y data frames se combinan para clasificar y resumir datos; la **clínica de errores** recoge los mensajes más comunes: argumento faltante, condición de longitud mayor que 1 y `else` fuera de lugar.
 
@@ -342,15 +384,19 @@ Los ejercicios se agrupan según la sección del capítulo a la que corresponden
     Imprime cinco líneas: 3, 9, 27, 81 y 243. Cuando `n` vale 81 la condición `n < 100` todavía se cumple, así que el cuerpo se ejecuta una vez más y `n` pasa a 243; la condición se comprueba solo al inicio de cada iteración, no después de cada instrucción.
     </details>
 
+### Factores y listas {#ejercicios-factores-listas}
+
+6. Cree una lista con el nombre de su cantón, su provincia y un vector con los nombres de al menos tres de sus distritos (puede consultarlos en [Wikipedia](https://es.wikipedia.org/wiki/Cantones_de_Costa_Rica)). Extraiga el vector de distritos con `$` y con `[[ ]]`, cuente cuántos son con `length()` y examine la lista con `str()`.
+
 ### Funciones {#ejercicios-funciones}
 
-6. Defina una función `celsius_a_fahrenheit()` que reciba una temperatura en grados Celsius y retorne su equivalente en Fahrenheit ($F = C \times 9/5 + 32$), y pruébela con un valor y con un vector de valores. Defina luego la función inversa.
+7. Defina una función `celsius_a_fahrenheit()` que reciba una temperatura en grados Celsius y retorne su equivalente en Fahrenheit ($F = C \times 9/5 + 32$), y pruébela con un valor y con un vector de valores. Defina luego la función inversa.
 
-7. Convierta el condicional del ejercicio 1 en una función `describir_densidad()` que reciba una densidad y **retorne** (no imprima) la descripción. Pruébela con la densidad de su cantón y con las de las siete provincias; en este último caso, ¿qué ocurre y por qué? Reescríbala con `ifelse()` anidado para que acepte vectores.
+8. Convierta el condicional del ejercicio 1 en una función `describir_densidad()` que reciba una densidad y **retorne** (no imprima) la descripción. Pruébela con la densidad de su cantón y con las de las siete provincias; en este último caso, ¿qué ocurre y por qué? Reescríbala con `ifelse()` anidado para que acepte vectores.
 
-8. Defina una función `resumen_canton()` que reciba el nombre de un cantón y el data frame `cantones`, y retorne una hilera de caracteres como `"Montes de Oca (San José): 53862 habitantes, 3413 hab./km²"`. Use `paste0()` y `round()`. Pruébela con su cantón y con dos más.
+9. Defina una función `resumen_canton()` que reciba el nombre de un cantón y el data frame `cantones`, y retorne una hilera de caracteres como `"Montes de Oca (San José): 53862 habitantes, 3413 hab./km²"`. Use `paste0()` y `round()`. Pruébela con su cantón y con dos más.
 
-9. **Prediga antes de ejecutar** qué muestra cada una de las cuatro llamadas; luego ejecute:
+10. **Prediga antes de ejecutar** qué muestra cada una de las cuatro llamadas; luego ejecute:
 
     ```r
     f <- function(x) {
@@ -374,7 +420,7 @@ Los ejercicios se agrupan según la sección del capítulo a la que corresponden
 
 ### Errores {#ejercicios-errores}
 
-10. El siguiente programa debería imprimir la densidad de cada provincia con su clasificación, pero tiene **dos errores**: uno detiene la ejecución con un mensaje y el otro es silencioso (el programa corre, pero el resultado es incorrecto). Encuéntrelos y corríjalos; primero por su cuenta y, si se atasca, pidiendo a un asistente de IA que le *explique* el mensaje de error, no que le resuelva el ejercicio.
+11. El siguiente programa debería imprimir la densidad de cada provincia con su clasificación, pero tiene **dos errores**: uno detiene la ejecución con un mensaje y el otro es silencioso (el programa corre, pero el resultado es incorrecto). Encuéntrelos y corríjalos; primero por su cuenta y, si se atasca, pidiendo a un asistente de IA que le *explique* el mensaje de error, no que le resuelva el ejercicio.
 
     ```r
     clasificar <- function(densidad, umbral) {

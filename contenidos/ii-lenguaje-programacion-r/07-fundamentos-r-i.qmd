@@ -18,7 +18,7 @@ Tenga a mano el proyecto `pf0953` y el programa `introduccion.R` creados en los 
 
 ## Introducción
 
-Este capítulo abre la serie *Fundamentos de R*, que continúa en la [parte II](08-fundamentos-r-ii.qmd) con los condicionales, los ciclos y las funciones definidas por el usuario. Aquí se presentan los elementos con los que se construye cualquier programa en R: las expresiones que se escriben en la consola, los objetos que guardan valores, las funciones y los paquetes, los tipos de datos y, sobre todo, las estructuras que los organizan: los **vectores** —la unidad básica de R— y los **data frames**, las tablas de datos con las que se trabaja durante el resto del curso.
+Este capítulo abre la serie *Fundamentos de R*, que continúa en la [parte II](08-fundamentos-r-ii.qmd) con otras estructuras de datos —los factores y las listas—, los condicionales, los ciclos y las funciones definidas por el usuario. Aquí se presentan los elementos con los que se construye cualquier programa en R: las expresiones que se escriben en la consola, los objetos que guardan valores, las funciones y, sobre todo, las estructuras que organizan los datos: los **vectores** —la unidad básica de R— y los **data frames**, las tablas de datos con las que se trabaja durante el resto del curso.
 
 Como hilo conductor se usan datos reales de Costa Rica: la población y la extensión de sus siete provincias y de sus 84 cantones, según la Estimación de Población y Vivienda 2022 del [Instituto Nacional de Estadística y Censos (INEC)](https://inec.cr/) (INEC, 2023). Se recomienda ejecutar cada bloque de código en RStudio, a medida que se lee, y experimentar modificándolo.
 
@@ -51,7 +51,7 @@ Todo lo que sigue a `#` en una línea es un **comentario**: R lo ignora, pero si
 
 La consola es útil para probar ideas, pero el trabajo se escribe en **programas** (*scripts*): archivos de texto con extensión `.R`, que se editan en el panel superior izquierdo de RStudio. Desde ahí, `Ctrl + Enter` ejecuta en la consola la línea en la que está el cursor (o las líneas seleccionadas) y el botón **Source** ejecuta el programa completo. Un programa se puede guardar, corregir y volver a ejecutar; la consola, no.
 
-*Ejercicios de esta sección: [ejercicios sobre R como calculadora](#ejercicios-calculadora).*
+*Ejercicios de esta sección: [ejercicios sobre R como calculadora y objetos](#ejercicios-calculadora-objetos).*
 
 ## Objetos y asignación
 
@@ -81,9 +81,9 @@ poblacion_sj
 
 Los nombres de objetos pueden contener letras, números, puntos y guiones bajos, pero deben empezar con una letra; R distingue mayúsculas de minúsculas (`area` y `Area` son objetos distintos). Según la guía de estilo del curso, se escriben en minúsculas y *snake case*, sin tildes ni eñes: `poblacion_sj`. En R también es posible asignar con `=`, pero por convención se reserva `=` para los argumentos de las funciones.
 
-*Ejercicios de esta sección: [ejercicios sobre objetos](#ejercicios-objetos).*
+*Ejercicios de esta sección: [ejercicios sobre R como calculadora y objetos](#ejercicios-calculadora-objetos).*
 
-## Funciones y paquetes
+## Funciones
 
 Una **función** es un bloque de código con nombre que realiza una tarea; se **llama** escribiendo su nombre seguido de paréntesis con los **argumentos** que necesita. Casi todo lo que se hace en R es llamar funciones: la instalación base incluye miles, y los paquetes agregan más.
 
@@ -114,48 +114,9 @@ Para saber qué argumentos tiene una función y qué hace cada uno, se consulta 
 args(round)
 ```
 
-Los **paquetes** se instalan una sola vez, con `install.packages()`, y se cargan en cada sesión en la que se usen, con `library()`. Por ejemplo, para el paquete leaflet, de mapas interactivos, que se usará más adelante en el curso:
+Muchas funciones provienen de **paquetes**, como los presentados en el [capítulo anterior](06-introduccion-r.qmd): se instalan una sola vez, con `install.packages("nombre")` (el nombre entre comillas), y se cargan en cada sesión en la que se usen, con `library(nombre)`; la notación `paquete::función()`, frecuente en la documentación, llama una función indicando además el paquete del que proviene.
 
-```{r}
-#| label: paquetes
-#| eval: false
-install.packages("leaflet")  # una vez; el nombre va entre comillas
-library(leaflet)             # en cada sesión; sin comillas
-```
-
-También puede llamarse una función de un paquete sin cargarlo, con la notación `paquete::función()`, que además deja claro de dónde proviene: `leaflet::leaflet()`. Esta notación aparece con frecuencia en la documentación y en el código de otras personas.
-
-*Ejercicios de esta sección: [ejercicios sobre funciones y paquetes](#ejercicios-funciones).*
-
-## Tipos de datos
-
-Cada valor en R tiene un **tipo de dato**, que determina qué operaciones admite. Los tipos básicos —llamados *atómicos*— que se usan en el curso son tres:
-
-- **Numérico**: números con o sin decimales (`44.62`, `352381`); R los almacena como `numeric` (en su forma *double*). Los enteros pueden distinguirse con el sufijo `L` (`5L`, tipo `integer`), aunque rara vez es necesario.
-- **Carácter** (*character*): texto, entre comillas dobles o simples (`"San José"`). También se les llama hileras de caracteres (*strings*).
-- **Lógico**: los valores `TRUE` y `FALSE`, resultado de las comparaciones.
-
-La función `class()` indica el tipo de un valor.
-
-```{r}
-#| label: tipos
-class(44.62)
-class("San José")
-class(TRUE)
-```
-
-R convierte entre tipos cuando puede, con las funciones `as.numeric()`, `as.character()` y `as.logical()`. Si la conversión no es posible, el resultado es **`NA`** (*not available*), el valor con el que R representa los datos faltantes, acompañado de una advertencia (*warning*). Un caso frecuente en Costa Rica: los números escritos con coma decimal.
-
-```{r}
-#| label: conversion
-#| warning: true
-as.numeric("44.62")
-as.numeric("44,62")
-```
-
-`NA` se propaga en los cálculos —cualquier operación con `NA` da `NA`— y se detecta con `is.na()`, no con `==`. Su manejo es parte del trabajo diario con datos reales.
-
-*Ejercicios de esta sección: [ejercicios sobre tipos de datos](#ejercicios-tipos).*
+*Ejercicios de esta sección: [ejercicios sobre funciones](#ejercicios-funciones).*
 
 ## Vectores
 
@@ -178,6 +139,35 @@ Otras formas de crear vectores son el operador `:`, para secuencias de enteros, 
 seq(0, 100, by = 25)
 rep("CR", 3)
 ```
+
+### Tipos de datos
+
+Los valores de un vector comparten un **tipo de dato**, que determina qué operaciones admiten. Los tipos básicos —llamados *atómicos*— que se usan en el curso son tres:
+
+- **Numérico**: números con o sin decimales (`44.62`, `352381`); R los almacena como `numeric` (en su forma *double*). Los enteros pueden distinguirse con el sufijo `L` (`5L`, tipo `integer`), aunque rara vez es necesario.
+- **Carácter** (*character*): texto, entre comillas dobles o simples (`"San José"`). También se les llama hileras de caracteres (*strings*).
+- **Lógico**: los valores `TRUE` y `FALSE`, resultado de las comparaciones.
+
+La función `class()` indica el tipo de un valor. Si se combinan tipos distintos en un vector, R los convierte todos al más general, que es el carácter.
+
+```{r}
+#| label: tipos
+class(44.62)
+class("San José")
+class(TRUE)
+c(1, "dos", TRUE)
+```
+
+R también convierte entre tipos cuando puede, con las funciones `as.numeric()`, `as.character()` y `as.logical()`. Si la conversión no es posible, el resultado es **`NA`** (*not available*), el valor con el que R representa los datos faltantes, acompañado de una advertencia (*warning*). Un caso frecuente en Costa Rica: los números escritos con coma decimal.
+
+```{r}
+#| label: conversion
+#| warning: true
+as.numeric("44.62")
+as.numeric("44,62")
+```
+
+`NA` se propaga en los cálculos —cualquier operación con `NA` da `NA`— y se detecta con `is.na()`, no con `==`. Su manejo es parte del trabajo diario con datos reales.
 
 ### Vectorización
 
@@ -267,73 +257,15 @@ mean(lluvia, na.rm = TRUE)
 is.na(lluvia)
 ```
 
-### Vectores de caracteres
-
-Los vectores de texto tienen sus propias funciones: `paste()` une textos, `nchar()` cuenta caracteres, `toupper()` y `tolower()` cambian mayúsculas y minúsculas. Si se combinan tipos distintos en un vector, R los convierte todos al más general, que es el carácter.
-
-```{r}
-#| label: caracteres
-paste("Provincia de", provincias[1:3])
-nchar(provincias)
-c(1, "dos", TRUE)
-```
-
-*Ejercicios de esta sección: [ejercicios sobre vectores](#ejercicios-vectores).*
-
-## Factores
-
-Un **factor** es un vector para variables categóricas con un conjunto fijo de valores posibles, llamados **niveles**. Se crea con `factor()`; si los niveles tienen un orden natural, se indica con el argumento `levels`. `table()` cuenta los elementos de cada nivel.
-
-```{r}
-#| label: factores
-clima <- factor(c("seco", "húmedo", "húmedo", "muy húmedo", "seco"),
-                levels = c("seco", "húmedo", "muy húmedo"))
-levels(clima)
-table(clima)
-```
-
-Los factores importan sobre todo al graficar y al modelar: ggplot2, por ejemplo, ordena las categorías de un gráfico según los niveles del factor.
-
-*Ejercicios de esta sección: [ejercicios sobre factores y listas](#ejercicios-factores-listas).*
-
-## Listas
-
-A diferencia de un vector, una **lista** puede contener elementos de distintos tipos y longitudes, incluidos otros vectores y otras listas. Se crea con `list()`, normalmente con nombres, y sus elementos se extraen con `$` o con `[[ ]]`.
-
-```{r}
-#| label: listas
-canton <- list(nombre = "Montes de Oca",
-               poblacion = 53862,
-               distritos = c("San Pedro", "Sabanilla", "Mercedes", "San Rafael"))
-canton$poblacion
-canton[["distritos"]]
-length(canton$distritos)
-```
-
-Las listas están por todas partes en R, aunque no siempre a la vista: un data frame es una lista de columnas, los resultados de muchas funciones son listas y, en shiny (sección V), los valores que el usuario ingresa en una aplicación se leen de una lista con `input$nombre`. La función `str()` muestra la estructura de cualquier objeto y es la mejor forma de examinar una lista.
-
-```{r}
-#| label: str-lista
-str(canton)
-```
-
-*Ejercicios de esta sección: [ejercicios sobre factores y listas](#ejercicios-factores-listas).*
+*Ejercicios de esta sección: [ejercicios sobre vectores y tipos de datos](#ejercicios-vectores).*
 
 ## Data frames
 
-Un **data frame** es la estructura de R para datos tabulares: una lista de vectores de igual longitud —las **columnas** o variables— en la que cada posición corresponde a una **fila** u observación. Puede construirse con `data.frame()` a partir de vectores:
-
-```{r}
-#| label: data-frame
-provincias_df <- data.frame(provincia = provincias,
-                            poblacion = poblaciones,
-                            area_km2 = areas)
-provincias_df
-```
+Un **data frame** es la estructura de R para datos tabulares: un conjunto de vectores de igual longitud —las **columnas** o variables— en el que cada posición corresponde a una **fila** u observación. Puede construirse con la función `data.frame()` a partir de vectores, pero lo habitual es importar los datos de un archivo.
 
 ### Importación
 
-Lo habitual, sin embargo, es importar los datos de un archivo. La función `read.csv()` lee un archivo CSV —desde la computadora o directamente desde una URL— y devuelve un data frame. El archivo [`cantones.csv`](https://github.com/pf0953-programacionr/2026-ii/blob/main/datos/cantones.csv) del repositorio del curso contiene la provincia, la población y el área de los 84 cantones, derivados de los cuadros del INEC (véase el [README](https://github.com/pf0953-programacionr/2026-ii/blob/main/datos/README.md) de los datos).
+La función `read.csv()` lee un archivo CSV —desde la computadora o directamente desde una URL— y devuelve un data frame. El archivo [`cantones.csv`](https://github.com/pf0953-programacionr/2026-ii/blob/main/datos/cantones.csv) del repositorio del curso contiene la provincia, la población y el área de los 84 cantones, derivados de los cuadros del INEC (véase el [README](https://github.com/pf0953-programacionr/2026-ii/blob/main/datos/README.md) de los datos).
 
 ```{r}
 #| label: importacion
@@ -401,92 +333,51 @@ aggregate(poblacion ~ provincia, data = cantones, FUN = sum)
 
 Estas operaciones —seleccionar, filtrar, ordenar, crear columnas, agrupar y resumir— son las que el paquete dplyr, en la sección III, expresa con una sintaxis más legible y encadenable; conocer su versión en R base ayuda a entender qué hace dplyr y a leer código que no lo usa.
 
-Por último, `write.csv()` guarda un data frame en un archivo CSV; `row.names = FALSE` evita que se escriba una columna con los números de fila.
-
-```{r}
-#| label: exportacion
-#| eval: false
-write.csv(mas_densos, "cantones-densidad.csv", row.names = FALSE)
-```
-
 *Ejercicios de esta sección: [ejercicios sobre data frames](#ejercicios-data-frames).*
 
 ## Clínica de errores
 
-Los mensajes de error de R son escuetos, pero informativos una vez que se aprende a leerlos. Los siguientes son los más frecuentes al comenzar; cada bloque se ejecuta a propósito con un error.
+Los mensajes de error de R son escuetos, pero informativos una vez que se aprende a leerlos. La siguiente tabla recoge los más frecuentes al comenzar; cuando aparezca uno, lea la primera línea del mensaje y búsquela aquí.
 
-El objeto no existe, casi siempre por un error de escritura (recuérdese que R distingue mayúsculas):
+| Mensaje o síntoma | Causa | Solución |
+|---|---|---|
+| `object 'x' not found` | El objeto no existe: el nombre está mal escrito (R distingue mayúsculas) o la línea que lo crea no se ha ejecutado. | Revisar la escritura y ejecutar la asignación que crea el objeto. |
+| `could not find function "f"` | La función pertenece a un paquete que no se ha cargado, o su nombre está mal escrito. | Cargar el paquete con `library()` o corregir el nombre. |
+| `unexpected symbol` (o `unexpected numeric constant`, etc.) | Falta una coma, un operador o unas comillas, o sobra un paréntesis; R señala el punto donde dejó de entender. | Revisar la puntuación en el punto señalado. |
+| `non-numeric argument to binary operator` | Una operación aritmética con un valor que no es numérico, por ejemplo un texto: `"5" + 5`. | Convertir con `as.numeric()` o revisar el origen del dato. |
+| La comparación «no funciona», sin mensaje de error | Se escribió `=` (asignación o nombre de argumento) en lugar de `==` (igualdad). | Usar `==` en las comparaciones. |
+| En la consola aparece `+` en lugar de `>` | La expresión está incompleta: un paréntesis o unas comillas sin cerrar. | Completar la expresión o cancelarla con `Esc`. |
 
-```{r}
-#| label: error-objeto
-#| error: true
-Poblacion_sj * 2
-```
-
-La función no existe o pertenece a un paquete que no se ha cargado con `library()`:
-
-```{r}
-#| label: error-funcion
-#| error: true
-leaflet()
-```
-
-Un símbolo inesperado: suele faltar una coma, un operador o unas comillas, o sobra un paréntesis. R señala el punto donde dejó de entender:
-
-```{r}
-#| label: error-simbolo
-#| error: true
-c(1, 2 3)
-```
-
-Una operación aritmética con un valor que no es numérico, por ejemplo un texto (la conversión implícita no se hace en las operaciones):
-
-```{r}
-#| label: error-tipo
-#| error: true
-"5" + 5
-```
-
-Dos situaciones más no producen un mensaje de error, pero desconciertan: si se usa `=` en lugar de `==` en una comparación, R interpreta una asignación o un nombre de argumento; y si en la consola aparece el símbolo `+` en lugar de `>`, R está esperando el final de una expresión incompleta (un paréntesis o unas comillas sin cerrar): `Esc` la cancela.
-
-*Ejercicios de esta sección: [ejercicios sobre errores](#ejercicios-errores).*
+: Errores más frecuentes al comenzar con R {tbl-colwidths="[30,40,30]"}
 
 ## Resumen
 
 - R evalúa **expresiones** en la **consola**; el trabajo se guarda en **programas** (`.R`), que se ejecutan línea por línea (`Ctrl + Enter`) o completos (**Source**).
 - Los **objetos** guardan valores mediante la **asignación** `<-`; los nombres siguen la guía de estilo (*snake case*).
-- Las **funciones** se llaman con argumentos por posición o por nombre, con valores por defecto documentados en `?función`; los **paquetes** se instalan una vez (`install.packages()`) y se cargan en cada sesión (`library()`).
-- Los tipos atómicos son **numérico**, **carácter** y **lógico**; **`NA`** representa los datos faltantes.
-- El **vector** es la estructura básica: las operaciones están **vectorizadas**, se indexa con `[ ]` por posición, por nombre o con un vector lógico (**filtrado**), y `na.rm = TRUE` ignora los `NA` en los resúmenes.
-- Los **factores** representan variables categóricas con **niveles**; las **listas** agrupan elementos heterogéneos (`$`, `[[ ]]`).
+- Las **funciones** se llaman con argumentos por posición o por nombre, con valores por defecto documentados en `?función`; muchas provienen de **paquetes**, que se instalan una vez (`install.packages()`) y se cargan en cada sesión (`library()`).
+- El **vector** es la estructura básica: sus valores comparten un **tipo de dato** —numérico, carácter o lógico, con **`NA`** para los datos faltantes—, las operaciones están **vectorizadas**, se indexa con `[ ]` por posición, por nombre o con un vector lógico (**filtrado**), y `na.rm = TRUE` ignora los `NA` en los resúmenes.
 - El **data frame** es la tabla de datos: se importa con `read.csv()`, se explora con `str()`, `head()` y `summary()`, se accede a sus columnas con `$`, se filtra y selecciona con `[filas, columnas]`, se ordena con `order()` y se resume con `table()` y `aggregate()`.
 
 ## Ejercicios
 
 Los ejercicios se agrupan según la sección del capítulo a la que corresponden; se recomienda realizarlos al concluir la sección respectiva, en el programa `introduccion.R` del proyecto `pf0953` o en uno nuevo, `fundamentos-1.R`. Varios usan el cantón que eligió en el trabajo previo: su población y su área están en el archivo [`cantones.csv`](https://github.com/pf0953-programacionr/2026-ii/blob/main/datos/cantones.csv).
 
-### R como calculadora {#ejercicios-calculadora}
+### R como calculadora y objetos {#ejercicios-calculadora-objetos}
 
-1. En la consola, calcule la densidad de población de su cantón (población entre área) y el porcentaje de la población del país (5 044 197 habitantes) que vive en él. Luego copie ambas expresiones al programa, con un comentario que indique el cantón y la fuente de los datos, y ejecútelas con `Ctrl + Enter`.
-
-### Objetos {#ejercicios-objetos}
-
-2. Guarde el nombre, la población y el área de su cantón en los objetos `canton`, `poblacion_canton` y `area_canton`, y calcule `densidad_canton` a partir de ellos. Después ejecute `poblacion_canton <- poblacion_canton * 2` y, **antes de ejecutar** `densidad_canton`, prediga si su valor cambió.
+1. En la consola, calcule la densidad de población de su cantón (población entre área). Luego, en el programa, guarde el nombre, la población y el área de su cantón en los objetos `canton`, `poblacion_canton` y `area_canton`, y calcule `densidad_canton` y el porcentaje de la población del país (5 044 197 habitantes) que vive en él, con un comentario que indique la fuente de los datos. Finalmente, ejecute `poblacion_canton <- poblacion_canton * 2` y, **antes de ejecutar** `densidad_canton`, prediga si su valor cambió.
 
     <details>
     <summary>Después de ejecutar, haga clic aquí para ver la explicación</summary>
     No cambió. La asignación guardó en `densidad_canton` el *resultado* del cálculo, no la fórmula: para actualizarlo hay que volver a ejecutar la línea que lo calcula. Esta es una diferencia importante con una hoja de cálculo, en la que las celdas se recalculan solas.
     </details>
 
-### Funciones y paquetes {#ejercicios-funciones}
+### Funciones {#ejercicios-funciones}
 
-3. Consulte la documentación de `mean()` con `?mean` y responda: ¿qué hace el argumento `na.rm` y cuál es su valor por defecto? Luego redondee `densidad_canton` a un decimal, una vez pasando `digits` por nombre y otra por posición.
+2. Consulte la documentación de `mean()` con `?mean` y responda: ¿qué hace el argumento `na.rm` y cuál es su valor por defecto? Luego redondee `densidad_canton` a un decimal, una vez pasando `digits` por nombre y otra por posición.
 
-4. Cargue el paquete tidyverse con `library(tidyverse)` (está instalado en el proyecto de Posit Cloud del curso; si trabaja localmente y no lo tiene, instálelo primero) y lea el mensaje que muestra: ¿cuántos paquetes carga? Ese conjunto es el tema de la sección III.
+### Vectores y tipos de datos {#ejercicios-vectores}
 
-### Tipos de datos {#ejercicios-tipos}
-
-5. **Prediga antes de ejecutar** el resultado —valor y tipo— de cada expresión; anote sus predicciones en comentarios y luego ejecútelas:
+3. **Prediga antes de ejecutar** el resultado —valor y tipo— de cada expresión; anote sus predicciones en comentarios y luego ejecútelas:
 
     ```r
     TRUE + TRUE
@@ -500,11 +391,9 @@ Los ejercicios se agrupan según la sección del capítulo a la que corresponden
     `TRUE + TRUE` es `2`: los lógicos se convierten en 1 y 0 al operar con ellos. `class(1:3)` es `"integer"`, porque `:` produce enteros. `as.numeric("3,5")` es `NA` con una advertencia, porque R solo reconoce el punto decimal. `"5" == 5` es `TRUE`: para comparar, R convierte el número a texto; en cambio `"5" + 5` es un error, porque la suma no convierte.
     </details>
 
-### Vectores {#ejercicios-vectores}
+4. Con los vectores `provincias`, `poblaciones` y `areas` del capítulo, calcule el porcentaje de la población del país que vive en cada provincia (redondeado a un decimal), asígnele los nombres de las provincias y muéstrelo ordenado de mayor a menor. Después obtenga, con un filtro lógico, los nombres de las provincias cuya densidad supera la del país (población total entre área total).
 
-6. Con los vectores `provincias`, `poblaciones` y `areas` del capítulo, calcule el porcentaje de la población del país que vive en cada provincia (redondeado a un decimal), asígnele los nombres de las provincias y muéstrelo ordenado de mayor a menor. Después obtenga, con un filtro lógico, los nombres de las provincias cuya densidad supera la del país (población total entre área total).
-
-7. **Prediga antes de ejecutar** el resultado de cada línea, anote las predicciones y luego ejecútelas:
+5. **Prediga antes de ejecutar** el resultado de cada línea, anote las predicciones y luego ejecútelas:
 
     ```r
     x <- c(10, 20, 30, NA)
@@ -519,21 +408,11 @@ Los ejercicios se agrupan según la sección del capítulo a la que corresponden
     La comparación con `NA` da `NA` (no se sabe si un valor desconocido es mayor que 15), por lo que `x > 15` es `FALSE TRUE TRUE NA`. `sum()` de un vector con `NA` es `NA`, salvo con `na.rm = TRUE`, que da `2`. Al indexar con un vector lógico que contiene `NA`, R devuelve `NA` en esa posición: `20 30 NA`. Por eso, al filtrar datos reales, conviene combinar la condición con `!is.na()`.
     </details>
 
-### Factores y listas {#ejercicios-factores-listas}
-
-8. Cree una lista con el nombre de su cantón, su provincia y un vector con los nombres de al menos tres de sus distritos (puede consultarlos en [Wikipedia](https://es.wikipedia.org/wiki/Cantones_de_Costa_Rica)). Extraiga el vector de distritos con `$` y con `[[ ]]`, cuente cuántos son con `length()` y examine la lista con `str()`.
-
 ### Data frames {#ejercicios-data-frames}
 
-9. A partir del data frame `cantones` (con la columna `densidad` ya calculada), obtenga los cantones de su provincia ordenados por área, de mayor a menor, mostrando solo las columnas `canton` y `area_km2`. ¿En qué posición queda su cantón?
+6. A partir del data frame `cantones` (con la columna `densidad` ya calculada), obtenga los cantones de su provincia ordenados por área, de mayor a menor, mostrando solo las columnas `canton` y `area_km2`. ¿En qué posición queda su cantón?
 
-10. Obtenga los diez cantones más densos del país. Luego determine la posición de su cantón en el ranking nacional de densidad: ordene el data frame completo por densidad decreciente, guárdelo en un objeto y use `which()` sobre la columna `canton`. Compare el resultado con el de sus compañeros.
-
-11. Con `aggregate()`, calcule el área total de cada provincia y determine cuál es la mayor. Con `table()`, verifique cuántos cantones tiene su provincia. Finalmente, guarde en un archivo CSV, dentro de su proyecto, el data frame de su provincia ordenado por densidad, y ábralo en RStudio o en una hoja de cálculo para comprobarlo.
-
-### Errores {#ejercicios-errores}
-
-12. Provoque a propósito, en la consola, los cuatro errores de la clínica con código propio (un objeto mal escrito, una función de un paquete no cargado, una coma faltante y una operación con texto) y anote en comentarios la primera línea de cada mensaje. Luego escriba `mean(c(1, 2` y presione `Enter`: observe el símbolo `+` y cancele con `Esc`.
+7. Obtenga los diez cantones más densos del país y determine la posición de su cantón en el ranking nacional de densidad: ordene el data frame completo por densidad decreciente, guárdelo en un objeto y use `which()` sobre la columna `canton`. Luego, con `aggregate()`, calcule el área total de cada provincia y determine cuál es la mayor, y con `table()` verifique cuántos cantones tiene la suya.
 
 ## Referencias bibliográficas
 
