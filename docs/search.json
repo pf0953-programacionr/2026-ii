@@ -48,7 +48,7 @@
     "href": "contenidos/evaluaciones/tarea-01.html#consideraciones-adicionales",
     "title": "Tarea 1",
     "section": "Consideraciones adicionales",
-    "text": "Consideraciones adicionales\nEsta tarea es estrictamente individual.\nSe permite el uso de herramientas de inteligencia artificial (IA), siempre que se declare explícitamente en el sitio web y que la persona estudiante comprenda y sea capaz de explicar el trabajo entregado, según lo establecido en el programa del curso. El uso no declarado de estas herramientas se considera una falta a la honestidad académica.",
+    "text": "Consideraciones adicionales\nEsta tarea es estrictamente individual.",
     "crumbs": [
       "Evaluaciones",
       "Tarea 1"
@@ -59,7 +59,7 @@
     "href": "contenidos/evaluaciones/tarea-01.html#desarrollo",
     "title": "Tarea 1",
     "section": "Desarrollo",
-    "text": "Desarrollo\nDebe desarrollar con Markdown un sitio web sobre un tema de su elección (ej. su [posible] trabajo final de graduación, un proyecto de otro curso u otra temática geográfica de su interés) que luego pueda desarrollar como proyecto final de este curso. Es importante que el tema cuente con datos disponibles —incluidos datos geoespaciales— y con algunos problemas a resolver o preguntas a contestar con esos datos: en las siguientes tareas y en el proyecto final esos datos se procesarán y visualizarán con R.\nEl sitio debe contener, como mínimo, los siguientes elementos:\n\nEncabezados (por lo menos de niveles uno y dos).\nTexto (por lo menos 750 palabras). Puede elegir la estructura que considere adecuada, pero incluya:\n\nDescripción general del tema.\nDescripción de los datos, de sus fuentes (con los enlaces respectivos) y de sus principales variables.\nProblemas que desea resolver o preguntas que espera contestar con los datos.\nDeclaración del uso de herramientas de IA (o de que no se usaron): cuáles se emplearon y para qué.\n\nNegritas (por lo menos una palabra).\nItálicas (por lo menos una palabra).\nListas (al menos una, ya sea numerada o no numerada).\nImágenes (al menos dos).\nHipervínculos (al menos dos).\n\nAgregue las citas bibliográficas que sean necesarias, en formato APA 7. Puede utilizar imágenes de fuentes externas, pero debe dar los créditos apropiados (proporcionar la cita bibliográfica o al menos un enlace a la fuente).\nEl contenido del sitio debe ser coherente y estar bien presentado.",
+    "text": "Desarrollo\nDebe desarrollar con Markdown un sitio web sobre un tema de su elección (ej. su [posible] trabajo final de graduación, un proyecto de otro curso u otra temática geográfica de su interés) que luego pueda desarrollar como proyecto final de este curso. Es importante que el tema cuente con datos disponibles —incluidos datos geoespaciales— y con algunos problemas a resolver o preguntas a contestar con esos datos: en las siguientes tareas y en el proyecto final esos datos se procesarán y visualizarán con R.\nEl sitio debe contener, como mínimo, los siguientes elementos:\n\nEncabezados (por lo menos de niveles uno y dos).\nTexto (por lo menos 750 palabras). Puede elegir la estructura que considere adecuada, pero incluya:\n\nDescripción general del tema.\nDescripción de los datos, de sus fuentes (con los enlaces respectivos) y de sus principales variables.\nProblemas que desea resolver o preguntas que espera contestar con los datos.\n\nNegritas (por lo menos una palabra).\nItálicas (por lo menos una palabra).\nListas (al menos una, ya sea numerada o no numerada).\nImágenes (al menos dos).\nHipervínculos (al menos dos).\n\nAgregue las citas bibliográficas que sean necesarias, en formato APA 7. Puede utilizar imágenes de fuentes externas, pero debe dar los créditos apropiados (proporcionar la cita bibliográfica o al menos un enlace a la fuente).\nEl contenido del sitio debe ser coherente y estar bien presentado.",
     "crumbs": [
       "Evaluaciones",
       "Tarea 1"
@@ -70,7 +70,7 @@
     "href": "contenidos/evaluaciones/tarea-01.html#calificación",
     "title": "Tarea 1",
     "section": "Calificación",
-    "text": "Calificación\nEntre paréntesis, se muestra el porcentaje correspondiente a cada aspecto que se calificará:\n\n(10 %) Coherencia y presentación general del sitio web, incluida la declaración del uso de herramientas de IA.\nElementos de Markdown:\n\n(25 %) Texto (extensión y descripción del tema, de los datos y de las preguntas).\n(5 %) Encabezados.\n(5 %) Negritas.\n(5 %) Itálicas.\n(10 %) Listas.\n(15 %) Imágenes (con sus créditos).\n(15 %) Hipervínculos.\n\n(10 %) Publicación correcta del sitio en GitHub Pages y entrega de ambas direcciones.",
+    "text": "Calificación\nEntre paréntesis, se muestra el porcentaje correspondiente a cada aspecto que se calificará:\n\n(10 %) Coherencia y presentación general del sitio web.\nElementos de Markdown:\n\n(25 %) Texto (extensión y descripción del tema, de los datos y de las preguntas).\n(5 %) Encabezados.\n(5 %) Negritas.\n(5 %) Itálicas.\n(10 %) Listas.\n(15 %) Imágenes (con sus créditos).\n(15 %) Hipervínculos.\n\n(10 %) Publicación correcta del sitio en GitHub Pages y entrega de ambas direcciones.",
     "crumbs": [
       "Evaluaciones",
       "Tarea 1"

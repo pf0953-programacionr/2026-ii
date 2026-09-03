@@ -28,8 +28,6 @@ La entrega debe realizarse a través de la plataforma Mediación Virtual. **Para
 
 **Esta tarea es estrictamente individual**.
 
-Se permite el uso de herramientas de inteligencia artificial (IA), siempre que se declare explícitamente en el sitio web y que la persona estudiante comprenda y sea capaz de explicar el trabajo entregado, según lo establecido en el programa del curso. El uso no declarado de estas herramientas se considera una falta a la honestidad académica.
-
 ## Desarrollo
 
 Debe desarrollar con Markdown un sitio web sobre un tema de su elección (ej. su [posible] trabajo final de graduación, un proyecto de otro curso u otra temática geográfica de su interés) que luego pueda desarrollar como proyecto final de este curso. Es importante que el tema cuente con **datos disponibles** —incluidos **datos geoespaciales**— y con algunos problemas a resolver o preguntas a contestar con esos datos: en las siguientes tareas y en el proyecto final esos datos se procesarán y visualizarán con R.
@@ -41,7 +39,6 @@ El sitio debe contener, como mínimo, los siguientes elementos:
   - Descripción general del tema.
   - Descripción de los datos, de sus fuentes (con los enlaces respectivos) y de sus principales variables.
   - Problemas que desea resolver o preguntas que espera contestar con los datos.
-  - Declaración del uso de herramientas de IA (o de que no se usaron): cuáles se emplearon y para qué.
 - Negritas (por lo menos una palabra).
 - Itálicas (por lo menos una palabra).
 - Listas (al menos una, ya sea numerada o no numerada).
@@ -56,7 +53,7 @@ El contenido del sitio debe ser **coherente** y estar **bien presentado**.
 
 Entre paréntesis, se muestra el porcentaje correspondiente a cada aspecto que se calificará:
 
-- (10 %) Coherencia y presentación general del sitio web, incluida la declaración del uso de herramientas de IA.
+- (10 %) Coherencia y presentación general del sitio web.
 - Elementos de Markdown:
   - (25 %) Texto (extensión y descripción del tema, de los datos y de las preguntas).
   - (5 %) Encabezados.
