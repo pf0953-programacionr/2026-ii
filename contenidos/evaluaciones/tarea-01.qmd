@@ -1,0 +1,72 @@
+---
+title: Tarea 1
+---
+
+La primera tarea del curso es un ejercicio **individual**, con un valor del **15 %** de la calificación final, según lo establecido en el [programa del curso](../../programa/programa.md). Su propósito es elegir el tema que cada estudiante desarrollará de manera incremental en las tareas 2 y 3 y en el proyecto final, y presentarlo en un sitio web escrito en Markdown y publicado en Internet.
+
+## Fecha y hora límite de entrega
+
+Viernes 11 de setiembre de 2026, 11:59 p.m.
+
+## Objetivos
+
+Cada estudiante debe mostrar que es capaz de:
+
+1. Escribir documentos en el lenguaje de marcado Markdown.
+2. Manejar repositorios en GitHub.
+3. Publicar sitios web con GitHub Pages.
+4. Elegir un tema de su interés, con datos disponibles —incluidos datos geoespaciales—, apto para desarrollarse durante el resto del curso.
+
+## Entregables
+
+1. Dirección de un repositorio en GitHub (ej. `https://github.com/usuario/tarea-01`) que contenga un documento escrito en Markdown llamado `README.md`, con el contenido especificado en la sección Desarrollo.
+2. Dirección del sitio web publicado con GitHub Pages a partir de ese repositorio (ej. `https://usuario.github.io/tarea-01/`).
+
+La entrega debe realizarse a través de la plataforma Mediación Virtual. **Para que la tarea sea aceptada, deben entregarse ambas direcciones**.
+
+## Consideraciones adicionales
+
+**Esta tarea es estrictamente individual**.
+
+## Desarrollo
+
+Debe desarrollar con Markdown un sitio web sobre un tema de su elección (ej. su [posible] trabajo final de graduación, un proyecto de otro curso u otra temática geográfica de su interés) que luego pueda desarrollar como proyecto final de este curso. Es importante que el tema cuente con **datos disponibles** —incluidos **datos geoespaciales**— y con algunos problemas a resolver o preguntas a contestar con esos datos: en las siguientes tareas y en el proyecto final esos datos se procesarán y visualizarán con R.
+
+El sitio debe contener, como mínimo, los siguientes elementos:
+
+- Encabezados (por lo menos de niveles uno y dos).
+- Texto (por lo menos 750 palabras). Puede elegir la estructura que considere adecuada, pero incluya:
+  - Descripción general del tema.
+  - Descripción de los datos, de sus fuentes (con los enlaces respectivos) y de sus principales variables.
+  - Problemas que desea resolver o preguntas que espera contestar con los datos.
+- Negritas (por lo menos una palabra).
+- Itálicas (por lo menos una palabra).
+- Listas (al menos una, ya sea numerada o no numerada).
+- Imágenes (al menos dos).
+- Hipervínculos (al menos dos).
+
+Agregue las citas bibliográficas que sean necesarias, en formato APA 7. Puede utilizar imágenes de fuentes externas, pero debe dar los créditos apropiados (proporcionar la cita bibliográfica o al menos un enlace a la fuente).
+
+El contenido del sitio debe ser **coherente** y estar **bien presentado**.
+
+## Calificación
+
+Entre paréntesis, se muestra el porcentaje correspondiente a cada aspecto que se calificará:
+
+- (10 %) Coherencia y presentación general del sitio web.
+- Elementos de Markdown:
+  - (25 %) Texto (extensión y descripción del tema, de los datos y de las preguntas).
+  - (5 %) Encabezados.
+  - (5 %) Negritas.
+  - (5 %) Itálicas.
+  - (10 %) Listas.
+  - (15 %) Imágenes (con sus créditos).
+  - (15 %) Hipervínculos.
+- (10 %) Publicación correcta del sitio en GitHub Pages y entrega de ambas direcciones.
+
+## Recursos
+
+Los contenidos evaluados en esta tarea se cubrieron en las siguientes lecciones del sitio del curso:
+
+- [El lenguaje de marcado Markdown](../i-introduccion-ciencia-datos-programacion/03-markdown.qmd)
+- [Git, GitHub y GitHub Pages](../i-introduccion-ciencia-datos-programacion/04-git-github.qmd), que incluye la activación de GitHub Pages en la configuración del repositorio (*Settings > Pages*).
