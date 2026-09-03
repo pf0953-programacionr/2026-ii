@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Asistentes de programación basados en inteligencia artificial – PF-0953 Programación en R - 2026-II</title>
+<title>Tarea 1 – PF-0953 Programación en R - 2026-II</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -74,9 +74,6 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Buscar"
   }
 }</script>
-<script src="../../site_libs/quarto-diagram/mermaid.min.js"></script>
-<script src="../../site_libs/quarto-diagram/mermaid-init.js"></script>
-<link href="../../site_libs/quarto-diagram/mermaid.css" rel="stylesheet">
 
 
 </head>
@@ -266,7 +263,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../contenidos/i-introduccion-ciencia-datos-programacion/01-introduccion-ciencia-datos.html">I. Introducción a la ciencia de datos y a la programación de computadoras</a></li><li class="breadcrumb-item"><a href="../../contenidos/i-introduccion-ciencia-datos-programacion/05-asistentes-ia.html">Asistentes de programación basados en inteligencia artificial</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../contenidos/evaluaciones/tarea-01.html">Evaluaciones</a></li><li class="breadcrumb-item"><a href="../../contenidos/evaluaciones/tarea-01.html">Tarea 1</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -319,7 +316,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../contenidos/i-introduccion-ciencia-datos-programacion/05-asistentes-ia.html" class="sidebar-item-text sidebar-link active">
+  <a href="../../contenidos/i-introduccion-ciencia-datos-programacion/05-asistentes-ia.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Asistentes de programación basados en inteligencia artificial</span></a>
   </div>
 </li>
@@ -365,7 +362,7 @@ ul.task-list li input[type="checkbox"] {
       <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../contenidos/evaluaciones/tarea-01.html" class="sidebar-item-text sidebar-link">
+  <a href="../../contenidos/evaluaciones/tarea-01.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Tarea 1</span></a>
   </div>
 </li>
@@ -398,35 +395,23 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">En esta página</h2>
    
   <ul>
-  <li><a href="#trabajo-previo" id="toc-trabajo-previo" class="nav-link active" data-scroll-target="#trabajo-previo">Trabajo previo</a>
-  <ul class="collapse">
-  <li><a href="#lecturas" id="toc-lecturas" class="nav-link" data-scroll-target="#lecturas">Lecturas</a></li>
-  <li><a href="#videos" id="toc-videos" class="nav-link" data-scroll-target="#videos">Videos</a></li>
-  </ul></li>
-  <li><a href="#introducción" id="toc-introducción" class="nav-link" data-scroll-target="#introducción">Introducción</a></li>
-  <li><a href="#modelos-de-lenguaje-de-gran-tamaño" id="toc-modelos-de-lenguaje-de-gran-tamaño" class="nav-link" data-scroll-target="#modelos-de-lenguaje-de-gran-tamaño">Modelos de lenguaje de gran tamaño</a></li>
-  <li><a href="#panorama-de-asistentes-de-programación" id="toc-panorama-de-asistentes-de-programación" class="nav-link" data-scroll-target="#panorama-de-asistentes-de-programación">Panorama de asistentes de programación</a></li>
-  <li><a href="#posibilidades-y-riesgos-en-el-aprendizaje" id="toc-posibilidades-y-riesgos-en-el-aprendizaje" class="nav-link" data-scroll-target="#posibilidades-y-riesgos-en-el-aprendizaje">Posibilidades y riesgos en el aprendizaje</a></li>
-  <li><a href="#lineamientos-de-uso-en-el-curso" id="toc-lineamientos-de-uso-en-el-curso" class="nav-link" data-scroll-target="#lineamientos-de-uso-en-el-curso">Lineamientos de uso en el curso</a></li>
-  <li><a href="#resumen" id="toc-resumen" class="nav-link" data-scroll-target="#resumen">Resumen</a></li>
-  <li><a href="#ejercicios" id="toc-ejercicios" class="nav-link" data-scroll-target="#ejercicios">Ejercicios</a>
-  <ul class="collapse">
-  <li><a href="#ejercicios-llm" id="toc-ejercicios-llm" class="nav-link" data-scroll-target="#ejercicios-llm">Modelos de lenguaje</a></li>
-  <li><a href="#ejercicios-panorama" id="toc-ejercicios-panorama" class="nav-link" data-scroll-target="#ejercicios-panorama">Panorama de asistentes</a></li>
-  <li><a href="#ejercicios-posibilidades-riesgos" id="toc-ejercicios-posibilidades-riesgos" class="nav-link" data-scroll-target="#ejercicios-posibilidades-riesgos">Posibilidades y riesgos</a></li>
-  <li><a href="#ejercicios-lineamientos" id="toc-ejercicios-lineamientos" class="nav-link" data-scroll-target="#ejercicios-lineamientos">Lineamientos</a></li>
-  </ul></li>
-  <li><a href="#referencias-bibliográficas" id="toc-referencias-bibliográficas" class="nav-link" data-scroll-target="#referencias-bibliográficas">Referencias bibliográficas</a></li>
+  <li><a href="#fecha-y-hora-límite-de-entrega" id="toc-fecha-y-hora-límite-de-entrega" class="nav-link active" data-scroll-target="#fecha-y-hora-límite-de-entrega">Fecha y hora límite de entrega</a></li>
+  <li><a href="#objetivos" id="toc-objetivos" class="nav-link" data-scroll-target="#objetivos">Objetivos</a></li>
+  <li><a href="#entregables" id="toc-entregables" class="nav-link" data-scroll-target="#entregables">Entregables</a></li>
+  <li><a href="#consideraciones-adicionales" id="toc-consideraciones-adicionales" class="nav-link" data-scroll-target="#consideraciones-adicionales">Consideraciones adicionales</a></li>
+  <li><a href="#desarrollo" id="toc-desarrollo" class="nav-link" data-scroll-target="#desarrollo">Desarrollo</a></li>
+  <li><a href="#calificación" id="toc-calificación" class="nav-link" data-scroll-target="#calificación">Calificación</a></li>
+  <li><a href="#recursos" id="toc-recursos" class="nav-link" data-scroll-target="#recursos">Recursos</a></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/pf0953-programacionr/2026-ii/blob/main/contenidos/i-introduccion-ciencia-datos-programacion/05-asistentes-ia.qmd" class="toc-action"><i class="bi bi-github"></i>Ver el código</a></li><li><a href="https://github.com/pf0953-programacionr/2026-ii/edit/main/contenidos/i-introduccion-ciencia-datos-programacion/05-asistentes-ia.qmd" class="toc-action"><i class="bi empty"></i>Editar esta página</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/pf0953-programacionr/2026-ii/blob/main/contenidos/evaluaciones/tarea-01.qmd" class="toc-action"><i class="bi bi-github"></i>Ver el código</a></li><li><a href="https://github.com/pf0953-programacionr/2026-ii/edit/main/contenidos/evaluaciones/tarea-01.qmd" class="toc-action"><i class="bi empty"></i>Editar esta página</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../contenidos/i-introduccion-ciencia-datos-programacion/01-introduccion-ciencia-datos.html">I. Introducción a la ciencia de datos y a la programación de computadoras</a></li><li class="breadcrumb-item"><a href="../../contenidos/i-introduccion-ciencia-datos-programacion/05-asistentes-ia.html">Asistentes de programación basados en inteligencia artificial</a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../contenidos/evaluaciones/tarea-01.html">Evaluaciones</a></li><li class="breadcrumb-item"><a href="../../contenidos/evaluaciones/tarea-01.html">Tarea 1</a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">Asistentes de programación basados en inteligencia artificial</h1>
+<h1 class="title">Tarea 1</h1>
 </div>
 
 
@@ -443,212 +428,81 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="trabajo-previo" class="level2">
-<h2 class="anchored" data-anchor-id="trabajo-previo">Trabajo previo</h2>
-<section id="lecturas" class="level3">
-<h3 class="anchored" data-anchor-id="lecturas">Lecturas</h3>
-<p>Antes de la clase, revise las siguientes lecturas. De la primera, en inglés, interesa la descripción general (<em>Overview</em>): presenta cómo los modelos de lenguaje están transformando el desarrollo de software, tema que este curso retoma en varias de sus semanas. La segunda, en español, es una guía introductoria breve sobre la inteligencia artificial generativa en la educación superior.</p>
-<p>Stanford University. (2025). <em>CS146S: The modern software developer</em>. Recuperado el 19 de agosto de 2026, de <a href="https://themodernsoftware.dev/" class="uri">https://themodernsoftware.dev/</a></p>
-<p>UNESCO IESALC. (2023). <em>ChatGPT e inteligencia artificial en la educación superior: Guía de inicio rápido</em>. UNESCO. <a href="https://unesdoc.unesco.org/ark:/48223/pf0000385146_spa" class="uri">https://unesdoc.unesco.org/ark:/48223/pf0000385146_spa</a></p>
+<p>La primera tarea del curso es un ejercicio <strong>individual</strong>, con un valor del <strong>15 %</strong> de la calificación final, según lo establecido en el <a href="../../programa/programa.html">programa del curso</a>. Su propósito es elegir el tema que cada estudiante desarrollará de manera incremental en las tareas 2 y 3 y en el proyecto final, y presentarlo en un sitio web escrito en Markdown y publicado en Internet.</p>
+<section id="fecha-y-hora-límite-de-entrega" class="level2">
+<h2 class="anchored" data-anchor-id="fecha-y-hora-límite-de-entrega">Fecha y hora límite de entrega</h2>
+<p>Viernes 11 de setiembre de 2026, 11:59 p.m.</p>
 </section>
-<section id="videos" class="level3">
-<h3 class="anchored" data-anchor-id="videos">Videos</h3>
-<p>El siguiente video (en inglés, con subtítulos en español) explica en ocho minutos cómo funcionan los modelos de lenguaje en los que se basan los asistentes de programación.</p>
-<p>3Blue1Brown. (2024). <em>Large language models explained briefly</em> [video]. YouTube. <a href="https://www.youtube.com/watch?v=LPZh9BOjkQs" class="uri">https://www.youtube.com/watch?v=LPZh9BOjkQs</a></p>
-</section>
-</section>
-<section id="introducción" class="level2">
-<h2 class="anchored" data-anchor-id="introducción">Introducción</h2>
-<p>En la lección de <a href="../../contenidos/i-introduccion-ciencia-datos-programacion/01-introduccion-ciencia-datos.html">introducción a la ciencia de datos</a> se mostró que la programación de computadoras articula todos los procesos de la ciencia de datos. Desde hace pocos años existen herramientas capaces de generar programas a partir de instrucciones en lenguaje natural: los <strong>asistentes de programación basados en inteligencia artificial (IA)</strong>. Estas herramientas también explican y corrigen código, redactan documentación y responden preguntas técnicas, por lo que están cambiando la forma en que se desarrolla software (Stanford University, 2025) y, a la vez, plantean preguntas nuevas sobre cómo se aprende a programar.</p>
-<p>Este curso incorpora los asistentes de IA de manera paulatina y crítica, como establece su programa: el objetivo es emplearlos de forma responsable y transparente como apoyo, no como sustituto, del razonamiento propio. Este capítulo presenta el panorama de estas herramientas, explica su funcionamiento y sus riesgos, y establece los lineamientos que rigen su uso en el curso.</p>
-</section>
-<section id="modelos-de-lenguaje-de-gran-tamaño" class="level2">
-<h2 class="anchored" data-anchor-id="modelos-de-lenguaje-de-gran-tamaño">Modelos de lenguaje de gran tamaño</h2>
-<p>Los asistentes de IA actuales se basan en <strong>modelos de lenguaje de gran tamaño</strong> (LLM, por sus siglas en inglés: <em>large language models</em>): programas entrenados con volúmenes enormes de texto y de código, de los que aprenden patrones estadísticos del lenguaje. Con base en esos patrones, un LLM genera sus respuestas prediciendo, palabra por palabra, la continuación más probable del texto que recibe (3Blue1Brown, 2024). La instrucción o pregunta que la persona usuaria escribe se denomina <strong>prompt</strong> y, junto con el resto de la conversación, forma el <strong>contexto</strong> que el modelo utiliza para generar la respuesta siguiente, como ilustra la figura 1.</p>
-<div class="cell" data-layout-align="center">
-<div class="cell-output-display">
-<div>
-<p></p><figure class="figure"><p></p>
-<div>
-<pre class="mermaid mermaid-js">flowchart LR
-  C([Grandes volúmenes&lt;br&gt;de texto y código]) -- entrenamiento --&gt; M([Modelo de lenguaje&lt;br&gt;de gran tamaño])
-  P([Prompt]) --&gt; M
-  M --&gt; R([Respuesta])
-  R -. se agrega al contexto&lt;br&gt;de la conversación .-&gt; P
-</pre>
-</div>
-<p></p></figure><p></p>
-</div>
-</div>
-</div>
-<p style="text-align: center;">
-<strong>Figura 1</strong>. Funcionamiento básico de un modelo de lenguaje de gran tamaño. Elaboración propia con base en 3Blue1Brown (2024).
-</p>
-<p>Esta naturaleza estadística explica tanto las capacidades de los LLM como sus limitaciones principales:</p>
-<ul>
-<li><strong>Alucinaciones</strong>: las respuestas de un LLM son <em>verosímiles</em>, pero no necesariamente <em>verdaderas</em>. Un modelo puede inventar datos, referencias bibliográficas o funciones de un paquete de R que no existen, y presentarlos con total seguridad. Por eso toda salida debe verificarse antes de utilizarse.</li>
-<li><strong>Sesgos</strong>: los modelos reproducen, y pueden amplificar, los sesgos presentes en sus datos de entrenamiento, como subrepresentar regiones, idiomas o puntos de vista.</li>
-<li><strong>Adulación</strong>: los asistentes conversacionales tienden a complacer a la persona usuaria y a darle la razón, en lugar de contradecirla cuando se equivoca. Que un asistente “confirme” una idea no es evidencia de que sea correcta.</li>
-<li><strong>Corte de conocimiento</strong>: el entrenamiento tiene una fecha límite, por lo que el modelo puede desconocer versiones recientes de los paquetes y herramientas, o eventos posteriores a esa fecha.</li>
-<li><strong>Privacidad</strong>: en varias herramientas, especialmente en sus versiones gratuitas, las conversaciones pueden utilizarse para entrenar los modelos. No debe ingresarse en ellas información personal, datos sensibles ni credenciales de acceso.</li>
-</ul>
-<p><em>Ejercicios de esta sección: <a href="#ejercicios-llm">ejercicios sobre modelos de lenguaje</a>.</em></p>
-</section>
-<section id="panorama-de-asistentes-de-programación" class="level2">
-<h2 class="anchored" data-anchor-id="panorama-de-asistentes-de-programación">Panorama de asistentes de programación</h2>
-<p>Los asistentes de programación se presentan en tres modalidades principales, que se diferencian por el grado de integración con el entorno de trabajo y por el grado de autonomía con que operan, como resume la tabla 1.</p>
-<figure style="text-align: center; margin: 20px 0;" class="figure">
-<figcaption>
-<strong>Tabla 1</strong>. Modalidades de asistentes de programación basados en IA. Elaboración propia con base en Stanford University (2025).
-</figcaption>
-<table class="table table-bordered table-striped" style="margin: 0 auto;">
-<thead>
-<tr>
-<th>
-Modalidad
-</th>
-<th>
-Ejemplos
-</th>
-<th>
-Uso típico
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-Asistentes conversacionales
-</td>
-<td>
-<a href="https://chatgpt.com/">ChatGPT</a>, <a href="https://gemini.google.com/">Gemini</a>, <a href="https://claude.ai/">Claude</a>, <a href="https://copilot.microsoft.com/">Copilot</a>
-</td>
-<td>
-Conversación en el navegador o en una aplicación: explicar conceptos y código, depurar errores, generar ejemplos y borradores.
-</td>
-</tr>
-<tr>
-<td>
-Asistentes integrados en editores de código
-</td>
-<td>
-<a href="https://github.com/features/copilot">GitHub Copilot</a> en <a href="../../contenidos/software/r-rstudio.html">RStudio</a> y en otros editores
-</td>
-<td>
-Autocompletado y chat dentro del editor, con acceso al código en el que se trabaja.
-</td>
-</tr>
-<tr>
-<td>
-Herramientas agénticas
-</td>
-<td>
-<a href="https://claude.com/claude-code">Claude Code</a>, <a href="https://github.com/google-gemini/gemini-cli">Gemini CLI</a>, modo agente de GitHub Copilot
-</td>
-<td>
-Ejecutan tareas de varios pasos (ej. modificar archivos, ejecutar programas y pruebas) bajo supervisión humana.
-</td>
-</tr>
-</tbody>
-</table>
-</figure>
-<p>Casi todas estas herramientas ofrecen versiones gratuitas con límites de uso, suficientes para este curso. Debe tenerse presente que cada herramienta tiene sus propias políticas sobre el uso que hace de los datos de las personas usuarias, que conviene revisar antes de utilizarla.</p>
-<p>El uso de estas modalidades se distribuye a lo largo del curso, en paralelo con el avance de los contenidos de programación:</p>
-<ul>
-<li><strong>Semana 2</strong>: panorama de los asistentes y lineamientos de uso (este capítulo).</li>
-<li><strong>Semana 5</strong>: uso de asistentes para explicar y depurar código.</li>
-<li><strong>Semana 8</strong>: uso de asistentes para generación y verificación de código de análisis de datos.</li>
-<li><strong>Semana 15</strong>: herramientas agénticas, revisión crítica del código generado y documentación de su uso.</li>
-</ul>
-<p><em>Ejercicios de esta sección: <a href="#ejercicios-panorama">ejercicios sobre el panorama de asistentes</a>.</em></p>
-</section>
-<section id="posibilidades-y-riesgos-en-el-aprendizaje" class="level2">
-<h2 class="anchored" data-anchor-id="posibilidades-y-riesgos-en-el-aprendizaje">Posibilidades y riesgos en el aprendizaje</h2>
-<p>Bien utilizados, los asistentes de IA pueden apoyar el aprendizaje de la programación de varias maneras: explican línea por línea un fragmento de código ajeno, ayudan a interpretar mensajes de error, generan ejemplos y ejercicios adicionales sobre un tema y responden preguntas a cualquier hora, como una especie de tutoría siempre disponible. Para una persona que aprende a programar, poder preguntar “¿por qué falla este código?” o “¿qué hace esta línea?” y recibir una explicación inmediata es una posibilidad valiosa.</p>
-<p>El riesgo central es la <strong>dependencia</strong>: si el asistente resuelve las tareas, la persona estudiante se salta precisamente el proceso que desarrolla su capacidad de programar. La evidencia disponible señala que el uso excesivo de estas herramientas puede disminuir el esfuerzo intelectual, la exploración autónoma y el pensamiento crítico (Del Cisne Loján et al., 2024). En programación el problema es tangible: quien entrega código generado que no comprende no puede corregirlo cuando falla, ni adaptarlo a un problema nuevo, ni defenderlo. A esto se suman las limitaciones de la sección anterior: el código generado puede contener errores sutiles, usar funciones inexistentes o basarse en versiones desactualizadas de los paquetes.</p>
-<p>La legitimidad de usar un asistente depende, entonces, del objetivo de cada actividad. Cuando el objetivo es el producto (ej. redactar más rápido un texto cuyo contenido ya se domina), el asistente es una herramienta legítima de productividad. Cuando el objetivo es el aprendizaje —como ocurre en este curso con la programación—, delegar la tarea en el asistente vacía la actividad de sentido, de la misma forma en que pedirle a otra persona que haga el ejercicio por uno no es hacer el ejercicio. La recomendación general del curso es usar los asistentes <strong>para aprender</strong> (pedir explicaciones, ejemplos, pistas) más que <strong>para resolver</strong> (pedir la solución completa).</p>
-<p>Cabe agregar que los detectores automáticos de texto y código generados por IA producen falsos positivos y falsos negativos, por lo que no constituyen una base confiable para evaluar la honestidad académica. Por esa razón, este curso no se apoya en detectores, sino en la transparencia: la declaración del uso y la capacidad de explicar el trabajo propio, como se detalla en la siguiente sección.</p>
-<p><em>Ejercicios de esta sección: <a href="#ejercicios-posibilidades-riesgos">ejercicios sobre posibilidades y riesgos</a>.</em></p>
-</section>
-<section id="lineamientos-de-uso-en-el-curso" class="level2">
-<h2 class="anchored" data-anchor-id="lineamientos-de-uso-en-el-curso">Lineamientos de uso en el curso</h2>
-<p>La Universidad de Costa Rica cuenta desde marzo de 2026 con un <a href="https://ci.ucr.ac.cr/marco-gobernanza-gestion-ia">Marco de gobernanza y gestión de la inteligencia artificial</a>, que orienta la integración ética, crítica y humanista de la IA en la docencia, la investigación, la acción social y la gestión (Universidad de Costa Rica, 2026). Entre sus principios, la <strong>integridad académica</strong> y la <strong>honestidad intelectual</strong> piden declarar de forma transparente el uso de la IA, verificar y contrastar sus salidas, y mantener la responsabilidad personal sobre el trabajo que se firma: la IA puede ser un apoyo, pero no un sustituto del pensamiento crítico. En la misma línea, la UNESCO (2025) define las competencias en materia de IA que el estudiantado debe desarrollar, empezando por una mentalidad centrada en el ser humano y el juicio crítico sobre estas tecnologías, y Costa Rica oficializó en 2026 la norma técnica INTE/ISO/IEC 42001 de gestión de sistemas de IA, elaborada por <a href="https://www.inteco.org/">INTECO</a>, lo que ilustra que el uso responsable de la IA es también una competencia profesional demandada en el país.</p>
-<p>En concordancia con ese marco, el uso de asistentes de IA en este curso se rige por los siguientes lineamientos, establecidos en el programa del curso:</p>
+<section id="objetivos" class="level2">
+<h2 class="anchored" data-anchor-id="objetivos">Objetivos</h2>
+<p>Cada estudiante debe mostrar que es capaz de:</p>
 <ol type="1">
-<li><strong>Dónde se permite</strong>: en todas las evaluaciones —las tareas, el proyecto final y sus presentaciones— y en los ejercicios de clase, siempre que se cumplan los lineamientos siguientes.</li>
-<li><strong>Transparencia</strong>: todo trabajo que haya utilizado asistentes de IA debe declararlo explícitamente: cuál herramienta se usó, con qué propósito y en cuáles partes del trabajo.</li>
-<li><strong>Comprensión</strong>: cada estudiante debe comprender y ser capaz de explicar todo el código y el texto que entregue, incluido el elaborado con asistencia de IA. Puede solicitarse una explicación o defensa oral de cualquier trabajo.</li>
-<li><strong>Verificación</strong>: los resultados generados deben verificarse antes de incorporarse al trabajo: ejecutar el código, contrastar las afirmaciones con la <a href="https://www.r-project.org/other-docs.html">documentación oficial</a> de R y de sus paquetes, y comprobar que las referencias citadas existan.</li>
-<li><strong>Privacidad</strong>: no debe ingresarse en estas herramientas información personal propia ni de terceros, datos sensibles, contraseñas ni claves de acceso a servicios (como las claves de API que se usarán más adelante en el curso).</li>
-<li><strong>Derechos de autor</strong>: debe respetarse la licencia del código y de los materiales de terceros, y citarse las fuentes utilizadas, según las prácticas de citación del curso.</li>
+<li>Escribir documentos en el lenguaje de marcado Markdown.</li>
+<li>Manejar repositorios en GitHub.</li>
+<li>Publicar sitios web con GitHub Pages.</li>
+<li>Elegir un tema de su interés, con datos disponibles —incluidos datos geoespaciales—, apto para desarrollarse durante el resto del curso.</li>
 </ol>
-<p>La declaración de uso puede ser breve. Por ejemplo, al final de un documento computacional o de un <code>README</code>:</p>
-<pre><code>Declaración de uso de IA: se utilizó [herramienta] para [propósito, ej.
-generar una primera versión de la función de descarga de datos y explicar
-el mensaje de error de la sección 3]. Los resultados fueron revisados,
-verificados y adaptados por la persona autora.</code></pre>
-<p>Este mismo repositorio ofrece un ejemplo real: los mensajes de los <em>commits</em> del sitio web del curso declaran la asistencia de IA mediante una línea final (<code>Co-Authored-By</code>), visible en el <a href="https://github.com/pf0953-programacionr/2026-ii/commits/">historial de confirmaciones</a>.</p>
-<p>El uso no declarado de herramientas de IA, así como la incapacidad de explicar el trabajo propio, se considera una falta a la honestidad académica, según lo establecido en el <a href="https://www.cu.ucr.ac.cr/normativ/orden_y_disciplina.pdf">Reglamento de Orden y Disciplina de los Estudiantes de la Universidad de Costa Rica</a>. El espíritu de estos lineamientos no es punitivo: es aprender a usar herramientas poderosas de una forma que fortalezca, en lugar de debilitar, el aprendizaje y la integridad del trabajo académico.</p>
-<p><em>Ejercicios de esta sección: <a href="#ejercicios-lineamientos">ejercicios sobre los lineamientos</a>.</em></p>
 </section>
-<section id="resumen" class="level2">
-<h2 class="anchored" data-anchor-id="resumen">Resumen</h2>
+<section id="entregables" class="level2">
+<h2 class="anchored" data-anchor-id="entregables">Entregables</h2>
+<ol type="1">
+<li>Dirección de un repositorio en GitHub (ej. <code>https://github.com/usuario/tarea-01</code>) que contenga un documento escrito en Markdown llamado <code>README.md</code>, con el contenido especificado en la sección Desarrollo.</li>
+<li>Dirección del sitio web publicado con GitHub Pages a partir de ese repositorio (ej. <code>https://usuario.github.io/tarea-01/</code>).</li>
+</ol>
+<p>La entrega debe realizarse a través de la plataforma Mediación Virtual. <strong>Para que la tarea sea aceptada, deben entregarse ambas direcciones</strong>.</p>
+</section>
+<section id="consideraciones-adicionales" class="level2">
+<h2 class="anchored" data-anchor-id="consideraciones-adicionales">Consideraciones adicionales</h2>
+<p><strong>Esta tarea es estrictamente individual</strong>.</p>
+<p>Se permite el uso de herramientas de inteligencia artificial (IA), siempre que se declare explícitamente en el sitio web y que la persona estudiante comprenda y sea capaz de explicar el trabajo entregado, según lo establecido en el programa del curso. El uso no declarado de estas herramientas se considera una falta a la honestidad académica.</p>
+</section>
+<section id="desarrollo" class="level2">
+<h2 class="anchored" data-anchor-id="desarrollo">Desarrollo</h2>
+<p>Debe desarrollar con Markdown un sitio web sobre un tema de su elección (ej. su [posible] trabajo final de graduación, un proyecto de otro curso u otra temática geográfica de su interés) que luego pueda desarrollar como proyecto final de este curso. Es importante que el tema cuente con <strong>datos disponibles</strong> —incluidos <strong>datos geoespaciales</strong>— y con algunos problemas a resolver o preguntas a contestar con esos datos: en las siguientes tareas y en el proyecto final esos datos se procesarán y visualizarán con R.</p>
+<p>El sitio debe contener, como mínimo, los siguientes elementos:</p>
 <ul>
-<li>Los <strong>asistentes de programación basados en IA</strong> generan, explican, corrigen y documentan código a partir de instrucciones en lenguaje natural denominadas <strong>prompts</strong>.</li>
-<li>Se basan en <strong>modelos de lenguaje de gran tamaño (LLM)</strong>, que aprenden patrones estadísticos de grandes volúmenes de texto y código, y generan respuestas prediciendo la continuación más probable. Por eso sus salidas son verosímiles pero no necesariamente verdaderas: presentan <strong>alucinaciones</strong>, <strong>sesgos</strong>, <strong>adulación</strong> y un <strong>corte de conocimiento</strong>, y deben verificarse siempre.</li>
-<li>Existen tres modalidades: <strong>asistentes conversacionales</strong>, <strong>asistentes integrados en editores de código</strong> y <strong>herramientas agénticas</strong>; el curso las incorpora paulatinamente en las semanas 2, 5, 8 y 15.</li>
-<li>El riesgo central para el aprendizaje es la <strong>dependencia</strong>: código que no se comprende no se puede corregir, adaptar ni defender. La recomendación del curso es usar los asistentes para aprender más que para resolver.</li>
-<li>Los <strong>lineamientos del curso</strong>, alineados con el Marco de gobernanza de la IA de la UCR, son: uso permitido en todas las evaluaciones, con <strong>declaración explícita</strong> del uso, <strong>comprensión</strong> demostrable del trabajo entregado, <strong>verificación</strong> de los resultados, protección de la <strong>privacidad</strong> y respeto a los <strong>derechos de autor</strong>.</li>
+<li>Encabezados (por lo menos de niveles uno y dos).</li>
+<li>Texto (por lo menos 750 palabras). Puede elegir la estructura que considere adecuada, pero incluya:
+<ul>
+<li>Descripción general del tema.</li>
+<li>Descripción de los datos, de sus fuentes (con los enlaces respectivos) y de sus principales variables.</li>
+<li>Problemas que desea resolver o preguntas que espera contestar con los datos.</li>
+<li>Declaración del uso de herramientas de IA (o de que no se usaron): cuáles se emplearon y para qué.</li>
+</ul></li>
+<li>Negritas (por lo menos una palabra).</li>
+<li>Itálicas (por lo menos una palabra).</li>
+<li>Listas (al menos una, ya sea numerada o no numerada).</li>
+<li>Imágenes (al menos dos).</li>
+<li>Hipervínculos (al menos dos).</li>
+</ul>
+<p>Agregue las citas bibliográficas que sean necesarias, en formato APA 7. Puede utilizar imágenes de fuentes externas, pero debe dar los créditos apropiados (proporcionar la cita bibliográfica o al menos un enlace a la fuente).</p>
+<p>El contenido del sitio debe ser <strong>coherente</strong> y estar <strong>bien presentado</strong>.</p>
+</section>
+<section id="calificación" class="level2">
+<h2 class="anchored" data-anchor-id="calificación">Calificación</h2>
+<p>Entre paréntesis, se muestra el porcentaje correspondiente a cada aspecto que se calificará:</p>
+<ul>
+<li>(10 %) Coherencia y presentación general del sitio web, incluida la declaración del uso de herramientas de IA.</li>
+<li>Elementos de Markdown:
+<ul>
+<li>(25 %) Texto (extensión y descripción del tema, de los datos y de las preguntas).</li>
+<li>(5 %) Encabezados.</li>
+<li>(5 %) Negritas.</li>
+<li>(5 %) Itálicas.</li>
+<li>(10 %) Listas.</li>
+<li>(15 %) Imágenes (con sus créditos).</li>
+<li>(15 %) Hipervínculos.</li>
+</ul></li>
+<li>(10 %) Publicación correcta del sitio en GitHub Pages y entrega de ambas direcciones.</li>
 </ul>
 </section>
-<section id="ejercicios" class="level2">
-<h2 class="anchored" data-anchor-id="ejercicios">Ejercicios</h2>
-<p>Los ejercicios se agrupan según la sección del capítulo a la que corresponden; se recomienda realizarlos al concluir la sección respectiva. Para realizarlos se requiere una cuenta en al menos un asistente conversacional de la tabla 1; puede usarse la versión gratuita de cualquiera de ellos.</p>
-<section id="ejercicios-llm" class="level3">
-<h3 class="anchored" data-anchor-id="ejercicios-llm">Modelos de lenguaje</h3>
-<ol type="1">
-<li>Pida a un asistente conversacional que explique qué es un modelo de lenguaje de gran tamaño y que incluya tres referencias bibliográficas. Luego verifique si las referencias existen, buscándolas en la Web.
+<section id="recursos" class="level2">
+<h2 class="anchored" data-anchor-id="recursos">Recursos</h2>
+<p>Los contenidos evaluados en esta tarea se cubrieron en las siguientes lecciones del sitio del curso:</p>
 <ul>
-<li>¿Encontró todas las referencias? Si alguna no existe, acaba de observar una alucinación.</li>
-<li>Compare la explicación con la del video de 3Blue1Brown (2024): ¿hay diferencias o contradicciones?</li>
-</ul></li>
-<li>Formule a dos asistentes distintos una misma pregunta sobre un tema geográfico de Costa Rica que conozca bien (ej. sobre su cantón, una cuenca o un área protegida). Compare las respuestas: ¿en qué coinciden y en qué difieren? Verifique al menos un dato de cada respuesta en una fuente oficial e indique cuál fuente usó.</li>
-</ol>
-</section>
-<section id="ejercicios-panorama" class="level3">
-<h3 class="anchored" data-anchor-id="ejercicios-panorama">Panorama de asistentes</h3>
-<ol start="3" type="1">
-<li>Explore un asistente conversacional de la tabla 1 que no haya utilizado antes y busque en su sitio web la respuesta a dos preguntas: ¿la versión gratuita utiliza las conversaciones para entrenar los modelos? ¿Puede desactivarse ese uso? Anote lo que encuentre y lo que no logre encontrar; la dificultad para hallar esta información también es un resultado relevante.</li>
-</ol>
-</section>
-<section id="ejercicios-posibilidades-riesgos" class="level3">
-<h3 class="anchored" data-anchor-id="ejercicios-posibilidades-riesgos">Posibilidades y riesgos</h3>
-<ol start="4" type="1">
-<li>Este ejercicio practica el ciclo completo de uso responsable: generar, comprender, verificar y criticar.
-<ul>
-<li>Pida a un asistente un programa corto en R que calcule la densidad de población de un cantón a partir de dos variables, <code>poblacion</code> y <code>area</code>, y muestre el resultado.</li>
-<li>Ejecute el programa generado en la consola de <a href="../../contenidos/software/r-rstudio.html">RStudio</a> —instalado en la lección de <a href="../../contenidos/i-introduccion-ciencia-datos-programacion/03-markdown.html">Markdown</a>— o en Posit Cloud, con valores reales de un cantón, y verifique que el resultado sea correcto.</li>
-<li>Pida al asistente que explique el programa línea por línea. Anote los elementos del lenguaje que reconozca: R se empieza a estudiar formalmente la próxima semana y podrá contrastar entonces estas explicaciones.</li>
-<li>Pregunte al asistente si el programa tiene errores o limitaciones (ej. ¿qué sucede si <code>area</code> es cero?) y evalúe críticamente la respuesta.</li>
-</ul></li>
-</ol>
-</section>
-<section id="ejercicios-lineamientos" class="level3">
-<h3 class="anchored" data-anchor-id="ejercicios-lineamientos">Lineamientos</h3>
-<ol start="5" type="1">
-<li>Redacte la declaración de uso de IA que correspondería al ejercicio 4, siguiendo el formato de ejemplo de la sección de lineamientos: herramienta, propósito, partes del trabajo y revisión realizada.</li>
-<li>Escriba cinco normas personales para su propio uso de asistentes de IA durante este curso, en forma de decálogo breve. Compárelas con los lineamientos del curso: ¿cuáles coinciden? ¿Agregó alguna que no está en los lineamientos?</li>
-</ol>
-</section>
-</section>
-<section id="referencias-bibliográficas" class="level2">
-<h2 class="anchored" data-anchor-id="referencias-bibliográficas">Referencias bibliográficas</h2>
-<p>3Blue1Brown. (2024). <em>Large language models explained briefly</em> [video]. YouTube. <a href="https://www.youtube.com/watch?v=LPZh9BOjkQs" class="uri">https://www.youtube.com/watch?v=LPZh9BOjkQs</a></p>
-<p>Del Cisne Loján, M., Antonio Romero, J., Sancho Aguilera, D. y Yajaira Romero, A. (2024). Consecuencias de la dependencia de la inteligencia artificial en habilidades críticas y aprendizaje autónomo en los estudiantes. <em>Ciencia Latina Revista Científica Multidisciplinar</em>, <em>8</em>(2), 2368–2382. <a href="https://ciencialatina.org/index.php/cienciala/article/view/10678" class="uri">https://ciencialatina.org/index.php/cienciala/article/view/10678</a></p>
-<p>Stanford University. (2025). <em>CS146S: The modern software developer</em>. Recuperado el 19 de agosto de 2026, de <a href="https://themodernsoftware.dev/" class="uri">https://themodernsoftware.dev/</a></p>
-<p>UNESCO. (2025). <em>Marco de competencias para estudiantes en materia de IA</em>. <a href="https://unesdoc.unesco.org/ark:/48223/pf0000393812" class="uri">https://unesdoc.unesco.org/ark:/48223/pf0000393812</a> (Obra original publicada en 2024)</p>
-<p>UNESCO IESALC. (2023). <em>ChatGPT e inteligencia artificial en la educación superior: Guía de inicio rápido</em>. UNESCO. <a href="https://unesdoc.unesco.org/ark:/48223/pf0000385146_spa" class="uri">https://unesdoc.unesco.org/ark:/48223/pf0000385146_spa</a></p>
-<p>Universidad de Costa Rica. (2026). <em>Marco de gobernanza y gestión de la inteligencia artificial en la Universidad de Costa Rica</em>. <a href="https://ci.ucr.ac.cr/marco-gobernanza-gestion-ia" class="uri">https://ci.ucr.ac.cr/marco-gobernanza-gestion-ia</a></p>
+<li><a href="../../contenidos/i-introduccion-ciencia-datos-programacion/03-markdown.html">El lenguaje de marcado Markdown</a></li>
+<li><a href="../../contenidos/i-introduccion-ciencia-datos-programacion/04-git-github.html">Git, GitHub y GitHub Pages</a>, que incluye la activación de GitHub Pages en la configuración del repositorio (<em>Settings &gt; Pages</em>).</li>
+</ul>
 
 
 </section>
@@ -1075,7 +929,7 @@ verificados y adaptados por la persona autora.</code></pre>
     </div>   
     <div class="nav-footer-center">
 <p>Los contenidos de este curso, a menos que se especifique de otra forma, se comparten mediante una <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.es">licencia de Creative Commons Reconocimiento-CompartirIgual 4.0 Internacional</a>.</p>
-<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/pf0953-programacionr/2026-ii/blob/main/contenidos/i-introduccion-ciencia-datos-programacion/05-asistentes-ia.qmd" class="toc-action"><i class="bi bi-github"></i>Ver el código</a></li><li><a href="https://github.com/pf0953-programacionr/2026-ii/edit/main/contenidos/i-introduccion-ciencia-datos-programacion/05-asistentes-ia.qmd" class="toc-action"><i class="bi empty"></i>Editar esta página</a></li></ul></div></div>
+<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/pf0953-programacionr/2026-ii/blob/main/contenidos/evaluaciones/tarea-01.qmd" class="toc-action"><i class="bi bi-github"></i>Ver el código</a></li><li><a href="https://github.com/pf0953-programacionr/2026-ii/edit/main/contenidos/evaluaciones/tarea-01.qmd" class="toc-action"><i class="bi empty"></i>Editar esta página</a></li></ul></div></div>
     <div class="nav-footer-right">
       &nbsp;
     </div>

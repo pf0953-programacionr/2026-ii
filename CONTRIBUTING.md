@@ -95,6 +95,13 @@ distinto: instrucciones de instalación, configuración y acceso, con pasos
 numerados cuando corresponda, sin la estructura completa de capítulos;
 las lecciones remiten a ellas en lugar de repetir instrucciones.
 
+Los enunciados de las evaluaciones (`contenidos/evaluaciones/`, sección
+Evaluaciones de la barra lateral) siguen la estructura de los de GF-0657:
+párrafo inicial (carácter individual o grupal, valor y propósito), «Fecha
+y hora límite de entrega», «Objetivos», «Entregables», «Consideraciones
+adicionales», «Desarrollo», «Calificación» (porcentajes por aspecto) y
+«Recursos» (enlaces a las lecciones que cubren lo evaluado).
+
 ### Estilo
 
 - Los nombres de los paquetes de R se escriben en minúsculas en la prosa
