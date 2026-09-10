@@ -55,6 +55,7 @@ website:
           - contenidos/ii-lenguaje-programacion-r/06-introduccion-r.qmd
           - contenidos/ii-lenguaje-programacion-r/07-fundamentos-r-i.qmd
           - contenidos/ii-lenguaje-programacion-r/08-fundamentos-r-ii.qmd
+          - contenidos/ii-lenguaje-programacion-r/09-quarto.qmd
       - section: "Evaluaciones"
         contents:
           - contenidos/evaluaciones/tarea-01.qmd

@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Git, GitHub y GitHub Pages – PF-0953 Programación en R - 2026-II</title>
+<title>Quarto: documentos computacionales – PF-0953 Programación en R - 2026-II</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -22,6 +22,41 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -266,7 +301,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../contenidos/i-introduccion-ciencia-datos-programacion/01-introduccion-ciencia-datos.html">I. Introducción a la ciencia de datos y a la programación de computadoras</a></li><li class="breadcrumb-item"><a href="../../contenidos/i-introduccion-ciencia-datos-programacion/04-git-github.html">Git, GitHub y GitHub Pages</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../contenidos/ii-lenguaje-programacion-r/06-introduccion-r.html">II. El lenguaje de programación R</a></li><li class="breadcrumb-item"><a href="../../contenidos/ii-lenguaje-programacion-r/09-quarto.html">Quarto: documentos computacionales</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -313,7 +348,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../contenidos/i-introduccion-ciencia-datos-programacion/04-git-github.html" class="sidebar-item-text sidebar-link active">
+  <a href="../../contenidos/i-introduccion-ciencia-datos-programacion/04-git-github.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Git, GitHub y GitHub Pages</span></a>
   </div>
 </li>
@@ -354,7 +389,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../contenidos/ii-lenguaje-programacion-r/09-quarto.html" class="sidebar-item-text sidebar-link">
+  <a href="../../contenidos/ii-lenguaje-programacion-r/09-quarto.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Quarto: documentos computacionales</span></a>
   </div>
 </li>
@@ -407,29 +442,40 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#trabajo-previo" id="toc-trabajo-previo" class="nav-link active" data-scroll-target="#trabajo-previo">Trabajo previo</a>
   <ul class="collapse">
   <li><a href="#lecturas" id="toc-lecturas" class="nav-link" data-scroll-target="#lecturas">Lecturas</a></li>
+  <li><a href="#otros-recursos" id="toc-otros-recursos" class="nav-link" data-scroll-target="#otros-recursos">Otros recursos</a></li>
   </ul></li>
   <li><a href="#introducción" id="toc-introducción" class="nav-link" data-scroll-target="#introducción">Introducción</a></li>
-  <li><a href="#control-de-versiones" id="toc-control-de-versiones" class="nav-link" data-scroll-target="#control-de-versiones">Control de versiones</a></li>
-  <li><a href="#git" id="toc-git" class="nav-link" data-scroll-target="#git">Git</a></li>
-  <li><a href="#github" id="toc-github" class="nav-link" data-scroll-target="#github">GitHub</a></li>
-  <li><a href="#github-pages" id="toc-github-pages" class="nav-link" data-scroll-target="#github-pages">GitHub Pages</a></li>
+  <li><a href="#anatomía-de-un-documento-quarto" id="toc-anatomía-de-un-documento-quarto" class="nav-link" data-scroll-target="#anatomía-de-un-documento-quarto">Anatomía de un documento Quarto</a>
+  <ul class="collapse">
+  <li><a href="#metadatos-en-yaml" id="toc-metadatos-en-yaml" class="nav-link" data-scroll-target="#metadatos-en-yaml">Metadatos en YAML</a></li>
+  <li><a href="#narrativa-en-markdown" id="toc-narrativa-en-markdown" class="nav-link" data-scroll-target="#narrativa-en-markdown">Narrativa en Markdown</a></li>
+  <li><a href="#bloques-de-código" id="toc-bloques-de-código" class="nav-link" data-scroll-target="#bloques-de-código">Bloques de código</a></li>
+  </ul></li>
+  <li><a href="#cómo-funciona" id="toc-cómo-funciona" class="nav-link" data-scroll-target="#cómo-funciona">Cómo funciona</a>
+  <ul class="collapse">
+  <li><a href="#el-directorio-de-trabajo-y-las-rutas" id="toc-el-directorio-de-trabajo-y-las-rutas" class="nav-link" data-scroll-target="#el-directorio-de-trabajo-y-las-rutas">El directorio de trabajo y las rutas</a></li>
+  </ul></li>
+  <li><a href="#publicación-en-internet" id="toc-publicación-en-internet" class="nav-link" data-scroll-target="#publicación-en-internet">Publicación en Internet</a></li>
+  <li><a href="#errores-y-asistentes-de-ia" id="toc-errores-y-asistentes-de-ia" class="nav-link" data-scroll-target="#errores-y-asistentes-de-ia">Errores y asistentes de IA</a></li>
   <li><a href="#resumen" id="toc-resumen" class="nav-link" data-scroll-target="#resumen">Resumen</a></li>
   <li><a href="#ejercicios" id="toc-ejercicios" class="nav-link" data-scroll-target="#ejercicios">Ejercicios</a>
   <ul class="collapse">
-  <li><a href="#ejercicios-github" id="toc-ejercicios-github" class="nav-link" data-scroll-target="#ejercicios-github">Control de versiones, Git y GitHub</a></li>
-  <li><a href="#ejercicios-pages" id="toc-ejercicios-pages" class="nav-link" data-scroll-target="#ejercicios-pages">GitHub Pages</a></li>
+  <li><a href="#ejercicios-documento" id="toc-ejercicios-documento" class="nav-link" data-scroll-target="#ejercicios-documento">El documento</a></li>
+  <li><a href="#ejercicios-rutas" id="toc-ejercicios-rutas" class="nav-link" data-scroll-target="#ejercicios-rutas">Rutas</a></li>
+  <li><a href="#ejercicios-publicacion" id="toc-ejercicios-publicacion" class="nav-link" data-scroll-target="#ejercicios-publicacion">Publicación</a></li>
+  <li><a href="#ejercicios-errores-ia" id="toc-ejercicios-errores-ia" class="nav-link" data-scroll-target="#ejercicios-errores-ia">Errores y asistentes de IA</a></li>
   </ul></li>
   <li><a href="#referencias-bibliográficas" id="toc-referencias-bibliográficas" class="nav-link" data-scroll-target="#referencias-bibliográficas">Referencias bibliográficas</a></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/pf0953-programacionr/2026-ii/blob/main/contenidos/i-introduccion-ciencia-datos-programacion/04-git-github.qmd" class="toc-action"><i class="bi bi-github"></i>Ver el código</a></li><li><a href="https://github.com/pf0953-programacionr/2026-ii/edit/main/contenidos/i-introduccion-ciencia-datos-programacion/04-git-github.qmd" class="toc-action"><i class="bi empty"></i>Editar esta página</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/pf0953-programacionr/2026-ii/blob/main/contenidos/ii-lenguaje-programacion-r/09-quarto.qmd" class="toc-action"><i class="bi bi-github"></i>Ver el código</a></li><li><a href="https://github.com/pf0953-programacionr/2026-ii/edit/main/contenidos/ii-lenguaje-programacion-r/09-quarto.qmd" class="toc-action"><i class="bi empty"></i>Editar esta página</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../contenidos/i-introduccion-ciencia-datos-programacion/01-introduccion-ciencia-datos.html">I. Introducción a la ciencia de datos y a la programación de computadoras</a></li><li class="breadcrumb-item"><a href="../../contenidos/i-introduccion-ciencia-datos-programacion/04-git-github.html">Git, GitHub y GitHub Pages</a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../contenidos/ii-lenguaje-programacion-r/06-introduccion-r.html">II. El lenguaje de programación R</a></li><li class="breadcrumb-item"><a href="../../contenidos/ii-lenguaje-programacion-r/09-quarto.html">Quarto: documentos computacionales</a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">Git, GitHub y GitHub Pages</h1>
+<h1 class="title">Quarto: documentos computacionales</h1>
 </div>
 
 
@@ -450,42 +496,109 @@ ul.task-list li input[type="checkbox"] {
 <h2 class="anchored" data-anchor-id="trabajo-previo">Trabajo previo</h2>
 <section id="lecturas" class="level3">
 <h3 class="anchored" data-anchor-id="lecturas">Lecturas</h3>
-<p>Antes de la clase, revise las siguientes lecturas, ambas en inglés. La primera es un tutorial que recorre los conceptos y comandos básicos de Git y su relación con GitHub; la segunda explica cómo publicar una página web con GitHub Pages. Además, <a href="https://github.com/signup">cree una cuenta gratuita en GitHub</a> antes de la clase; elija el nombre de usuario con cuidado, pues identificará sus trabajos durante el curso.</p>
-<p>Abba, I. V. (2021). <em>Git and GitHub tutorial – Version control for beginners</em>. freeCodeCamp. <a href="https://www.freecodecamp.org/news/git-and-github-for-beginners/" class="uri">https://www.freecodecamp.org/news/git-and-github-for-beginners/</a></p>
-<p>GitHub. (s. f.-b). <em>Quickstart for GitHub Pages</em>. GitHub Docs. Recuperado el 19 de agosto de 2026, de <a href="https://docs.github.com/en/pages/quickstart" class="uri">https://docs.github.com/en/pages/quickstart</a></p>
+<p>Antes de la clase, revise las siguientes lecturas. La primera es el tutorial oficial de Quarto para RStudio (lectura obligatoria de esta semana según el programa del curso), que puede seguirse en unos 20 minutos con RStudio abierto; la segunda es el capítulo sobre Quarto del libro de referencia de la sección III.</p>
+<p>Quarto. (s. f.-d). <em>Tutorial: Hello, Quarto</em>. Recuperado el 10 de setiembre de 2026, de <a href="https://quarto.org/docs/get-started/hello/rstudio.html" class="uri">https://quarto.org/docs/get-started/hello/rstudio.html</a></p>
+<p>Wickham, H., Çetinkaya-Rundel, M., y Grolemund, G. (2023). Quarto. En <em>R for data science: Import, tidy, transform, visualize, and model data</em> (2.ª ed.). O’Reilly Media. <a href="https://r4ds.hadley.nz/quarto.html" class="uri">https://r4ds.hadley.nz/quarto.html</a></p>
+</section>
+<section id="otros-recursos" class="level3">
+<h3 class="anchored" data-anchor-id="otros-recursos">Otros recursos</h3>
+<p>Tenga a mano el proyecto <code>pf0953</code> de RStudio, con los programas de los capítulos anteriores, y su cuenta de GitHub. No hay que instalar nada: Quarto viene incluido en RStudio (y en Posit Cloud).</p>
 </section>
 </section>
 <section id="introducción" class="level2">
 <h2 class="anchored" data-anchor-id="introducción">Introducción</h2>
-<p>En la lección de <a href="../../contenidos/i-introduccion-ciencia-datos-programacion/01-introduccion-ciencia-datos.html">introducción a la ciencia de datos</a>, los sistemas de control de versiones se presentaron entre las herramientas que hacen posible la reproducibilidad. Este capítulo los estudia con detalle: qué es el control de versiones, cómo funciona Git, qué agrega GitHub y cómo se publica una página web con GitHub Pages. Son herramientas de uso constante en el curso: las tareas y el proyecto final se desarrollan en repositorios de GitHub, y este mismo sitio web se publica con GitHub Pages. Al final del capítulo, el documento Markdown elaborado en los ejercicios de la <a href="../../contenidos/i-introduccion-ciencia-datos-programacion/03-markdown.html">lección anterior</a> se convertirá en una página web publicada en Internet.</p>
+<p>En la sección I se presentó la reproducibilidad como una meta de los procesos de análisis de datos, y Markdown, Git y GitHub como herramientas para documentarlos y compartirlos; en los capítulos anteriores de esta sección, el código de R se escribió en programas (<em>scripts</em>), archivos <code>.R</code> cuya única salida es lo que aparece en la consola. Este capítulo une las dos cosas: <a href="https://quarto.org/">Quarto</a> es un sistema de publicación de documentos técnicos y científicos con el que se escriben <strong>documentos computacionales</strong>, archivos que combinan texto en Markdown con bloques de código de R, y que al procesarse ejecutan el código e insertan sus resultados —tablas, gráficos, mapas— en un documento de salida en HTML, PDF o Word.</p>
+<p>La idea viene de lejos. La <strong>programación literaria</strong> (<em>literate programming</em>), propuesta por Donald Knuth en 1984, invierte la relación habitual entre el código y su documentación: el programa se escribe como una exposición para lectores humanos, con el código intercalado en el texto, como en un libro de matemáticas se intercalan las fórmulas (Knuth, 1984). En R, esa idea se materializó en 2012 con el paquete <a href="https://yihui.org/knitr/">knitr</a> y el formato <a href="https://rmarkdown.rstudio.com/">R Markdown</a> (Xie et al., 2018), y en 2022 <a href="https://posit.co/">Posit</a> publicó Quarto como su siguiente generación: un sistema independiente de R, que también trabaja con Python, Julia y JavaScript, y que genera desde artículos y presentaciones hasta libros, tableros de control y sitios web. Este sitio web, por ejemplo, está hecho con Quarto.</p>
+<p>A partir de esta semana, el trabajo del curso se hace en documentos de Quarto: en ellos se escribirán las tareas 2 y 3, el documento final del proyecto y, en la sección V, los tableros de control. La ventaja sobre un programa <code>.R</code> es que el documento explica, además de calcular, y la ventaja sobre un informe escrito aparte es que los resultados nunca quedan desactualizados respecto del código que los produjo: quien lo lee puede reproducirlos.</p>
 </section>
-<section id="control-de-versiones" class="level2">
-<h2 class="anchored" data-anchor-id="control-de-versiones">Control de versiones</h2>
-<p>Un sistema de <strong>control de versiones</strong> registra la historia de los cambios de un conjunto de archivos, de manera que sea posible consultar quién cambió qué y cuándo, comparar versiones y recuperar cualquier estado anterior (Chacon y Straub, 2014). Resuelve un problema que cualquiera ha enfrentado: sin control de versiones, la historia de un documento termina dispersa en copias como <code>informe.docx</code>, <code>informe-final.docx</code> e <code>informe-final-v2-DEFINITIVO.docx</code>, sin registro de qué cambió entre una y otra. Aunque estos sistemas nacieron ligados al desarrollo de software, sirven para cualquier conjunto de archivos: código, documentos, datos o configuraciones; los materiales de este curso, por ejemplo, se gestionan con uno.</p>
-<p>Además de ordenar la historia, el control de versiones facilita la <strong>colaboración</strong>: varias personas pueden modificar los mismos archivos y el sistema se encarga de reunir sus cambios y de señalar los conflictos. Para la ciencia de datos tiene un valor adicional, ligado a la reproducibilidad: el historial documenta la procedencia del código y de los datos de un análisis, y permite examinar y reproducir cualquiera de sus versiones, no solo la más reciente.</p>
-<p><em>Ejercicios de esta sección: <a href="#ejercicios-github">ejercicios sobre control de versiones, Git y GitHub</a>.</em></p>
-</section>
-<section id="git" class="level2">
-<h2 class="anchored" data-anchor-id="git">Git</h2>
-<p><strong>Git</strong> es un sistema de control de versiones <strong>distribuido</strong>: cada copia de un proyecto contiene su historial completo, sin depender de un servidor central. Fue creado en 2005 por <a href="https://es.wikipedia.org/wiki/Linus_Torvalds">Linus Torvalds</a> para gestionar el desarrollo del núcleo del sistema operativo <a href="https://es.wikipedia.org/wiki/Linux">Linux</a> y hoy es el sistema de control de versiones más utilizado (Chacon y Straub, 2014). Es software libre y está disponible en <a href="https://git-scm.com/">git-scm.com</a>.</p>
-<p>Sus conceptos fundamentales son:</p>
+<section id="anatomía-de-un-documento-quarto" class="level2">
+<h2 class="anchored" data-anchor-id="anatomía-de-un-documento-quarto">Anatomía de un documento Quarto</h2>
+<p>Un documento Quarto es un archivo de texto con extensión <code>.qmd</code> y tres tipos de contenido: <strong>metadatos</strong> en YAML al inicio, <strong>narrativa</strong> en Markdown y <strong>bloques de código</strong>. El siguiente es un documento completo, que procesa los datos de los cantones de los capítulos anteriores:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Los cantones de Costa Rica"</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="an">author:</span><span class="co"> "Nombre de la persona autora"</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="an">date:</span><span class="co"> 2026-09-10</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="an">lang:</span><span class="co"> es</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="an">format:</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co">  html:</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co">    toc: true</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co">    embed-resources: true</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="fu">## Introducción</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>Este documento calcula la **densidad de población** de los 84 cantones de</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>Costa Rica a partir de la población y el área publicadas por el</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="co">[</span><span class="ot">INEC</span><span class="co">](https://inec.cr/)</span> (Estimación de Población y Vivienda 2022).</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="fu">## Datos</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: importacion</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>cantones <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"https://raw.githubusercontent.com/pf0953-programacionr/2026-ii/main/datos/cantones.csv"</span>)</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>cantones<span class="sc">$</span>densidad <span class="ot">&lt;-</span> cantones<span class="sc">$</span>poblacion <span class="sc">/</span> cantones<span class="sc">$</span>area_km2</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="fu">## Los cantones más densos</span></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: mas-densos</span></span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>mas_densos <span class="ot">&lt;-</span> cantones[<span class="fu">order</span>(<span class="sc">-</span>cantones<span class="sc">$</span>densidad), <span class="fu">c</span>(<span class="st">"canton"</span>, <span class="st">"provincia"</span>, <span class="st">"densidad"</span>)]</span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(mas_densos, <span class="dv">5</span>)</span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<section id="metadatos-en-yaml" class="level3">
+<h3 class="anchored" data-anchor-id="metadatos-en-yaml">Metadatos en YAML</h3>
+<p>El <strong>encabezado YAML</strong>, delimitado por dos líneas de tres guiones (<code>---</code>), contiene los metadatos del documento en la sintaxis <a href="https://es.wikipedia.org/wiki/YAML">YAML</a>: pares de la forma <code>campo: valor</code>, uno por línea. Los campos que dependen de otros se anidan con una sangría de <strong>dos espacios</strong> —en YAML la sangría tiene significado, como las llaves en R— y siempre hay un espacio después de los dos puntos. Los más usados son:</p>
 <ul>
-<li><strong>Repositorio</strong>: un directorio cuyo historial es gestionado por Git. Contiene los archivos del proyecto y, en un subdirectorio oculto (<code>.git</code>), toda su historia.</li>
-<li><strong>Commit</strong> (confirmación): una “fotografía” del estado de los archivos en un momento dado, acompañada de la fecha, la autoría y un mensaje que describe el cambio. El historial de un repositorio es la secuencia de sus <em>commits</em>.</li>
-<li><strong>Rama</strong> (<em>branch</em>): una línea de desarrollo que avanza en paralelo a otras, útil para preparar cambios sin afectar la versión principal. La rama principal suele llamarse <code>main</code>.</li>
-<li><strong>Repositorio remoto</strong>: una copia del repositorio alojada en un servidor —por ejemplo, en GitHub— con la que se sincroniza el repositorio local.</li>
+<li><code>title</code>, <code>author</code> y <code>date</code>: el título, la persona autora y la fecha, que aparecen al inicio del documento.</li>
+<li><code>lang: es</code>: el idioma, con el que Quarto traduce los textos que genera (por ejemplo, «Tabla de contenidos») y ajusta la tipografía.</li>
+<li><code>format</code>: el formato de salida y sus opciones. En el ejemplo es <code>html</code>, con una tabla de contenidos (<code>toc: true</code>) y con <code>embed-resources: true</code>, que incorpora dentro del archivo HTML las imágenes, hojas de estilo y programas de JavaScript que necesita, de modo que el documento es un <strong>archivo único</strong>, fácil de compartir y de publicar. Sin esa opción, Quarto genera además una carpeta <code>nombre_files/</code> que debe acompañar al HTML.</li>
 </ul>
-<p>El flujo de trabajo básico consiste en modificar archivos en el <strong>directorio de trabajo</strong>, seleccionar los cambios que formarán parte del siguiente <em>commit</em> en el <strong>área de preparación</strong> (<em>staging area</em>), confirmarlos en el repositorio local y sincronizarlos con el repositorio remoto, como ilustra la figura 1.</p>
+<p>Las opciones disponibles para cada formato se documentan en la referencia de Quarto; las de HTML, en Quarto (s. f.-b). Otras que conviene conocer son <code>theme</code> (uno de los <a href="https://bootswatch.com/">temas de Bootswatch</a>, por ejemplo <code>theme: flatly</code>) y <code>code-fold: true</code>, que muestra el código plegado, de manera que quien lee puede abrirlo o ignorarlo.</p>
+</section>
+<section id="narrativa-en-markdown" class="level3">
+<h3 class="anchored" data-anchor-id="narrativa-en-markdown">Narrativa en Markdown</h3>
+<p>La narrativa se escribe en Markdown, con la misma sintaxis que se estudió en el <a href="../../contenidos/i-introduccion-ciencia-datos-programacion/03-markdown.html">capítulo de Markdown</a>: encabezados, énfasis, listas, enlaces, imágenes, tablas, código y notación matemática. Quarto usa la variante de <a href="https://pandoc.org/">Pandoc</a>, que agrega notas al pie, citas bibliográficas a partir de un archivo BibTeX, referencias cruzadas a figuras y tablas, y bloques destacados (<em>callouts</em>), entre otros elementos; están documentados en Quarto (s. f.-c). En el editor de RStudio, el modo <strong>Visual</strong> permite escribir la narrativa como en un procesador de texto e insertar bloques de código desde el menú <em>Insert</em>.</p>
+</section>
+<section id="bloques-de-código" class="level3">
+<h3 class="anchored" data-anchor-id="bloques-de-código">Bloques de código</h3>
+<p>Un <strong>bloque de código</strong> (<em>chunk</em>) se delimita con tres acentos graves (<code>```</code>) y, en la línea de apertura, el lenguaje entre llaves: <code>{r}</code>. Todo lo que hay entre las dos líneas de acentos se ejecuta como R y, en el documento de salida, aparece el código seguido de sus resultados. Las <strong>opciones del bloque</strong> se escriben en sus primeras líneas, con el prefijo <code>#|</code>; las más usadas son:</p>
+<ul>
+<li><code>label</code>: un nombre único para el bloque, que Quarto usa al informar errores y para nombrar las figuras. Conviene ponerlo siempre.</li>
+<li><code>echo: false</code>: oculta el código y muestra solo los resultados (como en el bloque <code>mas-densos</code> del ejemplo). Es la opción habitual en un informe para lectores no programadores.</li>
+<li><code>eval: false</code>: muestra el código pero no lo ejecuta.</li>
+<li><code>include: false</code>: ejecuta el código pero no muestra ni el código ni los resultados; útil para la carga de paquetes y datos.</li>
+<li><code>warning: false</code> y <code>message: false</code>: omiten las advertencias y los mensajes que producen algunas funciones, en especial al cargar paquetes.</li>
+<li><code>fig-cap</code>: la leyenda de una figura, si el bloque genera un gráfico.</li>
+</ul>
+<p>Así se ve, en el documento procesado, el bloque <code>mas-densos</code> del ejemplo: solo la salida, sin el código, porque tiene <code>echo: false</code>.</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>       canton provincia densidad
+13      Tibás  San José 9019.589
+1    San José  San José 7897.378
+18 Curridabat  San José 4422.540
+8  Goicoechea  San José 4167.319
+10 Alajuelita  San José 3773.265</code></pre>
+</div>
+</div>
+<p>Cuando una opción debe aplicarse a todos los bloques, se declara una vez en el encabezado YAML, bajo el campo <code>execute</code> (por ejemplo, <code>execute:</code> y, sangrado, <code>echo: false</code>). La lista completa de opciones está en Quarto (s. f.-a).</p>
+<p>Además de los bloques, hay <strong>código en línea</strong>: una expresión de R entre acentos graves, precedida de <code>r</code>, cuyo resultado se inserta en el texto. Por ejemplo, la frase «El archivo contiene <code>`r nrow(cantones)`</code> cantones» se convierte, al procesar el documento, en «El archivo contiene 84 cantones». Así, un número citado en la narrativa se actualiza solo si cambian los datos.</p>
+<p><em>Ejercicios de esta sección: <a href="#ejercicios-documento">ejercicios sobre el documento</a>.</em></p>
+</section>
+</section>
+<section id="cómo-funciona" class="level2">
+<h2 class="anchored" data-anchor-id="cómo-funciona">Cómo funciona</h2>
+<p>El botón <strong>Render</strong> de RStudio (o <code>Ctrl + Shift + K</code>) inicia el proceso de la figura 1: knitr ejecuta los bloques de código, de arriba abajo, y produce un documento Markdown intermedio con el código y sus resultados; luego Pandoc convierte ese Markdown al formato de salida. El resultado se guarda junto al documento fuente —<code>cantones.html</code> junto a <code>cantones.qmd</code>— y se muestra en el panel <em>Viewer</em> o en una ventana del navegador.</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div>
 <p></p><figure class="figure"><p></p>
 <div>
 <pre class="mermaid mermaid-js">flowchart LR
-  DT([Directorio&lt;br&gt;de trabajo]) -- git add --&gt; AP([Área de&lt;br&gt;preparación])
-  AP -- git commit --&gt; RL([Repositorio&lt;br&gt;local])
-  RL -- git push --&gt; RR([Repositorio&lt;br&gt;remoto])
-  RR -- git pull --&gt; DT
+    A["cantones.qmd&lt;br&gt;YAML + Markdown + código R"] -- "knitr ejecuta&lt;br&gt;el código" --&gt; B["cantones.md&lt;br&gt;Markdown con resultados"]
+    B -- "Pandoc convierte" --&gt; C["cantones.html&lt;br&gt;(o PDF, DOCX…)"]
 </pre>
 </div>
 <p></p></figure><p></p>
@@ -493,184 +606,185 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 <p style="text-align: center;">
-<strong>Figura 1</strong>. Flujo de trabajo básico de Git. Elaboración propia con base en Chacon y Straub (2014).
+<strong>Figura 1</strong>. Procesamiento de un documento Quarto con código en R. Elaboración propia con base en Quarto (s. f.-d).
 </p>
-<p>En este flujo, un archivo pasa por tres estados: <strong>modificado</strong>, cuando tiene cambios que aún no se han seleccionado; <strong>preparado</strong> (<em>staged</em>), cuando sus cambios están en el área de preparación, listos para el siguiente <em>commit</em>; y <strong>confirmado</strong> (<em>committed</em>), cuando ya forman parte del historial (Chacon y Straub, 2014). Este es el vocabulario que usa Git en sus mensajes: <code>git status</code>, por ejemplo, informa cuáles archivos están modificados y cuáles preparados.</p>
-<p>Una analogía útil es la de una compra en línea (Higgins, s. f.): el área de preparación funciona como el carrito de compras, donde se agregan y se quitan artículos sin compromiso; el <em>commit</em> equivale a confirmar el pedido, que queda registrado con su fecha y su detalle; y el <em>push</em> corresponde al envío.</p>
-<p>Git se maneja principalmente desde la línea de comandos. La tabla 1 resume los comandos que implementan el flujo anterior.</p>
+<p>Hay un detalle esencial de este proceso: la ejecución ocurre en una <strong>sesión de R nueva y limpia</strong>, distinta de la de la consola. Los objetos del panel <em>Environment</em> no existen para Quarto, así que todo lo que el documento necesita —cargar paquetes, importar datos, calcular columnas— debe estar en sus propios bloques, en el orden en que se necesita. Es lo que hace reproducible al documento: si se procesa en otra computadora, con los mismos archivos, produce el mismo resultado.</p>
+<p>Mientras se escribe, en cambio, es más cómodo ejecutar los bloques uno por uno, en la sesión de la consola: el botón con la flecha verde a la derecha de cada bloque (o <code>Ctrl + Shift + Enter</code>) lo ejecuta y muestra los resultados debajo, dentro del editor; el botón anterior ejecuta todos los bloques previos. Este es el flujo de trabajo habitual: se prueba cada bloque a medida que se escribe y, de vez en cuando y al terminar, se hace <em>Render</em> para comprobar que el documento completo se procesa de principio a fin.</p>
+<section id="el-directorio-de-trabajo-y-las-rutas" class="level3">
+<h3 class="anchored" data-anchor-id="el-directorio-de-trabajo-y-las-rutas">El directorio de trabajo y las rutas</h3>
+<p>Al procesar un documento, Quarto usa como <strong>directorio de trabajo</strong> la carpeta donde está el archivo <code>.qmd</code>; en un proyecto de RStudio, con el documento en la raíz, coincide con la carpeta del proyecto (la función <code>getwd()</code> la muestra en la consola). Por eso los datos se leen con <strong>rutas relativas</strong> a esa carpeta —<code>read.csv("datos/cantones.csv")</code> lee el archivo de la subcarpeta <code>datos/</code>— y nunca con rutas absolutas como <code>C:/Users/ana/Documents/pf0953/datos/cantones.csv</code> ni con <code>setwd()</code>: esas rutas solo existen en una computadora, y el documento dejaría de procesarse en cualquier otra, incluida la del profesor. Leer los datos por su URL, como en el ejemplo, es la otra opción portátil, si los datos están publicados en Internet.</p>
+<p>Un mensaje como <code>cannot open file 'datos/cantones.csv': No such file or directory</code> casi siempre significa que el archivo no está donde la ruta dice, respecto del directorio de trabajo; el panel <em>Files</em> de RStudio permite verificarlo.</p>
+<p><em>Ejercicios de esta sección: <a href="#ejercicios-rutas">ejercicios sobre rutas</a>.</em></p>
+</section>
+</section>
+<section id="publicación-en-internet" class="level2">
+<h2 class="anchored" data-anchor-id="publicación-en-internet">Publicación en Internet</h2>
+<p>El archivo HTML que produce Quarto es un sitio web estático, como los que se publicaron con GitHub Pages en el <a href="../../contenidos/i-introduccion-ciencia-datos-programacion/04-git-github.html">capítulo de Git y GitHub</a>: basta con subirlo a un repositorio público y activar GitHub Pages (<em>Settings &gt; Pages</em>) en la rama <code>main</code>. Con <code>embed-resources: true</code>, el documento es un solo archivo y no hay carpetas auxiliares que subir. GitHub Pages sirve cualquier archivo HTML del repositorio en la dirección <code>https://usuario.github.io/repositorio/archivo.html</code>; si el archivo se llama <code>index.html</code>, es la página inicial del sitio y no hace falta escribir su nombre.</p>
+<p>Se suben <strong>los dos archivos</strong>: el <code>.qmd</code>, que es el código fuente y permite reproducir el documento, y el <code>.html</code>, que es lo que se publica. Por ahora se hace desde el navegador (<em>Add file &gt; Upload files</em>), como en las semanas anteriores; para actualizar el sitio se vuelve a generar el HTML con <em>Render</em> y se suben de nuevo los archivos, con un mensaje de <em>commit</em> que describa el cambio. Más adelante en el curso, el propio RStudio se conectará con el repositorio, con lo que ese ciclo se hace sin salir del proyecto.</p>
+<p><em>Ejercicios de esta sección: <a href="#ejercicios-publicacion">ejercicios sobre publicación</a>.</em></p>
+</section>
+<section id="errores-y-asistentes-de-ia" class="level2">
+<h2 class="anchored" data-anchor-id="errores-y-asistentes-de-ia">Errores y asistentes de IA</h2>
+<p>Cuando falla un bloque, <em>Render</em> se detiene y la pestaña <em>Background Jobs</em> muestra el mensaje de error, precedido por la etiqueta del bloque (<code>Quitting from lines 23-26 [importacion]</code>): la primera pista es siempre esa etiqueta, que indica dónde buscar. La tabla 1 recoge los errores más comunes al empezar con Quarto.</p>
 <figure style="text-align: center; margin: 20px 0;" class="figure">
 <figcaption>
-<strong>Tabla 1</strong>. Comandos principales de Git. Elaboración propia con base en Chacon y Straub (2014).
+<strong>Tabla 1</strong>. Clínica de errores de Quarto. Fuente: elaboración propia.
 </figcaption>
 <table class="table table-bordered table-striped" style="margin: 0 auto;">
 <thead>
 <tr>
 <th>
-Comando
+Mensaje
 </th>
 <th>
-Descripción
+Causa
+</th>
+<th>
+Solución
 </th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>
-<code>git config</code>
+<code>object ‘cantones’ not found</code>, aunque el bloque funciona con la flecha verde
 </td>
-<td style="text-align: left;">
-Establece opciones de configuración, como el nombre y el correo que identifican a la persona autora de los <em>commits</em>.
+<td>
+El objeto existe en la sesión de la consola, pero no en la sesión limpia de <em>Render</em>.
+</td>
+<td>
+Crear el objeto en un bloque anterior del documento.
 </td>
 </tr>
 <tr>
 <td>
-<code>git init</code>
+<code>cannot open file ‘datos/cantones.csv’: No such file or directory</code>
 </td>
-<td style="text-align: left;">
-Crea un repositorio nuevo en el directorio actual.
+<td>
+La ruta no corresponde a la ubicación del archivo respecto del directorio de trabajo.
+</td>
+<td>
+Revisar la ruta relativa en el panel <em>Files</em>; no usar rutas absolutas.
 </td>
 </tr>
 <tr>
 <td>
-<code>git clone</code>
+<code>there is no package called ‘dplyr’</code>
 </td>
-<td style="text-align: left;">
-Copia un repositorio remoto, con todo su historial, en la computadora local.
+<td>
+El paquete no está instalado en esa computadora.
+</td>
+<td>
+Instalarlo una vez desde la consola con <code>install.packages()</code>; en el documento solo va <code>library()</code>.
 </td>
 </tr>
 <tr>
 <td>
-<code>git status</code>
+<code>YAMLException: bad indentation</code> o <code>ERROR: Validation of YAML front matter failed</code>
 </td>
-<td style="text-align: left;">
-Muestra el estado del directorio de trabajo y del área de preparación.
+<td>
+Sangría incorrecta o falta el espacio después de los dos puntos en el encabezado.
+</td>
+<td>
+Sangrar con dos espacios y escribir <code>campo: valor</code>.
 </td>
 </tr>
 <tr>
 <td>
-<code>git add</code>
+<code>Duplicate chunk label ‘importacion’</code>
 </td>
-<td style="text-align: left;">
-Agrega cambios al área de preparación.
+<td>
+Dos bloques con la misma etiqueta, a menudo por copiar y pegar.
+</td>
+<td>
+Dar a cada bloque una etiqueta distinta.
 </td>
 </tr>
 <tr>
 <td>
-<code>git commit</code>
+El resto del documento aparece como código
 </td>
-<td style="text-align: left;">
-Confirma los cambios preparados en el repositorio local, con un mensaje descriptivo.
-</td>
-</tr>
-<tr>
 <td>
-<code>git push</code>
+Un bloque sin cerrar: faltan los tres acentos graves finales.
 </td>
-<td style="text-align: left;">
-Envía los <em>commits</em> locales al repositorio remoto.
-</td>
-</tr>
-<tr>
 <td>
-<code>git pull</code>
-</td>
-<td style="text-align: left;">
-Trae los cambios del repositorio remoto y los incorpora en el repositorio local.
-</td>
-</tr>
-<tr>
-<td>
-<code>git log</code>
-</td>
-<td style="text-align: left;">
-Muestra el historial de <em>commits</em>.
+Cerrar el bloque; el editor colorea de gris los bloques bien delimitados.
 </td>
 </tr>
 </tbody>
 </table>
 </figure>
-<p>Las ramas merecen una mirada más de cerca, porque en ellas descansa el trabajo en paralelo. Una rama se crea a partir de un punto del historial, avanza con sus propios <em>commits</em> sin afectar a <code>main</code> y, cuando el cambio está listo, se <strong>fusiona</strong> (<em>merge</em>) de vuelta en la rama principal, como ilustra la figura 2. Así se desarrollan, por ejemplo, los materiales de este curso: cada lección nueva se prepara en una rama propia que se fusiona en <code>main</code> al estar terminada.</p>
-<div class="cell" data-layout-align="center">
-<div class="cell-output-display">
-<div>
-<p></p><figure class="figure"><p></p>
-<div>
-<pre class="mermaid mermaid-js">gitGraph
-   commit id: "sitio inicial"
-   commit id: "lección 1"
-   branch leccion-2
-   commit id: "borrador"
-   commit id: "revisión"
-   checkout main
-   commit id: "corrige errata"
-   merge leccion-2 id: "fusión"
-</pre>
-</div>
-<p></p></figure><p></p>
-</div>
-</div>
-</div>
-<p style="text-align: center;">
-<strong>Figura 2</strong>. Una rama se separa de <code>main</code>, avanza con sus propios <em>commits</em> y se fusiona de vuelta. Elaboración propia con base en Chacon y Straub (2014).
-</p>
-<p>Si dos ramas —o dos personas— modifican las mismas líneas de un archivo, al fusionar se produce un <strong>conflicto</strong>: Git no decide por su cuenta cuál versión conservar, sino que marca en el archivo los fragmentos en disputa para que alguien los revise, elija o combine las versiones y confirme el resultado. Los conflictos no dañan el repositorio; son la forma en que el sistema pide criterio humano.</p>
-<p>En esta lección, Git se practica desde el navegador, a través de GitHub, que ejecuta las operaciones por nosotros. La línea de comandos y la integración de Git en <a href="../../contenidos/software/r-rstudio.html">RStudio</a> —que permite clonar repositorios y realizar las operaciones esenciales desde la pestaña <em>Git</em>— se retomarán más adelante, cuando se trabaje con repositorios en la computadora local.</p>
-<p>Un buen mensaje de <em>commit</em> es breve y describe el cambio de forma específica (“Corrige la fórmula de densidad de población”, no “cambios”). Como referencia, las convenciones que siguen los materiales de este curso están documentadas en el archivo <a href="https://github.com/pf0953-programacionr/2026-ii/blob/main/CONTRIBUTING.md">CONTRIBUTING</a> de su repositorio.</p>
-<p><em>Ejercicios de esta sección: <a href="#ejercicios-github">ejercicios sobre control de versiones, Git y GitHub</a>.</em></p>
-</section>
-<section id="github" class="level2">
-<h2 class="anchored" data-anchor-id="github">GitHub</h2>
-<p><strong>GitHub</strong> es una plataforma en la nube que aloja repositorios Git y agrega, sobre ellos, servicios de colaboración: gestión de incidencias (<em>issues</em>), solicitudes de cambios (<em>pull requests</em>), revisión de código y automatización, además de la publicación de sitios web con GitHub Pages (GitHub, s. f.-c). Es la plataforma de este tipo más utilizada; existen alternativas como <a href="https://about.gitlab.com/">GitLab</a> y <a href="https://bitbucket.org/">Bitbucket</a>.</p>
-<p>Un repositorio de GitHub puede ser <strong>público</strong> (visible para cualquier persona, aunque solo quienes tengan permiso pueden modificarlo) o <strong>privado</strong>. Su página principal muestra los archivos y, renderizado debajo de ellos, el contenido del archivo <strong>README.md</strong>: un documento escrito en <a href="../../contenidos/i-introduccion-ciencia-datos-programacion/03-markdown.html">Markdown</a> que presenta el proyecto, explica qué contiene el repositorio y cómo usarlo.</p>
-<p>El mecanismo central de colaboración es la <strong>solicitud de cambios</strong> (<em>pull request</em>): una propuesta de fusionar una rama en otra que, antes de aplicarse, puede discutirse y revisarse <em>commit</em> por <em>commit</em>. En los proyectos con varias personas es la práctica habitual —nadie escribe directamente sobre <code>main</code>; se proponen los cambios y otra persona los revisa y aprueba—. Las <strong>incidencias</strong> (<em>issues</em>) complementan ese flujo: registran errores, ideas y tareas pendientes del proyecto.</p>
-<p>No todo lo que hay en un directorio de trabajo debe versionarse. El archivo <strong>.gitignore</strong>, en la raíz del repositorio, lista los archivos y directorios que Git debe ignorar: archivos regenerables, credenciales y, muy relevante en geografía, datos de gran tamaño. GitHub rechaza archivos de más de 100 MB (GitHub, s. f.-a), por lo que los datos geoespaciales voluminosos —imágenes satelitales, modelos de elevación— suelen distribuirse por otros medios y documentarse su origen en el README. El repositorio de este curso, por ejemplo, ignora un directorio <code>privado/</code> con documentos que no deben publicarse.</p>
-<p>Aunque el uso pleno de Git requiere la línea de comandos o un editor, GitHub permite realizar las operaciones esenciales directamente en el navegador: crear repositorios, crear y editar archivos —cada edición genera un <em>commit</em>—, examinar el historial y comparar versiones. Así se trabaja durante esta semana. En el curso, GitHub es también el medio de entrega: cada tarea y el proyecto final se desarrollan en repositorios propios, y los materiales del curso están en la organización <a href="https://github.com/pf0953-programacionr">pf0953-programacionr</a>.</p>
-<p><em>Ejercicios de esta sección: <a href="#ejercicios-github">ejercicios sobre control de versiones, Git y GitHub</a>.</em></p>
-</section>
-<section id="github-pages" class="level2">
-<h2 class="anchored" data-anchor-id="github-pages">GitHub Pages</h2>
-<p><strong>GitHub Pages</strong> es el servicio de GitHub que publica <a href="https://es.wikipedia.org/wiki/P%C3%A1gina_web_est%C3%A1tica">sitios web estáticos</a> directamente desde un repositorio, sin necesidad de un servidor propio (GitHub, s. f.-b). En las cuentas gratuitas está disponible para repositorios públicos. El sitio publicado queda en una URL con la forma:</p>
-<pre class="text"><code>https://usuario.github.io/repositorio/</code></pre>
-<p>En su modalidad más simple, se activa en la configuración del repositorio (<em>Settings &gt; Pages</em>), eligiendo la rama que se publicará (típicamente <code>main</code>). GitHub convierte entonces los documentos Markdown del repositorio en páginas HTML mediante <a href="https://jekyllrb.com/">Jekyll</a>, un generador de sitios estáticos: la página inicial se toma del archivo <code>index.md</code> (o <code>index.html</code>) y, en su ausencia, del <code>README.md</code>. Cada <em>push</em> a la rama publicada vuelve a generar el sitio; el proceso puede seguirse en la pestaña <em>Actions</em> del repositorio y tarda unos minutos.</p>
-<p>Este es el mecanismo con el que se publicará la documentación de las tareas del curso. Sitios más elaborados usan el mismo servicio con procesos de construcción propios; este, por ejemplo, se genera con <a href="https://quarto.org/">Quarto</a>: sus páginas HTML se construyen a partir de los documentos fuente y se publican desde el directorio <code>docs/</code> del repositorio.</p>
-<p><em>Ejercicios de esta sección: <a href="#ejercicios-pages">ejercicios sobre GitHub Pages</a>.</em></p>
+<p>Los asistentes de inteligencia artificial son buenos explicando mensajes de error, y este es uno de los usos que más ayuda a aprender, siempre que se les pida una <strong>explicación</strong> y no la solución. Una consulta eficaz incluye tres cosas: el mensaje de error completo, tal como aparece; el bloque de código que lo produjo; y qué se esperaba que ocurriera. Por ejemplo:</p>
+<pre class="text"><code>Estoy procesando un documento Quarto con R. Este bloque funciona cuando lo
+ejecuto con la flecha verde, pero Render falla con el mensaje de abajo.
+Explicame la causa del error y cómo comprobarla; no me des el código corregido.
+
+[bloque de código]
+
+[mensaje de error]</code></pre>
+<p>La explicación debe verificarse —comprobar la causa, corregir el código y volver a procesar el documento— y, si el resultado se incorpora a una tarea, declararse según los <a href="../../contenidos/i-introduccion-ciencia-datos-programacion/05-asistentes-ia.html">lineamientos del curso</a>. Pedir la solución directamente suele funcionar, pero no enseña a reconocer el error la próxima vez; y en Quarto muchos errores dependen de detalles del contexto (el orden de los bloques, la ubicación de los archivos) que el asistente no ve.</p>
+<p><em>Ejercicios de esta sección: <a href="#ejercicios-errores-ia">ejercicios sobre errores y asistentes</a>.</em></p>
 </section>
 <section id="resumen" class="level2">
 <h2 class="anchored" data-anchor-id="resumen">Resumen</h2>
 <ul>
-<li>Un sistema de <strong>control de versiones</strong> registra la historia de los cambios de un conjunto de archivos: quién cambió qué y cuándo, con la posibilidad de comparar y recuperar versiones y de reunir el trabajo de varias personas. Ese historial es parte de la procedencia de un análisis reproducible.</li>
-<li><strong>Git</strong> es el sistema de control de versiones más utilizado. Su flujo básico prepara los cambios (<code>git add</code>), los confirma en <em>commits</em> con mensajes descriptivos (<code>git commit</code>) y los sincroniza con un repositorio remoto (<code>git push</code>, <code>git pull</code>). Las <strong>ramas</strong> permiten desarrollar cambios en paralelo y fusionarlos cuando están listos; si dos cambios tocan las mismas líneas, el <strong>conflicto</strong> resultante se resuelve con revisión humana.</li>
-<li><strong>GitHub</strong> aloja repositorios Git en la nube y agrega colaboración y servicios; su archivo <strong>README.md</strong>, escrito en Markdown, presenta cada repositorio. Las <strong>solicitudes de cambios</strong> (<em>pull requests</em>) canalizan la revisión y fusión del trabajo, el archivo <strong>.gitignore</strong> excluye lo que no debe versionarse y las operaciones esenciales pueden realizarse desde el navegador.</li>
-<li><strong>GitHub Pages</strong> publica sitios web estáticos desde un repositorio; con Jekyll, los documentos Markdown se convierten en páginas HTML. Es el mecanismo de publicación de la documentación de las tareas y de este sitio web.</li>
+<li>Un <strong>documento computacional</strong> de Quarto (<code>.qmd</code>) combina <strong>metadatos</strong> en YAML, <strong>narrativa</strong> en Markdown y <strong>bloques de código</strong> de R; al procesarlo, el código se ejecuta y sus resultados se insertan en el documento de salida (HTML, PDF, Word). Es la forma de trabajo del resto del curso.</li>
+<li>El encabezado YAML define el título, el idioma y el <strong>formato</strong> con sus opciones; <code>embed-resources: true</code> produce un HTML de <strong>archivo único</strong>. Las <strong>opciones de bloque</strong> (<code>#| label</code>, <code>echo</code>, <code>eval</code>, <code>include</code>, <code>warning</code>, <code>message</code>) controlan qué se muestra; el <strong>código en línea</strong> inserta resultados en el texto.</li>
+<li><em>Render</em> ejecuta los bloques de arriba abajo en una <strong>sesión limpia</strong> de R, mediante knitr, y Pandoc convierte el resultado. Todo lo que el documento necesita debe estar en él, en orden; la flecha verde ejecuta bloques individuales en la sesión de la consola.</li>
+<li>Los datos se leen con <strong>rutas relativas</strong> al directorio del documento o por URL; las rutas absolutas y <code>setwd()</code> hacen que el documento no sea reproducible.</li>
+<li>El HTML se <strong>publica</strong> en GitHub Pages subiendo el <code>.qmd</code> y el <code>.html</code> a un repositorio público; <code>index.html</code> es la página inicial.</li>
+<li>Ante un error, la etiqueta del bloque indica dónde buscar; la <strong>clínica de errores</strong> recoge los más comunes, y un asistente de IA puede <strong>explicarlos</strong> si se le da el mensaje completo, el código y lo que se esperaba.</li>
 </ul>
 </section>
 <section id="ejercicios" class="level2">
 <h2 class="anchored" data-anchor-id="ejercicios">Ejercicios</h2>
-<p>Los ejercicios se agrupan según la sección del capítulo a la que corresponden; se recomienda realizarlos al concluir la sección respectiva. Continúan el trabajo de la lección de Markdown: el documento elaborado en aquellos ejercicios se convertirá aquí en un repositorio con una página web publicada.</p>
-<section id="ejercicios-github" class="level3">
-<h3 class="anchored" data-anchor-id="ejercicios-github">Control de versiones, Git y GitHub</h3>
+<p>Los ejercicios se agrupan según la sección del capítulo a la que corresponden; se recomienda realizarlos al concluir la sección respectiva. Construyen, paso a paso, un documento sobre los cantones de Costa Rica en el proyecto <code>pf0953</code>, que al final se publica en Internet.</p>
+<section id="ejercicios-documento" class="level3">
+<h3 class="anchored" data-anchor-id="ejercicios-documento">El documento</h3>
 <ol type="1">
-<li>En su cuenta de GitHub, cree un repositorio público llamado <code>practica-markdown</code>, marcando la opción <em>Add a README file</em>. Edite el <code>README.md</code> desde el navegador (ícono de lápiz), reemplace su contenido con el documento Markdown que elaboró en los <a href="../../contenidos/i-introduccion-ciencia-datos-programacion/03-markdown.html">ejercicios de la lección anterior</a>, escriba un mensaje de <em>commit</em> que describa el cambio y confírmelo (<em>Commit changes</em>). Verifique que el documento se muestre renderizado en la página principal del repositorio.</li>
-<li>Realice un segundo cambio —por ejemplo, agregue una sección con una tabla o corrija un texto— con su propio mensaje de <em>commit</em>. Abra el historial del archivo (<em>History</em>), compare las dos versiones y observe cómo se señalan las líneas agregadas y eliminadas. Abra también la vista <em>Raw</em> y compare la fuente Markdown con la versión renderizada.</li>
-<li>Observe Git “en producción” en el <a href="https://github.com/pf0953-programacionr/2026-ii">repositorio de este curso</a>: abra el historial del archivo de esta lección (<code>contenidos/i-introduccion-ciencia-datos-programacion/04-git-github.qmd</code>) y examine el diff de alguno de sus <em>commits</em>. Luego, en la pestaña <em>Pull requests</em> (filtro <em>Closed</em>), elija una solicitud de cambios fusionada e identifique la rama en que se preparó, los <em>commits</em> que la componen y el momento de la fusión. Compare los mensajes de <em>commit</em> que encuentre con las convenciones del archivo <a href="https://github.com/pf0953-programacionr/2026-ii/blob/main/CONTRIBUTING.md">CONTRIBUTING</a>.</li>
+<li><p>En el proyecto <code>pf0953</code>, cree un documento Quarto (<em>File &gt; New File &gt; Quarto Document…</em>) con el título «Los cantones de Costa Rica», su nombre como autor o autora, formato HTML y motor Knitr; guárdelo como <code>cantones.qmd</code>. Sin modificar la plantilla, presione <em>Render</em> y observe el resultado: identifique en el HTML el título, la narrativa y el bloque de código con su salida.</p></li>
+<li><p>Reemplace el contenido de la plantilla por el documento de ejemplo de la sección <a href="#anatomía-de-un-documento-quarto">Anatomía de un documento Quarto</a>, con su nombre en <code>author</code>. Agregue una sección «Resumen por provincia» con un bloque que calcule la población total de cada provincia con <code>aggregate()</code>, y otra sección «Mi cantón» con un bloque que muestre la fila del cantón elegido en los capítulos anteriores. Ejecute cada bloque con la flecha verde a medida que lo escribe y, al final, procese el documento con <em>Render</em>.</p></li>
+<li><p>Agregue a la introducción una frase que use código en línea para indicar cuántos cantones tiene el archivo (<code>nrow()</code>) y cuál es la población total del país (<code>sum()</code>); procese el documento y verifique que los números aparecen en el texto. ¿Qué ocurre si la frase se escribe antes del bloque <code>importacion</code>?</p></li>
+<li><p><strong>Prediga antes de ejecutar</strong>: agregue <code>#| echo: false</code> al bloque <code>importacion</code> y <code>#| eval: false</code> al bloque «Mi cantón». ¿Qué mostrará cada uno en el HTML? Procese el documento y compruébelo; luego restaure las opciones.</p>
+<details>
+<summary>
+<p>Después de ejecutar, haga clic aquí para ver la explicación</p>
+</summary>
+<p>El bloque <code>importacion</code> desaparece por completo del HTML: <code>echo: false</code> oculta el código y el bloque no produce salida visible (una asignación no imprime nada), aunque sí se ejecuta, por lo que los bloques siguientes funcionan. El bloque de «Mi cantón» muestra el código pero ningún resultado, porque <code>eval: false</code> impide ejecutarlo; si otro bloque posterior dependiera de un objeto creado ahí, fallaría con <code>object not found</code>.</p>
+</details></li>
 </ol>
 </section>
-<section id="ejercicios-pages" class="level3">
-<h3 class="anchored" data-anchor-id="ejercicios-pages">GitHub Pages</h3>
-<ol start="4" type="1">
-<li>Active GitHub Pages en el repositorio (<em>Settings &gt; Pages</em>), publicando la rama <code>main</code>. Siga el proceso de publicación en la pestaña <em>Actions</em> y, al concluir, visite <code>https://su-usuario.github.io/practica-markdown/</code>. Compare la página publicada con el <code>README.md</code> renderizado en GitHub: contenido igual, presentación distinta.</li>
-<li>En un documento aparte, explique en qué lugar del <a href="../../contenidos/i-introduccion-ciencia-datos-programacion/01-introduccion-ciencia-datos.html">espectro de reproducibilidad</a> quedaría un análisis cuyo código, datos y documentación se publican en un repositorio como el que acaba de crear, y qué aporta el historial de <em>commits</em> a esa valoración.</li>
+<section id="ejercicios-rutas" class="level3">
+<h3 class="anchored" data-anchor-id="ejercicios-rutas">Rutas</h3>
+<ol start="5" type="1">
+<li>Cree una carpeta <code>datos</code> en el proyecto (<em>New Folder</em> en el panel <em>Files</em>), descargue en ella el archivo <a href="https://github.com/pf0953-programacionr/2026-ii/blob/main/datos/cantones.csv"><code>cantones.csv</code></a> del repositorio del curso (botón <em>Download raw file</em>) y cambie el bloque <code>importacion</code> para que lo lea con la ruta relativa <code>datos/cantones.csv</code>. Ejecute <code>getwd()</code> en la consola, compare el resultado con la ubicación del proyecto y explique por qué el documento seguiría funcionando si otra persona lo descargara, con su carpeta <code>datos</code>, en una computadora distinta.</li>
+</ol>
+</section>
+<section id="ejercicios-publicacion" class="level3">
+<h3 class="anchored" data-anchor-id="ejercicios-publicacion">Publicación</h3>
+<ol start="6" type="1">
+<li><p>Cree en GitHub un repositorio público <code>practica-quarto</code> (con <em>Add a README file</em>), suba <code>cantones.qmd</code> y <code>cantones.html</code> (<em>Add file &gt; Upload files</em>) y active GitHub Pages en la rama <code>main</code>. Cuando el sitio esté publicado, visite <code>https://su-usuario.github.io/practica-quarto/cantones.html</code>. ¿Por qué el archivo <code>.qmd</code> no se muestra renderizado en GitHub, como sí ocurre con el <code>README.md</code>?</p></li>
+<li><p>Modifique el documento —por ejemplo, clasifique los cantones en urbanos y rurales con la función <code>clasificar_densidad()</code> del <a href="../../contenidos/ii-lenguaje-programacion-r/08-fundamentos-r-ii.html">capítulo anterior</a> y cuente cuántos hay de cada tipo por provincia con <code>table()</code>—, procéselo de nuevo y actualice los dos archivos en el repositorio. Verifique que el sitio publicado muestre el cambio.</p></li>
+</ol>
+</section>
+<section id="ejercicios-errores-ia" class="level3">
+<h3 class="anchored" data-anchor-id="ejercicios-errores-ia">Errores y asistentes de IA</h3>
+<ol start="8" type="1">
+<li><strong>Prediga antes de ejecutar</strong>: en la consola, ejecute <code>umbral &lt;- 100</code>; luego agregue al documento un bloque con <code>cantones$tipo &lt;- ifelse(cantones$densidad &gt; umbral, "urbano", "rural")</code> y ejecútelo con la flecha verde. ¿Funcionará? ¿Y al presionar <em>Render</em>? Compruébelo, explique la diferencia y corrija el documento. Después, pida a un asistente de IA que le explique el mensaje de error de <em>Render</em> con el formato de consulta de la sección <a href="#errores-y-asistentes-de-ia">Errores y asistentes de IA</a>, compare su explicación con la del capítulo y anote cómo declararía ese uso en una tarea.</li>
 </ol>
 </section>
 </section>
 <section id="referencias-bibliográficas" class="level2">
 <h2 class="anchored" data-anchor-id="referencias-bibliográficas">Referencias bibliográficas</h2>
-<p>Abba, I. V. (2021). <em>Git and GitHub tutorial – Version control for beginners</em>. freeCodeCamp. <a href="https://www.freecodecamp.org/news/git-and-github-for-beginners/" class="uri">https://www.freecodecamp.org/news/git-and-github-for-beginners/</a></p>
-<p>Chacon, S. y Straub, B. (2014). <em>Pro Git</em> (2.ª ed.). Apress. <a href="https://git-scm.com/book/es/v2" class="uri">https://git-scm.com/book/es/v2</a></p>
-<p>GitHub. (s. f.-a). <em>About large files on GitHub</em>. GitHub Docs. Recuperado el 19 de agosto de 2026, de <a href="https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-large-files-on-github" class="uri">https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-large-files-on-github</a></p>
-<p>GitHub. (s. f.-b). <em>Quickstart for GitHub Pages</em>. GitHub Docs. Recuperado el 19 de agosto de 2026, de <a href="https://docs.github.com/en/pages/quickstart" class="uri">https://docs.github.com/en/pages/quickstart</a></p>
-<p>GitHub. (s. f.-c). <em>What is GitHub?</em> GitHub Docs. Recuperado el 19 de agosto de 2026, de <a href="https://docs.github.com/en/get-started/start-your-journey/what-is-github" class="uri">https://docs.github.com/en/get-started/start-your-journey/what-is-github</a></p>
-<p>Higgins, M. (s. f.). <em>Reproducible templates for analysis and dissemination</em> [curso en línea]. Coursera. Recuperado el 19 de agosto de 2026, de <a href="https://www.coursera.org/learn/reproducible-templates-analysis" class="uri">https://www.coursera.org/learn/reproducible-templates-analysis</a></p>
+<p>GitHub. (s. f.). <em>Quickstart for GitHub Pages</em>. GitHub Docs. Recuperado el 10 de setiembre de 2026, de <a href="https://docs.github.com/en/pages/quickstart" class="uri">https://docs.github.com/en/pages/quickstart</a></p>
+<p>Instituto Nacional de Estadística y Censos. (2023). <em>Resultados de la Estimación de Población y Vivienda 2022</em> [archivo XLSX]. <a href="https://admin.inec.cr/sites/default/files/2023-11/reResultadosEstimacionPoblacionVivienda2022_3.xlsx" class="uri">https://admin.inec.cr/sites/default/files/2023-11/reResultadosEstimacionPoblacionVivienda2022_3.xlsx</a></p>
+<p>Knuth, D. E. (1984). Literate programming. <em>The Computer Journal</em>, <em>27</em>(2), 97–111. <a href="https://doi.org/10.1093/comjnl/27.2.97" class="uri">https://doi.org/10.1093/comjnl/27.2.97</a></p>
+<p>Quarto. (s. f.-a). <em>Code cells: Knitr</em>. Recuperado el 10 de setiembre de 2026, de <a href="https://quarto.org/docs/reference/cells/cells-knitr.html" class="uri">https://quarto.org/docs/reference/cells/cells-knitr.html</a></p>
+<p>Quarto. (s. f.-b). <em>HTML options</em>. Recuperado el 10 de setiembre de 2026, de <a href="https://quarto.org/docs/reference/formats/html.html" class="uri">https://quarto.org/docs/reference/formats/html.html</a></p>
+<p>Quarto. (s. f.-c). <em>Markdown basics</em>. Recuperado el 10 de setiembre de 2026, de <a href="https://quarto.org/docs/authoring/markdown-basics.html" class="uri">https://quarto.org/docs/authoring/markdown-basics.html</a></p>
+<p>Quarto. (s. f.-d). <em>Tutorial: Hello, Quarto</em>. Recuperado el 10 de setiembre de 2026, de <a href="https://quarto.org/docs/get-started/hello/rstudio.html" class="uri">https://quarto.org/docs/get-started/hello/rstudio.html</a></p>
+<p>Wickham, H., Çetinkaya-Rundel, M., y Grolemund, G. (2023). <em>R for data science: Import, tidy, transform, visualize, and model data</em> (2.ª ed.). O’Reilly Media. <a href="https://r4ds.hadley.nz/" class="uri">https://r4ds.hadley.nz/</a></p>
+<p>Xie, Y., Allaire, J. J., y Grolemund, G. (2018). <em>R Markdown: The definitive guide</em>. Chapman and Hall/CRC. <a href="https://bookdown.org/yihui/rmarkdown/" class="uri">https://bookdown.org/yihui/rmarkdown/</a></p>
 
 
 </section>
@@ -1097,7 +1211,7 @@ Muestra el historial de <em>commits</em>.
     </div>   
     <div class="nav-footer-center">
 <p>Los contenidos de este curso, a menos que se especifique de otra forma, se comparten mediante una <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.es">licencia de Creative Commons Reconocimiento-CompartirIgual 4.0 Internacional</a>.</p>
-<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/pf0953-programacionr/2026-ii/blob/main/contenidos/i-introduccion-ciencia-datos-programacion/04-git-github.qmd" class="toc-action"><i class="bi bi-github"></i>Ver el código</a></li><li><a href="https://github.com/pf0953-programacionr/2026-ii/edit/main/contenidos/i-introduccion-ciencia-datos-programacion/04-git-github.qmd" class="toc-action"><i class="bi empty"></i>Editar esta página</a></li></ul></div></div>
+<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/pf0953-programacionr/2026-ii/blob/main/contenidos/ii-lenguaje-programacion-r/09-quarto.qmd" class="toc-action"><i class="bi bi-github"></i>Ver el código</a></li><li><a href="https://github.com/pf0953-programacionr/2026-ii/edit/main/contenidos/ii-lenguaje-programacion-r/09-quarto.qmd" class="toc-action"><i class="bi empty"></i>Editar esta página</a></li></ul></div></div>
     <div class="nav-footer-right">
       &nbsp;
     </div>
