@@ -56,6 +56,10 @@ website:
           - contenidos/ii-lenguaje-programacion-r/07-fundamentos-r-i.qmd
           - contenidos/ii-lenguaje-programacion-r/08-fundamentos-r-ii.qmd
           - contenidos/ii-lenguaje-programacion-r/09-quarto.qmd
+      - section: "III. El conjunto de paquetes tidyverse"
+        contents:
+          - contenidos/iii-tidyverse/10-tidyverse.qmd
+          - contenidos/iii-tidyverse/11-dplyr.qmd
       - section: "Evaluaciones"
         contents:
           - contenidos/evaluaciones/tarea-01.qmd

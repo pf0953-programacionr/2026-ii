@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>R y RStudio – PF-0953 Programación en R - 2026-II</title>
+<title>tidyverse: paquetes para ciencia de datos – PF-0953 Programación en R - 2026-II</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -22,6 +22,41 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -263,7 +298,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../contenidos/software/r-rstudio.html">Software</a></li><li class="breadcrumb-item"><a href="../../contenidos/software/r-rstudio.html">R y RStudio</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../contenidos/iii-tidyverse/10-tidyverse.html">III. El conjunto de paquetes tidyverse</a></li><li class="breadcrumb-item"><a href="../../contenidos/iii-tidyverse/10-tidyverse.html">tidyverse: paquetes para ciencia de datos</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -368,7 +403,7 @@ ul.task-list li input[type="checkbox"] {
       <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../contenidos/iii-tidyverse/10-tidyverse.html" class="sidebar-item-text sidebar-link">
+  <a href="../../contenidos/iii-tidyverse/10-tidyverse.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">tidyverse: paquetes para ciencia de datos</span></a>
   </div>
 </li>
@@ -408,7 +443,7 @@ ul.task-list li input[type="checkbox"] {
       <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../contenidos/software/r-rstudio.html" class="sidebar-item-text sidebar-link active">
+  <a href="../../contenidos/software/r-rstudio.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">R y RStudio</span></a>
   </div>
 </li>
@@ -424,24 +459,36 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">En esta página</h2>
    
   <ul>
-  <li><a href="#instalación" id="toc-instalación" class="nav-link active" data-scroll-target="#instalación">Instalación</a></li>
-  <li><a href="#la-interfaz" id="toc-la-interfaz" class="nav-link" data-scroll-target="#la-interfaz">La interfaz</a></li>
-  <li><a href="#proyectos" id="toc-proyectos" class="nav-link" data-scroll-target="#proyectos">Proyectos</a></li>
-  <li><a href="#edición-de-markdown" id="toc-edición-de-markdown" class="nav-link" data-scroll-target="#edición-de-markdown">Edición de Markdown</a></li>
-  <li><a href="#terminal-integrada" id="toc-terminal-integrada" class="nav-link" data-scroll-target="#terminal-integrada">Terminal integrada</a></li>
-  <li><a href="#integración-con-git" id="toc-integración-con-git" class="nav-link" data-scroll-target="#integración-con-git">Integración con Git</a></li>
-  <li><a href="#asistente-de-inteligencia-artificial-github-copilot" id="toc-asistente-de-inteligencia-artificial-github-copilot" class="nav-link" data-scroll-target="#asistente-de-inteligencia-artificial-github-copilot">Asistente de inteligencia artificial (GitHub Copilot)</a></li>
-  <li><a href="#teclas-rápidas-recomendadas" id="toc-teclas-rápidas-recomendadas" class="nav-link" data-scroll-target="#teclas-rápidas-recomendadas">Teclas rápidas recomendadas</a></li>
+  <li><a href="#trabajo-previo" id="toc-trabajo-previo" class="nav-link active" data-scroll-target="#trabajo-previo">Trabajo previo</a>
+  <ul class="collapse">
+  <li><a href="#lecturas" id="toc-lecturas" class="nav-link" data-scroll-target="#lecturas">Lecturas</a></li>
+  <li><a href="#otros-recursos" id="toc-otros-recursos" class="nav-link" data-scroll-target="#otros-recursos">Otros recursos</a></li>
+  </ul></li>
+  <li><a href="#introducción" id="toc-introducción" class="nav-link" data-scroll-target="#introducción">Introducción</a></li>
+  <li><a href="#los-paquetes-del-tidyverse" id="toc-los-paquetes-del-tidyverse" class="nav-link" data-scroll-target="#los-paquetes-del-tidyverse">Los paquetes del tidyverse</a></li>
+  <li><a href="#instalación-y-carga" id="toc-instalación-y-carga" class="nav-link" data-scroll-target="#instalación-y-carga">Instalación y carga</a></li>
+  <li><a href="#importación-con-readr" id="toc-importación-con-readr" class="nav-link" data-scroll-target="#importación-con-readr">Importación con readr</a>
+  <ul class="collapse">
+  <li><a href="#el-tibble" id="toc-el-tibble" class="nav-link" data-scroll-target="#el-tibble">El tibble</a></li>
+  </ul></li>
+  <li><a href="#datos-tidy" id="toc-datos-tidy" class="nav-link" data-scroll-target="#datos-tidy">Datos <em>tidy</em></a></li>
+  <li><a href="#resumen" id="toc-resumen" class="nav-link" data-scroll-target="#resumen">Resumen</a></li>
+  <li><a href="#ejercicios" id="toc-ejercicios" class="nav-link" data-scroll-target="#ejercicios">Ejercicios</a>
+  <ul class="collapse">
+  <li><a href="#ejercicios-importacion" id="toc-ejercicios-importacion" class="nav-link" data-scroll-target="#ejercicios-importacion">Importación</a></li>
+  <li><a href="#ejercicios-tidy" id="toc-ejercicios-tidy" class="nav-link" data-scroll-target="#ejercicios-tidy">Datos <em>tidy</em></a></li>
+  </ul></li>
+  <li><a href="#referencias-bibliográficas" id="toc-referencias-bibliográficas" class="nav-link" data-scroll-target="#referencias-bibliográficas">Referencias bibliográficas</a></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/pf0953-programacionr/2026-ii/blob/main/contenidos/software/r-rstudio.qmd" class="toc-action"><i class="bi bi-github"></i>Ver el código</a></li><li><a href="https://github.com/pf0953-programacionr/2026-ii/edit/main/contenidos/software/r-rstudio.qmd" class="toc-action"><i class="bi empty"></i>Editar esta página</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/pf0953-programacionr/2026-ii/blob/main/contenidos/iii-tidyverse/10-tidyverse.qmd" class="toc-action"><i class="bi bi-github"></i>Ver el código</a></li><li><a href="https://github.com/pf0953-programacionr/2026-ii/edit/main/contenidos/iii-tidyverse/10-tidyverse.qmd" class="toc-action"><i class="bi empty"></i>Editar esta página</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../contenidos/software/r-rstudio.html">Software</a></li><li class="breadcrumb-item"><a href="../../contenidos/software/r-rstudio.html">R y RStudio</a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../contenidos/iii-tidyverse/10-tidyverse.html">III. El conjunto de paquetes tidyverse</a></li><li class="breadcrumb-item"><a href="../../contenidos/iii-tidyverse/10-tidyverse.html">tidyverse: paquetes para ciencia de datos</a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">R y RStudio</h1>
+<h1 class="title">tidyverse: paquetes para ciencia de datos</h1>
 </div>
 
 
@@ -458,80 +505,339 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p><a href="https://posit.co/products/open-source/rstudio/">RStudio</a> es un ambiente de desarrollo integrado (IDE, por sus siglas en inglés) para el lenguaje de programación <a href="https://www.r-project.org/">R</a>, gratuito y de código abierto, desarrollado por la empresa <a href="https://posit.co/">Posit</a> (antes llamada RStudio). Es el ambiente de trabajo principal de este curso: se usa para editar documentos Markdown y, a partir de la semana 3, para programar en R y elaborar documentos computacionales de <a href="https://quarto.org/">Quarto</a> y aplicaciones interactivas. Esta guía explica cómo instalar R y RStudio, y presenta los componentes principales de RStudio; como referencia general puede consultarse la <a href="https://docs.posit.co/ide/user/">guía de usuario de RStudio</a>, de Posit.</p>
-<p>La misma interfaz de RStudio está disponible en el navegador mediante <a href="https://posit.cloud/">Posit Cloud</a>, el servicio en la nube utilizado en el ejemplo de la semana 1, por lo que lo descrito en esta guía aplica también ahí.</p>
-<section id="instalación" class="level2">
-<h2 class="anchored" data-anchor-id="instalación">Instalación</h2>
-<p>RStudio requiere que R esté instalado previamente, por lo que la instalación consta de dos pasos, en este orden:</p>
+<section id="trabajo-previo" class="level2">
+<h2 class="anchored" data-anchor-id="trabajo-previo">Trabajo previo</h2>
+<section id="lecturas" class="level3">
+<h3 class="anchored" data-anchor-id="lecturas">Lecturas</h3>
+<p>Antes de la clase, revise las siguientes lecturas. La primera es el artículo que define los datos <em>tidy</em> (lectura obligatoria de esta semana según el programa del curso); basta con las secciones 1 a 3. La segunda y la tercera son los capítulos de <em>R for data science</em> sobre la organización y la importación de datos; de cada uno interesan las dos primeras secciones.</p>
+<p>Wickham, H. (2014). Tidy data. <em>Journal of Statistical Software, 59</em>(1), 1-23. <a href="https://doi.org/10.18637/jss.v059.i10" class="uri">https://doi.org/10.18637/jss.v059.i10</a></p>
+<p>Wickham, H., Çetinkaya-Rundel, M., y Grolemund, G. (2023). Data tidying. En <em>R for data science: Import, tidy, transform, visualize, and model data</em> (2.ª ed.). O’Reilly Media. <a href="https://r4ds.hadley.nz/data-tidy.html" class="uri">https://r4ds.hadley.nz/data-tidy.html</a></p>
+<p>Wickham, H., Çetinkaya-Rundel, M., y Grolemund, G. (2023). Data import. En <em>R for data science: Import, tidy, transform, visualize, and model data</em> (2.ª ed.). O’Reilly Media. <a href="https://r4ds.hadley.nz/data-import.html" class="uri">https://r4ds.hadley.nz/data-import.html</a></p>
+</section>
+<section id="otros-recursos" class="level3">
+<h3 class="anchored" data-anchor-id="otros-recursos">Otros recursos</h3>
+<p>Antes de la clase, instale el tidyverse ejecutando en la consola de RStudio <code>install.packages("tidyverse")</code>: descarga e instala varias decenas de paquetes y puede tardar varios minutos. Tenga a mano el proyecto <code>pf0953</code> y el documento <code>cantones.qmd</code> del <a href="../../contenidos/ii-lenguaje-programacion-r/09-quarto.html">capítulo de Quarto</a>. Si tiene ya los datos del tema elegido en la tarea 1, téngalos también a mano.</p>
+</section>
+</section>
+<section id="introducción" class="level2">
+<h2 class="anchored" data-anchor-id="introducción">Introducción</h2>
+<p>Con este capítulo empieza la sección III del curso, dedicada al <a href="https://www.tidyverse.org/">tidyverse</a>: una colección de paquetes de R para ciencia de datos que comparten una misma filosofía de diseño, una misma gramática y las mismas estructuras de datos. Sus paquetes cubren los procesos del ciclo de vida de la ciencia de datos presentado en el <a href="../../contenidos/i-introduccion-ciencia-datos-programacion/01-introduccion-ciencia-datos.html">primer capítulo</a> —importar, ordenar, transformar, visualizar, modelar y comunicar— y están diseñados para encadenarse entre sí. Fue concebido por Hadley Wickham, autor también de varios de sus paquetes, y hoy lo mantiene <a href="https://posit.co/">Posit</a> junto con una amplia comunidad.</p>
+<p>En la sección II se trabajó con el R <em>base</em>: lo que viene instalado con el lenguaje. Con él se importaron los datos de los cantones, se filtraron con <code>[ , ]</code>, se ordenaron con <code>order()</code> y se resumieron con <code>aggregate()</code>. El tidyverse hace las mismas cosas con funciones cuyos nombres dicen lo que hacen y que se combinan como las palabras de una oración; a cambio, exige que los datos estén organizados de una forma precisa: la de los <strong>datos <em>tidy</em></strong>. Este capítulo presenta los paquetes de la colección, cómo instalarlos y cargarlos, la importación de datos con readr y el concepto de datos <em>tidy</em>; el <a href="../../contenidos/iii-tidyverse/11-dplyr.html">siguiente</a> se dedica a la transformación de datos con dplyr. Se continúa con el hilo conductor de las secciones anteriores: la población y la extensión de los 84 cantones de Costa Rica (INEC, 2023).</p>
+</section>
+<section id="los-paquetes-del-tidyverse" class="level2">
+<h2 class="anchored" data-anchor-id="los-paquetes-del-tidyverse">Los paquetes del tidyverse</h2>
+<p>El núcleo del tidyverse lo forman <a href="https://www.tidyverse.org/packages/#core-tidyverse">nueve paquetes</a> que se instalan y se cargan juntos. La tabla 1 los presenta, junto con el momento del curso en que se usan.</p>
+<figure style="text-align: center; margin: 20px 0;" class="figure">
+<figcaption>
+<strong>Tabla 1</strong>. Paquetes del núcleo del tidyverse. Fuente: elaboración propia con base en tidyverse (s. f.).
+</figcaption>
+<table class="table table-bordered table-striped" style="margin: 0 auto;">
+<thead>
+<tr>
+<th>
+Paquete
+</th>
+<th>
+Propósito
+</th>
+<th>
+En este curso
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://readr.tidyverse.org/">readr</a>
+</td>
+<td>
+Importación de datos rectangulares (archivos CSV y similares).
+</td>
+<td>
+Este capítulo.
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://tibble.tidyverse.org/">tibble</a>
+</td>
+<td>
+Una versión moderna del data frame, más cómoda de imprimir y más estricta.
+</td>
+<td>
+Este capítulo.
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://tidyr.tidyverse.org/">tidyr</a>
+</td>
+<td>
+Organización de los datos en forma <em>tidy</em>: cambiar entre formatos anchos y largos, separar y unir columnas.
+</td>
+<td>
+Este capítulo.
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://dplyr.tidyverse.org/">dplyr</a>
+</td>
+<td>
+Transformación de datos: una gramática de «verbos» para seleccionar, filtrar, ordenar, agrupar, resumir y unir.
+</td>
+<td>
+Siguiente capítulo.
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://ggplot2.tidyverse.org/">ggplot2</a>
+</td>
+<td>
+Gráficos estadísticos, con base en la gramática de gráficos.
+</td>
+<td>
+Semana 7.
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://stringr.tidyverse.org/">stringr</a>
+</td>
+<td>
+Manipulación de hileras de caracteres.
+</td>
+<td>
+Según lo requieran los datos de cada tema.
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://forcats.tidyverse.org/">forcats</a>
+</td>
+<td>
+Manipulación de factores (variables categóricas).
+</td>
+<td>
+Con ggplot2, para ordenar categorías.
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://lubridate.tidyverse.org/">lubridate</a>
+</td>
+<td>
+Manipulación de fechas y horas.
+</td>
+<td>
+Según lo requieran los datos de cada tema.
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://purrr.tidyverse.org/">purrr</a>
+</td>
+<td>
+Programación funcional: aplicar funciones a listas y vectores.
+</td>
+<td>
+No se usa.
+</td>
+</tr>
+</tbody>
+</table>
+</figure>
+<p>Fuera del núcleo, el tidyverse incluye paquetes para tareas más específicas, que se cargan por separado: por ejemplo, <a href="https://readxl.tidyverse.org/">readxl</a> lee archivos de Excel y <a href="https://googlesheets4.tidyverse.org/">googlesheets4</a>, hojas de cálculo de Google. Muchos otros paquetes de R —entre ellos <a href="https://r-spatial.github.io/sf/">sf</a>, el paquete de datos geoespaciales que se estudia en la sección IV— siguen las convenciones del tidyverse aunque no formen parte de él, de modo que lo que se aprende en esta sección se aprovecha durante el resto del curso.</p>
+</section>
+<section id="instalación-y-carga" class="level2">
+<h2 class="anchored" data-anchor-id="instalación-y-carga">Instalación y carga</h2>
+<p>Como cualquier paquete, el tidyverse se instala <strong>una sola vez</strong> por computadora, desde la consola, con <code>install.packages()</code>; con el nombre <code>"tidyverse"</code> se instalan todos los paquetes del núcleo y sus dependencias.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"tidyverse"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>En cada sesión de R —y en cada documento Quarto, que se procesa en una sesión limpia— los paquetes se cargan con <code>library()</code>. Con <code>library(tidyverse)</code> se cargan los nueve paquetes del núcleo y se muestra un mensaje con sus versiones y con los <strong>conflictos</strong>: funciones cuyo nombre coincide con el de otras ya cargadas. Por ejemplo, <code>filter()</code> de dplyr «enmascara» a <code>filter()</code> del paquete stats, de modo que, a partir de la carga, <code>filter()</code> se refiere a la de dplyr.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.2.1     ✔ readr     2.2.0
+✔ forcats   1.0.1     ✔ stringr   1.6.0
+✔ ggplot2   4.0.3     ✔ tibble    3.3.1
+✔ lubridate 1.9.5     ✔ tidyr     1.3.2
+✔ purrr     1.2.2     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
+</div>
+</div>
+<p>En un documento Quarto, ese mensaje no debe aparecer en el informe: el bloque que carga los paquetes lleva la opción <code>#| message: false</code>. Si se prefiere cargar solo un paquete, se usa su nombre (<code>library(dplyr)</code>), y si se necesita una única función de un paquete instalado, la notación <code>paquete::funcion()</code> la llama sin cargarlo (<code>readr::read_csv()</code>).</p>
+</section>
+<section id="importación-con-readr" class="level2">
+<h2 class="anchored" data-anchor-id="importación-con-readr">Importación con readr</h2>
+<p>En la sección II los datos se importaron con <code>read.csv()</code>, del R base. El tidyverse ofrece <a href="https://readr.tidyverse.org/reference/read_delim.html"><code>read_csv()</code></a> (con guion bajo), del paquete readr, que hace lo mismo con tres ventajas: es más rápida con archivos grandes, detecta los tipos de datos de las columnas de forma más consistente y devuelve un <em>tibble</em>. Como en el capítulo anterior, los datos se leen por su URL en el repositorio del curso o con una ruta relativa al proyecto.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>cantones <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://raw.githubusercontent.com/pf0953-programacionr/2026-ii/main/datos/cantones.csv"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 84 Columns: 4
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+chr (2): provincia, canton
+dbl (2): poblacion, area_km2
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+</div>
+<p>El mensaje <code>Column specification</code> informa el tipo que readr asignó a cada columna: <code>chr</code> para <code>provincia</code> y <code>canton</code>, <code>dbl</code> para <code>poblacion</code> y <code>area_km2</code>. Vale la pena leerlo la primera vez, porque una columna numérica que aparezca como <code>chr</code> revela un problema en los datos (por ejemplo, una coma decimal o un texto en una celda); luego se silencia con <code>#| message: false</code> o con el argumento <code>show_col_types = FALSE</code>.</p>
+<p>Dos variantes son frecuentes con datos de Costa Rica: los archivos CSV exportados desde Excel en español separan las columnas con punto y coma y usan la coma como separador decimal, y se leen con <code>read_csv2()</code>; y los archivos de Excel (<code>.xlsx</code>) se leen con <code>read_excel()</code> del paquete readxl, que se instala y se carga por separado. En ambos casos el resultado es el mismo tipo de objeto.</p>
+<section id="el-tibble" class="level3">
+<h3 class="anchored" data-anchor-id="el-tibble">El tibble</h3>
+<p>Un <strong>tibble</strong> es un data frame con algunas mejoras; la más visible es la forma en que se imprime: solo las primeras diez filas y las columnas que caben en la pantalla, con el tipo de datos bajo el nombre de cada columna.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>cantones</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 84 × 4
+   provincia canton       poblacion area_km2
+   &lt;chr&gt;     &lt;chr&gt;            &lt;dbl&gt;    &lt;dbl&gt;
+ 1 San José  San José        352381     44.6
+ 2 San José  Escazú           71500     34.5
+ 3 San José  Desamparados    223226    119. 
+ 4 San José  Puriscal         38525    555. 
+ 5 San José  Tarrazú          17810    291. 
+ 6 San José  Aserrí           59588    168. 
+ 7 San José  Mora             32348    163. 
+ 8 San José  Goicoechea      132104     31.7
+ 9 San José  Santa Ana        58020     61.4
+10 San José  Alajuelita       81012     21.5
+# ℹ 74 more rows</code></pre>
+</div>
+</div>
+<p>Todo lo que se aprendió sobre data frames sigue funcionando con un tibble: <code>cantones$poblacion</code>, <code>nrow(cantones)</code>, <code>cantones[1:3, ]</code>, <code>summary(cantones)</code>. La función <a href="https://dplyr.tidyverse.org/reference/glimpse.html"><code>glimpse()</code></a> es la versión del tidyverse de <code>str()</code>: muestra cada columna en una fila, con su tipo y sus primeros valores, lo que resulta útil cuando hay muchas columnas.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(cantones)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 84
+Columns: 4
+$ provincia &lt;chr&gt; "San José", "San José", "San José", "San José", "San José", …
+$ canton    &lt;chr&gt; "San José", "Escazú", "Desamparados", "Puriscal", "Tarrazú",…
+$ poblacion &lt;dbl&gt; 352381, 71500, 223226, 38525, 17810, 59588, 32348, 132104, 5…
+$ area_km2  &lt;dbl&gt; 44.62, 34.53, 118.89, 555.04, 291.27, 168.26, 163.48, 31.70,…</code></pre>
+</div>
+</div>
+<p><em>Ejercicios de esta sección: <a href="#ejercicios-importacion">ejercicios sobre importación</a>.</em></p>
+</section>
+</section>
+<section id="datos-tidy" class="level2">
+<h2 class="anchored" data-anchor-id="datos-tidy">Datos <em>tidy</em></h2>
+<p>Los paquetes del tidyverse suponen que los datos están organizados de una forma precisa, que Wickham (2014) llamó <strong><em>tidy</em></strong> («ordenados»). Un conjunto de datos es <em>tidy</em> si cumple tres reglas:</p>
 <ol type="1">
-<li><strong>Instale R</strong> desde <a href="https://cran.r-project.org/">CRAN</a>, eligiendo el instalador correspondiente a su sistema operativo:
-<ul>
-<li><strong>Windows</strong>: haga clic en <em>Download R for Windows</em>, luego en <em>base</em> y descargue el instalador. Ejecútelo y acepte las opciones predeterminadas.</li>
-<li><strong>macOS</strong>: haga clic en <em>Download R for macOS</em> y descargue el paquete correspondiente a su procesador (Apple Silicon o Intel). Ábralo y siga las instrucciones.</li>
-<li><strong>Linux</strong>: siga las instrucciones para su distribución.</li>
-</ul></li>
-<li><strong>Instale RStudio Desktop</strong> desde la sección <a href="https://docs.posit.co/ide/user/#install-links"><em>Install Links</em></a> de la guía de usuario de RStudio: haga clic en <em>RStudio Desktop download</em> y, en la tabla de descargas, elija el instalador correspondiente a su sistema operativo:
-<ul>
-<li><strong>Windows</strong>: ejecute el instalador y siga las instrucciones.</li>
-<li><strong>macOS</strong>: abra el archivo descargado y arrastre la aplicación <strong>RStudio</strong> a la carpeta <strong>Applications</strong>.</li>
-<li><strong>Linux</strong>: descargue el paquete <code>.deb</code> o <code>.rpm</code> según su distribución e instálelo con el gestor de paquetes.</li>
-</ul></li>
-<li>Al finalizar, abra <strong>RStudio</strong> (no la aplicación “R” que también quedó instalada: RStudio encuentra la instalación de R automáticamente y ofrece una interfaz mucho más completa). Si en la consola aparece el mensaje de inicio de R con su número de versión, la instalación fue exitosa.</li>
+<li>Cada <strong>variable</strong> es una columna.</li>
+<li>Cada <strong>observación</strong> es una fila.</li>
+<li>Cada <strong>valor</strong> es una celda.</li>
 </ol>
-<p>La interfaz de RStudio está en inglés y esta guía usa los nombres de menús y botones en ese idioma.</p>
+<p>El data frame <code>cantones</code> es <em>tidy</em>: cada fila es un cantón (la observación), cada columna es una variable (provincia, nombre, población, área) y cada celda contiene un solo valor. Esa es la razón de que las operaciones de la sección II fueran tan directas: <code>cantones$poblacion</code> es un vector con la población de todos los cantones y <code>cantones$poblacion / cantones$area_km2</code> calcula la densidad de todos a la vez. Las mismas reglas describen la forma en que se organizan las tablas de una base de datos relacional y la forma en que los paquetes de la sección IV representan los datos geoespaciales: una fila por objeto geográfico, con sus atributos en columnas y su geometría en una más.</p>
+<p>Muchos datos, sin embargo, no vienen así, sobre todo cuando se preparan para ser leídos por personas. El caso más común es la <strong>tabla ancha</strong>, en la que una variable se reparte en varias columnas. La siguiente tabla, construida con <a href="https://tibble.tidyverse.org/reference/tribble.html"><code>tribble()</code></a> —una función para escribir tibbles pequeños fila por fila—, tiene la población de las provincias según el censo de 2011 (INEC, 2012) y la estimación de 2022 (INEC, 2023):</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>poblacion_ancha <span class="ot">&lt;-</span> <span class="fu">tribble</span>(</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="sc">~</span>provincia,   <span class="sc">~</span><span class="st">`</span><span class="at">2011</span><span class="st">`</span>, <span class="sc">~</span><span class="st">`</span><span class="at">2022</span><span class="st">`</span>,</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"San José"</span>,   <span class="dv">1404242</span>, <span class="dv">1601167</span>,</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Alajuela"</span>,    <span class="dv">848146</span>, <span class="dv">1035464</span>,</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Cartago"</span>,     <span class="dv">490903</span>,  <span class="dv">545092</span>,</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Heredia"</span>,     <span class="dv">433677</span>,  <span class="dv">479117</span>,</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Guanacaste"</span>,  <span class="dv">326953</span>,  <span class="dv">412808</span>,</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Puntarenas"</span>,  <span class="dv">410929</span>,  <span class="dv">500166</span>,</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Limón"</span>,       <span class="dv">386862</span>,  <span class="dv">470383</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>poblacion_ancha</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 7 × 3
+  provincia   `2011`  `2022`
+  &lt;chr&gt;        &lt;dbl&gt;   &lt;dbl&gt;
+1 San José   1404242 1601167
+2 Alajuela    848146 1035464
+3 Cartago     490903  545092
+4 Heredia     433677  479117
+5 Guanacaste  326953  412808
+6 Puntarenas  410929  500166
+7 Limón       386862  470383</code></pre>
+</div>
+</div>
+<p>Es fácil de leer, pero no es <em>tidy</em>: el año es una variable y está en los nombres de las columnas, en lugar de en una columna propia, y la población está repartida en dos columnas. Con esa organización no se puede, por ejemplo, graficar la población en función del año. La función <a href="https://tidyr.tidyverse.org/reference/pivot_longer.html"><code>pivot_longer()</code></a> de tidyr la convierte en una <strong>tabla larga</strong>, con una fila por combinación de provincia y año: <code>cols</code> indica las columnas que se van a reunir, <code>names_to</code> el nombre de la columna que recibirá sus nombres y <code>values_to</code> el de la que recibirá sus valores.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>poblacion_larga <span class="ot">&lt;-</span> <span class="fu">pivot_longer</span>(</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  poblacion_ancha,</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">cols =</span> <span class="fu">c</span>(<span class="st">`</span><span class="at">2011</span><span class="st">`</span>, <span class="st">`</span><span class="at">2022</span><span class="st">`</span>),</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">names_to =</span> <span class="st">"anio"</span>,</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">values_to =</span> <span class="st">"poblacion"</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>poblacion_larga</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 14 × 3
+   provincia  anio  poblacion
+   &lt;chr&gt;      &lt;chr&gt;     &lt;dbl&gt;
+ 1 San José   2011    1404242
+ 2 San José   2022    1601167
+ 3 Alajuela   2011     848146
+ 4 Alajuela   2022    1035464
+ 5 Cartago    2011     490903
+ 6 Cartago    2022     545092
+ 7 Heredia    2011     433677
+ 8 Heredia    2022     479117
+ 9 Guanacaste 2011     326953
+10 Guanacaste 2022     412808
+11 Puntarenas 2011     410929
+12 Puntarenas 2022     500166
+13 Limón      2011     386862
+14 Limón      2022     470383</code></pre>
+</div>
+</div>
+<p>Observe que los nombres de columna que empiezan con un dígito deben escribirse entre acentos graves (<code>`2011`</code>). La operación inversa, <a href="https://tidyr.tidyverse.org/reference/pivot_wider.html"><code>pivot_wider()</code></a>, produce una tabla ancha a partir de una larga; es útil al final del análisis, para presentar los resultados en una tabla compacta. Las demás funciones de tidyr —separar una columna en varias, unir varias en una, completar combinaciones faltantes— se documentan en tidyr (s. f.) y se recurre a ellas cuando los datos de cada tema lo requieran.</p>
+<p><em>Ejercicios de esta sección: <a href="#ejercicios-tidy">ejercicios sobre datos tidy</a>.</em></p>
 </section>
-<section id="la-interfaz" class="level2">
-<h2 class="anchored" data-anchor-id="la-interfaz">La interfaz</h2>
-<p>La ventana de RStudio se divide en cuatro paneles:</p>
+<section id="resumen" class="level2">
+<h2 class="anchored" data-anchor-id="resumen">Resumen</h2>
 <ul>
-<li><strong>Source</strong> (arriba a la izquierda): el editor, donde se abren y editan los archivos. Este panel solo aparece cuando hay un archivo abierto.</li>
-<li><strong>Console</strong> (abajo a la izquierda): donde se ejecutan interactivamente las instrucciones de R. Junto a ella está la pestaña <strong>Terminal</strong>, descrita más adelante.</li>
-<li><strong>Environment</strong> (arriba a la derecha): muestra los objetos en memoria durante una sesión de R; incluye también el historial de comandos (<strong>History</strong>).</li>
-<li><strong>Files / Plots / Packages / Help / Viewer</strong> (abajo a la derecha): explorador de archivos, gráficos generados, paquetes instalados, documentación de ayuda y vista de contenido web.</li>
+<li>El <strong>tidyverse</strong> es una colección de paquetes de R para ciencia de datos con una filosofía y una gramática comunes; su núcleo (readr, tibble, tidyr, dplyr, ggplot2, stringr, forcats, lubridate y purrr) se instala una sola vez con <code>install.packages("tidyverse")</code> y se carga en cada sesión con <code>library(tidyverse)</code>. En un documento Quarto, el bloque de carga lleva <code>#| message: false</code>.</li>
+<li><strong>readr</strong> importa datos rectangulares: <code>read_csv()</code> para archivos separados por comas, <code>read_csv2()</code> para los separados por punto y coma con coma decimal; los archivos de Excel se leen con readxl. El resultado es un <strong>tibble</strong>, un data frame que se imprime de forma compacta y muestra el tipo de cada columna; <code>glimpse()</code> resume su estructura.</li>
+<li>Un conjunto de datos es <strong><em>tidy</em></strong> si cada variable es una columna, cada observación es una fila y cada valor es una celda. Las <strong>tablas anchas</strong>, con una variable repartida en varias columnas, se convierten en <strong>largas</strong> con <code>pivot_longer()</code> de tidyr; <code>pivot_wider()</code> hace lo contrario.</li>
 </ul>
-<p>Los paneles asociados a la programación en R se estudiarán a partir de la semana 3; para el trabajo con Markdown de esta semana bastan el editor y el explorador de archivos.</p>
 </section>
-<section id="proyectos" class="level2">
-<h2 class="anchored" data-anchor-id="proyectos">Proyectos</h2>
-<p>RStudio puede abrir archivos individuales (<em>File &gt; Open File</em>), pero la forma habitual de trabajar es mediante <strong>proyectos</strong> (<em>File &gt; New Project</em>): cada proyecto está asociado a una carpeta, que el panel <em>Files</em> muestra y en la que queda establecido el directorio de trabajo. Así, los archivos de un mismo trabajo —documentos, código, datos, imágenes— se mantienen organizados y las rutas relativas entre ellos funcionan de manera consistente. Esta forma de trabajo es la apropiada para los repositorios de Git que se usan en el curso: un proyecto puede crearse desde cero (<em>New Directory</em>) o a partir de un repositorio remoto (<em>Version Control</em>), como se hará más adelante.</p>
-<p>Mientras se edita un archivo, un asterisco y el color rojo en el título de su pestaña indican que hay cambios sin guardar; los cambios se guardan con <code>Ctrl + S</code>.</p>
+<section id="ejercicios" class="level2">
+<h2 class="anchored" data-anchor-id="ejercicios">Ejercicios</h2>
+<p>Los ejercicios se agrupan según la sección del capítulo a la que corresponden. Se realizan en un documento Quarto nuevo del proyecto <code>pf0953</code>, que continúa en los ejercicios del capítulo siguiente.</p>
+<section id="ejercicios-importacion" class="level3">
+<h3 class="anchored" data-anchor-id="ejercicios-importacion">Importación</h3>
+<ol type="1">
+<li><p>En el proyecto <code>pf0953</code>, cree un documento Quarto con el título «Los cantones de Costa Rica con el tidyverse», su nombre como autor o autora, formato HTML y motor Knitr, y guárdelo como <code>tidyverse.qmd</code>. Borre la plantilla, deje el encabezado YAML con <code>lang: es</code>, <code>toc: true</code> y <code>embed-resources: true</code> (como en <code>cantones.qmd</code>), y agregue un bloque etiquetado <code>paquetes</code> que cargue el tidyverse con la opción <code>#| message: false</code>. Procese el documento con <em>Render</em> y compruebe que el mensaje de carga no aparece en el HTML.</p></li>
+<li><p>Agregue una sección «Datos» con un bloque etiquetado <code>importacion</code> que lea <code>cantones.csv</code> con <code>read_csv()</code> (por su URL o con la ruta relativa <code>datos/cantones.csv</code>, si descargó el archivo en el capítulo anterior) y muestre el tibble y el resultado de <code>glimpse()</code>. Compare lo que se imprime con lo que imprimía <code>read.csv()</code> en los capítulos anteriores: ¿qué información adicional muestra el tibble?</p></li>
+<li><p>Si ya cuenta con los datos del tema elegido en la tarea 1, guárdelos en una carpeta <code>datos</code> del proyecto y léalos en un bloque nuevo con la función que corresponda a su formato (<code>read_csv()</code>, <code>read_csv2()</code> o <code>read_excel()</code>). Aplique <code>glimpse()</code> y revise el tipo asignado a cada columna: ¿hay alguna columna numérica o de fecha que haya quedado como <code>chr</code>? Si es así, abra el archivo y busque la causa. Este bloque es el punto de partida de la tarea 2.</p></li>
+</ol>
 </section>
-<section id="edición-de-markdown" class="level2">
-<h2 class="anchored" data-anchor-id="edición-de-markdown">Edición de Markdown</h2>
-<p>Para crear un documento Markdown, seleccione <em>File &gt; New File &gt; Markdown File</em> y guárdelo con la extensión <code>.md</code>. El editor ofrece dos modos, que se alternan con los botones <strong>Source</strong> y <strong>Visual</strong>, en la esquina superior izquierda del panel del editor:</p>
-<ul>
-<li>En el modo <strong>Source</strong> se edita la fuente del documento, con las marcas de Markdown visibles.</li>
-<li>En el modo <strong>Visual</strong> el documento se muestra con su formato (negritas, encabezados, tablas, imágenes) mientras se escribe, y una barra de herramientas permite insertar los elementos sin escribir sus marcas, de manera similar a un procesador de texto. El archivo se sigue guardando como Markdown: puede cambiarse de un modo al otro en cualquier momento, lo que además es una buena forma de aprender la sintaxis. El modo visual es especialmente útil para editar tablas.</li>
-</ul>
-<p>El botón <strong>Preview</strong> (<code>Ctrl + Shift + K</code>) genera una vista previa del documento completo en HTML.</p>
-<p>Los documentos computacionales de Quarto (archivos <code>.qmd</code>), que combinan Markdown con código de R, se editan de la misma forma y se estudiarán más adelante en el curso; RStudio incluye Quarto integrado.</p>
+<section id="ejercicios-tidy" class="level3">
+<h3 class="anchored" data-anchor-id="ejercicios-tidy">Datos <em>tidy</em></h3>
+<ol start="4" type="1">
+<li><p>Para cada uno de los siguientes conjuntos de datos, indique si es <em>tidy</em> y, si no lo es, cuál de las tres reglas incumple y cómo se organizaría en forma <em>tidy</em>: (a) una tabla con una fila por estación meteorológica y una columna por mes con la precipitación; (b) una tabla con una fila por registro de presencia de una especie, con las columnas especie, fecha, longitud y latitud; (c) una tabla con una columna <code>coordenadas</code> que contiene textos como <code>"9.93, -84.08"</code>.</p></li>
+<li><p><strong>Prediga antes de ejecutar</strong>: ¿cuántas filas y cuántas columnas tendrá el resultado de aplicar <code>pivot_longer()</code> a una tabla ancha con 84 cantones y tres columnas de años? Escriba en el documento la tabla <code>poblacion_ancha</code> de la sección <a href="#datos-tidy">Datos <em>tidy</em></a>, conviértala en larga y luego vuelva a convertirla en ancha con <code>pivot_wider(names_from = anio, values_from = poblacion)</code>; compruebe que se recupera la tabla original.</p>
+<details>
+<summary>
+<p>Después de ejecutar, haga clic aquí para ver la explicación</p>
+</summary>
+<p>Una tabla ancha de 84 filas y 3 columnas de años produce 84 × 3 = 252 filas, con 3 columnas (cantón, año y población): cada celda de valores de la tabla ancha se convierte en una fila. La tabla de las provincias, con 7 filas y 2 años, produce 14 filas; <code>pivot_wider()</code> deshace la operación.</p>
+</details></li>
+<li><p>Con los datos de su tema (ejercicio 3), o con los de otro tema que le interese, identifique si la tabla es ancha o larga y anote en el documento, en prosa, qué transformación necesitaría para el análisis que tiene en mente.</p></li>
+</ol>
 </section>
-<section id="terminal-integrada" class="level2">
-<h2 class="anchored" data-anchor-id="terminal-integrada">Terminal integrada</h2>
-<p>RStudio incluye una terminal, en la pestaña <strong>Terminal</strong> del panel de la consola (si no está visible, <em>Tools &gt; Terminal &gt; New Terminal</em>). En ella pueden ejecutarse comandos del sistema operativo sin salir de RStudio; en el curso se usará más adelante, entre otras cosas, para ejecutar comandos de Git.</p>
 </section>
-<section id="integración-con-git" class="level2">
-<h2 class="anchored" data-anchor-id="integración-con-git">Integración con Git</h2>
-<p>Cuando un proyecto de RStudio está bajo control de versiones, el panel superior derecho muestra una pestaña <strong>Git</strong> con las operaciones esenciales —preparar cambios, confirmarlos (<em>commit</em>), enviarlos (<em>push</em>) y traerlos (<em>pull</em>)—, y al crear un proyecto con la opción <em>Version Control</em> se puede clonar un repositorio remoto, por ejemplo de GitHub. Esta integración requiere que <a href="https://git-scm.com/">Git</a> esté instalado en la computadora, lo que se hará cuando se trabaje con repositorios locales; en la lección de <a href="../../contenidos/i-introduccion-ciencia-datos-programacion/04-git-github.html">Git, GitHub y GitHub Pages</a>, las operaciones se realizan desde el navegador.</p>
-</section>
-<section id="asistente-de-inteligencia-artificial-github-copilot" class="level2">
-<h2 class="anchored" data-anchor-id="asistente-de-inteligencia-artificial-github-copilot">Asistente de inteligencia artificial (GitHub Copilot)</h2>
-<p><a href="https://github.com/features/copilot">GitHub Copilot</a> es un asistente de IA integrado en RStudio: sugiere autocompletados de código y de texto mientras se escribe. Para activarlo, abra <em>Tools &gt; Global Options &gt; Copilot</em>, marque la casilla de habilitación e inicie sesión con la cuenta de GitHub creada en la lección de <a href="../../contenidos/i-introduccion-ciencia-datos-programacion/04-git-github.html">Git, GitHub y GitHub Pages</a>. El plan gratuito para cuentas personales tiene límites mensuales de uso; además, <a href="https://github.com/education">GitHub Education</a> ofrece el plan Copilot Pro sin costo a estudiantes verificados con su correo institucional.</p>
-<p>Las sugerencias pueden desactivarse desde el mismo cuadro de opciones. Se recomienda mantenerlas desactivadas mientras se aprende un tema nuevo: primero intente resolver los ejercicios por su cuenta y use el asistente para pedir explicaciones o revisar su solución, según los lineamientos de uso de IA del curso (declarar el uso, comprender y verificar todo el código que entregue).</p>
-</section>
-<section id="teclas-rápidas-recomendadas" class="level2">
-<h2 class="anchored" data-anchor-id="teclas-rápidas-recomendadas">Teclas rápidas recomendadas</h2>
-<p>En macOS, sustituya <code>Ctrl</code> por <code>Cmd</code> en las combinaciones siguientes.</p>
-<ul>
-<li>Paleta de comandos: <code>Ctrl + Shift + P</code></li>
-<li>Guardar un archivo: <code>Ctrl + S</code></li>
-<li>Vista previa de un documento Markdown: <code>Ctrl + Shift + K</code></li>
-<li>Ejecutar en la consola la línea o la selección actual (en archivos de código R): <code>Ctrl + Enter</code></li>
-<li>Insertar el operador de asignación de R (<code>&lt;-</code>): <code>Alt + -</code> (guion)</li>
-<li>Insertar el operador <em>pipe</em> (<code>|&gt;</code>): <code>Ctrl + Shift + M</code></li>
-<li>Ayuda de teclas rápidas: <code>Alt + Shift + K</code></li>
-</ul>
-<p>La lista completa está disponible en el menú <em>Help &gt; Keyboard Shortcuts Help</em> y en la <a href="https://rstudio.github.io/cheatsheets/html/rstudio-ide.html">hoja de referencia del IDE de RStudio</a>, de Posit.</p>
+<section id="referencias-bibliográficas" class="level2">
+<h2 class="anchored" data-anchor-id="referencias-bibliográficas">Referencias bibliográficas</h2>
+<p>Instituto Nacional de Estadística y Censos. (2012). <em>X Censo Nacional de Población y VI de Vivienda 2011: Resultados generales</em>. <a href="https://sistemas.inec.cr/pad5/index.php/catalog/113" class="uri">https://sistemas.inec.cr/pad5/index.php/catalog/113</a></p>
+<p>Instituto Nacional de Estadística y Censos. (2023). <em>Resultados de la Estimación de Población y Vivienda 2022</em> [archivo XLSX]. <a href="https://admin.inec.cr/sites/default/files/2023-11/reResultadosEstimacionPoblacionVivienda2022_3.xlsx" class="uri">https://admin.inec.cr/sites/default/files/2023-11/reResultadosEstimacionPoblacionVivienda2022_3.xlsx</a></p>
+<p>tidyr. (s. f.). <em>Tidy data</em>. Recuperado el 17 de setiembre de 2026, de <a href="https://tidyr.tidyverse.org/articles/tidy-data.html" class="uri">https://tidyr.tidyverse.org/articles/tidy-data.html</a></p>
+<p>tidyverse. (s. f.). <em>Tidyverse packages</em>. Recuperado el 17 de setiembre de 2026, de <a href="https://www.tidyverse.org/packages/" class="uri">https://www.tidyverse.org/packages/</a></p>
+<p>Wickham, H. (2014). Tidy data. <em>Journal of Statistical Software, 59</em>(1), 1-23. <a href="https://doi.org/10.18637/jss.v059.i10" class="uri">https://doi.org/10.18637/jss.v059.i10</a></p>
+<p>Wickham, H., Çetinkaya-Rundel, M., y Grolemund, G. (2023). <em>R for data science: Import, tidy, transform, visualize, and model data</em> (2.ª ed.). O’Reilly Media. <a href="https://r4ds.hadley.nz/" class="uri">https://r4ds.hadley.nz/</a></p>
 
 
 </section>
@@ -958,7 +1264,7 @@ ul.task-list li input[type="checkbox"] {
     </div>   
     <div class="nav-footer-center">
 <p>Los contenidos de este curso, a menos que se especifique de otra forma, se comparten mediante una <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.es">licencia de Creative Commons Reconocimiento-CompartirIgual 4.0 Internacional</a>.</p>
-<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/pf0953-programacionr/2026-ii/blob/main/contenidos/software/r-rstudio.qmd" class="toc-action"><i class="bi bi-github"></i>Ver el código</a></li><li><a href="https://github.com/pf0953-programacionr/2026-ii/edit/main/contenidos/software/r-rstudio.qmd" class="toc-action"><i class="bi empty"></i>Editar esta página</a></li></ul></div></div>
+<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/pf0953-programacionr/2026-ii/blob/main/contenidos/iii-tidyverse/10-tidyverse.qmd" class="toc-action"><i class="bi bi-github"></i>Ver el código</a></li><li><a href="https://github.com/pf0953-programacionr/2026-ii/edit/main/contenidos/iii-tidyverse/10-tidyverse.qmd" class="toc-action"><i class="bi empty"></i>Editar esta página</a></li></ul></div></div>
     <div class="nav-footer-right">
       &nbsp;
     </div>
