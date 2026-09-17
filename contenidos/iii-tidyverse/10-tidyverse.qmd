@@ -1,0 +1,190 @@
+---
+title: "tidyverse: paquetes para ciencia de datos"
+---
+
+## Trabajo previo
+
+### Lecturas
+
+Antes de la clase, revise las siguientes lecturas. La primera es el artículo que define los datos *tidy* (lectura obligatoria de esta semana según el programa del curso); basta con las secciones 1 a 3. La segunda y la tercera son los capítulos de *R for data science* sobre la organización y la importación de datos; de cada uno interesan las dos primeras secciones.
+
+Wickham, H. (2014). Tidy data. *Journal of Statistical Software, 59*(1), 1-23. <https://doi.org/10.18637/jss.v059.i10>
+
+Wickham, H., Çetinkaya-Rundel, M., y Grolemund, G. (2023). Data tidying. En *R for data science: Import, tidy, transform, visualize, and model data* (2.ª ed.). O'Reilly Media. <https://r4ds.hadley.nz/data-tidy.html>
+
+Wickham, H., Çetinkaya-Rundel, M., y Grolemund, G. (2023). Data import. En *R for data science: Import, tidy, transform, visualize, and model data* (2.ª ed.). O'Reilly Media. <https://r4ds.hadley.nz/data-import.html>
+
+### Otros recursos
+
+Antes de la clase, instale el tidyverse ejecutando en la consola de RStudio `install.packages("tidyverse")`: descarga e instala varias decenas de paquetes y puede tardar varios minutos. Tenga a mano el proyecto `pf0953` y el documento `cantones.qmd` del [capítulo de Quarto](../ii-lenguaje-programacion-r/09-quarto.qmd). Si tiene ya los datos del tema elegido en la tarea 1, téngalos también a mano.
+
+## Introducción
+
+Con este capítulo empieza la sección III del curso, dedicada al [tidyverse](https://www.tidyverse.org/): una colección de paquetes de R para ciencia de datos que comparten una misma filosofía de diseño, una misma gramática y las mismas estructuras de datos. Sus paquetes cubren los procesos del ciclo de vida de la ciencia de datos presentado en el [primer capítulo](../i-introduccion-ciencia-datos-programacion/01-introduccion-ciencia-datos.qmd) —importar, ordenar, transformar, visualizar, modelar y comunicar— y están diseñados para encadenarse entre sí. Fue concebido por Hadley Wickham, autor también de varios de sus paquetes, y hoy lo mantiene [Posit](https://posit.co/) junto con una amplia comunidad.
+
+En la sección II se trabajó con el R *base*: lo que viene instalado con el lenguaje. Con él se importaron los datos de los cantones, se filtraron con `[ , ]`, se ordenaron con `order()` y se resumieron con `aggregate()`. El tidyverse hace las mismas cosas con funciones cuyos nombres dicen lo que hacen y que se combinan como las palabras de una oración; a cambio, exige que los datos estén organizados de una forma precisa: la de los **datos *tidy***. Este capítulo presenta los paquetes de la colección, cómo instalarlos y cargarlos, la importación de datos con readr y el concepto de datos *tidy*; el [siguiente](11-dplyr.qmd) se dedica a la transformación de datos con dplyr. Se continúa con el hilo conductor de las secciones anteriores: la población y la extensión de los 84 cantones de Costa Rica (INEC, 2023).
+
+## Los paquetes del tidyverse
+
+El núcleo del tidyverse lo forman [nueve paquetes](https://www.tidyverse.org/packages/#core-tidyverse) que se instalan y se cargan juntos. La tabla 1 los presenta, junto con el momento del curso en que se usan.
+
+<figure style="text-align: center; margin: 20px 0;">
+    <figcaption><strong>Tabla 1</strong>. Paquetes del núcleo del tidyverse. Fuente: elaboración propia con base en tidyverse (s. f.).</figcaption>
+    <table class="table table-bordered table-striped" style="margin: 0 auto;">
+    <thead>
+    <tr><th>Paquete</th><th>Propósito</th><th>En este curso</th></tr>
+    </thead>
+    <tbody>
+    <tr><td><a href="https://readr.tidyverse.org/">readr</a></td><td>Importación de datos rectangulares (archivos CSV y similares).</td><td>Este capítulo.</td></tr>
+    <tr><td><a href="https://tibble.tidyverse.org/">tibble</a></td><td>Una versión moderna del data frame, más cómoda de imprimir y más estricta.</td><td>Este capítulo.</td></tr>
+    <tr><td><a href="https://tidyr.tidyverse.org/">tidyr</a></td><td>Organización de los datos en forma <em>tidy</em>: cambiar entre formatos anchos y largos, separar y unir columnas.</td><td>Este capítulo.</td></tr>
+    <tr><td><a href="https://dplyr.tidyverse.org/">dplyr</a></td><td>Transformación de datos: una gramática de «verbos» para seleccionar, filtrar, ordenar, agrupar, resumir y unir.</td><td>Siguiente capítulo.</td></tr>
+    <tr><td><a href="https://ggplot2.tidyverse.org/">ggplot2</a></td><td>Gráficos estadísticos, con base en la gramática de gráficos.</td><td>Semana 7.</td></tr>
+    <tr><td><a href="https://stringr.tidyverse.org/">stringr</a></td><td>Manipulación de hileras de caracteres.</td><td>Según lo requieran los datos de cada tema.</td></tr>
+    <tr><td><a href="https://forcats.tidyverse.org/">forcats</a></td><td>Manipulación de factores (variables categóricas).</td><td>Con ggplot2, para ordenar categorías.</td></tr>
+    <tr><td><a href="https://lubridate.tidyverse.org/">lubridate</a></td><td>Manipulación de fechas y horas.</td><td>Según lo requieran los datos de cada tema.</td></tr>
+    <tr><td><a href="https://purrr.tidyverse.org/">purrr</a></td><td>Programación funcional: aplicar funciones a listas y vectores.</td><td>No se usa.</td></tr>
+    </tbody>
+    </table>
+</figure>
+
+Fuera del núcleo, el tidyverse incluye paquetes para tareas más específicas, que se cargan por separado: por ejemplo, [readxl](https://readxl.tidyverse.org/) lee archivos de Excel y [googlesheets4](https://googlesheets4.tidyverse.org/), hojas de cálculo de Google. Muchos otros paquetes de R —entre ellos [sf](https://r-spatial.github.io/sf/), el paquete de datos geoespaciales que se estudia en la sección IV— siguen las convenciones del tidyverse aunque no formen parte de él, de modo que lo que se aprende en esta sección se aprovecha durante el resto del curso.
+
+## Instalación y carga
+
+Como cualquier paquete, el tidyverse se instala **una sola vez** por computadora, desde la consola, con `install.packages()`; con el nombre `"tidyverse"` se instalan todos los paquetes del núcleo y sus dependencias.
+
+```{r}
+#| label: instalacion
+#| eval: false
+install.packages("tidyverse")
+```
+
+En cada sesión de R —y en cada documento Quarto, que se procesa en una sesión limpia— los paquetes se cargan con `library()`. Con `library(tidyverse)` se cargan los nueve paquetes del núcleo y se muestra un mensaje con sus versiones y con los **conflictos**: funciones cuyo nombre coincide con el de otras ya cargadas. Por ejemplo, `filter()` de dplyr «enmascara» a `filter()` del paquete stats, de modo que, a partir de la carga, `filter()` se refiere a la de dplyr.
+
+```{r}
+#| label: carga
+library(tidyverse)
+```
+
+En un documento Quarto, ese mensaje no debe aparecer en el informe: el bloque que carga los paquetes lleva la opción `#| message: false`. Si se prefiere cargar solo un paquete, se usa su nombre (`library(dplyr)`), y si se necesita una única función de un paquete instalado, la notación `paquete::funcion()` la llama sin cargarlo (`readr::read_csv()`).
+
+## Importación con readr
+
+En la sección II los datos se importaron con `read.csv()`, del R base. El tidyverse ofrece [`read_csv()`](https://readr.tidyverse.org/reference/read_delim.html) (con guion bajo), del paquete readr, que hace lo mismo con tres ventajas: es más rápida con archivos grandes, detecta los tipos de datos de las columnas de forma más consistente y devuelve un *tibble*. Como en el capítulo anterior, los datos se leen por su URL en el repositorio del curso o con una ruta relativa al proyecto.
+
+```{r}
+#| label: importacion
+cantones <- read_csv("https://raw.githubusercontent.com/pf0953-programacionr/2026-ii/main/datos/cantones.csv")
+```
+
+El mensaje `Column specification` informa el tipo que readr asignó a cada columna: `chr` para `provincia` y `canton`, `dbl` para `poblacion` y `area_km2`. Vale la pena leerlo la primera vez, porque una columna numérica que aparezca como `chr` revela un problema en los datos (por ejemplo, una coma decimal o un texto en una celda); luego se silencia con `#| message: false` o con el argumento `show_col_types = FALSE`.
+
+Dos variantes son frecuentes con datos de Costa Rica: los archivos CSV exportados desde Excel en español separan las columnas con punto y coma y usan la coma como separador decimal, y se leen con `read_csv2()`; y los archivos de Excel (`.xlsx`) se leen con `read_excel()` del paquete readxl, que se instala y se carga por separado. En ambos casos el resultado es el mismo tipo de objeto.
+
+### El tibble
+
+Un **tibble** es un data frame con algunas mejoras; la más visible es la forma en que se imprime: solo las primeras diez filas y las columnas que caben en la pantalla, con el tipo de datos bajo el nombre de cada columna.
+
+```{r}
+#| label: tibble
+cantones
+```
+
+Todo lo que se aprendió sobre data frames sigue funcionando con un tibble: `cantones$poblacion`, `nrow(cantones)`, `cantones[1:3, ]`, `summary(cantones)`. La función [`glimpse()`](https://dplyr.tidyverse.org/reference/glimpse.html) es la versión del tidyverse de `str()`: muestra cada columna en una fila, con su tipo y sus primeros valores, lo que resulta útil cuando hay muchas columnas.
+
+```{r}
+#| label: glimpse
+glimpse(cantones)
+```
+
+*Ejercicios de esta sección: [ejercicios sobre importación](#ejercicios-importacion).*
+
+## Datos *tidy*
+
+Los paquetes del tidyverse suponen que los datos están organizados de una forma precisa, que Wickham (2014) llamó ***tidy*** («ordenados»). Un conjunto de datos es *tidy* si cumple tres reglas:
+
+1. Cada **variable** es una columna.
+2. Cada **observación** es una fila.
+3. Cada **valor** es una celda.
+
+El data frame `cantones` es *tidy*: cada fila es un cantón (la observación), cada columna es una variable (provincia, nombre, población, área) y cada celda contiene un solo valor. Esa es la razón de que las operaciones de la sección II fueran tan directas: `cantones$poblacion` es un vector con la población de todos los cantones y `cantones$poblacion / cantones$area_km2` calcula la densidad de todos a la vez. Las mismas reglas describen la forma en que se organizan las tablas de una base de datos relacional y la forma en que los paquetes de la sección IV representan los datos geoespaciales: una fila por objeto geográfico, con sus atributos en columnas y su geometría en una más.
+
+Muchos datos, sin embargo, no vienen así, sobre todo cuando se preparan para ser leídos por personas. El caso más común es la **tabla ancha**, en la que una variable se reparte en varias columnas. La siguiente tabla, construida con [`tribble()`](https://tibble.tidyverse.org/reference/tribble.html) —una función para escribir tibbles pequeños fila por fila—, tiene la población de las provincias según el censo de 2011 (INEC, 2012) y la estimación de 2022 (INEC, 2023):
+
+```{r}
+#| label: tabla-ancha
+poblacion_ancha <- tribble(
+  ~provincia,   ~`2011`, ~`2022`,
+  "San José",   1404242, 1601167,
+  "Alajuela",    848146, 1035464,
+  "Cartago",     490903,  545092,
+  "Heredia",     433677,  479117,
+  "Guanacaste",  326953,  412808,
+  "Puntarenas",  410929,  500166,
+  "Limón",       386862,  470383
+)
+poblacion_ancha
+```
+
+Es fácil de leer, pero no es *tidy*: el año es una variable y está en los nombres de las columnas, en lugar de en una columna propia, y la población está repartida en dos columnas. Con esa organización no se puede, por ejemplo, graficar la población en función del año. La función [`pivot_longer()`](https://tidyr.tidyverse.org/reference/pivot_longer.html) de tidyr la convierte en una **tabla larga**, con una fila por combinación de provincia y año: `cols` indica las columnas que se van a reunir, `names_to` el nombre de la columna que recibirá sus nombres y `values_to` el de la que recibirá sus valores.
+
+```{r}
+#| label: pivot-longer
+poblacion_larga <- pivot_longer(
+  poblacion_ancha,
+  cols = c(`2011`, `2022`),
+  names_to = "anio",
+  values_to = "poblacion"
+)
+poblacion_larga
+```
+
+Observe que los nombres de columna que empiezan con un dígito deben escribirse entre acentos graves (`` `2011` ``). La operación inversa, [`pivot_wider()`](https://tidyr.tidyverse.org/reference/pivot_wider.html), produce una tabla ancha a partir de una larga; es útil al final del análisis, para presentar los resultados en una tabla compacta. Las demás funciones de tidyr —separar una columna en varias, unir varias en una, completar combinaciones faltantes— se documentan en tidyr (s. f.) y se recurre a ellas cuando los datos de cada tema lo requieran.
+
+*Ejercicios de esta sección: [ejercicios sobre datos tidy](#ejercicios-tidy).*
+
+## Resumen
+
+- El **tidyverse** es una colección de paquetes de R para ciencia de datos con una filosofía y una gramática comunes; su núcleo (readr, tibble, tidyr, dplyr, ggplot2, stringr, forcats, lubridate y purrr) se instala una sola vez con `install.packages("tidyverse")` y se carga en cada sesión con `library(tidyverse)`. En un documento Quarto, el bloque de carga lleva `#| message: false`.
+- **readr** importa datos rectangulares: `read_csv()` para archivos separados por comas, `read_csv2()` para los separados por punto y coma con coma decimal; los archivos de Excel se leen con readxl. El resultado es un **tibble**, un data frame que se imprime de forma compacta y muestra el tipo de cada columna; `glimpse()` resume su estructura.
+- Un conjunto de datos es ***tidy*** si cada variable es una columna, cada observación es una fila y cada valor es una celda. Las **tablas anchas**, con una variable repartida en varias columnas, se convierten en **largas** con `pivot_longer()` de tidyr; `pivot_wider()` hace lo contrario.
+
+## Ejercicios
+
+Los ejercicios se agrupan según la sección del capítulo a la que corresponden. Se realizan en un documento Quarto nuevo del proyecto `pf0953`, que continúa en los ejercicios del capítulo siguiente.
+
+### Importación {#ejercicios-importacion}
+
+1. En el proyecto `pf0953`, cree un documento Quarto con el título «Los cantones de Costa Rica con el tidyverse», su nombre como autor o autora, formato HTML y motor Knitr, y guárdelo como `tidyverse.qmd`. Borre la plantilla, deje el encabezado YAML con `lang: es`, `toc: true` y `embed-resources: true` (como en `cantones.qmd`), y agregue un bloque etiquetado `paquetes` que cargue el tidyverse con la opción `#| message: false`. Procese el documento con *Render* y compruebe que el mensaje de carga no aparece en el HTML.
+
+2. Agregue una sección «Datos» con un bloque etiquetado `importacion` que lea `cantones.csv` con `read_csv()` (por su URL o con la ruta relativa `datos/cantones.csv`, si descargó el archivo en el capítulo anterior) y muestre el tibble y el resultado de `glimpse()`. Compare lo que se imprime con lo que imprimía `read.csv()` en los capítulos anteriores: ¿qué información adicional muestra el tibble?
+
+3. Si ya cuenta con los datos del tema elegido en la tarea 1, guárdelos en una carpeta `datos` del proyecto y léalos en un bloque nuevo con la función que corresponda a su formato (`read_csv()`, `read_csv2()` o `read_excel()`). Aplique `glimpse()` y revise el tipo asignado a cada columna: ¿hay alguna columna numérica o de fecha que haya quedado como `chr`? Si es así, abra el archivo y busque la causa. Este bloque es el punto de partida de la tarea 2.
+
+### Datos *tidy* {#ejercicios-tidy}
+
+4. Para cada uno de los siguientes conjuntos de datos, indique si es *tidy* y, si no lo es, cuál de las tres reglas incumple y cómo se organizaría en forma *tidy*: (a) una tabla con una fila por estación meteorológica y una columna por mes con la precipitación; (b) una tabla con una fila por registro de presencia de una especie, con las columnas especie, fecha, longitud y latitud; (c) una tabla con una columna `coordenadas` que contiene textos como `"9.93, -84.08"`.
+
+5. **Prediga antes de ejecutar**: ¿cuántas filas y cuántas columnas tendrá el resultado de aplicar `pivot_longer()` a una tabla ancha con 84 cantones y tres columnas de años? Escriba en el documento la tabla `poblacion_ancha` de la sección [Datos *tidy*](#datos-tidy), conviértala en larga y luego vuelva a convertirla en ancha con `pivot_wider(names_from = anio, values_from = poblacion)`; compruebe que se recupera la tabla original.
+
+    <details>
+    <summary>Después de ejecutar, haga clic aquí para ver la explicación</summary>
+    Una tabla ancha de 84 filas y 3 columnas de años produce 84 × 3 = 252 filas, con 3 columnas (cantón, año y población): cada celda de valores de la tabla ancha se convierte en una fila. La tabla de las provincias, con 7 filas y 2 años, produce 14 filas; <code>pivot_wider()</code> deshace la operación.
+    </details>
+
+6. Con los datos de su tema (ejercicio 3), o con los de otro tema que le interese, identifique si la tabla es ancha o larga y anote en el documento, en prosa, qué transformación necesitaría para el análisis que tiene en mente.
+
+## Referencias bibliográficas
+
+Instituto Nacional de Estadística y Censos. (2012). *X Censo Nacional de Población y VI de Vivienda 2011: Resultados generales*. <https://sistemas.inec.cr/pad5/index.php/catalog/113>
+
+Instituto Nacional de Estadística y Censos. (2023). *Resultados de la Estimación de Población y Vivienda 2022* [archivo XLSX]. <https://admin.inec.cr/sites/default/files/2023-11/reResultadosEstimacionPoblacionVivienda2022_3.xlsx>
+
+tidyr. (s. f.). *Tidy data*. Recuperado el 17 de setiembre de 2026, de <https://tidyr.tidyverse.org/articles/tidy-data.html>
+
+tidyverse. (s. f.). *Tidyverse packages*. Recuperado el 17 de setiembre de 2026, de <https://www.tidyverse.org/packages/>
+
+Wickham, H. (2014). Tidy data. *Journal of Statistical Software, 59*(1), 1-23. <https://doi.org/10.18637/jss.v059.i10>
+
+Wickham, H., Çetinkaya-Rundel, M., y Grolemund, G. (2023). *R for data science: Import, tidy, transform, visualize, and model data* (2.ª ed.). O'Reilly Media. <https://r4ds.hadley.nz/>

@@ -1,0 +1,324 @@
+---
+title: "dplyr: transformación de datos"
+---
+
+## Trabajo previo
+
+### Lecturas
+
+Antes de la clase, revise las siguientes lecturas. La primera es el capítulo de *R for data science* que corresponde a este tema (lectura obligatoria de esta semana según el programa del curso, que asigna los capítulos 1 al 8 de ese libro; si dispone de poco tiempo, concéntrese en este). La segunda cubre la unión de conjuntos de datos; bastan sus tres primeras secciones. La tercera es la hoja de referencia de dplyr, que conviene tener a mano mientras se practica.
+
+Wickham, H., Çetinkaya-Rundel, M., y Grolemund, G. (2023). Data transformation. En *R for data science: Import, tidy, transform, visualize, and model data* (2.ª ed.). O'Reilly Media. <https://r4ds.hadley.nz/data-transform.html>
+
+Wickham, H., Çetinkaya-Rundel, M., y Grolemund, G. (2023). Joins. En *R for data science: Import, tidy, transform, visualize, and model data* (2.ª ed.). O'Reilly Media. <https://r4ds.hadley.nz/joins.html>
+
+Posit. (2024). *Data transformation with dplyr: Cheatsheet*. <https://rstudio.github.io/cheatsheets/data-transformation.pdf>
+
+### Otros recursos
+
+Tenga a mano el documento `tidyverse.qmd` de los ejercicios del [capítulo anterior](10-tidyverse.qmd), con el tidyverse cargado y los datos de los cantones importados: los ejercicios de este capítulo continúan ahí.
+
+## Introducción
+
+[dplyr](https://dplyr.tidyverse.org/) es el paquete del tidyverse para la **transformación de datos**: seleccionar columnas y filas, ordenarlas, crear columnas nuevas, agrupar, resumir y unir tablas. Se describe como una *gramática de manipulación de datos*, porque sus funciones son **verbos** —`select()`, `filter()`, `arrange()`, `mutate()`, `summarize()`— que se combinan en oraciones. Todos los verbos funcionan de la misma manera:
+
+1. El primer argumento es un data frame (o tibble).
+2. Los argumentos siguientes describen qué hacer con él, usando los nombres de las columnas **sin comillas** y sin el `$`.
+3. El resultado es un data frame nuevo; el original no se modifica.
+
+Esa uniformidad es lo que permite encadenar los verbos con el operador *pipe* (`|>`), de modo que un análisis se lee de arriba abajo como una secuencia de pasos. Todo lo que hace dplyr puede hacerse con el R base de la sección II (la tabla 1 muestra las equivalencias), pero el código con dplyr es más fácil de leer, de escribir y de modificar, y es el que se encuentra en la mayor parte de la documentación, los libros y los ejemplos actuales de R.
+
+<figure style="text-align: center; margin: 20px 0;">
+    <figcaption><strong>Tabla 1</strong>. Operaciones con data frames en el R base y en dplyr. Fuente: elaboración propia.</figcaption>
+    <table class="table table-bordered table-striped" style="margin: 0 auto;">
+    <thead>
+    <tr><th>Operación</th><th>R base (sección II)</th><th>dplyr</th></tr>
+    </thead>
+    <tbody>
+    <tr><td>Seleccionar columnas</td><td><code>cantones[, c("canton", "poblacion")]</code></td><td><code>select(cantones, canton, poblacion)</code></td></tr>
+    <tr><td>Filtrar filas</td><td><code>cantones[cantones&#36;provincia == "Heredia", ]</code></td><td><code>filter(cantones, provincia == "Heredia")</code></td></tr>
+    <tr><td>Ordenar</td><td><code>cantones[order(-cantones&#36;poblacion), ]</code></td><td><code>arrange(cantones, desc(poblacion))</code></td></tr>
+    <tr><td>Crear una columna</td><td><code>cantones&#36;densidad &lt;- cantones&#36;poblacion / cantones&#36;area_km2</code></td><td><code>mutate(cantones, densidad = poblacion / area_km2)</code></td></tr>
+    <tr><td>Agrupar y resumir</td><td><code>aggregate(poblacion ~ provincia, data = cantones, FUN = sum)</code></td><td><code>cantones |> group_by(provincia) |> summarize(poblacion = sum(poblacion))</code></td></tr>
+    <tr><td>Unir tablas</td><td><code>merge(cantones, provincias, by = "provincia")</code></td><td><code>left_join(cantones, provincias, by = "provincia")</code></td></tr>
+    </tbody>
+    </table>
+</figure>
+
+Los ejemplos usan los datos de los cantones (INEC, 2023), importados con readr como en el capítulo anterior.
+
+```{r}
+#| label: paquetes
+#| message: false
+library(tidyverse)
+cantones <- read_csv("https://raw.githubusercontent.com/pf0953-programacionr/2026-ii/main/datos/cantones.csv")
+```
+
+## Los verbos
+
+### `select()`: columnas
+
+[`select()`](https://dplyr.tidyverse.org/reference/select.html) elige columnas por su nombre. Se pueden listar las que se quieren conservar, excluir alguna con el signo menos o indicar un rango con dos puntos.
+
+```{r}
+#| label: select
+select(cantones, canton, poblacion)
+select(cantones, -area_km2)
+```
+
+Para cambiar el nombre de una columna al seleccionarla se escribe `nuevo = viejo`; [`rename()`](https://dplyr.tidyverse.org/reference/rename.html) cambia nombres sin descartar columnas. Nombres de columna cortos, en minúsculas, sin espacios ni tildes, como los de `cantones`, evitan problemas más adelante.
+
+### `filter()`: filas
+
+[`filter()`](https://dplyr.tidyverse.org/reference/filter.html) conserva las filas que cumplen una condición, que se escribe con los operadores de comparación (`==`, `!=`, `>`, `>=`, `<`, `<=`) y lógicos (`&`, `|`, `!`) del [capítulo de vectores](../ii-lenguaje-programacion-r/07-fundamentos-r-i.qmd#comparaciones-y-filtrado). Es lo mismo que el filtrado con un vector lógico entre corchetes, pero sin repetir el nombre del data frame.
+
+```{r}
+#| label: filter
+filter(cantones, provincia == "Heredia")
+```
+
+Varias condiciones separadas por comas equivalen a `&`: todas deben cumplirse. El operador `%in%` comprueba la pertenencia a un conjunto de valores y evita encadenar varios `|`.
+
+```{r}
+#| label: filter-varias
+filter(cantones, provincia == "Heredia", poblacion > 50000)
+filter(cantones, provincia %in% c("Heredia", "Cartago"))
+```
+
+Dos advertencias. La igualdad se escribe con `==`; con un solo `=`, dplyr detecta el error y sugiere la corrección. Y la comparación de textos distingue mayúsculas y tildes: `provincia == "heredia"` no produce un error, sino cero filas.
+
+### `arrange()`: orden
+
+[`arrange()`](https://dplyr.tidyverse.org/reference/arrange.html) ordena las filas según una o más columnas, de forma ascendente; [`desc()`](https://dplyr.tidyverse.org/reference/desc.html) invierte el orden de una columna.
+
+```{r}
+#| label: arrange
+arrange(cantones, desc(poblacion))
+```
+
+### `mutate()`: columnas nuevas
+
+[`mutate()`](https://dplyr.tidyverse.org/reference/mutate.html) agrega columnas calculadas a partir de las existentes; la operación se aplica a todas las filas a la vez, como en la aritmética vectorizada de la sección II. Puesto que los verbos no modifican el data frame original, para conservar la columna nueva hay que asignar el resultado.
+
+```{r}
+#| label: mutate
+cantones <- mutate(cantones, densidad = poblacion / area_km2)
+cantones
+```
+
+Dentro de `mutate()` se usa cualquier función vectorizada. [`if_else()`](https://dplyr.tidyverse.org/reference/if_else.html) es la versión de dplyr del `ifelse()` del [capítulo de condicionales](../ii-lenguaje-programacion-r/08-fundamentos-r-ii.qmd), más estricta con los tipos de datos, y [`case_when()`](https://dplyr.tidyverse.org/reference/case_when.html) generaliza a más de dos categorías.
+
+```{r}
+#| label: mutate-if-else
+cantones <- mutate(cantones, tipo = if_else(densidad > 100, "urbano", "rural"))
+select(cantones, canton, densidad, tipo)
+```
+
+*Ejercicios de esta sección: [ejercicios sobre los verbos](#ejercicios-verbos).*
+
+## El *pipe*
+
+Casi ninguna pregunta se responde con un solo verbo. Para obtener los cinco cantones más densos, con su provincia, hay que ordenar, seleccionar columnas y tomar las primeras filas. Sin ayuda, las llamadas se anidan y se leen de adentro hacia afuera:
+
+```{r}
+#| label: anidado
+head(select(arrange(cantones, desc(densidad)), canton, provincia, densidad), 5)
+```
+
+El operador ***pipe*** `|>` toma el resultado de la expresión a su izquierda y lo pasa como **primer argumento** de la función a su derecha: `x |> f(y)` equivale a `f(x, y)`. Como el primer argumento de todo verbo de dplyr es el data frame, una cadena de verbos se lee de arriba abajo, un paso por línea, y se pronuncia «y luego»:
+
+```{r}
+#| label: pipe
+cantones |>
+  arrange(desc(densidad)) |>
+  select(canton, provincia, densidad) |>
+  head(5)
+```
+
+Una cadena de este tipo se llama ***pipeline***. Por convención, cada verbo va en su propia línea, sangrada, y el *pipe* se escribe **al final** de la línea (nunca al inicio de la siguiente, donde R lo reporta como `unexpected '|>'`). En RStudio, `Ctrl + Shift + M` inserta el operador; si inserta `%>%` —el *pipe* del paquete magrittr, anterior al de R y que hace lo mismo—, se cambia en *Tools > Global Options > Code > Use native pipe operator*. El `%>%` aparece en mucho código publicado antes de 2021; se puede leer exactamente igual.
+
+Con el *pipe*, las operaciones de la sección anterior se escriben así; observe que `mutate()` reemplaza a la asignación con `$` de los capítulos anteriores:
+
+```{r}
+#| label: pipe-mutate
+cantones <- cantones |>
+  mutate(tipo = if_else(densidad > 100, "urbano", "rural"))
+
+cantones |>
+  filter(tipo == "urbano") |>
+  arrange(provincia, desc(densidad)) |>
+  select(provincia, canton, densidad)
+```
+
+## Agrupación y sumarización
+
+[`summarize()`](https://dplyr.tidyverse.org/reference/summarise.html) (también `summarise()`) reduce muchas filas a una: cada argumento define una columna del resultado a partir de una función que devuelve un solo valor, como `sum()`, `mean()`, `min()`, `max()` o [`n()`](https://dplyr.tidyverse.org/reference/context.html), que cuenta las filas.
+
+```{r}
+#| label: summarize
+cantones |>
+  summarize(
+    poblacion_total = sum(poblacion),
+    area_total = sum(area_km2),
+    cantones = n()
+  )
+```
+
+Su verdadera utilidad aparece con [`group_by()`](https://dplyr.tidyverse.org/reference/group_by.html), que divide las filas en grupos según los valores de una o más columnas; los verbos que siguen operan grupo por grupo, y `summarize()` produce una fila por grupo. Es lo que hacía `aggregate()` en la sección II, pero con varias estadísticas a la vez y encadenable con los demás verbos:
+
+```{r}
+#| label: group-by
+resumen_provincias <- cantones |>
+  group_by(provincia) |>
+  summarize(
+    cantones = n(),
+    poblacion = sum(poblacion),
+    area_km2 = sum(area_km2)
+  ) |>
+  mutate(densidad = poblacion / area_km2) |>
+  arrange(desc(densidad))
+resumen_provincias
+```
+
+Cuando lo único que interesa es cuántas filas hay por grupo, [`count()`](https://dplyr.tidyverse.org/reference/count.html) abrevia `group_by()` seguido de `summarize(n = n())`; con `sort = TRUE` ordena de mayor a menor. Se puede agrupar por más de una columna:
+
+```{r}
+#| label: count
+cantones |> count(provincia, sort = TRUE)
+cantones |> count(provincia, tipo)
+```
+
+Un detalle que no se presenta con `cantones`, pero sí con muchos datos reales: si una columna tiene **valores faltantes** (`NA`), funciones como `sum()` y `mean()` devuelven `NA`; el argumento `na.rm = TRUE` los omite del cálculo (`mean(precipitacion, na.rm = TRUE)`). Otras funciones útiles en esta etapa son [`distinct()`](https://dplyr.tidyverse.org/reference/distinct.html), que devuelve los valores distintos de una o más columnas, y [`slice_max()`](https://dplyr.tidyverse.org/reference/slice.html) y `slice_min()`, que toman las filas con los valores mayores o menores de una columna, también por grupo:
+
+```{r}
+#| label: slice-max
+cantones |>
+  group_by(provincia) |>
+  slice_max(poblacion, n = 1) |>
+  select(provincia, canton, poblacion)
+```
+
+*Ejercicios de esta sección: [ejercicios sobre agrupación y sumarización](#ejercicios-agrupacion).*
+
+## Unión de conjuntos de datos
+
+Con frecuencia la información necesaria está repartida en dos tablas que comparten una columna. Por ejemplo, para calcular qué porcentaje de la población de su provincia vive en cada cantón se necesita la población de la provincia, que está en `resumen_provincias`, junto a la del cantón, que está en `cantones`. Las **uniones** (*joins*) combinan dos data frames por una **clave**: la columna, o las columnas, con los mismos valores en ambos.
+
+[`left_join()`](https://dplyr.tidyverse.org/reference/mutate-joins.html) conserva **todas** las filas del data frame de la izquierda (el primero) y les agrega las columnas del de la derecha, emparejando por la clave indicada en `by`; si una fila no encuentra pareja, sus columnas nuevas quedan en `NA`.
+
+```{r}
+#| label: left-join
+poblacion_provincias <- resumen_provincias |>
+  select(provincia, poblacion_provincia = poblacion)
+
+cantones |>
+  left_join(poblacion_provincias, by = "provincia") |>
+  mutate(porcentaje = round(100 * poblacion / poblacion_provincia, 1)) |>
+  select(canton, provincia, poblacion, porcentaje) |>
+  arrange(desc(porcentaje))
+```
+
+Si la clave tiene nombres distintos en las dos tablas, se indica la correspondencia: `by = c("provincia" = "nombre_provincia")`. Las tablas de referencia pequeñas —códigos, categorías, capitales— suelen escribirse a mano con `tribble()`, como en el capítulo anterior:
+
+```{r}
+#| label: join-capitales
+capitales <- tribble(
+  ~provincia,   ~capital,
+  "San José",   "San José",
+  "Alajuela",   "Alajuela",
+  "Cartago",    "Cartago",
+  "Heredia",    "Heredia",
+  "Guanacaste", "Liberia",
+  "Puntarenas", "Puntarenas",
+  "Limón",      "Limón"
+)
+
+resumen_provincias |>
+  left_join(capitales, by = "provincia") |>
+  select(provincia, capital, poblacion)
+```
+
+[`inner_join()`](https://dplyr.tidyverse.org/reference/mutate-joins.html) conserva solo las filas con pareja en ambas tablas, y [`full_join()`](https://dplyr.tidyverse.org/reference/mutate-joins.html), todas las de ambas. Con `left_join()` e `inner_join()` se resuelve casi todo; [`anti_join()`](https://dplyr.tidyverse.org/reference/filter-joins.html), que devuelve las filas **sin** pareja, sirve para averiguar cuáles claves no coincidieron. Y esa es la advertencia principal: una unión no falla cuando las claves no coinciden exactamente —un espacio al final, una tilde, una mayúscula—, sino que deja `NA` en silencio. Antes de una unión conviene comparar los valores distintos de la clave en las dos tablas, y después, contar los `NA` del resultado.
+
+*Ejercicios de esta sección: [ejercicios sobre uniones](#ejercicios-uniones).*
+
+## Clínica de errores
+
+La tabla 2 recoge los errores más frecuentes al empezar con dplyr; los mensajes de dplyr son más explicativos que los del R base y con frecuencia sugieren la solución.
+
+<figure style="text-align: center; margin: 20px 0;">
+    <figcaption><strong>Tabla 2</strong>. Clínica de errores de dplyr. Fuente: elaboración propia.</figcaption>
+    <table class="table table-bordered table-striped" style="margin: 0 auto;">
+    <thead>
+    <tr><th>Mensaje o síntoma</th><th>Causa</th><th>Solución</th></tr>
+    </thead>
+    <tbody>
+    <tr><td><code>We detected a named input. This usually means that you've used `=` instead of `==`</code></td><td>Un solo <code>=</code> en la condición de <code>filter()</code>.</td><td>Usar <code>==</code>.</td></tr>
+    <tr><td><code>object 'Provincia' not found</code> dentro de un verbo</td><td>El nombre de la columna está mal escrito (mayúsculas, tildes) o la columna no existe en ese punto del <em>pipeline</em> (por ejemplo, se descartó con <code>select()</code>).</td><td>Revisar los nombres con <code>glimpse()</code> y el orden de los verbos.</td></tr>
+    <tr><td><code>filter()</code> devuelve 0 filas sin error</td><td>La comparación de textos no coincide exactamente («heredia», «Heredia »).</td><td>Revisar los valores con <code>distinct()</code>.</td></tr>
+    <tr><td><code>unexpected '|>'</code></td><td>El <em>pipe</em> está al inicio de una línea.</td><td>Escribirlo al final de la línea anterior.</td></tr>
+    <tr><td><code>could not find function "filter"</code> o <code>object 'cantones' not found</code> al hacer <em>Render</em>, aunque el bloque funciona con la flecha verde</td><td>En la sesión limpia de Quarto no se ha ejecutado <code>library(tidyverse)</code> o el bloque de importación, o está después del bloque que lo usa.</td><td>Revisar que los bloques de paquetes e importación estén en el documento y antes de los que los necesitan.</td></tr>
+    <tr><td><code>summarize()</code> devuelve <code>NA</code></td><td>La columna tiene valores faltantes.</td><td>Agregar <code>na.rm = TRUE</code> a la función de resumen.</td></tr>
+    <tr><td>Una unión produce <code>NA</code> en las columnas nuevas</td><td>Las claves no coinciden exactamente en las dos tablas.</td><td>Comparar los valores distintos de la clave; <code>anti_join()</code> muestra las filas sin pareja.</td></tr>
+    <tr><td>El resultado de un verbo «se perdió»</td><td>No se asignó el resultado: los verbos no modifican el data frame original.</td><td>Asignar con <code>&lt;-</code> cuando el resultado se necesita después.</td></tr>
+    </tbody>
+    </table>
+</figure>
+
+## Resumen
+
+- dplyr es una **gramática de transformación de datos** cuyos **verbos** reciben un data frame como primer argumento, usan los nombres de las columnas sin comillas y devuelven un data frame nuevo: `select()` elige columnas, `filter()` filas, `arrange()` ordena, `mutate()` crea columnas y `summarize()` resume.
+- El ***pipe*** `|>` pasa el resultado de la izquierda como primer argumento de la función de la derecha, con lo que un análisis se escribe como un ***pipeline*** que se lee de arriba abajo, un verbo por línea y el operador al final de cada una.
+- `group_by()` divide las filas en **grupos** y `summarize()` produce una fila por grupo con funciones como `sum()`, `mean()` y `n()`; `count()` abrevia el conteo por grupo y `na.rm = TRUE` omite los valores faltantes.
+- Las **uniones** combinan dos tablas por una **clave** común: `left_join()` conserva todas las filas de la izquierda, `inner_join()` solo las emparejadas; las claves que no coinciden exactamente producen `NA`, no errores.
+
+## Ejercicios
+
+Los ejercicios se agrupan según la sección del capítulo a la que corresponden y continúan el documento `tidyverse.qmd` del capítulo anterior, con el tidyverse cargado y `cantones` importado. Como en la sección II, use la provincia y el cantón elegidos como ejemplo propio. Al terminar, procese el documento completo con *Render* y publíquelo junto con `cantones.qmd` en el repositorio `practica-quarto` del [capítulo de Quarto](../ii-lenguaje-programacion-r/09-quarto.qmd#ejercicios-publicacion).
+
+### Los verbos y el *pipe* {#ejercicios-verbos}
+
+1. En una sección «Mi provincia», escriba un *pipeline* que muestre los cantones de su provincia ordenados de mayor a menor densidad, solo con las columnas `canton` y `densidad`, y limitado a los tres primeros. Antes de ejecutarlo, prediga cuántas filas y columnas tendrá el resultado.
+
+2. Reescriba con verbos de dplyr y el *pipe* la siguiente expresión del R base, y compruebe que ambas producen el mismo resultado: `cantones[cantones$densidad > 1000 & cantones$area_km2 < 20, c("canton", "densidad")]`.
+
+3. Con `mutate()` y `case_when()`, agregue una columna `tamano` con tres categorías según la población: «pequeño» (menos de 30 000 habitantes), «mediano» (de 30 000 a 100 000) y «grande» (más de 100 000). Consulte la documentación de `case_when()` (`?case_when`) para la sintaxis. ¿Cuántos cantones hay de cada tamaño?
+
+4. **Prediga antes de ejecutar** qué muestra cada línea; luego ejecute:
+
+    ```r
+    cantones |> filter(provincia == "Heredia") |> nrow()
+    cantones |> select(canton) |> filter(provincia == "Heredia")
+    cantones |> arrange(desc(area_km2)) |> slice_head(n = 1) |> select(canton)
+    ```
+
+    <details>
+    <summary>Después de ejecutar, haga clic aquí para ver la explicación</summary>
+    La primera línea muestra <code>10</code>: <code>nrow()</code> funciona igual con un tibble. La segunda falla con <code>object 'provincia' not found</code>: <code>select()</code> descartó la columna antes de que <code>filter()</code> la usara; el orden de los verbos importa. La tercera muestra <code>San Carlos</code>, el cantón más extenso del país; <code>slice_head()</code> toma las primeras filas, como <code>head()</code>.
+    </details>
+
+### Agrupación y sumarización {#ejercicios-agrupacion}
+
+5. Calcule, para cada provincia, la población promedio de sus cantones y el cantón más poblado (con `slice_max()` en otro *pipeline*), y ordene el resultado de mayor a menor promedio. Limón es de las provincias menos densas y, sin embargo, queda entre las de mayor promedio: explique por qué, con ayuda de `count()`.
+
+6. ¿Cuántos cantones urbanos y rurales (columna `tipo`) hay en cada provincia? Resuélvalo de dos maneras: con `group_by()` y `summarize()`, y con `count()`. Luego, con `pivot_wider()` del capítulo anterior, presente el resultado como una tabla con una fila por provincia y una columna por tipo.
+
+7. El ejercicio 9 de la lectura complementaria del [capítulo de Fundamentos de R II](../ii-lenguaje-programacion-r/08-fundamentos-r-ii.qmd#ejercicios-complementarios) pedía contar los cantones de cada provincia con un ciclo `for`. Resuélvalo sin ciclos, en un solo *pipeline* que produzca una tabla con la provincia, la cantidad de cantones, la población total y la densidad de cada provincia, redondeada a un decimal con `round()`, y clasifique cada provincia como urbana o rural con `if_else()`.
+
+### Uniones {#ejercicios-uniones}
+
+8. Con `left_join()`, agregue a `cantones` la columna `capital` de la tabla `capitales` de la sección [Unión de conjuntos de datos](#unión-de-conjuntos-de-datos) y, con `filter()`, obtenga los cantones cuyo nombre coincide con el de la capital de su provincia. ¿Cuántos son y por qué no son siete?
+
+9. **Prediga antes de ejecutar**: modifique la tabla `capitales` escribiendo `"Limon"` (sin tilde) y repita la unión con `resumen_provincias`. ¿Qué aparece en la fila de Limón? Compruébelo, y luego use `anti_join(resumen_provincias, capitales, by = "provincia")` para obtener las filas sin pareja. Explique por qué este tipo de error es más peligroso que uno que detiene la ejecución.
+
+10. Si ya tiene los datos de su tema, identifique una tabla de referencia que le convendría unirles (por ejemplo, los nombres de las provincias o cantones a partir de sus códigos, o las categorías de una clasificación) y escriba, en prosa, cuál sería la clave y qué tipo de unión usaría. Si la tabla es pequeña, escríbala con `tribble()` y haga la unión.
+
+## Referencias bibliográficas
+
+Instituto Nacional de Estadística y Censos. (2023). *Resultados de la Estimación de Población y Vivienda 2022* [archivo XLSX]. <https://admin.inec.cr/sites/default/files/2023-11/reResultadosEstimacionPoblacionVivienda2022_3.xlsx>
+
+Posit. (2024). *Data transformation with dplyr: Cheatsheet*. <https://rstudio.github.io/cheatsheets/data-transformation.pdf>
+
+Wickham, H., Çetinkaya-Rundel, M., y Grolemund, G. (2023). *R for data science: Import, tidy, transform, visualize, and model data* (2.ª ed.). O'Reilly Media. <https://r4ds.hadley.nz/>
+
+Wickham, H., François, R., Henry, L., Müller, K., y Vaughan, D. (2023). *dplyr: A grammar of data manipulation* (versión 1.1.4) [paquete de R]. <https://dplyr.tidyverse.org/>
