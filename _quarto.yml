@@ -60,6 +60,7 @@ website:
         contents:
           - contenidos/iii-tidyverse/10-tidyverse.qmd
           - contenidos/iii-tidyverse/11-dplyr.qmd
+          - contenidos/iii-tidyverse/12-ggplot2.qmd
       - section: "Evaluaciones"
         contents:
           - contenidos/evaluaciones/tarea-01.qmd
