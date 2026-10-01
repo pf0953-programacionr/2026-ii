@@ -413,6 +413,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="menu-text">dplyr: transformación de datos</span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../contenidos/iii-tidyverse/12-ggplot2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">ggplot2: gramática de gráficos</span></a>
+  </div>
+</li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
@@ -557,7 +563,7 @@ dplyr
 Seleccionar columnas
 </td>
 <td>
-<code>cantones[, c(“canton”, “poblacion”)]</code>
+<code>cantones[, c("canton", "poblacion")]</code>
 </td>
 <td>
 <code>select(cantones, canton, poblacion)</code>
@@ -568,10 +574,10 @@ Seleccionar columnas
 Filtrar filas
 </td>
 <td>
-<code>cantones[cantones$provincia == “Heredia”, ]</code>
+<code>cantones[cantones$provincia == "Heredia", ]</code>
 </td>
 <td>
-<code>filter(cantones, provincia == “Heredia”)</code>
+<code>filter(cantones, provincia == "Heredia")</code>
 </td>
 </tr>
 <tr>
@@ -612,10 +618,10 @@ Agrupar y resumir
 Unir tablas
 </td>
 <td>
-<code>merge(cantones, provincias, by = “provincia”)</code>
+<code>merge(cantones, provincias, by = "provincia")</code>
 </td>
 <td>
-<code>left_join(cantones, provincias, by = “provincia”)</code>
+<code>left_join(cantones, provincias, by = "provincia")</code>
 </td>
 </tr>
 </tbody>
@@ -1043,7 +1049,7 @@ Solución
 <tbody>
 <tr>
 <td>
-<code>We detected a named input. This usually means that you’ve used <code>=</code> instead of <code>==</code></code>
+<code>We detected a named input. This usually means that you've used `=` instead of `==`</code>
 </td>
 <td>
 Un solo <code>=</code> en la condición de <code>filter()</code>.
@@ -1054,7 +1060,7 @@ Usar <code>==</code>.
 </tr>
 <tr>
 <td>
-<code>object ‘Provincia’ not found</code> dentro de un verbo
+<code>object 'Provincia' not found</code> dentro de un verbo
 </td>
 <td>
 El nombre de la columna está mal escrito (mayúsculas, tildes) o la columna no existe en ese punto del <em>pipeline</em> (por ejemplo, se descartó con <code>select()</code>).
@@ -1076,7 +1082,7 @@ Revisar los valores con <code>distinct()</code>.
 </tr>
 <tr>
 <td>
-<code>unexpected ‘|&gt;’</code>
+<code>unexpected '|&gt;'</code>
 </td>
 <td>
 El <em>pipe</em> está al inicio de una línea.
@@ -1087,7 +1093,7 @@ Escribirlo al final de la línea anterior.
 </tr>
 <tr>
 <td>
-<code>could not find function “filter”</code> o <code>object ‘cantones’ not found</code> al hacer <em>Render</em>, aunque el bloque funciona con la flecha verde
+<code>could not find function "filter"</code> o <code>object 'cantones' not found</code> al hacer <em>Render</em>, aunque el bloque funciona con la flecha verde
 </td>
 <td>
 En la sesión limpia de Quarto no se ha ejecutado <code>library(tidyverse)</code> o el bloque de importación, o está después del bloque que lo usa.
@@ -1159,7 +1165,7 @@ Asignar con <code>&lt;-</code> cuando el resultado se necesita después.
 <summary>
 <p>Después de ejecutar, haga clic aquí para ver la explicación</p>
 </summary>
-<p>La primera línea muestra <code>10</code>: <code>nrow()</code> funciona igual con un tibble. La segunda falla con <code>object ‘provincia’ not found</code>: <code>select()</code> descartó la columna antes de que <code>filter()</code> la usara; el orden de los verbos importa. La tercera muestra <code>San Carlos</code>, el cantón más extenso del país; <code>slice_head()</code> toma las primeras filas, como <code>head()</code>.</p>
+<p>La primera línea muestra <code>10</code>: <code>nrow()</code> funciona igual con un tibble. La segunda falla con <code>object 'provincia' not found</code>: <code>select()</code> descartó la columna antes de que <code>filter()</code> la usara; el orden de los verbos importa. La tercera muestra <code>San Carlos</code>, el cantón más extenso del país; <code>slice_head()</code> toma las primeras filas, como <code>head()</code>.</p>
 </details></li>
 </ol>
 </section>
