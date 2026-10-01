@@ -39,7 +39,7 @@ El núcleo del tidyverse lo forman [nueve paquetes](https://www.tidyverse.org/pa
     <tr><td><a href="https://tibble.tidyverse.org/">tibble</a></td><td>Una versión moderna del data frame, más cómoda de imprimir y más estricta.</td><td>Este capítulo.</td></tr>
     <tr><td><a href="https://tidyr.tidyverse.org/">tidyr</a></td><td>Organización de los datos en forma <em>tidy</em>: cambiar entre formatos anchos y largos, separar y unir columnas.</td><td>Este capítulo.</td></tr>
     <tr><td><a href="https://dplyr.tidyverse.org/">dplyr</a></td><td>Transformación de datos: una gramática de «verbos» para seleccionar, filtrar, ordenar, agrupar, resumir y unir.</td><td>Siguiente capítulo.</td></tr>
-    <tr><td><a href="https://ggplot2.tidyverse.org/">ggplot2</a></td><td>Gráficos estadísticos, con base en la gramática de gráficos.</td><td>Semana 7.</td></tr>
+    <tr><td><a href="https://ggplot2.tidyverse.org/">ggplot2</a></td><td>Gráficos estadísticos, con base en la gramática de gráficos.</td><td><a href="12-ggplot2.qmd">Capítulo 12</a>.</td></tr>
     <tr><td><a href="https://stringr.tidyverse.org/">stringr</a></td><td>Manipulación de hileras de caracteres.</td><td>Según lo requieran los datos de cada tema.</td></tr>
     <tr><td><a href="https://forcats.tidyverse.org/">forcats</a></td><td>Manipulación de factores (variables categóricas).</td><td>Con ggplot2, para ordenar categorías.</td></tr>
     <tr><td><a href="https://lubridate.tidyverse.org/">lubridate</a></td><td>Manipulación de fechas y horas.</td><td>Según lo requieran los datos de cada tema.</td></tr>

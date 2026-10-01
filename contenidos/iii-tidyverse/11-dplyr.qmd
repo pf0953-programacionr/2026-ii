@@ -35,12 +35,12 @@ Esa uniformidad es lo que permite encadenar los verbos con el operador *pipe* (`
     <tr><th>Operación</th><th>R base (sección II)</th><th>dplyr</th></tr>
     </thead>
     <tbody>
-    <tr><td>Seleccionar columnas</td><td><code>cantones[, c("canton", "poblacion")]</code></td><td><code>select(cantones, canton, poblacion)</code></td></tr>
-    <tr><td>Filtrar filas</td><td><code>cantones[cantones&#36;provincia == "Heredia", ]</code></td><td><code>filter(cantones, provincia == "Heredia")</code></td></tr>
+    <tr><td>Seleccionar columnas</td><td><code>cantones[, c(&quot;canton&quot;, &quot;poblacion&quot;)]</code></td><td><code>select(cantones, canton, poblacion)</code></td></tr>
+    <tr><td>Filtrar filas</td><td><code>cantones[cantones&#36;provincia == &quot;Heredia&quot;, ]</code></td><td><code>filter(cantones, provincia == &quot;Heredia&quot;)</code></td></tr>
     <tr><td>Ordenar</td><td><code>cantones[order(-cantones&#36;poblacion), ]</code></td><td><code>arrange(cantones, desc(poblacion))</code></td></tr>
     <tr><td>Crear una columna</td><td><code>cantones&#36;densidad &lt;- cantones&#36;poblacion / cantones&#36;area_km2</code></td><td><code>mutate(cantones, densidad = poblacion / area_km2)</code></td></tr>
     <tr><td>Agrupar y resumir</td><td><code>aggregate(poblacion ~ provincia, data = cantones, FUN = sum)</code></td><td><code>cantones |> group_by(provincia) |> summarize(poblacion = sum(poblacion))</code></td></tr>
-    <tr><td>Unir tablas</td><td><code>merge(cantones, provincias, by = "provincia")</code></td><td><code>left_join(cantones, provincias, by = "provincia")</code></td></tr>
+    <tr><td>Unir tablas</td><td><code>merge(cantones, provincias, by = &quot;provincia&quot;)</code></td><td><code>left_join(cantones, provincias, by = &quot;provincia&quot;)</code></td></tr>
     </tbody>
     </table>
 </figure>
@@ -253,11 +253,11 @@ La tabla 2 recoge los errores más frecuentes al empezar con dplyr; los mensajes
     <tr><th>Mensaje o síntoma</th><th>Causa</th><th>Solución</th></tr>
     </thead>
     <tbody>
-    <tr><td><code>We detected a named input. This usually means that you've used `=` instead of `==`</code></td><td>Un solo <code>=</code> en la condición de <code>filter()</code>.</td><td>Usar <code>==</code>.</td></tr>
-    <tr><td><code>object 'Provincia' not found</code> dentro de un verbo</td><td>El nombre de la columna está mal escrito (mayúsculas, tildes) o la columna no existe en ese punto del <em>pipeline</em> (por ejemplo, se descartó con <code>select()</code>).</td><td>Revisar los nombres con <code>glimpse()</code> y el orden de los verbos.</td></tr>
+    <tr><td>``We detected a named input. This usually means that you've used `=` instead of `==` ``</td><td>Un solo <code>=</code> en la condición de <code>filter()</code>.</td><td>Usar <code>==</code>.</td></tr>
+    <tr><td><code>object &#39;Provincia&#39; not found</code> dentro de un verbo</td><td>El nombre de la columna está mal escrito (mayúsculas, tildes) o la columna no existe en ese punto del <em>pipeline</em> (por ejemplo, se descartó con <code>select()</code>).</td><td>Revisar los nombres con <code>glimpse()</code> y el orden de los verbos.</td></tr>
     <tr><td><code>filter()</code> devuelve 0 filas sin error</td><td>La comparación de textos no coincide exactamente («heredia», «Heredia »).</td><td>Revisar los valores con <code>distinct()</code>.</td></tr>
-    <tr><td><code>unexpected '|>'</code></td><td>El <em>pipe</em> está al inicio de una línea.</td><td>Escribirlo al final de la línea anterior.</td></tr>
-    <tr><td><code>could not find function "filter"</code> o <code>object 'cantones' not found</code> al hacer <em>Render</em>, aunque el bloque funciona con la flecha verde</td><td>En la sesión limpia de Quarto no se ha ejecutado <code>library(tidyverse)</code> o el bloque de importación, o está después del bloque que lo usa.</td><td>Revisar que los bloques de paquetes e importación estén en el documento y antes de los que los necesitan.</td></tr>
+    <tr><td><code>unexpected &#39;|>&#39;</code></td><td>El <em>pipe</em> está al inicio de una línea.</td><td>Escribirlo al final de la línea anterior.</td></tr>
+    <tr><td><code>could not find function &quot;filter&quot;</code> o <code>object &#39;cantones&#39; not found</code> al hacer <em>Render</em>, aunque el bloque funciona con la flecha verde</td><td>En la sesión limpia de Quarto no se ha ejecutado <code>library(tidyverse)</code> o el bloque de importación, o está después del bloque que lo usa.</td><td>Revisar que los bloques de paquetes e importación estén en el documento y antes de los que los necesitan.</td></tr>
     <tr><td><code>summarize()</code> devuelve <code>NA</code></td><td>La columna tiene valores faltantes.</td><td>Agregar <code>na.rm = TRUE</code> a la función de resumen.</td></tr>
     <tr><td>Una unión produce <code>NA</code> en las columnas nuevas</td><td>Las claves no coinciden exactamente en las dos tablas.</td><td>Comparar los valores distintos de la clave; <code>anti_join()</code> muestra las filas sin pareja.</td></tr>
     <tr><td>El resultado de un verbo «se perdió»</td><td>No se asignó el resultado: los verbos no modifican el data frame original.</td><td>Asignar con <code>&lt;-</code> cuando el resultado se necesita después.</td></tr>
@@ -294,7 +294,7 @@ Los ejercicios se agrupan según la sección del capítulo a la que corresponden
 
     <details>
     <summary>Después de ejecutar, haga clic aquí para ver la explicación</summary>
-    La primera línea muestra <code>10</code>: <code>nrow()</code> funciona igual con un tibble. La segunda falla con <code>object 'provincia' not found</code>: <code>select()</code> descartó la columna antes de que <code>filter()</code> la usara; el orden de los verbos importa. La tercera muestra <code>San Carlos</code>, el cantón más extenso del país; <code>slice_head()</code> toma las primeras filas, como <code>head()</code>.
+    La primera línea muestra <code>10</code>: <code>nrow()</code> funciona igual con un tibble. La segunda falla con <code>object &#39;provincia&#39; not found</code>: <code>select()</code> descartó la columna antes de que <code>filter()</code> la usara; el orden de los verbos importa. La tercera muestra <code>San Carlos</code>, el cantón más extenso del país; <code>slice_head()</code> toma las primeras filas, como <code>head()</code>.
     </details>
 
 ### Agrupación y sumarización {#ejercicios-agrupacion}
