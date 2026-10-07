@@ -1,0 +1,81 @@
+---
+title: Tarea 2
+---
+
+La segunda tarea del curso es un ejercicio **individual**, con un valor del **15 %** de la calificación final, según lo establecido en el [programa del curso](../../programa/programa.md). Su propósito es procesar con los paquetes del tidyverse los datos del tema elegido en la tarea 1 y presentar los resultados en tablas y gráficos, en un documento computacional de Quarto publicado en Internet. Es la segunda aproximación al proyecto final: el documento que se entrega aquí se ampliará con datos geoespaciales en la tarea 3.
+
+## Fecha y hora límite de entrega
+
+Viernes 23 de octubre de 2026, 11:59 p.m.
+
+## Objetivos
+
+Cada estudiante debe mostrar que es capaz de:
+
+1. Importar, explorar, transformar y resumir datos tabulares con los paquetes **readr** y **dplyr**.
+2. Elaborar gráficos con **ggplot2**, adecuados a la pregunta que responden y con título, etiquetas y unidades, y convertirlos en interactivos con **plotly**.
+3. Presentar datos en tablas interactivas con **DT**.
+4. Integrar código, resultados y texto interpretativo en un documento computacional de **Quarto**, con referencias bibliográficas.
+5. Publicar el documento en un repositorio de GitHub y en GitHub Pages.
+
+## Entregables
+
+1. Dirección de un repositorio público en GitHub (ej. `https://github.com/usuario/tarea-02`) que contenga:
+    - El documento Quarto, `index.qmd`, y el archivo `index.html` generado por *Render* con `embed-resources: true`, como en los ejercicios de las lecciones.
+    - Los archivos de datos (CSV, Excel u otros) que el documento lee, salvo que se lean directamente desde una URL de la fuente original.
+    - Un archivo `README.md` breve con el título del trabajo, el nombre del autor o autora y el enlace al documento publicado.
+2. Dirección del documento publicado con GitHub Pages a partir de ese repositorio (ej. `https://usuario.github.io/tarea-02/`).
+
+La entrega debe realizarse a través de la plataforma Mediación Virtual. **Para que la tarea sea aceptada, deben entregarse ambas direcciones**. El documento debe leer los datos desde una **URL** (la del archivo en el repositorio, con el botón *Raw* de GitHub, o la de la fuente original), no desde una ruta local de su computadora, para que pueda reproducirse en cualquier lugar.
+
+## Consideraciones adicionales
+
+**Esta tarea es estrictamente individual**.
+
+Puede usar asistentes de inteligencia artificial para explicar, depurar, generar y verificar código, según los [lineamientos del curso](../i-introduccion-ciencia-datos-programacion/05-asistentes-ia.qmd): debe **declarar su uso** en una sección del documento (cuál herramienta, con qué propósito y en cuáles partes), comprender y ser capaz de explicar todo el código que entregue, y verificar los resultados. El profesor puede pedirle en clase que explique cualquier parte de su documento.
+
+## Desarrollo
+
+A partir de los datos del tema elegido en la tarea 1 (u otros, si aquellos resultaron inadecuados; en ese caso, descríbalos en la introducción), desarrolle un documento Quarto con, como mínimo, los siguientes elementos:
+
+- **Encabezado YAML** con el título, su nombre como autor o autora, `lang: es`, `toc: true` y `embed-resources: true`, como en los documentos de las lecciones.
+- **Introducción**: el tema, las preguntas que se responden (al menos tres), la fuente de los datos, con su cita bibliográfica y su enlace, y una descripción de las variables principales. Puede reutilizar texto de la tarea 1.
+- **Importación y preparación de los datos**: un bloque que cargue los paquetes (con `message: false`), lectura con `read_csv()` (o la función de readr o readxl que corresponda) desde una URL, exploración inicial (`dim()`, `glimpse()` o `head()`) y las transformaciones que el análisis requiera con los verbos de dplyr (`select()`, `filter()`, `mutate()`, `arrange()`, `group_by()` y `summarize()`, `left_join()`), encadenadas con el *pipe*. Cada transformación se explica brevemente en el texto: qué hace y por qué.
+- **Al menos una tabla interactiva** con DT, con los datos o con un resumen de ellos obtenido mediante agrupación, filtrado o conteo: sin números de fila, con nombres de columna en español, con los controles en español y con los números formateados (separador de miles y cantidad de decimales adecuada). Debe ir acompañada de un párrafo que diga qué muestra. Las tablas pequeñas pueden presentarse también con `knitr::kable()`.
+- **Al menos tres gráficos** de ggplot2, cada uno con:
+    - Un **tipo adecuado** a la pregunta que responde (dispersión, barras, histograma, caja, líneas u otro), según la tabla 3 del capítulo de ggplot2. Los tres deben ser de geometrías distintas.
+    - **Título** descriptivo, **etiquetas** de los ejes con **unidades**, nombre de la leyenda si la hay, y la **fuente** de los datos en `caption` o en `fig-cap`.
+    - Un párrafo de **interpretación**: qué muestra el gráfico y qué se observa en los datos.
+- **Al menos uno de los tres gráficos en versión interactiva** con `ggplotly()`, con una **etiqueta emergente** construida con la estética `text` que identifique cada observación (por ejemplo, su nombre y el valor con formato), en español y sin el logotipo de plotly.
+- **Conclusiones**: las respuestas a las preguntas de la introducción y sus limitaciones.
+- **Referencias bibliográficas** en formato APA 7, con las fuentes de los datos y cualquier otra fuente consultada.
+- **Declaración de uso de asistentes de IA**, o la indicación de que no se usaron.
+
+El documento debe ser **coherente** y estar **bien presentado**: encabezados que organicen las secciones, texto que explique el código y los resultados, bloques de código con etiquetas, y salidas legibles (sin tablas de cientos de filas impresas en el texto ni mensajes de carga de paquetes). Los gráficos deben estar en bloques con etiqueta `fig-` y `fig-cap`, de modo que Quarto los numere y puedan citarse en el texto.
+
+## Calificación
+
+Entre paréntesis, se muestra el porcentaje correspondiente a cada aspecto que se calificará:
+
+- (10 %) Coherencia y presentación general del documento (estructura, encabezados, texto, etiquetas de los bloques, salidas legibles).
+- (10 %) Introducción: tema, preguntas, fuentes de los datos con sus citas y descripción de las variables.
+- (15 %) Importación y preparación de los datos (lectura desde una URL, exploración y transformaciones con dplyr explicadas).
+- (10 %) Tabla interactiva con DT (contenido, opciones, formato e interpretación).
+- (36 %) Gráficos de ggplot2, 12 % cada uno (geometría adecuada, corrección, título, etiquetas y unidades, fuente, leyenda de la figura e interpretación).
+- (9 %) Gráfico interactivo con plotly (conversión correcta y etiqueta emergente informativa).
+- (5 %) Conclusiones y referencias bibliográficas.
+- (5 %) Entrega correcta: repositorio con el `.qmd`, el `.html` y los datos accesibles, documento publicado en GitHub Pages, entrega de ambas direcciones y declaración de uso de IA.
+
+## Recursos
+
+Los contenidos evaluados en esta tarea se cubrieron en las siguientes lecciones del sitio del curso:
+
+- [Quarto: documentos computacionales](../ii-lenguaje-programacion-r/09-quarto.qmd), que incluye la publicación en GitHub Pages y la clínica de errores de *Render*.
+- [tidyverse: paquetes para ciencia de datos](../iii-tidyverse/10-tidyverse.qmd), con la importación de datos con readr.
+- [dplyr: transformación de datos](../iii-tidyverse/11-dplyr.qmd).
+- [ggplot2: gramática de gráficos](../iii-tidyverse/12-ggplot2.qmd), con la tabla de geometrías y las opciones de figura de Quarto.
+- [plotly y DT: gráficos y tablas interactivos](../iii-tidyverse/13-plotly-dt.qmd).
+
+Los ejercicios con los datos de su tema que cierran esos capítulos (el 10 del de dplyr, el 11 del de ggplot2 y el 9 del de plotly y DT) son el punto de partida de esta tarea: si los hizo, ya tiene buena parte del trabajo.
+
+Para subir un archivo de datos a GitHub sin la línea de comandos: en el repositorio, botón *Add file > Upload files*, arrastre el archivo y confirme con *Commit changes*. Luego abra el archivo, haga clic en *Raw* y copie la dirección del navegador: esa es la URL que se pasa a `read_csv()`. Si los datos están en Excel, lo más sencillo es convertirlos a CSV (*Archivo > Guardar como*) antes de subirlos.
