@@ -65,6 +65,7 @@ website:
       - section: "Evaluaciones"
         contents:
           - contenidos/evaluaciones/tarea-01.qmd
+          - contenidos/evaluaciones/tarea-02.qmd
       - section: "Software"
         contents:
           - contenidos/software/r-rstudio.qmd
