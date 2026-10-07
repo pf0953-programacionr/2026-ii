@@ -1,0 +1,377 @@
+---
+title: "plotly y DT: gráficos y tablas interactivos"
+---
+
+## Trabajo previo
+
+### Lecturas
+
+Antes de la clase, revise las siguientes lecturas. La primera es la introducción del libro de Sievert sobre plotly, el autor del paquete de R; bastan las secciones 2.1 a 2.3, que presentan `ggplotly()` y la relación con ggplot2. La segunda es la página de inicio de la documentación de plotly para R, que el programa del curso asigna como lectura de esta semana; recórrala para conocer los tipos de gráficos disponibles. La tercera es la documentación de DT, también asignada en el programa; interesan la página de inicio y la sección sobre las opciones.
+
+Sievert, C. (2020). Overview. En *Interactive web-based data visualization with R, plotly, and shiny*. Chapman and Hall/CRC. <https://plotly-r.com/overview.html>
+
+Plotly. (s. f.). *Plotly R open source graphing library*. Recuperado el 7 de octubre de 2026, de <https://plotly.com/r/>
+
+Xie, Y., Cheng, J., y Tan, X. (s. f.). *DT: An R interface to the DataTables library*. Recuperado el 7 de octubre de 2026, de <https://rstudio.github.io/DT/>
+
+### Otros recursos
+
+Antes de la clase, instale los dos paquetes ejecutando en la consola de RStudio `install.packages(c("plotly", "DT"))`; plotly descarga varias dependencias y puede tardar unos minutos. Tenga a mano el proyecto `pf0953` y el documento `graficos.qmd` del [capítulo de ggplot2](12-ggplot2.qmd), con el objeto `grafico` de la sección «Etiquetas y temas».
+
+## Introducción
+
+Los gráficos del [capítulo anterior](12-ggplot2.qmd) son **estáticos**: imágenes que muestran lo que su autor decidió mostrar. En una página web, un gráfico puede además ser **interactivo**: quien lo lee pasa el cursor sobre un punto y ve a qué observación corresponde, acerca una región amontonada, oculta una categoría con un clic en la leyenda o descarga el gráfico como imagen. Lo mismo ocurre con las tablas: una tabla interactiva se ordena por cualquier columna, se pagina y se filtra con un cuadro de búsqueda, de modo que una tabla de 84 cantones —o de 8 400 registros— cabe en un documento sin abrumarlo.
+
+Esa interactividad la aporta [JavaScript](https://es.wikipedia.org/wiki/JavaScript), el lenguaje de programación de los navegadores web. No hace falta aprenderlo: una familia de paquetes de R, construidos sobre [htmlwidgets](https://www.htmlwidgets.org/), «envuelve» bibliotecas de JavaScript y las pone a disposición desde R. En este curso se usan tres: [plotly](https://plotly.com/r/) para gráficos, [DT](https://rstudio.github.io/DT/) para tablas y, en la sección IV, [leaflet](https://rstudio.github.io/leaflet/) para mapas. En el [ejemplo de la semana 1](../i-introduccion-ciencia-datos-programacion/02-ejemplo-procesos-ciencia-datos.qmd) ya aparecieron plotly y leaflet; ahora se ve cómo se construyen.
+
+Este capítulo presenta plotly a partir de lo que ya se sabe de ggplot2 —la función `ggplotly()` convierte un gráfico de ggplot2 en uno interactivo— y DT para las tablas, y termina con lo que hay que saber para incluirlos en un documento Quarto. Los gráficos y tablas interactivos solo funcionan en salidas HTML: en el sitio de cada estudiante en GitHub Pages, en los tableros de control y en las aplicaciones shiny de las secciones siguientes. Se continúa con el hilo conductor del curso: la población y la extensión de los 84 cantones de Costa Rica (INEC, 2023).
+
+```{r}
+#| label: preparacion
+#| message: false
+library(tidyverse)
+library(plotly)
+library(DT)
+
+cantones <- read_csv("https://raw.githubusercontent.com/pf0953-programacionr/2026-ii/main/datos/cantones.csv") |>
+  mutate(
+    densidad = poblacion / area_km2,
+    tipo = if_else(densidad > 100, "urbano", "rural")
+  )
+```
+
+Al cargar plotly después del tidyverse aparece un mensaje que dice que algunos objetos quedan «enmascarados» (`masked`): `last_plot` de ggplot2, `filter` de stats y `layout` de graphics. No es un error: plotly define funciones con esos nombres, y la que importa, `filter()`, sigue siendo la de dplyr. Como en los capítulos anteriores, el bloque lleva `message: false` para que el mensaje no aparezca en el documento.
+
+## Gráficos interactivos con plotly
+
+[plotly](https://plotly.com/r/) es el paquete de R de la biblioteca de JavaScript [plotly.js](https://plotly.com/javascript/), que también tiene versiones para Python, Julia y otros lenguajes. Puede usarse de dos maneras: convirtiendo un gráfico de ggplot2 con `ggplotly()`, o construyendo el gráfico desde cero con `plot_ly()`, su propia gramática. En este curso se usa la primera, porque aprovecha todo lo aprendido en el capítulo anterior; la segunda se presenta brevemente al final de la sección.
+
+### De ggplot2 a plotly
+
+El punto de partida es el gráfico que se dejó listo para presentar en el capítulo anterior:
+
+```{r}
+#| label: grafico
+grafico <- ggplot(cantones, aes(x = area_km2, y = poblacion, color = tipo)) +
+  geom_point(size = 2, alpha = 0.8) +
+  scale_x_log10(labels = scales::label_number(big.mark = " ")) +
+  scale_y_log10(labels = scales::label_number(big.mark = " ")) +
+  scale_color_manual(values = c(rural = "#4f7d3a", urbano = "#005da4")) +
+  labs(
+    title = "Área y población de los cantones de Costa Rica",
+    subtitle = "Estimación de población de 2022; ejes en escala logarítmica",
+    x = "Área (km²)",
+    y = "Población (habitantes)",
+    color = "Tipo de cantón",
+    caption = "Fuente: INEC (2023)"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "bottom")
+```
+
+La función [`ggplotly()`](https://plotly.com/ggplot2/) recibe el objeto de ggplot2 y devuelve un gráfico interactivo:
+
+```{r}
+#| label: ggplotly
+ggplotly(grafico)
+```
+
+Pruebe el gráfico: pase el cursor sobre un punto para ver sus valores en la **etiqueta emergente** (*tooltip*); arrastre un rectángulo sobre la esquina superior izquierda, donde se amontonan los cantones urbanos, para acercarla, y haga doble clic para volver; haga clic en «rural» en la leyenda para ocultar esos cantones y otro clic para mostrarlos de nuevo; y use la barra de herramientas que aparece arriba a la derecha, con el botón de la cámara que descarga el gráfico como imagen PNG.
+
+`ggplotly()` traduce casi todo el gráfico, pero no todo. La tabla 1 resume qué se conserva y qué se pierde; lo más visible es que el subtítulo y la nota al pie (`caption`) desaparecen, porque plotly no tiene equivalentes directos. Si la fuente de los datos debe quedar en el gráfico interactivo, se escribe en el título o en el texto del documento.
+
+<figure style="text-align: center; margin: 20px 0;">
+    <figcaption><strong>Tabla 1</strong>. Componentes de un gráfico de ggplot2 al convertirlo con <code>ggplotly()</code>. Fuente: elaboración propia con base en Sievert (2020).</figcaption>
+    <table class="table table-bordered table-striped" style="margin: 0 auto;">
+    <thead>
+    <tr><th>Se conserva</th><th>Se pierde o cambia</th></tr>
+    </thead>
+    <tbody>
+    <tr><td>Geometrías de puntos, líneas, barras, histogramas, cajas y texto; capas múltiples.</td><td>Algunas geometrías y sistemas de coordenadas poco comunes (por ejemplo, <code>coord_polar()</code>), que producen un error o un gráfico incompleto.</td></tr>
+    <tr><td>Mapeos estéticos, escalas (incluidas las logarítmicas y los colores manuales) y facetas.</td><td>Las etiquetas de los ejes formateadas con <code>labels</code> se conservan, pero el formato de la etiqueta emergente es el de los datos crudos (ver la siguiente sección).</td></tr>
+    <tr><td>Título, nombres de los ejes y de la leyenda, posición de la leyenda, tema (colores de fondo y de las líneas de la cuadrícula).</td><td>El <strong>subtítulo</strong> y la <strong>nota al pie</strong> (<code>caption</code>) desaparecen; algunos detalles del tema (tipografías, márgenes) se aproximan.</td></tr>
+    </tbody>
+    </table>
+</figure>
+
+### La etiqueta emergente
+
+Por defecto, la etiqueta emergente muestra las variables mapeadas a las estéticas —`area_km2`, `poblacion`, `tipo`—, con el nombre de la columna y el valor sin formato. Para explorar los datos eso no basta: lo que se quiere saber al pasar el cursor por un punto es **cuál cantón es**. La solución es mapear una estética adicional, `text`, con el contenido de la etiqueta, y pedirle a `ggplotly()` que muestre solo esa estética con el argumento `tooltip`. ggplot2 no conoce la estética `text` y la ignora al dibujar, pero plotly sí la usa.
+
+El contenido se construye con `paste0()`, que une textos y valores; `"\n"` es un salto de línea, y las funciones del paquete scales ([`number()`](https://scales.r-lib.org/reference/label_number.html)) dan formato a los números, como se hizo con los ejes en el capítulo anterior:
+
+```{r}
+#| label: tooltip
+grafico_interactivo <- ggplot(
+  cantones,
+  aes(
+    x = area_km2,
+    y = poblacion,
+    color = tipo,
+    text = paste0(
+      canton, " (", provincia, ")",
+      "\nPoblación: ", scales::number(poblacion, big.mark = " "),
+      "\nÁrea: ", scales::number(area_km2, accuracy = 0.1, big.mark = " "), " km²",
+      "\nDensidad: ", scales::number(densidad, accuracy = 1, big.mark = " "), " hab./km²"
+    )
+  )
+) +
+  geom_point(size = 2, alpha = 0.8) +
+  scale_x_log10(labels = scales::label_number(big.mark = " ")) +
+  scale_y_log10(labels = scales::label_number(big.mark = " ")) +
+  scale_color_manual(values = c(rural = "#4f7d3a", urbano = "#005da4")) +
+  labs(
+    title = "Área y población de los cantones de Costa Rica (INEC, 2023)",
+    x = "Área (km²)",
+    y = "Población (habitantes)",
+    color = "Tipo de cantón"
+  ) +
+  theme_minimal()
+
+ggplotly(grafico_interactivo, tooltip = "text")
+```
+
+Ahora el gráfico responde la pregunta que quedó abierta en el capítulo anterior sin necesidad de rotular los puntos: el cantón más poblado es San José, el más extenso es San Carlos, y los cantones urbanos pequeños de la esquina superior izquierda se identifican uno por uno.
+
+La estética `text` se escribe en el `aes()` de `ggplot()`, no en el de la geometría: si se pone en `geom_point(aes(text = …))`, ggplot2 emite la advertencia `Ignoring unknown aesthetics: text`, que no impide que funcione pero ensucia el documento. Y, como la estética no existe para ggplot2, el objeto `grafico_interactivo` también se puede mostrar como gráfico estático: la etiqueta simplemente no se dibuja.
+
+### Configuración
+
+El objeto que devuelve `ggplotly()` se puede seguir modificando con el *pipe* y dos funciones de plotly: [`config()`](https://plotly.com/r/configuration-options/), para la barra de herramientas y el comportamiento general, y [`layout()`](https://plotly.com/r/reference/layout/), para la apariencia (títulos, ejes, leyenda, márgenes). Dos opciones de `config()` conviene usarlas siempre en documentos en español: `locale = "es"` traduce los textos de la barra de herramientas y los formatos de fecha, y `displaylogo = FALSE` quita el logotipo de Plotly.
+
+```{r}
+#| label: config
+ggplotly(grafico_interactivo, tooltip = "text") |>
+  config(locale = "es", displaylogo = FALSE)
+```
+
+El mismo procedimiento sirve para cualquier gráfico del capítulo anterior. Por ejemplo, el gráfico de barras de la población por provincia, con la población formateada en la etiqueta emergente:
+
+```{r}
+#| label: barras
+grafico_barras <- cantones |>
+  group_by(provincia) |>
+  summarize(poblacion = sum(poblacion)) |>
+  ggplot(aes(
+    x = poblacion,
+    y = fct_reorder(provincia, poblacion),
+    text = paste0(provincia, ": ", scales::number(poblacion, big.mark = " "), " habitantes")
+  )) +
+  geom_col(fill = "#005da4") +
+  scale_x_continuous(labels = scales::label_number(big.mark = " ")) +
+  labs(
+    title = "Población de las provincias de Costa Rica (INEC, 2023)",
+    x = "Población (habitantes)",
+    y = NULL
+  ) +
+  theme_minimal()
+
+ggplotly(grafico_barras, tooltip = "text") |>
+  config(locale = "es", displaylogo = FALSE)
+```
+
+### La gramática propia de plotly
+
+plotly tiene además su propia gramática, con la función [`plot_ly()`](https://plotly.com/r/getting-started/): recibe el data frame, las columnas de cada eje precedidas por una virgulilla (`~`, como en `facet_wrap()`) y el tipo de gráfico (`type`); `layout()` agrega los títulos. Es la que se usó en el ejemplo de la semana 1, y la que hace falta para los tipos de gráficos que `ggplotly()` no traduce, como los de pastel o los tridimensionales. El gráfico de barras anterior, con `plot_ly()`:
+
+```{r}
+#| label: plot-ly
+cantones |>
+  group_by(provincia) |>
+  summarize(poblacion = sum(poblacion)) |>
+  plot_ly(
+    x = ~poblacion,
+    y = ~provincia,
+    type = "bar",
+    orientation = "h",
+    marker = list(color = "#005da4")
+  ) |>
+  layout(
+    title = "Población de las provincias de Costa Rica (INEC, 2023)",
+    xaxis = list(title = "Población (habitantes)"),
+    yaxis = list(title = "", categoryorder = "total ascending")
+  ) |>
+  config(locale = "es", displaylogo = FALSE)
+```
+
+Las dos gramáticas producen el mismo resultado. En este curso se prefiere `ggplotly()`: un solo código sirve para el gráfico estático de un documento impreso y para el interactivo de una página web, y lo aprendido sobre la gramática de gráficos no se desperdicia. La documentación de plotly (Plotly, s. f.) describe `plot_ly()` con detalle para quien la necesite.
+
+*Ejercicios de esta sección: [ejercicios sobre plotly](#ejercicios-plotly).*
+
+## Tablas interactivas con DT
+
+Hasta ahora las tablas se han mostrado imprimiendo el data frame, lo que en un documento Quarto produce un listado de texto, útil para una decena de filas y poco más. [DT](https://rstudio.github.io/DT/) es el paquete de R de la biblioteca de JavaScript [DataTables](https://datatables.net/): su función [`datatable()`](https://rdrr.io/cran/DT/man/datatable.html) convierte cualquier data frame en una tabla interactiva, paginada, que se ordena con un clic en el encabezado de una columna y se filtra con el cuadro de búsqueda.
+
+```{r}
+#| label: datatable
+datatable(cantones)
+```
+
+Pruebe la tabla: ordene por `densidad` con dos clics en su encabezado (el primero ordena de menor a mayor; el segundo, de mayor a menor), escriba «Heredia» en el cuadro de búsqueda y cambie la cantidad de filas por página.
+
+### Opciones
+
+La tabla anterior muestra los datos tal cual: nombres de columnas en el formato del código, números sin formato, un número de fila que no aporta nada y los controles en inglés. `datatable()` y las funciones `format*()` de DT permiten dejarla lista para presentar. La tabla 2 recoge los argumentos más usados.
+
+<figure style="text-align: center; margin: 20px 0;">
+    <figcaption><strong>Tabla 2</strong>. Argumentos y funciones de DT de uso frecuente. Fuente: elaboración propia con base en Xie et al. (s. f.).</figcaption>
+    <table class="table table-bordered table-striped" style="margin: 0 auto;">
+    <thead>
+    <tr><th>Argumento o función</th><th>Efecto</th></tr>
+    </thead>
+    <tbody>
+    <tr><td><code>rownames = FALSE</code></td><td>Oculta la columna con los números de fila.</td></tr>
+    <tr><td><code>colnames = c(…)</code></td><td>Nombres de las columnas para mostrar, en el mismo orden que en el data frame.</td></tr>
+    <tr><td><code>filter = &quot;top&quot;</code></td><td>Agrega un filtro por columna encima de la tabla: un rango para las numéricas y una lista para las de texto.</td></tr>
+    <tr><td><code>options = list(pageLength = 10)</code></td><td>Filas por página (por defecto, 10). <code>options</code> es una lista con las <a href="https://datatables.net/reference/option/">opciones de DataTables</a>.</td></tr>
+    <tr><td><code>options = list(language = list(url = &quot;…/es-ES.json&quot;))</code></td><td>Textos de los controles en español, a partir de un archivo de traducción de DataTables.</td></tr>
+    <tr><td><code>formatRound(columns, digits, mark)</code></td><td>Redondea las columnas indicadas a <code>digits</code> decimales, con <code>mark</code> como separador de miles. <code>formatCurrency()</code> y <code>formatPercentage()</code> son similares.</td></tr>
+    </tbody>
+    </table>
+</figure>
+
+Como con ggplot2, dplyr prepara los datos —aquí, selecciona y ordena las columnas— y los pasa a `datatable()`, que recibe el data frame por el *pipe*; las funciones `format*()` se encadenan después, también con el *pipe*:
+
+```{r}
+#| label: datatable-opciones
+cantones |>
+  select(provincia, canton, poblacion, area_km2, densidad, tipo) |>
+  arrange(desc(densidad)) |>
+  datatable(
+    rownames = FALSE,
+    colnames = c("Provincia", "Cantón", "Población", "Área (km²)", "Densidad (hab./km²)", "Tipo"),
+    filter = "top",
+    options = list(
+      pageLength = 10,
+      language = list(url = "//cdn.datatables.net/plug-ins/2.3.2/i18n/es-ES.json")
+    )
+  ) |>
+  formatRound(columns = "poblacion", digits = 0, mark = " ") |>
+  formatRound(columns = c("area_km2", "densidad"), digits = 1, mark = " ")
+```
+
+Con el filtro de la columna «Densidad», arrastre el control deslizante para quedarse con los cantones de más de 1 000 habitantes por kilómetro cuadrado: son 16, nueve de ellos en San José y cinco en Heredia. Observe que `formatRound()` recibe los nombres **originales** de las columnas (`poblacion`, no «Población»), porque `colnames` solo cambia lo que se muestra.
+
+La traducción se carga desde Internet cada vez que se abre el documento; si la tabla debe funcionar sin conexión, `language` admite en su lugar una lista con los textos (`list(search = "Buscar:", …)`), como se describe en la documentación de DT.
+
+### Cuándo no usar una tabla interactiva
+
+Una tabla interactiva es la herramienta para que quien lee **explore** muchas filas. No lo es para una tabla pequeña de resultados —las siete provincias de `resumen_provincias`—, que se lee mejor completa y quieta: para eso está [`knitr::kable()`](https://bookdown.org/yihui/rmarkdown-cookbook/kable.html), que produce una tabla estática y funciona también en PDF y Word. Tampoco lo es para un data frame enorme: `datatable()` copia **todas** las filas al documento HTML, de modo que una tabla de cien mil filas lo vuelve lento o inservible; antes hay que filtrar o resumir con dplyr.
+
+```{r}
+#| label: kable
+cantones |>
+  group_by(provincia) |>
+  summarize(cantones = n(), poblacion = sum(poblacion), area_km2 = sum(area_km2)) |>
+  mutate(densidad = poblacion / area_km2) |>
+  arrange(desc(densidad)) |>
+  knitr::kable(
+    digits = 1,
+    format.args = list(big.mark = " "),
+    col.names = c("Provincia", "Cantones", "Población", "Área (km²)", "Densidad (hab./km²)")
+  )
+```
+
+*Ejercicios de esta sección: [ejercicios sobre DT](#ejercicios-dt).*
+
+## Gráficos y tablas interactivos en documentos Quarto
+
+Los gráficos de plotly y las tablas de DT son **htmlwidgets**: fragmentos de HTML y JavaScript que Quarto inserta en el documento tal como inserta una imagen. Tres consecuencias prácticas:
+
+- Solo funcionan en formatos **HTML**. Si el mismo documento se procesa a PDF o a Word, Quarto intenta sustituirlos por una captura de pantalla estática (lo que requiere paquetes adicionales) o los omite. Para un documento que deba salir en ambos formatos, los gráficos se construyen con ggplot2 y se muestran con `ggplotly()` solo en la versión HTML, o se dejan estáticos.
+- Las opciones de figura del capítulo anterior funcionan: un bloque con una etiqueta `fig-…` y `fig-cap` numera el gráfico interactivo como una figura más y permite citarlo con `@fig-…`, y `fig-height` fija su alto (en pulgadas, como en las figuras estáticas). El ancho de un htmlwidget es siempre el disponible en la página, de modo que `fig-width` no tiene efecto visible.
+- Con `embed-resources: true`, las bibliotecas de JavaScript de plotly y de DT se incrustan en el archivo HTML, que crece unos 4 MB con el primer gráfico interactivo y la primera tabla; los siguientes agregan poco. Sigue siendo un solo archivo que se sube a GitHub Pages como hasta ahora, pero conviene saberlo si el documento debe enviarse por correo.
+
+*Ejercicios de esta sección: [ejercicios sobre publicación](#ejercicios-publicacion).*
+
+## Clínica de errores
+
+La tabla 3 recoge los problemas más frecuentes al empezar con plotly y DT.
+
+<figure style="text-align: center; margin: 20px 0;">
+    <figcaption><strong>Tabla 3</strong>. Clínica de errores de plotly y DT. Fuente: elaboración propia.</figcaption>
+    <table class="table table-bordered table-striped" style="margin: 0 auto;">
+    <thead>
+    <tr><th>Mensaje o síntoma</th><th>Causa</th><th>Solución</th></tr>
+    </thead>
+    <tbody>
+    <tr><td><code>there is no package called &#39;plotly&#39;</code> (o <code>&#39;DT&#39;</code>)</td><td>El paquete no está instalado.</td><td><code>install.packages(c(&quot;plotly&quot;, &quot;DT&quot;))</code> en la consola, una sola vez.</td></tr>
+    <tr><td><code>could not find function &quot;ggplotly&quot;</code> (o <code>&quot;datatable&quot;</code>)</td><td>El paquete está instalado pero no cargado en la sesión, o el <code>library()</code> está después del bloque que falla.</td><td>Agregar <code>library(plotly)</code> y <code>library(DT)</code> al bloque de preparación.</td></tr>
+    <tr><td><code>The following object is masked from &#39;package:stats&#39;: filter</code></td><td>Mensaje informativo de <code>library(plotly)</code>.</td><td>No es un error. Ocultarlo con <code>message: false</code>.</td></tr>
+    <tr><td><code>Ignoring unknown aesthetics: text</code></td><td>La estética <code>text</code> está en el <code>aes()</code> de la geometría.</td><td>Es una advertencia, no un error: el gráfico funciona. Mover <code>text</code> al <code>aes()</code> de <code>ggplot()</code>.</td></tr>
+    <tr><td>La etiqueta emergente muestra nombres de columnas y números sin formato</td><td>No se definió la estética <code>text</code>, o se olvidó <code>tooltip = &quot;text&quot;</code> en <code>ggplotly()</code>.</td><td>Mapear <code>text</code> con <code>paste0()</code> y pasar <code>tooltip = &quot;text&quot;</code>.</td></tr>
+    <tr><td>El gráfico interactivo no tiene subtítulo ni fuente</td><td><code>ggplotly()</code> no traduce <code>subtitle</code> ni <code>caption</code>.</td><td>Incluir la fuente en el título o en el texto del documento.</td></tr>
+    <tr><td><code>no applicable method for &#39;ggplotly&#39; applied to an object of class &quot;data.frame&quot;</code></td><td>Se pasó el data frame a <code>ggplotly()</code> en lugar del gráfico.</td><td><code>ggplotly()</code> recibe el objeto creado con <code>ggplot()</code>.</td></tr>
+    <tr><td><code>&#39;data&#39; must be 2-dimensional (e.g. data frame or matrix)</code></td><td>Se pasó una columna (un vector) a <code>datatable()</code>.</td><td>Pasar el data frame, o seleccionar columnas con <code>select()</code>.</td></tr>
+    <tr><td><code>You specified the columns: Población, but the column names of the data are …</code></td><td>En <code>formatRound()</code> se usaron los nombres de <code>colnames</code> en lugar de los originales.</td><td>En las funciones <code>format*()</code>, los nombres de las columnas son los del data frame (<code>poblacion</code>).</td></tr>
+    <tr><td>Los gráficos y tablas aparecen en RStudio pero no en el documento procesado</td><td>El documento se procesó a PDF o Word.</td><td>Los htmlwidgets requieren <code>format: html</code>.</td></tr>
+    <tr><td>El archivo HTML pesa varios megabytes</td><td><code>embed-resources: true</code> incrusta las bibliotecas de JavaScript.</td><td>Es normal (unos 4 MB con plotly y DT). Si es un problema, revisar que no se haya incluido una tabla con decenas de miles de filas.</td></tr>
+    </tbody>
+    </table>
+</figure>
+
+## Resumen
+
+- Los **htmlwidgets** son paquetes de R que envuelven bibliotecas de JavaScript para producir gráficos, tablas y mapas **interactivos**, que funcionan únicamente en salidas HTML.
+- `ggplotly()` convierte un gráfico de ggplot2 en un gráfico interactivo de **plotly**, con etiquetas emergentes, acercamiento, leyenda activa y descarga como imagen; se pierden el subtítulo y la nota al pie.
+- La **etiqueta emergente** se controla con la estética `text` (en el `aes()` de `ggplot()`, construida con `paste0()` y formateada con scales) y el argumento `tooltip = "text"`; `config(locale = "es", displaylogo = FALSE)` traduce los controles y quita el logotipo.
+- `plot_ly()` es la gramática propia de plotly, necesaria para los gráficos que `ggplotly()` no traduce.
+- `datatable()`, de **DT**, convierte un data frame en una tabla interactiva paginada, ordenable y filtrable; `rownames`, `colnames`, `filter`, `options` y las funciones `format*()` la dejan lista para presentar. Para tablas pequeñas, `knitr::kable()` produce una tabla estática.
+- En Quarto, los htmlwidgets se insertan como las figuras, aceptan `fig-cap` y aumentan el tamaño del archivo HTML con `embed-resources: true`.
+
+## Ejercicios
+
+Los ejercicios se agrupan según la sección del capítulo a la que corresponden y continúan el documento `graficos.qmd` del capítulo anterior, en una sección nueva, «Gráficos y tablas interactivos». Como en los capítulos anteriores, use la provincia y el cantón elegidos como ejemplo propio.
+
+### plotly {#ejercicios-plotly}
+
+1. Agregue `library(plotly)` y `library(DT)` al bloque `preparacion` de `graficos.qmd` y ejecútelo. Luego, en la sección nueva, convierta con `ggplotly()` el objeto `grafico` del capítulo anterior. Con el gráfico interactivo, y sin agregar nada más, responda: ¿qué información muestra la etiqueta emergente de un punto? ¿Alcanza para saber de cuál cantón se trata? Acerque la esquina superior izquierda y oculte los cantones rurales con la leyenda.
+
+2. Cree un gráfico `grafico_interactivo` como el de la sección «La etiqueta emergente», pero con la densidad en el eje y en lugar de la población, y con la etiqueta emergente con el nombre del cantón, la provincia y la densidad redondeada a un decimal. Muéstrelo con `tooltip = "text"`, en español y sin logotipo. ¿Cuáles son los tres cantones menos densos del país?
+
+3. **Prediga antes de ejecutar** qué muestra la etiqueta emergente en cada caso; luego ejecute:
+
+    ```r
+    ggplotly(grafico_interactivo)
+    ggplotly(grafico_interactivo, tooltip = c("x", "y"))
+    ggplotly(grafico_interactivo, tooltip = "colour")
+    ```
+
+    <details>
+    <summary>Después de ejecutar, haga clic aquí para ver la explicación</summary>
+    Sin <code>tooltip</code>, la etiqueta muestra <strong>todas</strong> las estéticas mapeadas, incluida <code>text</code>, de modo que el nombre del cantón aparece junto con los valores crudos de <code>area_km2</code>, <code>densidad</code> y <code>tipo</code>. Con <code>c(&quot;x&quot;, &quot;y&quot;)</code> aparecen solo las dos coordenadas, sin formato y sin el nombre del cantón. Con <code>&quot;colour&quot;</code> (plotly usa la grafía británica de <code>color</code>) aparece únicamente el tipo de cantón. Por eso la combinación de la estética <code>text</code> con <code>tooltip = &quot;text&quot;</code> es la forma de controlar por completo la etiqueta.
+    </details>
+
+4. Convierta en interactivo el gráfico de barras horizontales con la población de los cantones de su provincia (ejercicio 5 del capítulo anterior), con la etiqueta emergente «Cantón: población habitantes», con el número formateado con separador de miles. Compruebe que el orden de las barras se conserva.
+
+### DT {#ejercicios-dt}
+
+5. Muestre en una tabla interactiva los cantones de su provincia, con las columnas cantón, población, área y densidad, sin números de fila, con nombres de columna en español, con los controles en español y con la población con separador de miles y el área y la densidad con un decimal. Ordene la tabla por densidad desde el encabezado: ¿cuál es el cantón más denso de su provincia y cuál el menos denso?
+
+6. Muestre los 84 cantones en una tabla interactiva con `filter = "top"` y use los filtros, no código, para responder: ¿cuántos cantones rurales tienen más de 100 000 habitantes, y de cuáles provincias son? Luego compruebe su respuesta con `filter()` y `count()` de dplyr.
+
+7. **Prediga antes de ejecutar**: ¿qué pasa si en el ejercicio 5 escribe `formatRound(columns = "Población", digits = 0)`, con el nombre que se muestra en la tabla? Compruébelo y corríjalo.
+
+### Publicación {#ejercicios-publicacion}
+
+8. Dele al gráfico del ejercicio 2 un bloque con etiqueta `fig-densidad-interactivo` y `fig-cap`, y cítelo en el texto con `@fig-densidad-interactivo`. Procese el documento con *Render*, anote el tamaño del archivo `graficos.html` antes y después de agregar los gráficos y tablas interactivos (panel *Files*), y publíquelo de nuevo en el repositorio `practica-quarto`. Compruebe en la dirección pública que los gráficos responden al cursor y que la tabla se ordena.
+
+9. Si ya tiene los datos de su tema: convierta en interactivo el gráfico del ejercicio 11 del capítulo anterior, con una etiqueta emergente que identifique cada observación, y muestre los datos (o un resumen de ellos, si son muchos) en una tabla interactiva con las opciones de la sección. Son dos de los componentes de la tarea 2.
+
+## Referencias bibliográficas
+
+Instituto Nacional de Estadística y Censos. (2023). *Resultados de la Estimación de Población y Vivienda 2022* [archivo XLSX]. <https://admin.inec.cr/sites/default/files/2023-11/reResultadosEstimacionPoblacionVivienda2022_3.xlsx>
+
+Plotly. (s. f.). *Plotly R open source graphing library*. Recuperado el 7 de octubre de 2026, de <https://plotly.com/r/>
+
+Sievert, C. (2020). *Interactive web-based data visualization with R, plotly, and shiny*. Chapman and Hall/CRC. <https://plotly-r.com/>
+
+Sievert, C., Parmer, C., Hocking, T., Chamberlain, S., Ram, K., Corvellec, M., y Despouy, P. (2026). *plotly: Create interactive web graphics via 'plotly.js'* (versión 4.12.1) [paquete de R]. <https://CRAN.R-project.org/package=plotly>
+
+SpryMedia. (s. f.). *DataTables: Table plug-in for jQuery*. Recuperado el 7 de octubre de 2026, de <https://datatables.net/>
+
+Vaidyanathan, R., Xie, Y., Allaire, J. J., Cheng, J., Sievert, C., y Russell, K. (2023). *htmlwidgets: HTML widgets for R* (versión 1.6.4) [paquete de R]. <https://CRAN.R-project.org/package=htmlwidgets>
+
+Xie, Y., Cheng, J., y Tan, X. (2025). *DT: A wrapper of the JavaScript library 'DataTables'* (versión 0.34.0) [paquete de R]. <https://CRAN.R-project.org/package=DT>
+
+Xie, Y., Cheng, J., y Tan, X. (s. f.). *DT: An R interface to the DataTables library*. Recuperado el 7 de octubre de 2026, de <https://rstudio.github.io/DT/>
