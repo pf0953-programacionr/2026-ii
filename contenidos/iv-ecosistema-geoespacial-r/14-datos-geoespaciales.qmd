@@ -20,9 +20,9 @@ Este capítulo está pensado como **lectura previa**: léalo completo antes de l
 
 ## Introducción
 
-Este capítulo abre la sección IV del curso, dedicada al **ecosistema geoespacial de R**. En las secciones anteriores, los datos del INEC se trabajaron como tablas: una fila por cantón, con su población, su área y su densidad. Lo que faltaba era la pregunta geográfica por excelencia: **¿dónde?** Un **dato geoespacial** (o geográfico) es un dato que, además de sus atributos, tiene una **ubicación** sobre la superficie terrestre. Con esa ubicación, los cantones dejan de ser filas y se vuelven polígonos en un mapa; la densidad se ve, no solo se lee; y aparecen preguntas nuevas: ¿cuáles cantones son vecinos?, ¿qué hay a menos de 10 km de un punto?, ¿en cuál cantón cae esta coordenada?
+Este capítulo abre la sección IV del curso, dedicada al **ecosistema geoespacial de R**. En las secciones anteriores, los datos del INEC se trabajaron como tablas: una fila por cantón, con su población, su área y su densidad. Lo que faltaba era la pregunta geográfica por excelencia: **¿dónde?** Un **dato geoespacial** (o geográfico) es un dato que, además de sus atributos, tiene una **ubicación** sobre la superficie terrestre. Con esa ubicación, los cantones —o los países— dejan de ser filas y se vuelven polígonos en un mapa; la densidad se ve, no solo se lee; y aparecen preguntas nuevas: ¿cuáles cantones son vecinos?, ¿qué hay a menos de 10 km de un punto?, ¿en cuál país cae esta coordenada?
 
-Para responderlas en R hace falta entender primero tres asuntos que este capítulo presenta y que el resto de la sección usa continuamente: los dos **modelos** con que se representan los datos geoespaciales (vectorial y raster), los **sistemas de referencia de coordenadas** que dan significado a los números de una ubicación y los **formatos de archivo** en que se guardan. El [capítulo siguiente](15-sf-datos-vectoriales.qmd) pone todo esto en práctica con el paquete sf.
+Para responderlas en R hace falta entender primero tres asuntos que este capítulo presenta y que el resto de la sección usa continuamente: los dos **modelos** con que se representan los datos geoespaciales (vectorial y raster), los **sistemas de referencia de coordenadas** que dan significado a los números de una ubicación y los **formatos de archivo** en que se guardan. El [capítulo siguiente](15-sf-datos-vectoriales.qmd) pone todo esto en práctica con el paquete sf y datos de los países del mundo, donde las consecuencias de elegir un sistema de referencia de coordenadas se ven a simple vista.
 
 ## Modelos de datos
 
@@ -140,7 +140,7 @@ Los datos vectoriales y raster se guardan en archivos de formatos específicos, 
       <tr><th>Formato</th><th>Modelo</th><th>Extensión</th><th>Características</th></tr>
     </thead>
     <tbody>
-      <tr><td>GeoPackage</td><td>Vectorial (y raster)</td><td><code>.gpkg</code></td><td>Estándar del OGC basado en SQLite. Un solo archivo que puede contener varias capas, sin límites de tamaño ni de nombres de columnas. El formato recomendado para guardar datos vectoriales; es el de las capas de cantones y provincias del curso.</td></tr>
+      <tr><td>GeoPackage</td><td>Vectorial (y raster)</td><td><code>.gpkg</code></td><td>Estándar del OGC basado en SQLite. Un solo archivo que puede contener varias capas, sin límites de tamaño ni de nombres de columnas. El formato recomendado para guardar datos vectoriales; es el de las capas del curso (países de Natural Earth, cantones del IGN).</td></tr>
       <tr><td>Shapefile</td><td>Vectorial</td><td><code>.shp</code> + <code>.shx</code>, <code>.dbf</code>, <code>.prj</code>…</td><td>Formato de Esri de 1990, todavía el más común. Una capa son al menos tres archivos que deben ir siempre juntos; nombres de columnas de 10 caracteres como máximo; 2 GB por archivo; una sola geometría por capa.</td></tr>
       <tr><td>GeoJSON</td><td>Vectorial</td><td><code>.geojson</code>, <code>.json</code></td><td>Texto en formato JSON, el mismo que entregan las API como la de GBIF. Legible, ideal para la web y para archivos pequeños; siempre en WGS84 según su especificación.</td></tr>
       <tr><td>CSV con coordenadas</td><td>Vectorial (puntos)</td><td><code>.csv</code></td><td>Una tabla con columnas de longitud y latitud (o <em>x</em> y <em>y</em>). No es un formato geoespacial: no guarda el SRC ni geometrías que no sean puntos, pero es la forma más frecuente de recibir datos de puntos (GBIF, sensores, encuestas).</td></tr>
@@ -153,7 +153,7 @@ Además de los archivos, los datos geoespaciales se publican mediante **servicio
 
 ## Fuentes de datos
 
-La tabla 3 reúne fuentes de datos geoespaciales abiertos útiles para la tarea 3 y el proyecto final.
+La tabla 3 reúne fuentes de datos geoespaciales abiertos útiles para la tarea 3 y el proyecto final; las dos primeras se usan en el capítulo siguiente.
 
 <figure style="text-align: center; margin: 20px 0;">
     <figcaption><strong>Tabla 3</strong>. Fuentes de datos geoespaciales abiertos. Fuente: elaboración propia.</figcaption>
@@ -162,10 +162,11 @@ La tabla 3 reúne fuentes de datos geoespaciales abiertos útiles para la tarea 
       <tr><th>Fuente</th><th>Contenido</th><th>Acceso</th></tr>
     </thead>
     <tbody>
+      <tr><td><a href="https://www.naturalearthdata.com/">Natural Earth</a></td><td>Países, ciudades, aeropuertos, ríos, lagos y relieve a escalas de 1:10 M a 1:110 M, de dominio público</td><td>Descarga de archivos vectoriales y raster; paquete rnaturalearth</td></tr>
       <tr><td><a href="https://www.snitcr.go.cr/">SNIT</a> (IGN y otras instituciones de Costa Rica)</td><td>División territorial, red vial, hidrografía, curvas de nivel, aeródromos, áreas protegidas, uso de la tierra</td><td>Visor y servicios WFS/WMS</td></tr>
       <tr><td><a href="https://inec.cr/">INEC</a></td><td>Censos y estimaciones de población y vivienda por provincia, cantón y distrito</td><td>Cuadros en Excel y CSV; se unen a las capas del IGN por código o por nombre</td></tr>
+      <tr><td><a href="https://datos.bancomundial.org/">Banco Mundial</a></td><td>Indicadores del desarrollo mundial por país y año (población, economía, salud, educación, ambiente); se unen a los países de Natural Earth por código ISO</td><td>Descarga de CSV y API REST (paquete WDI)</td></tr>
       <tr><td><a href="https://www.gbif.org/">GBIF</a></td><td>Registros de presencia de especies (puntos) de todo el mundo</td><td>API REST (paquete rgbif, como en la semana 1) y descargas CSV</td></tr>
-      <tr><td><a href="https://www.naturalearthdata.com/">Natural Earth</a></td><td>Países, ciudades, aeropuertos, ríos, lagos y relieve a escalas de 1:10 M a 1:110 M, de dominio público</td><td>Descarga de archivos vectoriales y raster; paquete rnaturalearth</td></tr>
       <tr><td><a href="https://www.openstreetmap.org/">OpenStreetMap</a></td><td>Cartografía colaborativa: vías, edificios, servicios</td><td>Descargas (Geofabrik) y API Overpass (paquete osmdata)</td></tr>
       <tr><td><a href="https://www.worldclim.org/">WorldClim</a>, <a href="https://www.usgs.gov/">USGS</a>, <a href="https://dataspace.copernicus.eu/">Copernicus</a></td><td>Clima, elevación e imágenes satelitales (rasters)</td><td>Descarga de GeoTIFF; paquete geodata</td></tr>
     </tbody>
@@ -191,7 +192,7 @@ Los ejercicios de este capítulo son conceptuales y no requieren código. Respon
 
 3. Escriba en WKT (a) un punto con las coordenadas geográficas de la Escuela de Geografía de la UCR, que puede obtener de Google Maps u OpenStreetMap (recuerde el orden: longitud y luego latitud), y (b) un polígono rectangular que encierre aproximadamente el campus Rodrigo Facio. Verifique el polígono dibujándolo en [geojson.io](https://geojson.io/) o en [wktmap.com](https://wktmap.com/).
 
-4. Entre al [visor del SNIT](https://www.snitcr.go.cr/) y ubique la capa de la división territorial administrativa (límite cantonal) del IGN. Anote el SRC en que se publica y la escala. Si la capa está disponible como servicio WFS, copie la URL del servicio.
+4. Entre al [visor del SNIT](https://www.snitcr.go.cr/) y ubique la capa de la división territorial administrativa (límite cantonal) del IGN. Anote el SRC en que se publica y la escala. Si la capa está disponible como servicio WFS, copie la URL del servicio. Si su tema es de otro país, haga lo mismo con el portal de datos geoespaciales de ese país (o con [GADM](https://gadm.org/), que publica la división administrativa de todos los países).
 
 5. Explique (a) por qué en un mapa web, dibujado en Web Mercator, Groenlandia parece más grande que Brasil, cuando en realidad es cuatro veces más pequeña, y qué SRC convendría usar para comparar las áreas de los países del mundo; y (b) por qué CR-SIRGAS / CRTM05, que es el SRC adecuado para medir en Costa Rica, no lo es para medir en México.
 

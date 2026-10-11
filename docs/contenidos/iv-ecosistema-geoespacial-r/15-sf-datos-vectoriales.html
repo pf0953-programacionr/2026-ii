@@ -502,11 +502,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#introducción" id="toc-introducción" class="nav-link" data-scroll-target="#introducción">Introducción</a></li>
   <li><a href="#lectura-de-capas-vectoriales" id="toc-lectura-de-capas-vectoriales" class="nav-link" data-scroll-target="#lectura-de-capas-vectoriales">Lectura de capas vectoriales</a></li>
   <li><a href="#un-objeto-sf-es-un-data-frame" id="toc-un-objeto-sf-es-un-data-frame" class="nav-link" data-scroll-target="#un-objeto-sf-es-un-data-frame">Un objeto sf es un data frame</a></li>
-  <li><a href="#mapas-con-ggplot2" id="toc-mapas-con-ggplot2" class="nav-link" data-scroll-target="#mapas-con-ggplot2">Mapas con ggplot2</a></li>
   <li><a href="#de-una-tabla-con-coordenadas-a-un-objeto-sf" id="toc-de-una-tabla-con-coordenadas-a-un-objeto-sf" class="nav-link" data-scroll-target="#de-una-tabla-con-coordenadas-a-un-objeto-sf">De una tabla con coordenadas a un objeto sf</a></li>
+  <li><a href="#mapas-con-ggplot2" id="toc-mapas-con-ggplot2" class="nav-link" data-scroll-target="#mapas-con-ggplot2">Mapas con ggplot2</a></li>
   <li><a href="#sistemas-de-referencia-de-coordenadas" id="toc-sistemas-de-referencia-de-coordenadas" class="nav-link" data-scroll-target="#sistemas-de-referencia-de-coordenadas">Sistemas de referencia de coordenadas</a></li>
   <li><a href="#unión-con-datos-tabulares" id="toc-unión-con-datos-tabulares" class="nav-link" data-scroll-target="#unión-con-datos-tabulares">Unión con datos tabulares</a></li>
-  <li><a href="#mapas-de-coropletas" id="toc-mapas-de-coropletas" class="nav-link" data-scroll-target="#mapas-de-coropletas">Mapas de coropletas</a></li>
+  <li><a href="#mapas-de-coropletas" id="toc-mapas-de-coropletas" class="nav-link" data-scroll-target="#mapas-de-coropletas">Mapas de coropletas</a>
+  <ul class="collapse">
+  <li><a href="#clasificación" id="toc-clasificación" class="nav-link" data-scroll-target="#clasificación">Clasificación</a></li>
+  <li><a href="#paletas-divergentes" id="toc-paletas-divergentes" class="nav-link" data-scroll-target="#paletas-divergentes">Paletas divergentes</a></li>
+  </ul></li>
   <li><a href="#escritura-de-capas" id="toc-escritura-de-capas" class="nav-link" data-scroll-target="#escritura-de-capas">Escritura de capas</a></li>
   <li><a href="#mapas-en-documentos-quarto" id="toc-mapas-en-documentos-quarto" class="nav-link" data-scroll-target="#mapas-en-documentos-quarto">Mapas en documentos Quarto</a></li>
   <li><a href="#asistentes-de-ia-para-generar-mapas" id="toc-asistentes-de-ia-para-generar-mapas" class="nav-link" data-scroll-target="#asistentes-de-ia-para-generar-mapas">Asistentes de IA para generar mapas</a></li>
@@ -515,8 +519,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#ejercicios" id="toc-ejercicios" class="nav-link" data-scroll-target="#ejercicios">Ejercicios</a>
   <ul class="collapse">
   <li><a href="#ejercicios-lectura" id="toc-ejercicios-lectura" class="nav-link" data-scroll-target="#ejercicios-lectura">Lectura y estructura</a></li>
-  <li><a href="#ejercicios-mapas" id="toc-ejercicios-mapas" class="nav-link" data-scroll-target="#ejercicios-mapas">Mapas</a></li>
   <li><a href="#ejercicios-puntos" id="toc-ejercicios-puntos" class="nav-link" data-scroll-target="#ejercicios-puntos">Puntos</a></li>
+  <li><a href="#ejercicios-mapas" id="toc-ejercicios-mapas" class="nav-link" data-scroll-target="#ejercicios-mapas">Mapas</a></li>
   <li><a href="#ejercicios-src" id="toc-ejercicios-src" class="nav-link" data-scroll-target="#ejercicios-src">Sistemas de referencia de coordenadas</a></li>
   <li><a href="#ejercicios-coropletas" id="toc-ejercicios-coropletas" class="nav-link" data-scroll-target="#ejercicios-coropletas">Unión y coropletas</a></li>
   <li><a href="#ejercicios-publicacion" id="toc-ejercicios-publicacion" class="nav-link" data-scroll-target="#ejercicios-publicacion">Publicación, asistentes y datos propios</a></li>
@@ -565,202 +569,241 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="introducción" class="level2">
 <h2 class="anchored" data-anchor-id="introducción">Introducción</h2>
 <p>El <a href="../../contenidos/iv-ecosistema-geoespacial-r/14-datos-geoespaciales.html">capítulo anterior</a> presentó los conceptos: el modelo vectorial, el estándar Simple Features, los sistemas de referencia de coordenadas (SRC) y los formatos de archivo. Este los pone en práctica con <a href="https://r-spatial.github.io/sf/">sf</a>, el paquete de R para datos geoespaciales vectoriales, creado por Edzer Pebesma en 2016 (Pebesma, 2018). Su nombre proviene del estándar <a href="https://www.ogc.org/standards/sfa">Simple Features</a>, que implementa; y, como se adelantó en el <a href="../../contenidos/iii-tidyverse/10-tidyverse.html">capítulo de tidyverse</a>, sigue las convenciones del tidyverse sin formar parte de él, por lo que todo lo aprendido sobre dplyr y ggplot2 se aprovecha sin cambios.</p>
-<p>La idea central del paquete cabe en una frase: <strong>un objeto sf es un data frame con una columna de geometrías</strong>. Cada fila es una entidad geográfica (un cantón, un registro de presencia de una especie), las columnas son sus atributos (el nombre, la población, la fecha) y una columna especial, por lo general llamada <code>geometry</code> o <code>geom</code>, contiene la geometría de cada fila: un punto, una línea o un polígono. Por eso <code>filter()</code>, <code>select()</code>, <code>left_join()</code> y <code>group_by()</code> funcionan con un objeto sf como con cualquier otro data frame, y la geometría acompaña a los datos en cada operación. Por debajo, sf se apoya en tres bibliotecas de software que usan casi todas las herramientas geoespaciales, incluidos QGIS y PostGIS: <a href="https://gdal.org/">GDAL</a>, que lee y escribe los formatos de archivo; <a href="https://libgeos.org/">GEOS</a>, que ejecuta las operaciones geométricas; y <a href="https://proj.org/">PROJ</a>, que transforma coordenadas entre SRC.</p>
-<p>Este capítulo cubre lo que hace falta para empezar: leer una capa, entender su estructura, dibujarla con ggplot2, convertir una tabla con coordenadas en puntos, manejar el SRC, unir la capa con datos tabulares y producir un mapa de coropletas. El capítulo siguiente trata las operaciones espaciales (relaciones entre capas, uniones espaciales, zonas de influencia, agregación) y, más adelante, el de leaflet produce mapas interactivos a partir de los mismos objetos. Los datos son los del hilo conductor del curso —los cantones de Costa Rica (INEC, 2023)— ahora con sus polígonos, publicados por el Instituto Geográfico Nacional (IGN, s. f.), más un conjunto de datos de puntos: registros de presencia de félidos silvestres descargados de GBIF (GBIF.org, 2026), como en el <a href="../../contenidos/i-introduccion-ciencia-datos-programacion/02-ejemplo-procesos-ciencia-datos.html">ejemplo de la semana 1</a>. Los tres archivos están descritos en el <a href="https://github.com/pf0953-programacionr/2026-ii/tree/main/datos">directorio de datos</a> del repositorio del curso.</p>
+<p>La idea central del paquete cabe en una frase: <strong>un objeto sf es un data frame con una columna de geometrías</strong>. Cada fila es una entidad geográfica (un país, una ciudad), las columnas son sus atributos (el nombre, la población, el continente) y una columna especial, por lo general llamada <code>geometry</code> o <code>geom</code>, contiene la geometría de cada fila: un punto, una línea o un polígono. Por eso <code>filter()</code>, <code>select()</code>, <code>left_join()</code> y <code>group_by()</code> funcionan con un objeto sf como con cualquier otro data frame, y la geometría acompaña a los datos en cada operación. Por debajo, sf se apoya en tres bibliotecas de software que usan casi todas las herramientas geoespaciales, incluidos QGIS y PostGIS: <a href="https://gdal.org/">GDAL</a>, que lee y escribe los formatos de archivo; <a href="https://libgeos.org/">GEOS</a>, que ejecuta las operaciones geométricas; y <a href="https://proj.org/">PROJ</a>, que transforma coordenadas entre SRC.</p>
+<p>Los datos de este capítulo cambian de escala. En lugar de los cantones de Costa Rica, se usan los <strong>países del mundo</strong> de <a href="https://www.naturalearthdata.com/">Natural Earth</a>, un conjunto de datos cartográficos de dominio público con capas de países, ciudades, aeropuertos, ríos y lagos a varias escalas, y los <strong>indicadores del desarrollo mundial</strong> del <a href="https://datos.bancomundial.org/">Banco Mundial</a>, con una fila por país. Ambos están preparados para el curso en los directorios <a href="https://github.com/pf0953-programacionr/2026-ii/tree/main/datos/natural-earth"><code>datos/natural-earth/</code></a> y <a href="https://github.com/pf0953-programacionr/2026-ii/tree/main/datos/banco-mundial"><code>datos/banco-mundial/</code></a> del repositorio, cada uno con un LEEME que describe sus archivos y variables. La escala mundial tiene una ventaja didáctica: con datos de todo el planeta, las consecuencias de elegir un sistema de referencia de coordenadas u otro se ven a simple vista en el mapa —un país que parece el doble de grande, un mapa estirado—, mientras que a la escala de un país solo se notan al medir. Los cantones de Costa Rica, con sus polígonos, y los registros de presencia de félidos de GBIF vuelven en el capítulo siguiente, con las operaciones espaciales, y en la tarea 3.</p>
+<p>Este capítulo cubre lo que hace falta para empezar: leer una capa, entender su estructura, dibujarla con ggplot2, convertir una tabla con coordenadas en puntos, manejar el SRC, unir la capa con datos tabulares y producir un mapa de coropletas. El capítulo siguiente trata las operaciones espaciales (relaciones entre capas, uniones espaciales, zonas de influencia, agregación) y, más adelante, el de leaflet produce mapas interactivos a partir de los mismos objetos.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>cantones <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://raw.githubusercontent.com/pf0953-programacionr/2026-ii/main/datos/cantones.csv"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">densidad =</span> poblacion <span class="sc">/</span> area_km2,</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">tipo =</span> <span class="fu">if_else</span>(densidad <span class="sc">&gt;</span> <span class="dv">100</span>, <span class="st">"urbano"</span>, <span class="st">"rural"</span>)</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Directorios de datos en el repositorio del curso</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>datos_ne <span class="ot">&lt;-</span> <span class="st">"https://raw.githubusercontent.com/pf0953-programacionr/2026-ii/main/datos/natural-earth/"</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>datos_bm <span class="ot">&lt;-</span> <span class="st">"https://raw.githubusercontent.com/pf0953-programacionr/2026-ii/main/datos/banco-mundial/"</span></span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>Al cargar sf aparece un mensaje como <code>Linking to GEOS 3.12.1, GDAL 3.8.4, PROJ 9.4.0; sf_use_s2() is TRUE</code>: indica las versiones de las tres bibliotecas y que el paquete usa la biblioteca <a href="https://r-spatial.github.io/s2/">s2</a> para las geometrías en coordenadas geográficas. No es un error; como en los capítulos anteriores, <code>message: false</code> lo oculta en el documento.</p>
+<p>Al cargar sf aparece un mensaje como <code>Linking to GEOS 3.12.1, GDAL 3.8.4, PROJ 9.4.0; sf_use_s2() is TRUE</code>: indica las versiones de las tres bibliotecas y que el paquete usa la biblioteca <a href="https://r-spatial.github.io/s2/">s2</a> para las geometrías en coordenadas geográficas. No es un error; como en los capítulos anteriores, <code>message: false</code> lo oculta en el documento. Las dos direcciones se guardan en objetos para no repetirlas: <code>paste0()</code> las une con el nombre de cada archivo.</p>
 </section>
 <section id="lectura-de-capas-vectoriales" class="level2">
 <h2 class="anchored" data-anchor-id="lectura-de-capas-vectoriales">Lectura de capas vectoriales</h2>
-<p>La función <a href="https://r-spatial.github.io/sf/reference/st_read.html"><code>st_read()</code></a> lee cualquier formato vectorial que GDAL conozca —GeoPackage, shapefile, GeoJSON, KML y <a href="https://gdal.org/en/stable/drivers/vector/">muchos más</a>— desde una ruta local o desde una URL, y devuelve un objeto sf. Casi todas las funciones de sf empiezan con el prefijo <code>st_</code> (de <em>spatial type</em>, heredado de PostGIS), lo que facilita encontrarlas con el autocompletado de RStudio. La capa de cantones del IGN, en formato GeoPackage:</p>
+<p>La función <a href="https://r-spatial.github.io/sf/reference/st_read.html"><code>st_read()</code></a> lee cualquier formato vectorial que GDAL conozca —GeoPackage, shapefile, GeoJSON, KML y <a href="https://gdal.org/en/stable/drivers/vector/">muchos más</a>— desde una ruta local o desde una URL, y devuelve un objeto sf. Casi todas las funciones de sf empiezan con el prefijo <code>st_</code> (de <em>spatial type</em>, heredado de PostGIS), lo que facilita encontrarlas con el autocompletado de RStudio. La capa de países de Natural Earth a escala 1:110 millones, en formato GeoPackage:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>cantones_sf <span class="ot">&lt;-</span> <span class="fu">st_read</span>(<span class="st">"https://raw.githubusercontent.com/pf0953-programacionr/2026-ii/main/datos/cantones.gpkg"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>paises <span class="ot">&lt;-</span> <span class="fu">st_read</span>(<span class="fu">paste0</span>(datos_ne, <span class="st">"paises.gpkg"</span>))</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Reading layer `cantones' from data source 
-  `https://raw.githubusercontent.com/pf0953-programacionr/2026-ii/main/datos/cantones.gpkg' 
+<pre><code>Reading layer `paises' from data source 
+  `https://raw.githubusercontent.com/pf0953-programacionr/2026-ii/main/datos/natural-earth/paises.gpkg' 
   using driver `GPKG'
-Simple feature collection with 84 features and 4 fields
+Simple feature collection with 177 features and 9 fields
 Geometry type: MULTIPOLYGON
 Dimension:     XY
-Bounding box:  xmin: 156147.8 ymin: 608898.4 xmax: 658877.1 ymax: 1241118
-Projected CRS: CR-SIRGAS / CRTM05</code></pre>
+Bounding box:  xmin: -180 ymin: -90 xmax: 180 ymax: 83.64513
+Geodetic CRS:  WGS 84</code></pre>
 </div>
 </div>
-<p>El mensaje describe lo que se leyó: la capa <code>cantones</code>, con el controlador (<em>driver</em>) GPKG, 84 entidades (<em>features</em>, las filas) y 4 campos (<em>fields</em>, las columnas de atributos); el tipo de geometría, <code>MULTIPOLYGON</code>; la <strong>extensión</strong> (<em>bounding box</em>), el rectángulo que encierra todas las geometrías; y el SRC, proyectado, CR-SIRGAS / CRTM05. Con <code>quiet = TRUE</code> el mensaje se omite. Al imprimir el objeto se repite ese encabezado y se muestran las primeras filas:</p>
+<p>El mensaje describe lo que se leyó: la capa <code>paises</code>, con el controlador (<em>driver</em>) GPKG, 177 entidades (<em>features</em>, las filas) y 9 campos (<em>fields</em>, las columnas de atributos); el tipo de geometría, <code>MULTIPOLYGON</code>; la <strong>extensión</strong> (<em>bounding box</em>), el rectángulo que encierra todas las geometrías, aquí el mundo entero; y el SRC, geodésico (geográfico), WGS 84. Con <code>quiet = TRUE</code> el mensaje se omite. Al imprimir el objeto se repite ese encabezado y se muestran las primeras filas:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>cantones_sf</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>paises</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Simple feature collection with 84 features and 4 fields
+<pre><code>Simple feature collection with 177 features and 9 fields
 Geometry type: MULTIPOLYGON
 Dimension:     XY
-Bounding box:  xmin: 156147.8 ymin: 608898.4 xmax: 658877.1 ymax: 1241118
-Projected CRS: CR-SIRGAS / CRTM05
+Bounding box:  xmin: -180 ymin: -90 xmax: 180 ymax: 83.64513
+Geodetic CRS:  WGS 84
 First 10 features:
-   codigo_provincia provincia codigo_canton       canton
-1                 1  San José           101     San José
-2                 1  San José           102       Escazú
-3                 1  San José           103 Desamparados
-4                 1  San José           104     Puriscal
-5                 1  San José           105      Tarrazú
-6                 1  San José           106       Aserrí
-7                 1  San José           107         Mora
-8                 1  San José           108   Goicoechea
-9                 1  San José           109    Santa Ana
-10                1  San José           110   Alajuelita
-                             geom
-1  MULTIPOLYGON (((481030.3 11...
-2  MULTIPOLYGON (((479844.9 11...
-3  MULTIPOLYGON (((494091.2 10...
-4  MULTIPOLYGON (((455732.1 10...
-5  MULTIPOLYGON (((501118.6 10...
-6  MULTIPOLYGON (((491211.1 10...
-7  MULTIPOLYGON (((456885.8 10...
-8  MULTIPOLYGON (((512379.4 11...
-9  MULTIPOLYGON (((479218 1102...
-10 MULTIPOLYGON (((486917.3 10...</code></pre>
+   codigo iso3             nombre                nombre_en        continente
+1     FJI  FJI               Fiyi                     Fiji           Oceanía
+2     TZA  TZA           Tanzania                 Tanzania            África
+3     SAH  ESH  Sahara Occidental                W. Sahara            África
+4     CAN  CAN             Canadá                   Canada América del Norte
+5     USA  USA     Estados Unidos United States of America América del Norte
+6     KAZ  KAZ         Kazajistán               Kazakhstan              Asia
+7     UZB  UZB         Uzbekistán               Uzbekistan              Asia
+8     PNG  PNG Papúa Nueva Guinea         Papua New Guinea           Oceanía
+9     IDN  IDN          Indonesia                Indonesia              Asia
+10    ARG  ARG          Argentina                Argentina   América del Sur
+               subregion poblacion_estimada pib_millones
+1              Melanesia             889953         5496
+2        África oriental           58005463        63177
+3   África septentrional             603253          907
+4  América septentrional           37589262      1736425
+5  América septentrional          328239523     21433226
+6           Asia central           18513930       181665
+7           Asia central           33580650        57921
+8              Melanesia            8776109        24829
+9       Asia sudoriental          270625568      1119190
+10       América del Sur           44938712       445445
+             grupo_ingreso                           geom
+1  4. Ingreso mediano bajo MULTIPOLYGON (((180 -16.067...
+2          5. Ingreso bajo MULTIPOLYGON (((33.90371 -0...
+3          5. Ingreso bajo MULTIPOLYGON (((-8.66559 27...
+4    1. Ingreso alto: OCDE MULTIPOLYGON (((-122.84 49,...
+5    1. Ingreso alto: OCDE MULTIPOLYGON (((-122.84 49,...
+6  3. Ingreso mediano alto MULTIPOLYGON (((87.35997 49...
+7  4. Ingreso mediano bajo MULTIPOLYGON (((55.96819 41...
+8  4. Ingreso mediano bajo MULTIPOLYGON (((141.0002 -2...
+9  4. Ingreso mediano bajo MULTIPOLYGON (((141.0002 -2...
+10 3. Ingreso mediano alto MULTIPOLYGON (((-68.63401 -...</code></pre>
 </div>
 </div>
-<p>Es un data frame de 84 filas con las columnas <code>codigo_provincia</code>, <code>provincia</code>, <code>codigo_canton</code>, <code>canton</code> y <code>geom</code>, y esta última contiene un multipolígono por cantón, impreso en WKT y abreviado. Las coordenadas son números de seis y siete cifras: metros en la proyección CRTM05, como se vio en el capítulo anterior. Tres funciones describen la parte geoespacial del objeto:</p>
+<p>Es un data frame de 177 filas con el código y el nombre de cada país, su continente, su subregión, una estimación de población, el PIB y el grupo de ingreso, y una columna <code>geom</code> con un multipolígono por país, impreso en WKT y abreviado. Las coordenadas son grados de longitud y latitud. Tres funciones describen la parte geoespacial del objeto:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(cantones_sf)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(paises)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "sf"         "data.frame"</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">st_geometry</span>(cantones_sf)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">st_geometry</span>(paises)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Geometry set for 84 features 
+<pre><code>Geometry set for 177 features 
 Geometry type: MULTIPOLYGON
 Dimension:     XY
-Bounding box:  xmin: 156147.8 ymin: 608898.4 xmax: 658877.1 ymax: 1241118
-Projected CRS: CR-SIRGAS / CRTM05
+Bounding box:  xmin: -180 ymin: -90 xmax: 180 ymax: 83.64513
+Geodetic CRS:  WGS 84
 First 5 geometries:</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>MULTIPOLYGON (((481030.3 1102633, 481510.3 1101...</code></pre>
+<pre><code>MULTIPOLYGON (((180 -16.06713, 180 -16.55522, 1...</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>MULTIPOLYGON (((479844.9 1102670, 479982.5 1102...</code></pre>
+<pre><code>MULTIPOLYGON (((33.90371 -0.95, 34.07262 -1.059...</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>MULTIPOLYGON (((494091.2 1094937, 494448.5 1094...</code></pre>
+<pre><code>MULTIPOLYGON (((-8.66559 27.65643, -8.665124 27...</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>MULTIPOLYGON (((455732.1 1095962, 456519.2 1095...</code></pre>
+<pre><code>MULTIPOLYGON (((-122.84 49, -122.9742 49.00254,...</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>MULTIPOLYGON (((501118.6 1074476, 502324 107457...</code></pre>
+<pre><code>MULTIPOLYGON (((-122.84 49, -120 49, -117.0312 ...</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">st_crs</span>(cantones_sf)<span class="sc">$</span>epsg</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">st_crs</span>(paises)<span class="sc">$</span>epsg</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 8908</code></pre>
+<pre><code>[1] 4326</code></pre>
 </div>
 </div>
 <ul>
 <li><code>class()</code> muestra que el objeto es a la vez de la clase <code>sf</code> y de la clase <code>data.frame</code>: lo primero le da las funciones geoespaciales; lo segundo, todas las de los data frames.</li>
-<li><a href="https://r-spatial.github.io/sf/reference/st_geometry.html"><code>st_geometry()</code></a> extrae la columna de geometrías, cualquiera que sea su nombre (<code>geom</code> aquí; <code>geometry</code> en otros archivos), como un objeto de la clase <code>sfc</code> (<em>simple feature column</em>).</li>
-<li><a href="https://r-spatial.github.io/sf/reference/st_crs.html"><code>st_crs()</code></a> devuelve el SRC completo; con <code>$epsg</code> se obtiene solo el código, más cómodo de comparar. Se retoma en la sección sobre SRC.</li>
+<li><a href="https://r-spatial.github.io/sf/reference/st_geometry.html"><code>st_geometry()</code></a> extrae la columna de geometrías, cualquiera que sea su nombre (<code>geom</code> aquí; <code>geometry</code> en otros archivos), como un objeto de la clase <code>sfc</code> (<em>simple feature column</em>). Todas son multipolígonos, aunque la mayoría de los países tiene un solo cuerpo: la capa se guardó con el tipo «multi» para toda ella, lo que permite representar los países con islas o partes separadas.</li>
+<li><a href="https://r-spatial.github.io/sf/reference/st_crs.html"><code>st_crs()</code></a> devuelve el SRC completo; con <code>$epsg</code> se obtiene solo el código, más cómodo de comparar. WGS84, EPSG:4326, es el SRC en que se distribuyen casi todos los datos globales. Se retoma en la sección sobre SRC.</li>
 </ul>
-<p>Un archivo GeoPackage puede contener varias capas; <a href="https://r-spatial.github.io/sf/reference/st_layers.html"><code>st_layers()</code></a> las lista, y el argumento <code>layer</code> de <code>st_read()</code> elige una. Para un shapefile se indica la ruta del archivo <code>.shp</code> (los demás archivos del conjunto deben estar en el mismo directorio) y para un GeoJSON, la del archivo <code>.geojson</code>. Las capas publicadas como servicios WFS se leen con la URL del servicio, como en el ejemplo siguiente (que no se ejecuta en el curso, para no depender de la disponibilidad del SNIT):</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Capa de cantones del SNIT, directamente del servicio WFS del IGN</span></span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>cantones_wfs <span class="ot">&lt;-</span> <span class="fu">st_read</span>(</span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"WFS:https://geos.snitcr.go.cr/be/IGN_5_CO/wfs"</span>,</span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">layer =</span> <span class="st">"IGN_5_CO:limitecantonal_5k"</span></span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<p>La <strong>escala</strong> de una capa determina para qué sirve. A 1:110 M, Costa Rica es un polígono de unos pocos vértices; Natural Earth publica las mismas capas a 1:50 M y 1:10 M, y el repositorio del curso incluye los países de Centroamérica a 1:10 M, para mapas de la región. Las dos versiones del país, una sobre la otra (el mapa usa <code>geom_sf()</code>, de la sección sobre mapas):</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>centroamerica <span class="ot">&lt;-</span> <span class="fu">st_read</span>(<span class="fu">paste0</span>(datos_ne, <span class="st">"centroamerica.gpkg"</span>), <span class="at">quiet =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">data =</span> <span class="fu">filter</span>(centroamerica, nombre <span class="sc">==</span> <span class="st">"Costa Rica"</span>), <span class="at">fill =</span> <span class="st">"#dce9f5"</span>, <span class="at">color =</span> <span class="st">"#005da4"</span>) <span class="sc">+</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">data =</span> <span class="fu">filter</span>(paises, nombre <span class="sc">==</span> <span class="st">"Costa Rica"</span>), <span class="at">fill =</span> <span class="cn">NA</span>, <span class="at">color =</span> <span class="st">"red"</span>, <span class="at">linewidth =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Costa Rica a escala 1:10 M (azul) y 1:110 M (rojo)"</span>) <span class="sc">+</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="15-sf-datos-vectoriales_files/figure-html/escalas-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Las dos capas están en el mismo SRC; difieren en el detalle de las geometrías (y en el tamaño del archivo). Un archivo GeoPackage puede contener varias capas; <a href="https://r-spatial.github.io/sf/reference/st_layers.html"><code>st_layers()</code></a> las lista, y el argumento <code>layer</code> de <code>st_read()</code> elige una. Para un shapefile se indica la ruta del archivo <code>.shp</code> (los demás archivos del conjunto deben estar en el mismo directorio) y para un GeoJSON, la del archivo <code>.geojson</code>. Las capas publicadas como servicios WFS se leen con la URL del servicio, como en el ejemplo siguiente, con la capa de cantones del SNIT (que no se ejecuta en el curso, para no depender de la disponibilidad del servicio):</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Capa de cantones del SNIT, directamente del servicio WFS del IGN</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>cantones_wfs <span class="ot">&lt;-</span> <span class="fu">st_read</span>(</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"WFS:https://geos.snitcr.go.cr/be/IGN_5_CO/wfs"</span>,</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">layer =</span> <span class="st">"IGN_5_CO:limitecantonal_5k"</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <p><em>Ejercicios de esta sección: <a href="#ejercicios-lectura">ejercicios sobre lectura y estructura</a>.</em></p>
 </section>
 <section id="un-objeto-sf-es-un-data-frame" class="level2">
 <h2 class="anchored" data-anchor-id="un-objeto-sf-es-un-data-frame">Un objeto sf es un data frame</h2>
-<p>Todos los verbos de <a href="../../contenidos/iii-tidyverse/11-dplyr.html">dplyr</a> funcionan con un objeto sf y el resultado conserva la geometría. Los cantones de Heredia:</p>
+<p>Todos los verbos de <a href="../../contenidos/iii-tidyverse/11-dplyr.html">dplyr</a> funcionan con un objeto sf y el resultado conserva la geometría. Los países de América del Sur, ordenados por población:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>cantones_sf <span class="sc">|&gt;</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(provincia <span class="sc">==</span> <span class="st">"Heredia"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>america_sur <span class="ot">&lt;-</span> paises <span class="sc">|&gt;</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(continente <span class="sc">==</span> <span class="st">"América del Sur"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(poblacion_estimada))</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>america_sur</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Simple feature collection with 10 features and 4 fields
+<pre><code>Simple feature collection with 13 features and 9 fields
 Geometry type: MULTIPOLYGON
 Dimension:     XY
-Bounding box:  xmin: 478085.5 ymin: 1101260 xmax: 531727.6 ymax: 1193308
-Projected CRS: CR-SIRGAS / CRTM05
-   codigo_provincia provincia codigo_canton        canton
-1                 4   Heredia           401       Heredia
-2                 4   Heredia           402         Barva
-3                 4   Heredia           403 Santo Domingo
-4                 4   Heredia           404 Santa Bárbara
-5                 4   Heredia           405    San Rafael
-6                 4   Heredia           406    San Isidro
-7                 4   Heredia           407         Belén
-8                 4   Heredia           408        Flores
-9                 4   Heredia           409     San Pablo
-10                4   Heredia           410     Sarapiquí
-                             geom
-1  MULTIPOLYGON (((482438.7 11...
-2  MULTIPOLYGON (((486302.1 11...
-3  MULTIPOLYGON (((497196.3 11...
-4  MULTIPOLYGON (((482367 1123...
-5  MULTIPOLYGON (((490951.6 11...
-6  MULTIPOLYGON (((495645.2 11...
-7  MULTIPOLYGON (((480648.1 11...
-8  MULTIPOLYGON (((483152.5 11...
-9  MULTIPOLYGON (((491777.7 11...
-10 MULTIPOLYGON (((496954.9 11...</code></pre>
-</div>
-</div>
-<p>El resultado es otro objeto sf, de 10 entidades, y su extensión se recalculó: ahora encierra solo esa provincia. Con <code>select()</code> ocurre algo particular: la columna de geometría <strong>siempre se conserva</strong>, aunque no se pida, porque sin ella el objeto dejaría de ser geoespacial:</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>cantones_sf <span class="sc">|&gt;</span></span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(canton)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Simple feature collection with 84 features and 1 field
-Geometry type: MULTIPOLYGON
-Dimension:     XY
-Bounding box:  xmin: 156147.8 ymin: 608898.4 xmax: 658877.1 ymax: 1241118
-Projected CRS: CR-SIRGAS / CRTM05
+Bounding box:  xmin: -81.41094 ymin: -55.61183 xmax: -34.72999 ymax: 12.4373
+Geodetic CRS:  WGS 84
 First 10 features:
-         canton                           geom
-1      San José MULTIPOLYGON (((481030.3 11...
-2        Escazú MULTIPOLYGON (((479844.9 11...
-3  Desamparados MULTIPOLYGON (((494091.2 10...
-4      Puriscal MULTIPOLYGON (((455732.1 10...
-5       Tarrazú MULTIPOLYGON (((501118.6 10...
-6        Aserrí MULTIPOLYGON (((491211.1 10...
-7          Mora MULTIPOLYGON (((456885.8 10...
-8    Goicoechea MULTIPOLYGON (((512379.4 11...
-9     Santa Ana MULTIPOLYGON (((479218 1102...
-10   Alajuelita MULTIPOLYGON (((486917.3 10...</code></pre>
+   codigo iso3    nombre nombre_en      continente       subregion
+1     BRA  BRA    Brasil    Brazil América del Sur América del Sur
+2     COL  COL  Colombia  Colombia América del Sur América del Sur
+3     ARG  ARG Argentina Argentina América del Sur América del Sur
+4     PER  PER      Perú      Peru América del Sur América del Sur
+5     VEN  VEN Venezuela Venezuela América del Sur América del Sur
+6     CHL  CHL     Chile     Chile América del Sur América del Sur
+7     ECU  ECU   Ecuador   Ecuador América del Sur América del Sur
+8     BOL  BOL   Bolivia   Bolivia América del Sur América del Sur
+9     PRY  PRY  Paraguay  Paraguay América del Sur América del Sur
+10    URY  URY   Uruguay   Uruguay América del Sur América del Sur
+   poblacion_estimada pib_millones           grupo_ingreso
+1           211049527      1839758 3. Ingreso mediano alto
+2            50339443       323615 3. Ingreso mediano alto
+3            44938712       445445 3. Ingreso mediano alto
+4            32510453       226848 3. Ingreso mediano alto
+5            28515829       482359 3. Ingreso mediano alto
+6            18952038       282318 3. Ingreso mediano alto
+7            17373662       107435 3. Ingreso mediano alto
+8            11513100        40895 4. Ingreso mediano bajo
+9             7044636        38145 4. Ingreso mediano bajo
+10            3461734        56045 3. Ingreso mediano alto
+                             geom
+1  MULTIPOLYGON (((-53.37366 -...
+2  MULTIPOLYGON (((-66.87633 1...
+3  MULTIPOLYGON (((-68.63401 -...
+4  MULTIPOLYGON (((-69.89364 -...
+5  MULTIPOLYGON (((-60.73357 5...
+6  MULTIPOLYGON (((-68.63401 -...
+7  MULTIPOLYGON (((-75.37322 -...
+8  MULTIPOLYGON (((-69.52968 -...
+9  MULTIPOLYGON (((-58.16639 -...
+10 MULTIPOLYGON (((-57.62513 -...</code></pre>
 </div>
 </div>
-<p>Cuando se quiere solo la tabla de atributos —para mostrarla con <code>knitr::kable()</code> o <code>datatable()</code>, o para unirla a otra tabla—, <a href="https://r-spatial.github.io/sf/reference/st_geometry.html"><code>st_drop_geometry()</code></a> la quita y devuelve un data frame ordinario. Los cantones por provincia, con <code>count()</code>:</p>
+<p>El resultado es otro objeto sf, de 13 entidades, y su extensión se recalculó: ahora encierra solo ese continente. Con <code>select()</code> ocurre algo particular: la columna de geometría <strong>siempre se conserva</strong>, aunque no se pida, porque sin ella el objeto dejaría de ser geoespacial:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>cantones_sf <span class="sc">|&gt;</span></span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_drop_geometry</span>() <span class="sc">|&gt;</span></span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(provincia, <span class="at">sort =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>america_sur <span class="sc">|&gt;</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(nombre, poblacion_estimada)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>   provincia  n
-1   San José 20
-2   Alajuela 16
-3 Puntarenas 13
-4 Guanacaste 11
-5    Heredia 10
-6    Cartago  8
-7      Limón  6</code></pre>
+<pre><code>Simple feature collection with 13 features and 2 fields
+Geometry type: MULTIPOLYGON
+Dimension:     XY
+Bounding box:  xmin: -81.41094 ymin: -55.61183 xmax: -34.72999 ymax: 12.4373
+Geodetic CRS:  WGS 84
+First 10 features:
+      nombre poblacion_estimada                           geom
+1     Brasil          211049527 MULTIPOLYGON (((-53.37366 -...
+2   Colombia           50339443 MULTIPOLYGON (((-66.87633 1...
+3  Argentina           44938712 MULTIPOLYGON (((-68.63401 -...
+4       Perú           32510453 MULTIPOLYGON (((-69.89364 -...
+5  Venezuela           28515829 MULTIPOLYGON (((-60.73357 5...
+6      Chile           18952038 MULTIPOLYGON (((-68.63401 -...
+7    Ecuador           17373662 MULTIPOLYGON (((-75.37322 -...
+8    Bolivia           11513100 MULTIPOLYGON (((-69.52968 -...
+9   Paraguay            7044636 MULTIPOLYGON (((-58.16639 -...
+10   Uruguay            3461734 MULTIPOLYGON (((-57.62513 -...</code></pre>
 </div>
 </div>
-<p>El conteo funcionaría también sin quitar la geometría, pero con una diferencia importante que se verá en el capítulo siguiente: <code>summarize()</code> y <code>count()</code> sobre un objeto sf <strong>unen las geometrías</strong> de cada grupo, lo que aquí produciría el polígono de cada provincia, con el costo de cálculo correspondiente. Para resúmenes puramente tabulares, <code>st_drop_geometry()</code> primero.</p>
-<p><em>Ejercicios de esta sección: <a href="#ejercicios-lectura">ejercicios sobre lectura y estructura</a>.</em></p>
-</section>
-<section id="mapas-con-ggplot2" class="level2">
-<h2 class="anchored" data-anchor-id="mapas-con-ggplot2">Mapas con ggplot2</h2>
-<p>La forma más rápida de ver una capa es <code>plot()</code>, la función de gráficos de R base, que sf adapta para dibujar mapas. Tiene una particularidad que sorprende la primera vez: dibuja <strong>un mapa por cada columna de atributos</strong>, coloreado según sus valores:</p>
+<p>Cuando se quiere solo la tabla de atributos —para mostrarla con <code>knitr::kable()</code> o <code>datatable()</code>, o para unirla a otra tabla—, <a href="https://r-spatial.github.io/sf/reference/st_geometry.html"><code>st_drop_geometry()</code></a> la quita y devuelve un data frame ordinario. Los países por continente, con <code>count()</code>:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(cantones_sf)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>paises <span class="sc">|&gt;</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_drop_geometry</span>() <span class="sc">|&gt;</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(continente, <span class="at">sort =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                    continente  n
+1                       África 51
+2                         Asia 47
+3                       Europa 39
+4            América del Norte 18
+5              América del Sur 13
+6                      Oceanía  7
+7                    Antártida  1
+8 Siete mares (océano abierto)  1</code></pre>
+</div>
+</div>
+<p>El conteo funcionaría también sin quitar la geometría, pero con una diferencia importante que se verá en el capítulo siguiente: <code>summarize()</code> y <code>count()</code> sobre un objeto sf <strong>unen las geometrías</strong> de cada grupo, lo que aquí produciría el polígono de cada continente, con el costo de cálculo correspondiente. Para resúmenes puramente tabulares, <code>st_drop_geometry()</code> primero.</p>
+<p>La diferencia con un data frame común aparece al pedir un gráfico: <code>plot()</code>, la función de gráficos de R base, dibuja las <strong>geometrías</strong>, y tiene una particularidad que sorprende la primera vez: dibuja <strong>un mapa por cada columna de atributos</strong>, coloreado según sus valores.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(america_sur)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -769,10 +812,85 @@ First 10 features:
 </div>
 </div>
 </div>
-<p>Para ver solo las geometrías se le pasa <code>st_geometry()</code>, y para un solo atributo, el objeto con la columna entre corchetes (<code>cantones_sf["provincia"]</code>). <code>plot()</code> es suficiente para explorar; para comunicar se usa ggplot2, con lo aprendido en el <a href="../../contenidos/iii-tidyverse/12-ggplot2.html">capítulo correspondiente</a> y una geometría nueva, <a href="https://ggplot2.tidyverse.org/reference/ggsf.html"><code>geom_sf()</code></a>, que dibuja puntos, líneas o polígonos según lo que contenga la columna de geometrías, sin que haga falta mapear <code>x</code> ni <code>y</code>:</p>
+<p>Para ver solo las geometrías se le pasa <code>st_geometry()</code>, y para un solo atributo, el objeto con la columna entre corchetes (<code>america_sur["poblacion_estimada"]</code>). <code>plot()</code> es suficiente para explorar; para comunicar se usa ggplot2.</p>
+<p><em>Ejercicios de esta sección: <a href="#ejercicios-lectura">ejercicios sobre lectura y estructura</a>.</em></p>
+</section>
+<section id="de-una-tabla-con-coordenadas-a-un-objeto-sf" class="level2">
+<h2 class="anchored" data-anchor-id="de-una-tabla-con-coordenadas-a-un-objeto-sf">De una tabla con coordenadas a un objeto sf</h2>
+<p>Los datos de puntos rara vez llegan como capa geoespacial: lo usual es un CSV con dos columnas de coordenadas, como los registros de GBIF de la <a href="../../contenidos/i-introduccion-ciencia-datos-programacion/02-ejemplo-procesos-ciencia-datos.html">semana 1</a>, las ciudades de Natural Earth del repositorio, los datos de estaciones o de encuestas, o los que cada estudiante recopile para la tarea 3.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(cantones_sf) <span class="sc">+</span></span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>()</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>tabla_ciudades <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="fu">paste0</span>(datos_ne, <span class="st">"ciudades.csv"</span>))</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>tabla_ciudades</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 243 × 7
+   nombre       pais              codigo_pais capital poblacion longitud latitud
+   &lt;chr&gt;        &lt;chr&gt;             &lt;chr&gt;       &lt;lgl&gt;       &lt;dbl&gt;    &lt;dbl&gt;   &lt;dbl&gt;
+ 1 Vatican City Vatican           VAT         TRUE          832    12.5    41.9 
+ 2 San Marino   San Marino        SMR         TRUE        29579    12.4    43.9 
+ 3 Vaduz        Liechtenstein     LIE         TRUE        36281     9.52   47.1 
+ 4 Lobamba      eSwatini          SWZ         FALSE        9782    31.2   -26.5 
+ 5 Luxembourg   Luxembourg        LUX         TRUE       107260     6.13   49.6 
+ 6 Palikir      Federated States… FSM         TRUE         4645   158.      6.92
+ 7 Majuro       Marshall Islands  MHL         TRUE        25400   171.      7.10
+ 8 Funafuti     Tuvalu            TUV         TRUE         4749   179.     -8.52
+ 9 Melekeok     Palau             PLW         TRUE         7026   135.      7.49
+10 Bir Lehlou   Western Sahara    SAH         FALSE         500    -9.65   26.1 
+# ℹ 233 more rows</code></pre>
+</div>
+</div>
+<p><a href="https://r-spatial.github.io/sf/reference/st_as_sf.html"><code>st_as_sf()</code></a> convierte el data frame en un objeto sf a partir de las columnas de coordenadas, indicadas en <code>coords</code>, y del SRC en que están esas coordenadas, en <code>crs</code>:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>ciudades <span class="ot">&lt;-</span> <span class="fu">st_as_sf</span>(</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  tabla_ciudades,</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">coords =</span> <span class="fu">c</span>(<span class="st">"longitud"</span>, <span class="st">"latitud"</span>),</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">crs =</span> <span class="dv">4326</span></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>ciudades</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Simple feature collection with 243 features and 5 fields
+Geometry type: POINT
+Dimension:     XY
+Bounding box:  xmin: -175.2206 ymin: -41.29999 xmax: 179.2166 ymax: 64.15002
+Geodetic CRS:  WGS 84
+# A tibble: 243 × 6
+   nombre       pais     codigo_pais capital poblacion             geometry
+ * &lt;chr&gt;        &lt;chr&gt;    &lt;chr&gt;       &lt;lgl&gt;       &lt;dbl&gt;          &lt;POINT [°]&gt;
+ 1 Vatican City Vatican  VAT         TRUE          832  (12.45339 41.90328)
+ 2 San Marino   San Mar… SMR         TRUE        29579   (12.44177 43.9361)
+ 3 Vaduz        Liechte… LIE         TRUE        36281   (9.51667 47.13372)
+ 4 Lobamba      eSwatini SWZ         FALSE        9782     (31.2 -26.46667)
+ 5 Luxembourg   Luxembo… LUX         TRUE       107260  (6.130003 49.61166)
+ 6 Palikir      Federat… FSM         TRUE         4645    (158.15 6.916644)
+ 7 Majuro       Marshal… MHL         TRUE        25400    (171.38 7.103004)
+ 8 Funafuti     Tuvalu   TUV         TRUE         4749 (179.2166 -8.516652)
+ 9 Melekeok     Palau    PLW         TRUE         7026  (134.6265 7.487396)
+10 Bir Lehlou   Western… SAH         FALSE         500 (-9.652522 26.11917)
+# ℹ 233 more rows</code></pre>
+</div>
+</div>
+<p>Las dos columnas de coordenadas desaparecieron y en su lugar hay una columna <code>geometry</code> con un punto por ciudad; el SRC es WGS 84 y la extensión está en grados. Dos detalles causan errores frecuentes. El orden en <code>coords</code> es <strong>x, y</strong>, es decir, <strong>longitud, latitud</strong>: al revés del «latitud, longitud» con que suelen escribirse las coordenadas, y si se invierte, las ciudades caen en lugares absurdos. Y <code>crs</code> es indispensable: sin él, el objeto se crea, pero no tiene SRC, por lo que no se puede reproyectar ni combinar con otras capas. Los datos de GBIF, de GPS, de Google Maps y de casi cualquier fuente que hable de «latitud y longitud» están en WGS84, EPSG:4326. El camino inverso, de puntos a tabla, es <a href="https://r-spatial.github.io/sf/reference/st_coordinates.html"><code>st_coordinates()</code></a>, que devuelve una matriz con las columnas <code>X</code> y <code>Y</code>:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>ciudades <span class="sc">|&gt;</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(nombre <span class="sc">==</span> <span class="st">"San José"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_coordinates</span>()</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>           X        Y
+[1,] -84.086 9.936958</code></pre>
+</div>
+</div>
+<p><em>Ejercicios de esta sección: <a href="#ejercicios-puntos">ejercicios sobre puntos</a>.</em></p>
+</section>
+<section id="mapas-con-ggplot2" class="level2">
+<h2 class="anchored" data-anchor-id="mapas-con-ggplot2">Mapas con ggplot2</h2>
+<p>Para comunicar, el mapa se construye con lo aprendido en el <a href="../../contenidos/iii-tidyverse/12-ggplot2.html">capítulo de ggplot2</a> y una geometría nueva, <a href="https://ggplot2.tidyverse.org/reference/ggsf.html"><code>geom_sf()</code></a>, que dibuja puntos, líneas o polígonos según lo que contenga la columna de geometrías, sin que haga falta mapear <code>x</code> ni <code>y</code>. Los argumentos son los de siempre: <code>fill</code> para el relleno de los polígonos, <code>color</code> para sus bordes o para los puntos, <code>linewidth</code> para el grosor de la línea, <code>size</code> para el tamaño de los puntos y <code>alpha</code> para la transparencia. Y, como las capas de puntos y texto del capítulo de ggplot2, cada <code>geom_sf()</code> puede tener sus propios datos, lo que permite <strong>superponer capas</strong>. Los países con las ciudades encima:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">data =</span> paises, <span class="at">fill =</span> <span class="st">"#dce9f5"</span>, <span class="at">color =</span> <span class="st">"white"</span>, <span class="at">linewidth =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">data =</span> ciudades, <span class="at">color =</span> <span class="st">"#d97b1b"</span>, <span class="at">size =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Países y ciudades principales del mundo (Natural Earth, 1:110 M)"</span>) <span class="sc">+</span></span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -781,276 +899,231 @@ First 10 features:
 </div>
 </div>
 </div>
-<p>Dos observaciones. Primera: aunque las coordenadas de la capa están en metros, los ejes muestran grados de longitud y latitud: <code>geom_sf()</code> dibuja los datos en su propio SRC, pero rotula los ejes con una <strong>retícula</strong> (<em>graticule</em>) geográfica. Segunda: el país ocupa menos de la mitad del mapa y hay un punto diminuto en la esquina inferior izquierda. Es la Isla del Coco, parte del cantón de Puntarenas, a unos 500 km de la costa: como está en la capa, la extensión la incluye. Para centrar el mapa en el territorio continental se fijan los límites de los ejes con <a href="https://ggplot2.tidyverse.org/reference/ggsf.html"><code>coord_sf()</code></a>, en las unidades del SRC de los datos (metros de CRTM05); las estéticas y los argumentos son los de siempre (<code>fill</code> para el relleno de los polígonos, <code>color</code> para sus bordes, <code>linewidth</code> para el grosor de la línea), y los temas también:</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(cantones_sf) <span class="sc">+</span></span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="fu">aes</span>(<span class="at">fill =</span> provincia), <span class="at">color =</span> <span class="st">"white"</span>, <span class="at">linewidth =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_sf</span>(<span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">280000</span>, <span class="dv">660000</span>), <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">880000</span>, <span class="dv">1250000</span>)) <span class="sc">+</span></span>
-<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Cantones de Costa Rica, por provincia"</span>, <span class="at">fill =</span> <span class="st">"Provincia"</span>) <span class="sc">+</span></span>
-<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="15-sf-datos-vectoriales_files/figure-html/geom-sf-provincias-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>Como en cualquier gráfico de ggplot2, <code>aes(fill = provincia)</code> <strong>mapea</strong> una columna al relleno y produce una leyenda; <code>fill = "gray90"</code>, fuera de <code>aes()</code>, lo <strong>fija</strong>. Los rótulos se agregan con <a href="https://ggplot2.tidyverse.org/reference/ggsf.html"><code>geom_sf_text()</code></a> (o <code>geom_sf_label()</code>, con fondo), que coloca el texto en un punto interior de cada polígono. Los cantones de Heredia, con sus nombres:</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>cantones_sf <span class="sc">|&gt;</span></span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(provincia <span class="sc">==</span> <span class="st">"Heredia"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span></span>
-<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">fill =</span> <span class="st">"#dce9f5"</span>, <span class="at">color =</span> <span class="st">"#005da4"</span>) <span class="sc">+</span></span>
-<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> canton), <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
-<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Cantones de Heredia"</span>, <span class="at">x =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="cn">NULL</span>) <span class="sc">+</span></span>
-<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="15-sf-datos-vectoriales_files/figure-html/geom-sf-text-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>Los nombres de los cantones pequeños del sur de la provincia se superponen; en un mapa para presentar, se resuelve con un acercamiento (<code>coord_sf()</code>), con un tamaño de letra menor o con un mapa interactivo, como los de leaflet. Y <code>theme_void()</code> quita por completo los ejes y la retícula, lo que es habitual en los mapas temáticos.</p>
+<p>Como en cualquier gráfico de ggplot2, <code>fill = "#dce9f5"</code>, fuera de <code>aes()</code>, <strong>fija</strong> el relleno; <code>aes(fill = continente)</code> lo <strong>mapearía</strong> a una columna y produciría una leyenda, como se hace en la sección de coropletas. Los ejes muestran la <strong>retícula</strong> (<em>graticule</em>) de longitud y latitud; <code>theme_void()</code> la quita por completo, lo que es habitual en los mapas temáticos, y <a href="https://ggplot2.tidyverse.org/reference/ggsf.html"><code>geom_sf_text()</code></a> (o <code>geom_sf_label()</code>, con fondo) escribe rótulos en un punto interior de cada polígono, lo que se practica en los ejercicios.</p>
+<p>El mapa, sin embargo, tiene un defecto: está «estirado». Es el aspecto de un SRC geográfico dibujado directamente, con un grado de longitud tan ancho como uno de latitud en toda la figura, lo que deforma todo lo que está lejos del ecuador. Un mapa del mundo se dibuja en una proyección.</p>
 <p><em>Ejercicios de esta sección: <a href="#ejercicios-mapas">ejercicios sobre mapas</a>.</em></p>
-</section>
-<section id="de-una-tabla-con-coordenadas-a-un-objeto-sf" class="level2">
-<h2 class="anchored" data-anchor-id="de-una-tabla-con-coordenadas-a-un-objeto-sf">De una tabla con coordenadas a un objeto sf</h2>
-<p>Los datos de puntos rara vez llegan como capa geoespacial: lo usual es un CSV con dos columnas de coordenadas, como los registros de GBIF de la semana 1, los datos de estaciones o de encuestas, o los que cada estudiante recopile para la tarea 3. El archivo de félidos del repositorio del curso es un ejemplo: 1 041 registros de presencia de seis especies de félidos silvestres en Costa Rica, con las columnas <code>decimalLongitude</code> y <code>decimalLatitude</code> en WGS84, como entrega GBIF.</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>felidos <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://raw.githubusercontent.com/pf0953-programacionr/2026-ii/main/datos/felidos.csv"</span>)</span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>felidos</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 1,041 × 9
-       gbifID species       basisOfRecord eventDate  year stateProvince locality
-        &lt;dbl&gt; &lt;chr&gt;         &lt;chr&gt;         &lt;chr&gt;     &lt;dbl&gt; &lt;chr&gt;         &lt;chr&gt;   
- 1  476859057 Leopardus pa… PRESERVED_SP… 1928       1928 Cartago       Turrial…
- 2  476861450 Leopardus pa… PRESERVED_SP… 1928       1928 Cartago       Turrial…
- 3 5146956266 Leopardus pa… PRESERVED_SP… 1932-01-…  1932 San Jose      vicinit…
- 4 5147044265 Leopardus pa… PRESERVED_SP… 1932-06-…  1932 San Jose      vicinit…
- 5 1122686047 Leopardus pa… PRESERVED_SP… 1958-06    1958 Limon         N/A     
- 6   45869265 Leopardus pa… PRESERVED_SP… 1963-02-…  1963 Puntarenas P… Gromaco…
- 7 1065425532 Leopardus pa… PRESERVED_SP… 1963-04-…  1963 Guanacaste P… San Jua…
- 8 1065369705 Leopardus pa… PRESERVED_SP… 1964-10-…  1964 Puntarenas P… Potrero…
- 9 4174649366 Leopardus pa… PRESERVED_SP… 1965-06-…  1965 Puntarenas    14 km N…
-10   45869301 Leopardus pa… PRESERVED_SP… 1965-06-…  1965 Puntarenas P… 14 km N…
-# ℹ 1,031 more rows
-# ℹ 2 more variables: decimalLongitude &lt;dbl&gt;, decimalLatitude &lt;dbl&gt;</code></pre>
-</div>
-</div>
-<p><a href="https://r-spatial.github.io/sf/reference/st_as_sf.html"><code>st_as_sf()</code></a> convierte el data frame en un objeto sf a partir de las columnas de coordenadas, indicadas en <code>coords</code>, y del SRC en que están esas coordenadas, en <code>crs</code>:</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>felidos_sf <span class="ot">&lt;-</span> <span class="fu">st_as_sf</span>(</span>
-<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  felidos,</span>
-<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">coords =</span> <span class="fu">c</span>(<span class="st">"decimalLongitude"</span>, <span class="st">"decimalLatitude"</span>),</span>
-<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">crs =</span> <span class="dv">4326</span></span>
-<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>felidos_sf</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Simple feature collection with 1041 features and 7 fields
-Geometry type: POINT
-Dimension:     XY
-Bounding box:  xmin: -85.8 ymin: 8.268703 xmax: -82.61173 ymax: 11.17616
-Geodetic CRS:  WGS 84
-# A tibble: 1,041 × 8
-       gbifID species       basisOfRecord eventDate  year stateProvince locality
- *      &lt;dbl&gt; &lt;chr&gt;         &lt;chr&gt;         &lt;chr&gt;     &lt;dbl&gt; &lt;chr&gt;         &lt;chr&gt;   
- 1  476859057 Leopardus pa… PRESERVED_SP… 1928       1928 Cartago       Turrial…
- 2  476861450 Leopardus pa… PRESERVED_SP… 1928       1928 Cartago       Turrial…
- 3 5146956266 Leopardus pa… PRESERVED_SP… 1932-01-…  1932 San Jose      vicinit…
- 4 5147044265 Leopardus pa… PRESERVED_SP… 1932-06-…  1932 San Jose      vicinit…
- 5 1122686047 Leopardus pa… PRESERVED_SP… 1958-06    1958 Limon         N/A     
- 6   45869265 Leopardus pa… PRESERVED_SP… 1963-02-…  1963 Puntarenas P… Gromaco…
- 7 1065425532 Leopardus pa… PRESERVED_SP… 1963-04-…  1963 Guanacaste P… San Jua…
- 8 1065369705 Leopardus pa… PRESERVED_SP… 1964-10-…  1964 Puntarenas P… Potrero…
- 9 4174649366 Leopardus pa… PRESERVED_SP… 1965-06-…  1965 Puntarenas    14 km N…
-10   45869301 Leopardus pa… PRESERVED_SP… 1965-06-…  1965 Puntarenas P… 14 km N…
-# ℹ 1,031 more rows
-# ℹ 1 more variable: geometry &lt;POINT [°]&gt;</code></pre>
-</div>
-</div>
-<p>Las dos columnas de coordenadas desaparecieron y en su lugar hay una columna <code>geometry</code> con un punto por registro; el SRC es geodésico (geográfico), WGS 84, y la extensión está en grados. Dos detalles causan errores frecuentes. El orden en <code>coords</code> es <strong>x, y</strong>, es decir, <strong>longitud, latitud</strong>: al revés del «latitud, longitud» con que suelen escribirse las coordenadas, y si se invierte, los puntos quedan en la Antártida. Y <code>crs</code> es indispensable: sin él, el objeto se crea, pero no tiene SRC, por lo que no se puede reproyectar ni combinar con otras capas. Los datos de GBIF, de GPS y de casi cualquier fuente que hable de «latitud y longitud» están en WGS84, EPSG:4326.</p>
-<p>Para dibujar los puntos sobre los cantones se agregan dos capas de <code>geom_sf()</code>, cada una con sus datos, como las capas de puntos y texto del capítulo de ggplot2:</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
-<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">data =</span> cantones_sf, <span class="at">fill =</span> <span class="st">"white"</span>, <span class="at">color =</span> <span class="st">"gray70"</span>) <span class="sc">+</span></span>
-<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">data =</span> felidos_sf, <span class="fu">aes</span>(<span class="at">color =</span> species), <span class="at">size =</span> <span class="dv">1</span>, <span class="at">alpha =</span> <span class="fl">0.6</span>) <span class="sc">+</span></span>
-<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_sf</span>(<span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">280000</span>, <span class="dv">660000</span>), <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">880000</span>, <span class="dv">1250000</span>)) <span class="sc">+</span></span>
-<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Registros de presencia de félidos en Costa Rica"</span>, <span class="at">color =</span> <span class="st">"Especie"</span>) <span class="sc">+</span></span>
-<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="15-sf-datos-vectoriales_files/figure-html/felidos-mapa-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>Las dos capas se superponen correctamente aunque una esté en metros y la otra en grados: ggplot2 <strong>reproyecta</strong> todas las capas al SRC de la primera para dibujarlas. Es una comodidad del dibujo, no una regla general: en las operaciones espaciales del capítulo siguiente, las capas deben estar en el mismo SRC. Y el mapa ya responde preguntas: los registros de jaguar (<em>Panthera onca</em>) se concentran en las llanuras del Caribe norte, en Guanacaste y en la península de Osa, y los de puma (<em>Puma concolor</em>) se reparten por casi todo el país. Para responder «¿cuántos registros hay en cada cantón?» no sirve la columna <code>stateProvince</code> del archivo (tiene valores como «Puntarenas», «Puntarenas Prov» y «Puntarenas Province», y 421 registros sin provincia): hace falta averiguar en cuál polígono cae cada punto, una <strong>unión espacial</strong>, tema del capítulo siguiente.</p>
-<p><em>Ejercicios de esta sección: <a href="#ejercicios-puntos">ejercicios sobre puntos</a>.</em></p>
 </section>
 <section id="sistemas-de-referencia-de-coordenadas" class="level2">
 <h2 class="anchored" data-anchor-id="sistemas-de-referencia-de-coordenadas">Sistemas de referencia de coordenadas</h2>
-<p>El SRC de una capa se consulta con <code>st_crs()</code> y se cambia, reproyectando todas sus geometrías, con <a href="https://r-spatial.github.io/sf/reference/st_transform.html"><code>st_transform()</code></a>, que recibe un código EPSG y devuelve una capa nueva. Los cantones en WGS84:</p>
+<p>El SRC de una capa se consulta con <code>st_crs()</code> y se cambia, reproyectando todas sus geometrías, con <a href="https://r-spatial.github.io/sf/reference/st_transform.html"><code>st_transform()</code></a>, que recibe un código EPSG y devuelve una capa nueva. Los países en Equal Earth, una proyección que conserva las áreas, y en Web Mercator, la de los mapas web, que conserva las formas:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>cantones_wgs84 <span class="ot">&lt;-</span> <span class="fu">st_transform</span>(cantones_sf, <span class="dv">4326</span>)</span>
-<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a><span class="fu">st_bbox</span>(cantones_sf)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>paises_ee <span class="ot">&lt;-</span> <span class="fu">st_transform</span>(paises, <span class="dv">8857</span>)</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>paises_merc <span class="ot">&lt;-</span> <span class="fu">st_transform</span>(paises, <span class="dv">3857</span>)</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a><span class="fu">st_crs</span>(paises_ee)<span class="sc">$</span>Name</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>     xmin      ymin      xmax      ymax 
- 156147.8  608898.4  658877.1 1241118.2 </code></pre>
+<pre><code>[1] "WGS 84 / Equal Earth Greenwich"</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">st_bbox</span>(cantones_wgs84)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">st_crs</span>(paises_merc)<span class="sc">$</span>Name</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "WGS 84 / Pseudo-Mercator"</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">st_bbox</span>(paises)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>      xmin       ymin       xmax       ymax 
--87.101923   5.499144 -82.552871  11.219639 </code></pre>
+-180.00000  -90.00000  180.00000   83.64513 </code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">st_bbox</span>(paises_ee)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     xmin      ymin      xmax      ymax 
+-16923980  -8392928  16923980   8316222 </code></pre>
 </div>
 </div>
-<p>Son los mismos cantones, con la extensión en metros desde el origen de la proyección y en grados de longitud y latitud. <code>st_crs()</code> también compara SRC, lo que conviene hacer antes de combinar dos capas:</p>
+<p><a href="https://r-spatial.github.io/sf/reference/st_bbox.html"><code>st_bbox()</code></a> devuelve la extensión de la capa: los mismos países, en grados y en metros desde el origen de la proyección. El mismo mapa en las dos proyecciones (en Mercator se excluye la Antártida, cuyo polígono llega al polo, donde la proyección se extiende al infinito, y se limita el eje y con <code>coord_sf()</code>, en las unidades del SRC de los datos):</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">st_crs</span>(felidos_sf) <span class="sc">==</span> <span class="fu">st_crs</span>(cantones_sf)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] FALSE</code></pre>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(paises_ee) <span class="sc">+</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">fill =</span> <span class="st">"#dce9f5"</span>, <span class="at">color =</span> <span class="st">"white"</span>, <span class="at">linewidth =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Equal Earth (EPSG:8857): conserva las áreas"</span>) <span class="sc">+</span></span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="15-sf-datos-vectoriales_files/figure-html/equal-earth-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">st_crs</span>(felidos_sf) <span class="sc">==</span> <span class="fu">st_crs</span>(cantones_wgs84)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] TRUE</code></pre>
 </div>
 </div>
-<p>La consecuencia práctica más importante del SRC es la <strong>medición</strong>. <a href="https://r-spatial.github.io/sf/reference/geos_measures.html"><code>st_area()</code></a> calcula el área de cada geometría, y el resultado lleva sus <strong>unidades</strong>, gracias al paquete <a href="https://r-quantities.github.io/units/">units</a>: metros cuadrados, porque CRTM05 está en metros. Con <code>units::set_units()</code> se convierten a kilómetros cuadrados, y con <code>as.numeric()</code> se obtiene el número sin unidades, que es lo que conviene dentro de <code>mutate()</code>:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>areas <span class="ot">&lt;-</span> <span class="fu">st_area</span>(cantones_sf)</span>
-<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(areas, <span class="dv">3</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>paises_merc <span class="sc">|&gt;</span></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(nombre <span class="sc">!=</span> <span class="st">"Antártida"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">fill =</span> <span class="st">"#dce9f5"</span>, <span class="at">color =</span> <span class="st">"white"</span>, <span class="at">linewidth =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_sf</span>(<span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">9e6</span>, <span class="fl">1.9e7</span>)) <span class="sc">+</span></span>
+<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Mercator (EPSG:3857): conserva las formas"</span>) <span class="sc">+</span></span>
+<span id="cb42-7"><a href="#cb42-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="15-sf-datos-vectoriales_files/figure-html/mercator-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Las dos proyecciones cuentan historias distintas sobre Groenlandia. No es un detalle menor: como se vio en el <a href="../../contenidos/iv-ecosistema-geoespacial-r/14-datos-geoespaciales.html#src-proyectados">capítulo anterior</a>, en setiembre de 2026 la Asamblea General de las Naciones Unidas aprobó una resolución que alienta a usar Equal Earth u otras proyecciones equivalentes en lugar de Mercator cuando importe el tamaño relativo de las regiones. ggplot2 ofrece además un atajo: <code>coord_sf(crs = 8857)</code> reproyecta las capas <strong>solo para dibujarlas</strong>, sin modificar los objetos; y cuando un mapa combina capas en SRC distintos, ggplot2 las reproyecta todas al SRC de la primera. Es una comodidad del dibujo, no una regla general: en las operaciones espaciales del capítulo siguiente, las capas deben estar en el mismo SRC.</p>
+<p>La consecuencia práctica más importante del SRC es la <strong>medición</strong>. <a href="https://r-spatial.github.io/sf/reference/geos_measures.html"><code>st_area()</code></a> calcula el área de cada geometría, y el resultado lleva sus <strong>unidades</strong>, gracias al paquete <a href="https://r-quantities.github.io/units/">units</a>; <code>as.numeric()</code> quita las unidades, que es lo que conviene dentro de <code>mutate()</code>. Groenlandia y Brasil en tres SRC:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>seleccion <span class="ot">&lt;-</span> paises<span class="sc">$</span>nombre <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Groenlandia"</span>, <span class="st">"Brasil"</span>)</span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a><span class="fu">tibble</span>(</span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">nombre =</span> paises<span class="sc">$</span>nombre[seleccion],</span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">area_wgs84_km2 =</span> <span class="fu">round</span>(<span class="fu">as.numeric</span>(<span class="fu">st_area</span>(paises[seleccion, ])) <span class="sc">/</span> <span class="fl">1e6</span>),</span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">area_equal_earth_km2 =</span> <span class="fu">round</span>(<span class="fu">as.numeric</span>(<span class="fu">st_area</span>(paises_ee[seleccion, ])) <span class="sc">/</span> <span class="fl">1e6</span>),</span>
+<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">area_mercator_km2 =</span> <span class="fu">round</span>(<span class="fu">as.numeric</span>(<span class="fu">st_area</span>(paises_merc[seleccion, ])) <span class="sc">/</span> <span class="fl">1e6</span>)</span>
+<span id="cb43-8"><a href="#cb43-8" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Units: [m^2]
-[1]  44718373  34607013 119293514</code></pre>
+<pre><code># A tibble: 2 × 4
+  nombre      area_wgs84_km2 area_equal_earth_km2 area_mercator_km2
+  &lt;chr&gt;                &lt;dbl&gt;                &lt;dbl&gt;             &lt;dbl&gt;
+1 Groenlandia        2189752              2206879          36285503
+2 Brasil             8540954              8508179           9059541</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(units<span class="sc">::</span><span class="fu">set_units</span>(areas, km<span class="sc">^</span><span class="dv">2</span>), <span class="dv">3</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>En Equal Earth, Brasil es casi cuatro veces más grande que Groenlandia, como en la realidad (8,5 contra 2,2 millones de km²); en Mercator, Groenlandia resulta cuatro veces más grande que Brasil. La primera columna merece una explicación: con coordenadas geográficas, sf no devuelve grados cuadrados sin sentido, sino que calcula el área sobre una esfera con la biblioteca s2, y el resultado es una buena aproximación. Pero una proyección proyectada adecuada sigue siendo la referencia: para medir áreas a escala mundial, una proyección <strong>equivalente</strong>, como Equal Earth; para medir en un país, su proyección local. La de Costa Rica es CR-SIRGAS / CRTM05 (EPSG:8908):</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>centroamerica_crtm05 <span class="ot">&lt;-</span> centroamerica <span class="sc">|&gt;</span></span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_transform</span>(<span class="dv">8908</span>) <span class="sc">|&gt;</span></span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">area_km2 =</span> <span class="fu">round</span>(<span class="fu">as.numeric</span>(<span class="fu">st_area</span>(geom)) <span class="sc">/</span> <span class="fl">1e6</span>))</span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a>centroamerica_crtm05 <span class="sc">|&gt;</span></span>
+<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_drop_geometry</span>() <span class="sc">|&gt;</span></span>
+<span id="cb45-7"><a href="#cb45-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(nombre, area_km2) <span class="sc">|&gt;</span></span>
+<span id="cb45-8"><a href="#cb45-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(area_km2))</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Units: [km^2]
-[1]  44.71837  34.60701 119.29351</code></pre>
+<pre><code>       nombre area_km2
+1   Nicaragua   128735
+2    Honduras   112497
+3   Guatemala   110073
+4      Panamá    74915
+5  Costa Rica    51152
+6      Belice    22433
+7 El Salvador    20679</code></pre>
 </div>
 </div>
-<p>Los 44,7 km² de San José coinciden con los 44,62 km² del INEC. Si se calcula el área de <code>cantones_wgs84</code>, sf no devuelve grados cuadrados sin sentido: como las coordenadas son geográficas, calcula el área sobre una esfera con la biblioteca s2, y el resultado (44,9 km²) es una aproximación razonable, pero no la medida oficial. La regla del capítulo anterior sigue vigente: para medir en Costa Rica, CRTM05.</p>
+<p>Costa Rica mide unos 51 100 km², la cifra oficial. CRTM05 está diseñada para Costa Rica, y la deformación crece con la distancia a su meridiano central (−84°): el área de Guatemala, a unos 600 km, sale ya un 1 % mayor que en Equal Earth, y la de México, a más de 2 000 km, no sería confiable. La regla: medir en el SRC diseñado para la región de los datos.</p>
 <p><em>Ejercicios de esta sección: <a href="#ejercicios-src">ejercicios sobre sistemas de referencia de coordenadas</a>.</em></p>
 </section>
 <section id="unión-con-datos-tabulares" class="level2">
 <h2 class="anchored" data-anchor-id="unión-con-datos-tabulares">Unión con datos tabulares</h2>
-<p>La capa del IGN trae la geometría y unos pocos atributos; la población y el área están en la tabla del INEC, <code>cantones</code>, que se usa desde la sección II. Las dos fuentes identifican los cantones por el nombre de la provincia y el del cantón, así que se unen con <a href="../../contenidos/iii-tidyverse/11-dplyr.html#unión-de-conjuntos-de-datos"><code>left_join()</code></a>, como cualquier par de tablas, con una regla: <strong>el objeto sf va a la izquierda</strong>. Si el objeto sf está a la derecha, el resultado es un data frame ordinario en el que la geometría es una columna más, sin funciones geoespaciales.</p>
+<p>Las capas de Natural Earth traen la geometría y unos pocos atributos; los indicadores actuales están en el CSV del Banco Mundial. Ambas fuentes identifican los países con códigos de tres letras, así que se unen con <a href="../../contenidos/iii-tidyverse/11-dplyr.html#unión-de-conjuntos-de-datos"><code>left_join()</code></a>, como cualquier par de tablas, con una regla: <strong>el objeto sf va a la izquierda</strong>. Si el objeto sf está a la derecha, el resultado es un data frame ordinario en el que la geometría es una columna más, sin funciones geoespaciales.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>cantones_union <span class="ot">&lt;-</span> cantones_sf <span class="sc">|&gt;</span></span>
-<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(cantones, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"provincia"</span>, <span class="st">"canton"</span>))</span>
-<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">is.na</span>(cantones_union<span class="sc">$</span>poblacion))</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>indicadores <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="fu">paste0</span>(datos_bm, <span class="st">"indicadores-2024.csv"</span>))</span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>indicadores</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 2</code></pre>
+<pre><code># A tibble: 217 × 11
+   codigo pais     region grupo_ingreso poblacion crecimiento_poblacion area_km2
+   &lt;chr&gt;  &lt;chr&gt;    &lt;chr&gt;  &lt;chr&gt;             &lt;dbl&gt;                 &lt;dbl&gt;    &lt;dbl&gt;
+ 1 ABW    Aruba    Améri… Ingreso alto     107995                  0.59     180 
+ 2 AFG    Afganis… Orien… Países de in…  42647492                  2.84  652230 
+ 3 AGO    Angola   Áfric… Países de in…  37885849                  3.04 1246700 
+ 4 ALB    Albania  Europ… Ingreso medi…   2377128                 -1.44   27400 
+ 5 AND    Andorra  Europ… Ingreso alto      81938                  1.33     470 
+ 6 ARE    Emirato… Orien… Ingreso alto   10986400                  4.68   71020 
+ 7 ARG    Argenti… Améri… Ingreso medi…  45696159                  0.35 2736690 
+ 8 ARM    Armenia  Europ… Ingreso medi…   3033500                  2.31   28199.
+ 9 ASM    Samoa A… Asia … Ingreso alto      46765                 -1.6      200 
+10 ATG    Antigua… Améri… Ingreso alto      93772                  0.49     440 
+# ℹ 207 more rows
+# ℹ 4 more variables: pib_per_capita &lt;dbl&gt;, esperanza_vida &lt;dbl&gt;,
+#   poblacion_urbana_pct &lt;dbl&gt;, usuarios_internet_pct &lt;dbl&gt;</code></pre>
 </div>
 </div>
-<p>Dos cantones quedaron sin población. Como se advirtió en el capítulo de dplyr, una unión no falla cuando las claves no coinciden: deja <code>NA</code> en silencio. <a href="https://dplyr.tidyverse.org/reference/filter-joins.html"><code>anti_join()</code></a> muestra las filas sin pareja, en las dos direcciones:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anti_join</span>(<span class="fu">st_drop_geometry</span>(cantones_sf), cantones, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"provincia"</span>, <span class="st">"canton"</span>))</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>paises_bm <span class="ot">&lt;-</span> paises_ee <span class="sc">|&gt;</span></span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(indicadores, <span class="at">by =</span> <span class="st">"codigo"</span>)</span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(paises_bm)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>  codigo_provincia provincia codigo_canton              canton
-1                1  San José           111 Vázquez de Coronado
-2                1  San José           120  León Cortés Castro</code></pre>
+<pre><code>[1] "sf"         "data.frame"</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anti_join</span>(cantones, <span class="fu">st_drop_geometry</span>(cantones_sf), <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"provincia"</span>, <span class="st">"canton"</span>))</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">is.na</span>(paises_bm<span class="sc">$</span>poblacion))</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 2 × 6
-  provincia canton              poblacion area_km2 densidad tipo  
-  &lt;chr&gt;     &lt;chr&gt;                   &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt; &lt;chr&gt; 
-1 San José  Vásquez de Coronado     67078     224.     300. urbano
-2 San José  León Cortés             13553     122.     111. urbano</code></pre>
+<pre><code>[1] 10</code></pre>
 </div>
 </div>
-<p>El IGN escribe «Vázquez de Coronado» y «León Cortés Castro»; el INEC, «Vásquez de Coronado» y «León Cortés». Las dos grafías circulan, y es un ejemplo de por qué conviene unir por códigos, cuando existen, y no por nombres: la capa del IGN tiene <code>codigo_canton</code>, pero la tabla del INEC del curso no. Las claves que no coinciden se corrigen <strong>antes</strong> de unir, en una de las dos tablas; aquí se ajustan los nombres de la capa a los de la tabla del curso, con <a href="https://dplyr.tidyverse.org/reference/case_when.html"><code>case_when()</code></a>, que generaliza <code>if_else()</code> a varias condiciones:</p>
+<p>Diez países quedaron sin datos del Banco Mundial. Como se advirtió en el capítulo de dplyr, una unión no falla cuando las claves no coinciden: deja <code>NA</code> en silencio. <a href="https://dplyr.tidyverse.org/reference/filter-joins.html"><code>anti_join()</code></a> muestra las filas sin pareja:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>cantones_sf <span class="ot">&lt;-</span> cantones_sf <span class="sc">|&gt;</span></span>
-<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">canton =</span> <span class="fu">case_when</span>(</span>
-<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>    canton <span class="sc">==</span> <span class="st">"Vázquez de Coronado"</span> <span class="sc">~</span> <span class="st">"Vásquez de Coronado"</span>,</span>
-<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>    canton <span class="sc">==</span> <span class="st">"León Cortés Castro"</span> <span class="sc">~</span> <span class="st">"León Cortés"</span>,</span>
-<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">.default =</span> canton</span>
-<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a>  ))</span>
-<span id="cb51-7"><a href="#cb51-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb51-8"><a href="#cb51-8" aria-hidden="true" tabindex="-1"></a>cantones_union <span class="ot">&lt;-</span> cantones_sf <span class="sc">|&gt;</span></span>
-<span id="cb51-9"><a href="#cb51-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(cantones, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"provincia"</span>, <span class="st">"canton"</span>))</span>
-<span id="cb51-10"><a href="#cb51-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb51-11"><a href="#cb51-11" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">is.na</span>(cantones_union<span class="sc">$</span>poblacion))</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>paises_ee <span class="sc">|&gt;</span></span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_drop_geometry</span>() <span class="sc">|&gt;</span></span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">anti_join</span>(indicadores, <span class="at">by =</span> <span class="st">"codigo"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(codigo, nombre, poblacion_estimada)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 0</code></pre>
-</div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>cantones_union</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Simple feature collection with 84 features and 8 fields
-Geometry type: MULTIPOLYGON
-Dimension:     XY
-Bounding box:  xmin: 156147.8 ymin: 608898.4 xmax: 658877.1 ymax: 1241118
-Projected CRS: CR-SIRGAS / CRTM05
-First 10 features:
-   codigo_provincia provincia codigo_canton       canton poblacion area_km2
-1                 1  San José           101     San José    352381    44.62
-2                 1  San José           102       Escazú     71500    34.53
-3                 1  San José           103 Desamparados    223226   118.89
-4                 1  San José           104     Puriscal     38525   555.04
-5                 1  San José           105      Tarrazú     17810   291.27
-6                 1  San José           106       Aserrí     59588   168.26
-7                 1  San José           107         Mora     32348   163.48
-8                 1  San José           108   Goicoechea    132104    31.70
-9                 1  San José           109    Santa Ana     58020    61.42
-10                1  San José           110   Alajuelita     81012    21.47
-     densidad   tipo                           geom
-1  7897.37786 urbano MULTIPOLYGON (((481030.3 11...
-2  2070.66319 urbano MULTIPOLYGON (((479844.9 11...
-3  1877.58432 urbano MULTIPOLYGON (((494091.2 10...
-4    69.40941  rural MULTIPOLYGON (((455732.1 10...
-5    61.14602  rural MULTIPOLYGON (((501118.6 10...
-6   354.14240 urbano MULTIPOLYGON (((491211.1 10...
-7   197.87130 urbano MULTIPOLYGON (((456885.8 10...
-8  4167.31861 urbano MULTIPOLYGON (((512379.4 11...
-9   944.64344 urbano MULTIPOLYGON (((479218 1102...
-10 3773.26502 urbano MULTIPOLYGON (((486917.3 10...</code></pre>
+<pre><code>   codigo                                   nombre poblacion_estimada
+1     SAH                        Sahara Occidental             603253
+2     FLK                           Islas Malvinas               3398
+3     ATF Tierras Australes y Antárticas Francesas                140
+4     PSX                                Palestina            4685306
+5     TWN                       República de China           23568378
+6     ATA                                Antártida               4490
+7     CYN      República Turca del Norte de Chipre             326000
+8     SOL                             Somalilandia            5096159
+9     KOS                                   Kosovo            1794248
+10    SDS                            Sudán del Sur           11062113</code></pre>
 </div>
 </div>
-<p>Ahora los 84 cantones tienen población, área, densidad y tipo, además de su polígono. La unión permite también verificar la capa contra la fuente oficial: el área que publica el INEC frente a la que se calcula con <code>st_area()</code> sobre los polígonos del IGN.</p>
+<p>Son de dos clases. Algunos no están en el Banco Mundial (la Antártida, Taiwán, Somalilandia y otros territorios sin reconocimiento general). Pero Kosovo, Palestina y Sudán del Sur sí están: con <strong>otro código</strong> (<code>XKX</code>, <code>PSE</code> y <code>SSD</code> en lugar de <code>KOS</code>, <code>PSX</code> y <code>SDS</code>, como advierte el LEEME). Es el mismo problema de la unión por nombre del capítulo de dplyr: las claves que no coinciden se corrigen <strong>antes</strong> de unir, aquí con <a href="https://dplyr.tidyverse.org/reference/case_when.html"><code>case_when()</code></a>, que generaliza <code>if_else()</code> a varias condiciones:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>cantones_union <span class="sc">|&gt;</span></span>
-<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">area_ign_km2 =</span> <span class="fu">as.numeric</span>(<span class="fu">st_area</span>(geom)) <span class="sc">/</span> <span class="fl">1e6</span>, <span class="at">diferencia_km2 =</span> area_ign_km2 <span class="sc">-</span> area_km2) <span class="sc">|&gt;</span></span>
-<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_drop_geometry</span>() <span class="sc">|&gt;</span></span>
-<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(canton, area_km2, area_ign_km2, diferencia_km2) <span class="sc">|&gt;</span></span>
-<span id="cb55-5"><a href="#cb55-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(<span class="fu">abs</span>(diferencia_km2))) <span class="sc">|&gt;</span></span>
-<span id="cb55-6"><a href="#cb55-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>(<span class="dv">5</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>paises_ee <span class="ot">&lt;-</span> paises_ee <span class="sc">|&gt;</span></span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">codigo =</span> <span class="fu">case_when</span>(</span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a>    codigo <span class="sc">==</span> <span class="st">"KOS"</span> <span class="sc">~</span> <span class="st">"XKX"</span>,</span>
+<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a>    codigo <span class="sc">==</span> <span class="st">"PSX"</span> <span class="sc">~</span> <span class="st">"PSE"</span>,</span>
+<span id="cb55-5"><a href="#cb55-5" aria-hidden="true" tabindex="-1"></a>    codigo <span class="sc">==</span> <span class="st">"SDS"</span> <span class="sc">~</span> <span class="st">"SSD"</span>,</span>
+<span id="cb55-6"><a href="#cb55-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">.default =</span> codigo</span>
+<span id="cb55-7"><a href="#cb55-7" aria-hidden="true" tabindex="-1"></a>  ))</span>
+<span id="cb55-8"><a href="#cb55-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-9"><a href="#cb55-9" aria-hidden="true" tabindex="-1"></a>paises_bm <span class="ot">&lt;-</span> paises_ee <span class="sc">|&gt;</span></span>
+<span id="cb55-10"><a href="#cb55-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(indicadores, <span class="at">by =</span> <span class="st">"codigo"</span>)</span>
+<span id="cb55-11"><a href="#cb55-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-12"><a href="#cb55-12" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">is.na</span>(paises_bm<span class="sc">$</span>poblacion))</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>      canton area_km2 area_ign_km2 diferencia_km2
-1 Puntarenas  1763.39    1787.1586     23.7685665
-2   Garabito   316.01     317.2684      1.2584241
-3    La Cruz  1385.40    1386.5914      1.1914284
-4 Santa Cruz  1320.80    1321.8075      1.0075033
-5  Talamanca  2792.23    2793.2053      0.9753288</code></pre>
+<pre><code>[1] 7</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>paises_bm<span class="sc">$</span>nombre[<span class="fu">is.na</span>(paises_bm<span class="sc">$</span>poblacion)]</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Sahara Occidental"                       
+[2] "Islas Malvinas"                          
+[3] "Tierras Australes y Antárticas Francesas"
+[4] "República de China"                      
+[5] "Antártida"                               
+[6] "República Turca del Norte de Chipre"     
+[7] "Somalilandia"                            </code></pre>
 </div>
 </div>
-<p>En 83 cantones la diferencia es de 1 km² o menos, atribuible a la simplificación de las geometrías de la capa del curso. Puntarenas difiere en casi 24 km²: la capa del IGN incluye la Isla del Coco y la cifra del INEC no. Verificar los datos aunque provengan de fuentes oficiales, y entender por qué difieren, es parte del trabajo.</p>
+<p>Los siete que quedan no tienen datos en la fuente: en los mapas aparecerán como «sin datos», lo que es correcto. Y la unión permite verificar las áreas calculadas contra la superficie que publica el Banco Mundial:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a>paises_bm <span class="ot">&lt;-</span> paises_bm <span class="sc">|&gt;</span></span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">area_calculada_km2 =</span> <span class="fu">round</span>(<span class="fu">as.numeric</span>(<span class="fu">st_area</span>(geom)) <span class="sc">/</span> <span class="fl">1e6</span>),</span>
+<span id="cb59-4"><a href="#cb59-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">diferencia_pct =</span> <span class="fu">round</span>((area_calculada_km2 <span class="sc">-</span> area_km2) <span class="sc">/</span> area_km2 <span class="sc">*</span> <span class="dv">100</span>, <span class="dv">1</span>)</span>
+<span id="cb59-5"><a href="#cb59-5" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb59-6"><a href="#cb59-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-7"><a href="#cb59-7" aria-hidden="true" tabindex="-1"></a>paises_bm <span class="sc">|&gt;</span></span>
+<span id="cb59-8"><a href="#cb59-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_drop_geometry</span>() <span class="sc">|&gt;</span></span>
+<span id="cb59-9"><a href="#cb59-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(nombre, area_calculada_km2, area_km2, diferencia_pct) <span class="sc">|&gt;</span></span>
+<span id="cb59-10"><a href="#cb59-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(<span class="fu">abs</span>(diferencia_pct))) <span class="sc">|&gt;</span></span>
+<span id="cb59-11"><a href="#cb59-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>()</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>             nombre area_calculada_km2 area_km2 diferencia_pct
+1       Groenlandia            2206879   410450          437.7
+2            Brunéi              10698     5270          103.0
+3           Bahamas              15592    10010           55.8
+4 Trinidad y Tobago               7742     5130           50.9
+5            Gambia              14029    10120           38.6
+6           Vanuatu               7489    12190          -38.6</code></pre>
+</div>
+</div>
+<p>La mitad de los países difiere menos de un 3 %, lo razonable para geometrías a 1:110 M. Los casos extremos tienen explicación: el Banco Mundial reporta la superficie <strong>terrestre</strong>, sin aguas interiores ni, en Groenlandia, la capa de hielo (410 000 km² de los 2,2 millones); y en las islas pequeñas, como Brunéi o Bahamas, la geometría a 1:110 M es demasiado gruesa. Verificar los datos aunque provengan de fuentes oficiales, y entender por qué difieren, es parte del trabajo.</p>
 <p><em>Ejercicios de esta sección: <a href="#ejercicios-coropletas">ejercicios sobre unión y coropletas</a>.</em></p>
 </section>
 <section id="mapas-de-coropletas" class="level2">
 <h2 class="anchored" data-anchor-id="mapas-de-coropletas">Mapas de coropletas</h2>
-<p>Un <a href="https://es.wikipedia.org/wiki/Mapa_coropl%C3%A9tico">mapa de coropletas</a> colorea cada polígono según el valor de una variable. En ggplot2 basta con mapear la variable a <code>fill</code>; la <strong>escala de color</strong> se elige como cualquier otra escala del <a href="../../contenidos/iii-tidyverse/12-ggplot2.html#escalas">capítulo de ggplot2</a>. La densidad de población tiene la misma asimetría que la población y el área —muchos valores pequeños y unos pocos enormes—, de modo que con una escala lineal casi todo el país queda del mismo color y solo Tibás destaca; la solución es la misma que entonces: una transformación logarítmica, aquí con el argumento <code>transform</code> de <a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html"><code>scale_fill_viridis_c()</code></a>.</p>
+<p>Un <a href="https://es.wikipedia.org/wiki/Mapa_coropl%C3%A9tico">mapa de coropletas</a> colorea cada polígono según el valor de una variable. En ggplot2 basta con mapear la variable a <code>fill</code>; la <strong>escala de color</strong> se elige como cualquier otra escala del <a href="../../contenidos/iii-tidyverse/12-ggplot2.html#escalas">capítulo de ggplot2</a>. El PIB per cápita, en un primer intento con <a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html"><code>scale_fill_viridis_c()</code></a>:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(cantones_union) <span class="sc">+</span></span>
-<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="fu">aes</span>(<span class="at">fill =</span> densidad), <span class="at">color =</span> <span class="st">"white"</span>, <span class="at">linewidth =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
-<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_c</span>(<span class="at">transform =</span> <span class="st">"log10"</span>, <span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">label_number</span>(<span class="at">big.mark =</span> <span class="st">" "</span>)) <span class="sc">+</span></span>
-<span id="cb57-4"><a href="#cb57-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_sf</span>(<span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">280000</span>, <span class="dv">660000</span>), <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">880000</span>, <span class="dv">1250000</span>)) <span class="sc">+</span></span>
-<span id="cb57-5"><a href="#cb57-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb57-6"><a href="#cb57-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Densidad de población de los cantones de Costa Rica"</span>,</span>
-<span id="cb57-7"><a href="#cb57-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Estimación de población de 2022"</span>,</span>
-<span id="cb57-8"><a href="#cb57-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">"Habitantes por km²"</span>,</span>
-<span id="cb57-9"><a href="#cb57-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">"Fuentes: INEC (2023) e IGN (s. f.)"</span></span>
-<span id="cb57-10"><a href="#cb57-10" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb57-11"><a href="#cb57-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_void</span>()</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(paises_bm) <span class="sc">+</span></span>
+<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="fu">aes</span>(<span class="at">fill =</span> pib_per_capita), <span class="at">color =</span> <span class="st">"white"</span>, <span class="at">linewidth =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb61-3"><a href="#cb61-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_c</span>(<span class="at">option =</span> <span class="st">"mako"</span>, <span class="at">direction =</span> <span class="sc">-</span><span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb61-4"><a href="#cb61-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"PIB per cápita, 2024 (US$): primer intento"</span>) <span class="sc">+</span></span>
+<span id="cb61-5"><a href="#cb61-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_void</span>()</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -1059,25 +1132,57 @@ First 10 features:
 </div>
 </div>
 </div>
-<p>El mapa muestra lo que las tablas y los gráficos de las secciones anteriores solo sugerían: la densidad alta se concentra en la Gran Área Metropolitana, en un corredor continuo del Valle Central, y cae en todas direcciones hacia las costas y las fronteras; los cantones extensos del norte, del Caribe y del Pacífico sur están entre los menos densos.</p>
-<p>La alternativa a la escala continua es <strong>clasificar</strong> los valores en pocas clases, cada una con un color, como hacen los SIG de escritorio y los mapas impresos. <a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html"><code>scale_fill_fermenter()</code></a> lo hace con las paletas de ColorBrewer y acepta la misma transformación; <code>n.breaks</code> sugiere la cantidad de clases:</p>
+<p>Dos problemas. El mapa es casi todo del color más claro: unos pocos países muy ricos estiran la escala y el resto queda indistinguible, la misma asimetría que en el capítulo de ggplot2 obligó a usar escalas logarítmicas, y la solución es la misma: el argumento <code>transform = "log10"</code> de la escala. Y los países sin datos se dibujan en un gris oscuro que se confunde con los valores altos de la escala: <code>na.value</code> fija su color, con un gris claro que se distinga. Además, <code>labels</code> formatea los números de la leyenda y <code>labs()</code> le da nombre y unidades:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(cantones_union) <span class="sc">+</span></span>
-<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="fu">aes</span>(<span class="at">fill =</span> densidad), <span class="at">color =</span> <span class="st">"white"</span>, <span class="at">linewidth =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
-<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_fermenter</span>(</span>
-<span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">palette =</span> <span class="st">"YlOrRd"</span>,</span>
-<span id="cb58-5"><a href="#cb58-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">direction =</span> <span class="dv">1</span>,</span>
-<span id="cb58-6"><a href="#cb58-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">transform =</span> <span class="st">"log10"</span>,</span>
-<span id="cb58-7"><a href="#cb58-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">n.breaks =</span> <span class="dv">6</span>,</span>
-<span id="cb58-8"><a href="#cb58-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">label_number</span>(<span class="at">big.mark =</span> <span class="st">" "</span>)</span>
-<span id="cb58-9"><a href="#cb58-9" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb58-10"><a href="#cb58-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_sf</span>(<span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">280000</span>, <span class="dv">660000</span>), <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">880000</span>, <span class="dv">1250000</span>)) <span class="sc">+</span></span>
-<span id="cb58-11"><a href="#cb58-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb58-12"><a href="#cb58-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Densidad de población de los cantones de Costa Rica"</span>,</span>
-<span id="cb58-13"><a href="#cb58-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">"Habitantes por km²"</span>,</span>
-<span id="cb58-14"><a href="#cb58-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">"Fuentes: INEC (2023) e IGN (s. f.)"</span></span>
-<span id="cb58-15"><a href="#cb58-15" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb58-16"><a href="#cb58-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_void</span>()</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(paises_bm) <span class="sc">+</span></span>
+<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="fu">aes</span>(<span class="at">fill =</span> pib_per_capita), <span class="at">color =</span> <span class="st">"white"</span>, <span class="at">linewidth =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb62-3"><a href="#cb62-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_c</span>(</span>
+<span id="cb62-4"><a href="#cb62-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">option =</span> <span class="st">"mako"</span>,</span>
+<span id="cb62-5"><a href="#cb62-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">direction =</span> <span class="sc">-</span><span class="dv">1</span>,</span>
+<span id="cb62-6"><a href="#cb62-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">transform =</span> <span class="st">"log10"</span>,</span>
+<span id="cb62-7"><a href="#cb62-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">label_number</span>(<span class="at">big.mark =</span> <span class="st">" "</span>),</span>
+<span id="cb62-8"><a href="#cb62-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">na.value =</span> <span class="st">"gray85"</span></span>
+<span id="cb62-9"><a href="#cb62-9" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb62-10"><a href="#cb62-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb62-11"><a href="#cb62-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"PIB per cápita, 2024"</span>,</span>
+<span id="cb62-12"><a href="#cb62-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">"US$ por habitante</span><span class="sc">\n</span><span class="st">(escala logarítmica)"</span>,</span>
+<span id="cb62-13"><a href="#cb62-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">"Fuentes: Banco Mundial (2026) y Natural Earth (s. f.)"</span></span>
+<span id="cb62-14"><a href="#cb62-14" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb62-15"><a href="#cb62-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_void</span>()</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="15-sf-datos-vectoriales_files/figure-html/coropletas-log-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Ahora se lee el gradiente completo, de los 200 dólares de Burundi a los 140 000 de Luxemburgo, y la Antártida, Groenlandia y los demás países sin datos quedan en gris.</p>
+<section id="clasificación" class="level3">
+<h3 class="anchored" data-anchor-id="clasificación">Clasificación</h3>
+<p>La alternativa a la escala continua es <strong>clasificar</strong> los valores en pocas clases, cada una con un color, como hacen los SIG de escritorio y los mapas impresos. <a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html"><code>scale_fill_fermenter()</code></a> lo hace con las paletas de ColorBrewer: con <code>n.breaks</code> elige cortes «bonitos» (intervalos iguales en la escala, logarítmica si se indica <code>transform</code>), y con <code>breaks</code> acepta los cortes que se le den. Los <strong>cuantiles</strong> ponen la misma cantidad de países en cada clase y se calculan con <code>quantile()</code>:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a>cortes <span class="ot">&lt;-</span> <span class="fu">quantile</span>(paises_bm<span class="sc">$</span>pib_per_capita, <span class="at">probs =</span> <span class="fu">c</span>(<span class="fl">0.2</span>, <span class="fl">0.4</span>, <span class="fl">0.6</span>, <span class="fl">0.8</span>), <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a>cortes</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     20%      40%      60%      80% 
+ 1775.22  4536.68  9313.10 31668.04 </code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(paises_bm) <span class="sc">+</span></span>
+<span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="fu">aes</span>(<span class="at">fill =</span> pib_per_capita), <span class="at">color =</span> <span class="st">"white"</span>, <span class="at">linewidth =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb65-3"><a href="#cb65-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_fermenter</span>(</span>
+<span id="cb65-4"><a href="#cb65-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">palette =</span> <span class="st">"YlGnBu"</span>,</span>
+<span id="cb65-5"><a href="#cb65-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">direction =</span> <span class="dv">1</span>,</span>
+<span id="cb65-6"><a href="#cb65-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">breaks =</span> cortes,</span>
+<span id="cb65-7"><a href="#cb65-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">label_number</span>(<span class="at">big.mark =</span> <span class="st">" "</span>),</span>
+<span id="cb65-8"><a href="#cb65-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">na.value =</span> <span class="st">"gray85"</span></span>
+<span id="cb65-9"><a href="#cb65-9" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb65-10"><a href="#cb65-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb65-11"><a href="#cb65-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"PIB per cápita, 2024 (cuantiles)"</span>,</span>
+<span id="cb65-12"><a href="#cb65-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">"US$ por habitante"</span>,</span>
+<span id="cb65-13"><a href="#cb65-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">"Fuentes: Banco Mundial (2026) y Natural Earth (s. f.)"</span></span>
+<span id="cb65-14"><a href="#cb65-14" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb65-15"><a href="#cb65-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_void</span>()</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -1086,54 +1191,85 @@ First 10 features:
 </div>
 </div>
 </div>
-<p>La clasificación simplifica la lectura a costa de ocultar las diferencias dentro de cada clase; la cantidad de clases y los cortes cambian el mapa, por lo que conviene indicarlos en la leyenda o en el texto. Y para una variable <strong>categórica</strong>, como <code>tipo</code>, la escala es discreta y los colores pueden fijarse a mano, como en los gráficos anteriores:</p>
+<p>Cada clase tiene unos 33 países, y los cortes (unos 1 800, 4 500, 9 300 y 31 700 dólares) resumen la distribución: tres de cada cinco países tienen un PIB per cápita menor de 9 300 dólares. La clasificación simplifica la lectura a costa de ocultar las diferencias dentro de cada clase; el método elegido cambia el mapa, por lo que debe indicarse en el título o en la leyenda.</p>
+</section>
+<section id="paletas-divergentes" class="level3">
+<h3 class="anchored" data-anchor-id="paletas-divergentes">Paletas divergentes</h3>
+<p>Para una variable con un valor central significativo, como el crecimiento de la población (positivo o negativo), lo adecuado es una paleta <strong>divergente</strong> (<code>"RdBu"</code>, <code>"PiYG"</code>, <code>"BrBG"</code>) centrada en ese valor. <a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html"><code>scale_fill_distiller()</code></a> usa esas paletas de forma continua; con <code>limits</code> simétricos respecto al cero, el blanco queda en el centro, y <code>oob = scales::squish</code> lleva al extremo los valores que se salen de los límites en lugar de omitirlos:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(cantones_union) <span class="sc">+</span></span>
-<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="fu">aes</span>(<span class="at">fill =</span> tipo), <span class="at">color =</span> <span class="st">"white"</span>, <span class="at">linewidth =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
-<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="at">rural =</span> <span class="st">"#4f7d3a"</span>, <span class="at">urbano =</span> <span class="st">"#005da4"</span>)) <span class="sc">+</span></span>
-<span id="cb59-4"><a href="#cb59-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_sf</span>(<span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">280000</span>, <span class="dv">660000</span>), <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">880000</span>, <span class="dv">1250000</span>)) <span class="sc">+</span></span>
-<span id="cb59-5"><a href="#cb59-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Cantones urbanos y rurales de Costa Rica"</span>, <span class="at">fill =</span> <span class="st">"Tipo de cantón"</span>) <span class="sc">+</span></span>
-<span id="cb59-6"><a href="#cb59-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_void</span>()</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(paises_bm) <span class="sc">+</span></span>
+<span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="fu">aes</span>(<span class="at">fill =</span> crecimiento_poblacion), <span class="at">color =</span> <span class="st">"white"</span>, <span class="at">linewidth =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb66-3"><a href="#cb66-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_distiller</span>(</span>
+<span id="cb66-4"><a href="#cb66-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">palette =</span> <span class="st">"RdBu"</span>,</span>
+<span id="cb66-5"><a href="#cb66-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">direction =</span> <span class="dv">1</span>,</span>
+<span id="cb66-6"><a href="#cb66-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">limits =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">4</span>, <span class="dv">4</span>),</span>
+<span id="cb66-7"><a href="#cb66-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">oob =</span> scales<span class="sc">::</span>squish,</span>
+<span id="cb66-8"><a href="#cb66-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">na.value =</span> <span class="st">"gray85"</span></span>
+<span id="cb66-9"><a href="#cb66-9" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb66-10"><a href="#cb66-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb66-11"><a href="#cb66-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Crecimiento anual de la población, 2024"</span>,</span>
+<span id="cb66-12"><a href="#cb66-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">"% anual"</span>,</span>
+<span id="cb66-13"><a href="#cb66-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">"Fuentes: Banco Mundial (2026) y Natural Earth (s. f.)"</span></span>
+<span id="cb66-14"><a href="#cb66-14" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb66-15"><a href="#cb66-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_void</span>()</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="15-sf-datos-vectoriales_files/figure-html/coropletas-tipo-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="15-sf-datos-vectoriales_files/figure-html/coropletas-divergente-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
-<p>Una advertencia de la cartografía temática, que se retoma en los ejercicios: un mapa de coropletas debe mostrar <strong>variables normalizadas</strong> —densidades, tasas, porcentajes—, no conteos absolutos. Un mapa de la población total colorea de forma más intensa los cantones más poblados, que suelen ser también los más grandes o los más urbanos, y el ojo confunde el tamaño del polígono con la magnitud del fenómeno; la densidad corrige ese efecto. Los conteos absolutos se representan mejor con símbolos proporcionales, que se construyen en el capítulo siguiente a partir de los centroides.</p>
+<p>El patrón geográfico es claro: la población decrece (rojo) en Europa oriental y en Japón, y crece más rápido (azul intenso) en el África subsahariana y en la península arábiga. Por último, para una variable <strong>categórica</strong>, como el continente o el grupo de ingreso, la escala es discreta (<code>scale_fill_brewer()</code>, <code>scale_fill_viridis_d()</code> o <code>scale_fill_manual()</code>, con un color por categoría), lo que se practica en los ejercicios.</p>
+<p>Una advertencia de la cartografía temática: un mapa de coropletas debe mostrar <strong>variables normalizadas</strong> —densidades, tasas, porcentajes, valores per cápita—, no conteos absolutos. Un mapa de la población total colorea de forma más intensa los países más poblados, que suelen ser también los más grandes, y el ojo confunde el tamaño del polígono con la magnitud del fenómeno. Los conteos absolutos se representan mejor con símbolos proporcionales, que se construyen en el capítulo siguiente a partir de los centroides.</p>
 <p><em>Ejercicios de esta sección: <a href="#ejercicios-coropletas">ejercicios sobre unión y coropletas</a>.</em></p>
+</section>
 </section>
 <section id="escritura-de-capas" class="level2">
 <h2 class="anchored" data-anchor-id="escritura-de-capas">Escritura de capas</h2>
-<p><a href="https://r-spatial.github.io/sf/reference/st_write.html"><code>st_write()</code></a> guarda un objeto sf en el formato que indique la extensión del archivo. GeoPackage es la opción recomendada, porque conserva el SRC, los tipos de las columnas y los nombres largos; GeoJSON es útil para la web y, por su especificación, debe guardarse en WGS84, por lo que se reproyecta antes. Como con <code>ggsave()</code> en el capítulo de ggplot2, estos bloques se ejecutan una vez (en el documento llevan <code>eval: false</code>) y los archivos quedan en la carpeta del proyecto:</p>
+<p><a href="https://r-spatial.github.io/sf/reference/st_write.html"><code>st_write()</code></a> guarda un objeto sf en el formato que indique la extensión del archivo. GeoPackage es la opción recomendada, porque conserva el SRC, los tipos de las columnas y los nombres largos; GeoJSON es útil para la web y, por su especificación, debe guardarse en WGS84. Los países de América del Sur con los indicadores, en los dos formatos (como con <code>ggsave()</code> en el capítulo de ggplot2, estos bloques se ejecutan una vez, llevan <code>eval: false</code> en el documento y los archivos quedan en la carpeta del proyecto):</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="fu">st_write</span>(cantones_union, <span class="st">"cantones-densidad.gpkg"</span>)</span>
-<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb60-3"><a href="#cb60-3" aria-hidden="true" tabindex="-1"></a>cantones_union <span class="sc">|&gt;</span></span>
-<span id="cb60-4"><a href="#cb60-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_transform</span>(<span class="dv">4326</span>) <span class="sc">|&gt;</span></span>
-<span id="cb60-5"><a href="#cb60-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_write</span>(<span class="st">"cantones-densidad.geojson"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a>america_sur_bm <span class="ot">&lt;-</span> paises_bm <span class="sc">|&gt;</span></span>
+<span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(continente <span class="sc">==</span> <span class="st">"América del Sur"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb67-3"><a href="#cb67-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_transform</span>(<span class="dv">4326</span>)</span>
+<span id="cb67-4"><a href="#cb67-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-5"><a href="#cb67-5" aria-hidden="true" tabindex="-1"></a><span class="fu">st_write</span>(america_sur_bm, <span class="st">"america-sur.gpkg"</span>)</span>
+<span id="cb67-6"><a href="#cb67-6" aria-hidden="true" tabindex="-1"></a><span class="fu">st_write</span>(america_sur_bm, <span class="st">"america-sur.geojson"</span>)</span>
+<span id="cb67-7"><a href="#cb67-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-8"><a href="#cb67-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Comprobación: se vuelve a leer el GeoPackage</span></span>
+<span id="cb67-9"><a href="#cb67-9" aria-hidden="true" tabindex="-1"></a><span class="fu">st_read</span>(<span class="st">"america-sur.gpkg"</span>, <span class="at">quiet =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Si el archivo ya existe, <code>st_write()</code> se detiene con un error; <code>delete_dsn = TRUE</code> lo sobrescribe.</p>
+<p><em>Ejercicios de esta sección: <a href="#ejercicios-publicacion">ejercicios sobre publicación, asistentes y datos propios</a>.</em></p>
 </section>
 <section id="mapas-en-documentos-quarto" class="level2">
 <h2 class="anchored" data-anchor-id="mapas-en-documentos-quarto">Mapas en documentos Quarto</h2>
-<p>Un mapa de ggplot2 es una figura más: las <a href="../../contenidos/iii-tidyverse/12-ggplot2.html#gráficos-en-documentos-quarto">opciones de figura</a> de Quarto (<code>fig-cap</code>, <code>fig-alt</code>, <code>fig-width</code>, <code>fig-height</code>) funcionan igual y, con una etiqueta que empiece con <code>fig-</code>, el mapa se numera y se cita con <code>@fig-…</code>. Dos particularidades. Los mapas suelen necesitar más alto que los gráficos: Costa Rica es más ancha que alta, pero con la leyenda a la derecha, <code>fig-height: 6</code> suele quedar bien. Y la lectura de las capas por URL ocurre en cada <em>Render</em>, lo que tarda unos segundos con los archivos del curso; con capas grandes (decenas de megabytes), conviene guardar una versión simplificada o recortada con <code>st_write()</code> y leerla desde el proyecto. Los mapas interactivos, con leaflet, siguen las reglas de los htmlwidgets del <a href="../../contenidos/iii-tidyverse/13-plotly-dt.html">capítulo de plotly y DT</a>.</p>
+<p>Un mapa de ggplot2 es una figura más: las <a href="../../contenidos/iii-tidyverse/12-ggplot2.html#gráficos-en-documentos-quarto">opciones de figura</a> de Quarto (<code>fig-cap</code>, <code>fig-alt</code>, <code>fig-width</code>, <code>fig-height</code>) funcionan igual y, con una etiqueta que empiece con <code>fig-</code>, el mapa se numera y se cita con <code>@fig-…</code>. Dos particularidades. Los mapas del mundo son más anchos que altos y quedan bien con <code>fig-height: 5</code>; los de un país suelen necesitar más alto. Y la lectura de las capas por URL ocurre en cada <em>Render</em>, lo que tarda unos segundos con los archivos del curso; con capas grandes (decenas de megabytes), conviene guardar una versión simplificada o recortada con <code>st_write()</code> y leerla desde el proyecto. Los mapas interactivos, con leaflet, siguen las reglas de los htmlwidgets del <a href="../../contenidos/iii-tidyverse/13-plotly-dt.html">capítulo de plotly y DT</a>.</p>
 <p><em>Ejercicios de esta sección: <a href="#ejercicios-publicacion">ejercicios sobre publicación, asistentes y datos propios</a>.</em></p>
 </section>
 <section id="asistentes-de-ia-para-generar-mapas" class="level2">
 <h2 class="anchored" data-anchor-id="asistentes-de-ia-para-generar-mapas">Asistentes de IA para generar mapas</h2>
-<p>Los <a href="../../contenidos/i-introduccion-ciencia-datos-programacion/05-asistentes-ia.html">lineamientos del curso</a> aplican: los asistentes de IA sirven para explicar, depurar, generar y verificar código, se declara su uso y se comprende todo lo que se entrega. Para generar código de mapas, el prompt debe describir el objeto sf —las columnas y, ahora, también el <strong>SRC</strong> y el tipo de geometría—, pedir el patrón del curso (ggplot2 con <code>geom_sf()</code>) y el resultado debe <strong>verificarse</strong> con tres comprobaciones específicas: que el código no mezcle SRC en operaciones espaciales (todas las capas en el mismo, reproyectadas antes de medir), que la escala de color sea adecuada a la distribución de la variable (logarítmica o clasificada si es asimétrica; discreta si es categórica) y que la leyenda tenga unidades. Un prompt de ejemplo, con las cuatro partes del capítulo de asistentes:</p>
+<p>Los <a href="../../contenidos/i-introduccion-ciencia-datos-programacion/05-asistentes-ia.html">lineamientos del curso</a> aplican: los asistentes de IA sirven para explicar, depurar, generar y verificar código, se declara su uso y se comprende todo lo que se entrega. Para generar código de mapas, el prompt debe describir el objeto sf —las columnas y, ahora, también el <strong>SRC</strong> y el tipo de geometría—, pedir el patrón del curso (ggplot2 con <code>geom_sf()</code>) y el resultado debe <strong>verificarse</strong> con tres comprobaciones específicas: que el código no mezcle SRC en operaciones espaciales (todas las capas en el mismo, reproyectadas antes de medir), que la escala de color sea adecuada a la distribución de la variable (logarítmica o clasificada si es asimétrica; divergente si tiene un valor central; discreta si es categórica) y que la leyenda tenga unidades. Un prompt de ejemplo, con las cuatro partes del capítulo de asistentes:</p>
 <blockquote class="blockquote">
-<p>Actúe como asistente de visualización de datos geoespaciales con R, sf y ggplot2 <strong>(rol)</strong>. Tengo un objeto sf llamado <code>cantones_union</code>, con un multipolígono por cantón de Costa Rica en el SRC EPSG:8908 (CR-SIRGAS / CRTM05, metros) y las columnas <code>provincia</code> (texto), <code>canton</code> (texto), <code>poblacion</code> (entero) y <code>area_km2</code> (decimal) <strong>(contexto)</strong>. Escriba el código de un mapa de coropletas de la población por kilómetro cuadrado de cada cantón, con una paleta secuencial, escala de color logarítmica con etiquetas con separador de miles, bordes blancos, título, leyenda con unidades, fuente de los datos en la nota al pie, sin ejes y con los límites del mapa fijados para excluir la Isla del Coco <strong>(tarea)</strong>. Use <code>ggplot(cantones_union) + geom_sf(...)</code> y escalas de ggplot2; no use otros paquetes <strong>(formato)</strong>.</p>
+<p>Actúe como asistente de visualización de datos geoespaciales con R, sf y ggplot2 <strong>(rol)</strong>. Tengo un objeto sf llamado <code>paises_bm</code>, con un multipolígono por país del mundo en el SRC EPSG:8857 (Equal Earth) y las columnas <code>nombre</code> (texto), <code>continente</code> (texto), <code>poblacion</code> (entero) y <code>poblacion_urbana_pct</code> (decimal: porcentaje de población urbana en 2024, entre 0 y 100, con valores faltantes) <strong>(contexto)</strong>. Escriba el código de un mapa de coropletas del porcentaje de población urbana, con una paleta secuencial, los países sin datos en gris, leyenda con título y unidades, título, bordes blancos, fuente de los datos en la nota al pie y sin ejes <strong>(tarea)</strong>. Use <code>ggplot(paises_bm) + geom_sf(...)</code> y escalas de ggplot2; no use otros paquetes <strong>(formato)</strong>.</p>
 </blockquote>
-<p>Al verificar el código generado, además de las tres comprobaciones, compare el color de dos o tres cantones conocidos con sus valores en la tabla: Tibás debe ser el más intenso y Talamanca, Puerto Jiménez o Turrubares, los más claros.</p>
+<p>Al verificar el código generado, además de las tres comprobaciones, compare el color de dos o tres países conocidos con sus valores en la tabla.</p>
 <p><em>Ejercicios de esta sección: <a href="#ejercicios-publicacion">ejercicios sobre publicación, asistentes y datos propios</a>.</em></p>
 </section>
 <section id="clínica-de-errores" class="level2">
 <h2 class="anchored" data-anchor-id="clínica-de-errores">Clínica de errores</h2>
-<p>La tabla 1 recoge los problemas más frecuentes al empezar con sf.</p>
+<p>La tabla 1 recoge los problemas más frecuentes al empezar con sf. El primero de la lista de síntomas sin mensaje merece verse una vez: con <code>plot()</code> de R base, dos capas en SRC distintos no se superponen y no hay ningún aviso; las ciudades en grados sobre los países en metros quedan todas amontonadas cerca del origen, a la escala de los grados. ggplot2 evita ese error al reproyectar, pero las operaciones espaciales del capítulo siguiente no.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">st_geometry</span>(paises_ee), <span class="at">col =</span> <span class="st">"#dce9f5"</span>)</span>
+<span id="cb68-2"><a href="#cb68-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">st_geometry</span>(ciudades), <span class="at">add =</span> <span class="cn">TRUE</span>, <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">pch =</span> <span class="dv">16</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="15-sf-datos-vectoriales_files/figure-html/error-src-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
 <figure style="text-align: center; margin: 20px 0;" class="figure">
 <figcaption>
 <strong>Tabla 1</strong>. Clínica de errores de sf. Fuente: elaboración propia.
@@ -1210,13 +1346,24 @@ Es el comportamiento de <code>plot()</code> con un objeto sf: un mapa por atribu
 </tr>
 <tr>
 <td>
-El mapa de ggplot2 es diminuto y hay un punto en una esquina
+Con <code>plot(…, add = TRUE)</code>, la segunda capa no aparece o queda amontonada en un punto
 </td>
 <td>
-La extensión incluye la Isla del Coco (o cualquier geometría lejana).
+Capas en SRC distintos: no hay mensaje.
 </td>
 <td>
-<code>coord_sf(xlim = …, ylim = …)</code> con los límites en las unidades del SRC.
+Reproyectar con <code>st_transform()</code> al SRC de la primera capa.
+</td>
+</tr>
+<tr>
+<td>
+El mapa de ggplot2 es diminuto, o el mapa en Mercator es una franja
+</td>
+<td>
+La extensión incluye una geometría lejana (la Isla del Coco en los cantones) o la Antártida, que en Mercator se extiende al infinito.
+</td>
+<td>
+<code>coord_sf(xlim = …, ylim = …)</code> con los límites en las unidades del SRC, o <code>filter()</code> para excluir la geometría.
 </td>
 </tr>
 <tr>
@@ -1243,7 +1390,7 @@ Filas con <code>NA</code> en la longitud o la latitud.
 </tr>
 <tr>
 <td>
-Los puntos aparecen en la Antártida o en el océano, lejos del país
+Los puntos aparecen en lugares absurdos (el océano, la Antártida)
 </td>
 <td>
 Las columnas de <code>coords</code> están al revés (latitud, longitud).
@@ -1276,10 +1423,10 @@ Reproyectar una de ellas con <code>st_transform()</code> al SRC de la otra.
 </tr>
 <tr>
 <td>
-Después de <code>left_join()</code> el objeto ya no tiene funciones de sf (<code>geom_sf()</code> falla o la geometría es una columna más)
+<code>stat_sf() requires the following missing aesthetics: geometry</code> después de una unión
 </td>
 <td>
-El objeto sf quedó a la derecha de la unión.
+El objeto sf quedó a la derecha de <code>left_join()</code> y el resultado es un data frame común.
 </td>
 <td>
 El objeto sf va a la izquierda: <code>capa |&gt; left_join(tabla, by = …)</code>.
@@ -1290,10 +1437,10 @@ El objeto sf va a la izquierda: <code>capa |&gt; left_join(tabla, by = …)</cod
 La unión deja <code>NA</code> en las columnas nuevas
 </td>
 <td>
-Claves que no coinciden exactamente (tildes, grafías, espacios).
+Claves que no coinciden exactamente (códigos distintos, tildes, grafías).
 </td>
 <td>
-<code>anti_join()</code> en las dos direcciones; corregir con <code>case_when()</code> antes de unir, o unir por códigos.
+<code>anti_join()</code> en las dos direcciones; corregir con <code>case_when()</code> antes de unir.
 </td>
 </tr>
 <tr>
@@ -1312,10 +1459,21 @@ Variable asimétrica con escala lineal.
 <code>Discrete value supplied to a continuous scale</code>
 </td>
 <td>
-Se mapeó una columna de texto a <code>fill</code> con una escala continua (viridis_c, fermenter).
+Se mapeó una columna de texto a <code>fill</code> con una escala continua (viridis_c, fermenter, distiller).
 </td>
 <td>
 Usar una escala discreta (<code>scale_fill_viridis_d()</code>, <code>scale_fill_manual()</code>, <code>scale_fill_brewer()</code>).
+</td>
+</tr>
+<tr>
+<td>
+<code>Removed n rows containing missing values</code> en un mapa de coropletas
+</td>
+<td>
+Advertencia, no error: países sin datos en la variable mapeada.
+</td>
+<td>
+<code>na.value = "gray85"</code> en la escala, para que aparezcan como «sin datos».
 </td>
 </tr>
 <tr>
@@ -1348,77 +1506,74 @@ Simplificar (<code>st_simplify()</code>) o recortar la capa, guardarla con <code
 <h2 class="anchored" data-anchor-id="resumen">Resumen</h2>
 <ul>
 <li><strong>sf</strong> implementa el estándar Simple Features en R sobre GDAL, GEOS y PROJ. Un <strong>objeto sf es un data frame con una columna de geometrías</strong>: los verbos de dplyr funcionan y conservan la geometría; <code>st_drop_geometry()</code> la quita para trabajar solo con los atributos.</li>
-<li><code>st_read()</code> lee cualquier formato vectorial, desde rutas o URL; <code>st_write()</code> escribe, preferiblemente en <strong>GeoPackage</strong>. <code>st_geometry()</code>, <code>st_crs()</code> y <code>st_bbox()</code> describen la geometría, el SRC y la extensión.</li>
-<li>Una tabla con coordenadas se convierte en puntos con <code>st_as_sf(coords = c("longitud", "latitud"), crs = 4326)</code>: en ese orden y con el SRC declarado.</li>
-<li><code>st_transform()</code> <strong>reproyecta</strong>; <code>st_area()</code> mide, con unidades, y se mide en el SRC proyectado de la región (CR-SIRGAS / CRTM05 en Costa Rica). Para dibujar, ggplot2 reproyecta las capas por su cuenta; para las operaciones espaciales, deben estar en el mismo SRC.</li>
-<li><code>left_join()</code> une una capa con una tabla <strong>con el objeto sf a la izquierda</strong>; las claves que no coinciden se detectan con <code>anti_join()</code> y se corrigen antes de unir.</li>
-<li><code>geom_sf()</code> dibuja mapas con ggplot2; <code>coord_sf()</code> fija los límites; <code>geom_sf_text()</code> rotula. Un <strong>mapa de coropletas</strong> mapea una variable normalizada a <code>fill</code>, con una escala logarítmica o clasificada (<code>scale_fill_fermenter()</code>) si la variable es asimétrica.</li>
+<li><code>st_read()</code> lee cualquier formato vectorial, desde rutas o URL; <code>st_write()</code> escribe, preferiblemente en <strong>GeoPackage</strong>. <code>st_geometry()</code>, <code>st_crs()</code> y <code>st_bbox()</code> describen la geometría, el SRC y la extensión. La <strong>escala</strong> de la capa determina su uso.</li>
+<li>Una tabla con coordenadas se convierte en puntos con <code>st_as_sf(coords = c("longitud", "latitud"), crs = 4326)</code>: en ese orden y con el SRC declarado; <code>st_coordinates()</code> hace el camino inverso.</li>
+<li><code>st_transform()</code> <strong>reproyecta</strong>. Un mapa del mundo se dibuja en una proyección (Equal Earth, EPSG:8857), no en WGS84; <code>st_area()</code> mide, con unidades, y se mide en una proyección equivalente a escala mundial o en la local del país (CR-SIRGAS / CRTM05 en Costa Rica). Para dibujar, ggplot2 reproyecta las capas por su cuenta; para las operaciones espaciales, deben estar en el mismo SRC.</li>
+<li><code>left_join()</code> une una capa con una tabla <strong>con el objeto sf a la izquierda</strong>; las claves que no coinciden (los códigos de Kosovo, Palestina y Sudán del Sur) se detectan con <code>anti_join()</code> y se corrigen antes de unir.</li>
+<li><code>geom_sf()</code> dibuja mapas con ggplot2, superponiendo capas con <code>data</code>; <code>coord_sf()</code> fija los límites o la proyección del dibujo. Un <strong>mapa de coropletas</strong> mapea una variable normalizada a <code>fill</code>, con una escala logarítmica si es asimétrica, clasificada con <code>scale_fill_fermenter()</code>, divergente con <code>scale_fill_distiller()</code> si tiene un valor central, y con <code>na.value</code> para los valores faltantes.</li>
 </ul>
 </section>
 <section id="ejercicios" class="level2">
 <h2 class="anchored" data-anchor-id="ejercicios">Ejercicios</h2>
-<p>Los ejercicios se agrupan según la sección del capítulo a la que corresponden y se resuelven en un documento Quarto nuevo del proyecto <code>pf0953</code>, <code>mapas.qmd</code>, con el mismo encabezado YAML de <code>graficos.qmd</code> y un bloque <code>preparacion</code> igual al del inicio del capítulo (más <code>library(plotly)</code> y <code>library(DT)</code> si los usa). Como en los capítulos anteriores, use la provincia y el cantón elegidos como ejemplo propio.</p>
+<p>Los ejercicios se agrupan según la sección del capítulo a la que corresponden y se resuelven en un documento Quarto nuevo del proyecto <code>pf0953</code>, <code>mapas.qmd</code>, con el mismo encabezado YAML de <code>graficos.qmd</code> y un bloque <code>preparacion</code> igual al del inicio del capítulo. Varios suponen ejecutados los bloques de las secciones anteriores (<code>paises</code>, <code>paises_ee</code> con los códigos corregidos, <code>centroamerica</code>, <code>centroamerica_crtm05</code>, <code>ciudades</code>, <code>indicadores</code> y <code>paises_bm</code>).</p>
 <section id="ejercicios-lectura" class="level3">
 <h3 class="anchored" data-anchor-id="ejercicios-lectura">Lectura y estructura</h3>
 <ol type="1">
-<li><p>Lea en un objeto <code>provincias</code> la capa de provincias del repositorio del curso (<code>https://raw.githubusercontent.com/pf0953-programacionr/2026-ii/main/datos/provincias.gpkg</code>) e imprímalo. ¿Cuántas entidades y cuántos campos tiene, cuál es el tipo de geometría y cuál el SRC? Compare su extensión con la de <code>cantones_sf</code>: ¿por qué son casi iguales?</p></li>
-<li><p>Obtenga los cantones de su provincia a partir de <code>cantones_sf</code> con <code>filter()</code> y compruebe, imprimiendo el resultado, que sigue siendo un objeto sf y que la extensión cambió. Luego, con <code>st_drop_geometry()</code>, <code>select()</code> y <code>knitr::kable()</code>, muestre una tabla con los códigos y los nombres de esos cantones.</p></li>
-</ol>
-</section>
-<section id="ejercicios-mapas" class="level3">
-<h3 class="anchored" data-anchor-id="ejercicios-mapas">Mapas</h3>
-<ol start="3" type="1">
-<li><p>Dibuje con ggplot2 el mapa de los cantones de su provincia, con un relleno fijo, los bordes del color de su preferencia, el nombre de cada cantón con <code>geom_sf_text()</code>, título y <code>theme_minimal()</code> o <code>theme_void()</code>. Si los nombres se superponen, pruebe con <code>size</code> y con <code>coord_sf()</code>.</p></li>
-<li><p><strong>Prediga antes de ejecutar</strong> qué dibuja cada instrucción: cuántos mapas, de qué colores y con qué leyenda; luego ejecute:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(cantones_sf)</span>
-<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">st_geometry</span>(cantones_sf))</span>
-<span id="cb61-3"><a href="#cb61-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(cantones_sf[<span class="st">"provincia"</span>])</span>
-<span id="cb61-4"><a href="#cb61-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(cantones_sf) <span class="sc">+</span> <span class="fu">geom_sf</span>(<span class="fu">aes</span>(<span class="at">fill =</span> codigo_provincia))</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
-<details>
-<summary>
-<p>Después de ejecutar, haga clic aquí para ver la explicación</p>
-</summary>
-<p><code>plot()</code> sobre el objeto completo dibuja un mapa por cada columna de atributos (cuatro), cada uno coloreado según los valores de esa columna, sin leyenda; sobre <code>st_geometry()</code>, un solo mapa con los contornos; sobre <code>cantones_sf["provincia"]</code>, un mapa coloreado por provincia, con leyenda. En ggplot2, <code>codigo_provincia</code> es una columna <strong>numérica</strong>, de modo que el relleno usa una escala continua (una barra de color de 1 a 7) aunque la variable sea en realidad categórica: para un color por provincia hay que mapear <code>provincia</code>, que es texto, o convertir el código con <code>factor()</code>.</p>
-</details></li>
+<li><p>Lea en un objeto <code>aeropuertos</code> la capa de aeropuertos de Natural Earth (<code>paste0(datos_ne, "aeropuertos.gpkg")</code>) e imprímalo. ¿Cuántas entidades y cuántos campos tiene, cuál es el tipo de geometría y cuál el SRC? Luego, con <code>paises</code>, cuente los países de cada continente: ¿cuál continente tiene más países en la capa?</p></li>
+<li><p>Obtenga en <code>africa</code> los países de África a partir de <code>paises_ee</code> y compruebe, imprimiendo el resultado, que sigue siendo un objeto sf, en Equal Earth, y que la extensión cambió. Luego, con <code>st_drop_geometry()</code>, <code>select()</code>, <code>arrange()</code> y <code>knitr::kable()</code>, muestre una tabla con los diez países más poblados del continente.</p></li>
 </ol>
 </section>
 <section id="ejercicios-puntos" class="level3">
 <h3 class="anchored" data-anchor-id="ejercicios-puntos">Puntos</h3>
+<ol start="3" type="1">
+<li><p>Construya a mano, con <code>tribble()</code>, una tabla con tres lugares que conozca (por ejemplo, su casa, la Escuela de Geografía y un sitio de interés), con columnas <code>nombre</code>, <code>longitud</code> y <code>latitud</code> obtenidas de Google Maps u OpenStreetMap, y conviértala en el objeto sf <code>lugares</code> con el SRC correcto. Dibújelo sobre <code>centroamerica</code> (o sobre <code>paises</code>, si los lugares están en otra región) y verifique que los puntos caen donde deben. Luego reproyecte <code>lugares</code> a CR-SIRGAS / CRTM05 (o al SRC proyectado de su país) y observe las coordenadas con <code>st_coordinates()</code>: ¿en qué unidades están y qué tan grandes son los números?</p></li>
+<li><p><strong>Prediga antes de ejecutar</strong>: ¿dónde quedan las ciudades si <code>st_as_sf()</code> recibe <code>coords = c("latitud", "longitud")</code>? Compruébelo con <code>st_bbox()</code> del resultado y explique los valores. Luego cree el objeto sin el argumento <code>crs</code>, consulte <code>st_crs()</code> e intente <code>st_transform(…, 8857)</code>: anote el mensaje de error y búsquelo en la clínica de errores.</p></li>
+</ol>
+</section>
+<section id="ejercicios-mapas" class="level3">
+<h3 class="anchored" data-anchor-id="ejercicios-mapas">Mapas</h3>
 <ol start="5" type="1">
-<li><p>A partir de <code>felidos_sf</code>, cuente los registros por especie y dibuje un mapa con los registros de <strong>una</strong> especie (la que prefiera) sobre las provincias (<code>provincias</code> del ejercicio 1), con los puntos de un color fijo y las provincias rotuladas. ¿En cuáles regiones del país se concentra la especie? Mencione dos.</p></li>
-<li><p><strong>Prediga antes de ejecutar</strong>: ¿dónde quedan los puntos si <code>st_as_sf()</code> recibe <code>coords = c("decimalLatitude", "decimalLongitude")</code>? Compruébelo con <code>st_bbox()</code> del resultado y explique los valores. Luego cree el objeto sin el argumento <code>crs</code>, consulte <code>st_crs()</code> e intente <code>st_transform(…, 8908)</code>: anote el mensaje de error y búsquelo en la clínica de errores.</p></li>
+<li><p>Dibuje el mapa de <code>africa</code> (ejercicio 2) con los países en un color claro, los límites en blanco, las ciudades del continente encima (filtre <code>ciudades</code> por los códigos de país de <code>africa</code>), el nombre de cada país con <code>geom_sf_text()</code>, título y <code>theme_void()</code>. Recuerde que ggplot2 reproyecta las ciudades para dibujarlas. ¿Cuántos países tiene el continente en la capa y cuántas ciudades quedaron en el mapa?</p></li>
+<li><p><strong>Prediga antes de ejecutar</strong> qué dibuja cada instrucción: de qué color es cada país, cuántos colores hay y qué muestra la leyenda; luego ejecute:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(paises_ee) <span class="sc">+</span> <span class="fu">geom_sf</span>(<span class="fu">aes</span>(<span class="at">fill =</span> continente), <span class="at">color =</span> <span class="st">"white"</span>, <span class="at">linewidth =</span> <span class="fl">0.2</span>)</span>
+<span id="cb69-2"><a href="#cb69-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(paises_ee) <span class="sc">+</span> <span class="fu">geom_sf</span>(<span class="fu">aes</span>(<span class="at">fill =</span> poblacion_estimada), <span class="at">color =</span> <span class="st">"white"</span>, <span class="at">linewidth =</span> <span class="fl">0.2</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<details>
+<summary>
+<p>Después de ejecutar, haga clic aquí para ver la explicación</p>
+</summary>
+<p>Cuando <code>fill</code> es una columna de <strong>texto</strong>, ggplot2 usa una escala discreta: un color distinto por valor (ocho, uno por continente, con la paleta categórica por defecto) y una leyenda con la lista de categorías. Es la forma más rápida de ver a qué grupo pertenece cada polígono. Cuando es una columna <strong>numérica</strong>, usa una escala continua, con una barra de color; y como la población es muy asimétrica (China e India tienen más de mil millones de habitantes; la mitad de los países, menos de diez millones), casi todos los países quedan del color más oscuro y solo esos dos se distinguen: es la razón de las escalas logarítmicas y de las clases de la sección de coropletas.</p>
+</details></li>
 </ol>
 </section>
 <section id="ejercicios-src" class="level3">
 <h3 class="anchored" data-anchor-id="ejercicios-src">Sistemas de referencia de coordenadas</h3>
 <ol start="7" type="1">
-<li><p>Reproyecte <code>felidos_sf</code> a CR-SIRGAS / CRTM05 en <code>felidos_crtm05</code> y compare <code>st_bbox()</code> de los dos objetos: ¿en qué unidades está cada uno y qué tan grandes son los números? Verifique con <code>st_crs()</code> que el nuevo objeto tiene el mismo SRC que <code>cantones_sf</code>.</p></li>
-<li><p>Calcule con <code>st_area()</code> el área de cada provincia en km² (a partir de <code>provincias</code>) y compárela con la suma de <code>area_km2</code> de sus cantones en la tabla <code>cantones</code> (con <code>group_by()</code> y <code>summarize()</code>, y una unión). ¿En cuál provincia es mayor la diferencia y por qué?</p></li>
+<li><p>Reproyecte <code>ciudades</code> a Web Mercator en <code>ciudades_merc</code> y a Equal Earth en <code>ciudades_ee</code>. Obtenga con <code>st_coordinates()</code> las coordenadas de San José de Costa Rica en los tres SRC y explique en el texto por qué los tres pares de números representan el mismo lugar.</p></li>
+<li><p>Una <code>centroamerica_crtm05</code> con los indicadores del Banco Mundial (por <code>codigo</code>, con el objeto sf a la izquierda; como las dos tablas tienen una columna <code>area_km2</code>, renombre antes la calculada, por ejemplo a <code>area_calculada_km2</code>) y agregue la columna <code>diferencia_pct</code> entre el área calculada en CRTM05 y la superficie terrestre del Banco Mundial. ¿En cuál país es mayor la diferencia y por qué? Pista: el Banco Mundial reporta superficie <strong>terrestre</strong>; piense qué tiene ese país que los demás no. Luego calcule el área de cada país también en Equal Earth y compárela con la de CRTM05: ¿cuánto de la diferencia se debe a la proyección y en cuál país es mayor ese efecto?</p></li>
 </ol>
 </section>
 <section id="ejercicios-coropletas" class="level3">
 <h3 class="anchored" data-anchor-id="ejercicios-coropletas">Unión y coropletas</h3>
 <ol start="9" type="1">
-<li><p>Una <code>provincias</code> con un resumen por provincia de la tabla <code>cantones</code> (población, área y densidad, como <code>resumen_provincias</code> del capítulo de dplyr) y dibuje un mapa de coropletas de la densidad de población de las provincias, con la paleta viridis, los nombres de las provincias y la leyenda con unidades. Compárelo con el mapa de los cantones: ¿qué se gana y qué se pierde al agregar?</p></li>
-<li><p>Dibuje un mapa de coropletas de la <strong>población</strong> (no de la densidad) de los cantones, con <code>scale_fill_viridis_c(transform = "log10")</code>, y compárelo con el de la densidad de la sección. ¿Cuáles cantones cambian más de color entre los dos mapas? Explique en un párrafo por qué el mapa de población absoluta puede inducir a error y cuál de los dos conviene publicar.</p></li>
-<li><p>Dibuje el mapa de coropletas de la densidad de los cantones de <strong>su provincia</strong>, clasificada en cuatro clases con <code>scale_fill_fermenter()</code> (sin transformación logarítmica, si los valores de su provincia lo permiten), con los nombres de los cantones, título, leyenda con unidades y fuente. ¿Cuál cantón de su provincia es el más denso y cuál el menos denso? Compruébelo con <code>arrange()</code> sobre la tabla.</p></li>
+<li><p>Dibuje un mapa de coropletas de la <strong>esperanza de vida</strong> de los países de América del Sur (filtre <code>paises_bm</code> por continente), con la paleta viridis, leyenda con unidades, los países sin datos en gris, el nombre de cada país con <code>geom_sf_text()</code> y título. ¿Cuál país tiene la mayor esperanza de vida y cuál la menor? Compruébelo con <code>arrange()</code> sobre la tabla.</p></li>
+<li><p>Dibuje un mapa de coropletas del porcentaje de personas que usan Internet (<code>usuarios_internet_pct</code> de <code>paises_bm</code>) clasificado en cinco clases por cuantiles con <code>scale_fill_fermenter()</code>, con la paleta <code>"YlGnBu"</code>, los países sin datos en gris, leyenda con título y unidades, y título. Compárelo con una versión de escala continua: ¿qué muestra la clasificación que la escala continua no, y viceversa?</p></li>
+<li><p>Dibuje un mapa de coropletas del <strong>porcentaje de población urbana</strong> (<code>poblacion_urbana_pct</code>) con la paleta divergente <code>"BrBG"</code> centrada en el 50 % (con <code>limits = c(0, 100)</code>, el centro de la paleta queda en 50). ¿En qué regiones del mundo predomina la población rural? Interprete el patrón geográfico en un párrafo.</p></li>
 </ol>
 </section>
 <section id="ejercicios-publicacion" class="level3">
 <h3 class="anchored" data-anchor-id="ejercicios-publicacion">Publicación, asistentes y datos propios</h3>
 <ol start="12" type="1">
-<li><p>Dele al mapa del ejercicio 11 un bloque con etiqueta <code>fig-densidad-provincia</code>, <code>fig-cap</code>, <code>fig-alt</code> y <code>fig-height</code>, cítelo en el texto, procese <code>mapas.qmd</code> con <em>Render</em> y publíquelo en el repositorio <code>practica-quarto</code>, junto con los documentos anteriores. Compruebe en la dirección pública que el mapa se ve con su leyenda numerada.</p></li>
-<li><p>Pida a un asistente de IA el código del prompt de ejemplo de la sección de asistentes y verifíquelo: lea el código, compruebe que calcula la densidad a partir de las columnas indicadas y no inventa otras, que la escala es logarítmica y la leyenda tiene unidades, que los límites excluyen la Isla del Coco, y compare el color de Tibás, San Carlos y Talamanca con sus densidades en <code>cantones</code>. Documente en el texto del documento el asistente, el prompt, el código y el resultado de las comprobaciones, como en la declaración de uso de IA de la tarea 2.</p></li>
-<li><p>Para la tarea 3, que agrega el componente geoespacial a los datos de su tema, cargue en un objeto sf la fuente que identificó en el ejercicio 6 del capítulo anterior (con <code>st_read()</code>, o con <code>st_as_sf()</code> si es un CSV con coordenadas), imprímalo, anote su SRC, su cantidad de entidades y su tipo de geometría, y dibújelo sobre <code>cantones_sf</code> o <code>provincias</code>. Si sus datos son tabulares por cantón, provincia o distrito, únalos a la capa correspondiente y verifique la unión con <code>anti_join()</code>. Anote qué preguntas podría responder al combinarlos con otras capas.</p></li>
+<li><p>Guarde <code>africa</code> con los indicadores del Banco Mundial (únalos primero, con los códigos ya corregidos) en un GeoPackage <code>africa.gpkg</code> y vuelva a leerlo en <code>africa_leido</code>. Compruebe que el SRC y la cantidad de entidades se conservaron. Luego dele al mapa del ejercicio 9 un bloque con etiqueta <code>fig-esperanza-vida</code>, <code>fig-cap</code>, <code>fig-alt</code> y <code>fig-height</code>, cítelo en el texto, procese <code>mapas.qmd</code> con <em>Render</em> y publíquelo en el repositorio <code>practica-quarto</code>, junto con los documentos anteriores.</p></li>
+<li><p>Pida a un asistente de IA el código del prompt de ejemplo de la sección de asistentes (coropletas de la población urbana) y verifíquelo: lea el código, compruebe que usa la columna indicada y no inventa otras, que los países sin datos aparecen en gris, que la leyenda tiene unidades, y compare el color de tres países con sus valores en <code>paises_bm</code>. Documente en el texto del documento el asistente, el prompt, el código y el resultado de las comprobaciones, como en la declaración de uso de IA de la tarea 2.</p></li>
+<li><p>Para la tarea 3, que agrega el componente geoespacial a los datos de su tema, cargue en un objeto sf la fuente que identificó en el ejercicio 6 del capítulo anterior (con <code>st_read()</code>, o con <code>st_as_sf()</code> si es un CSV con coordenadas), imprímalo, anote su SRC, su cantidad de entidades y su tipo de geometría, y dibújelo sobre la capa que corresponda a su extensión: <code>paises</code>, <code>centroamerica</code> o, para Costa Rica, los cantones del repositorio del curso (<code>https://raw.githubusercontent.com/pf0953-programacionr/2026-ii/main/datos/cantones.gpkg</code>, en CRTM05). Si sus datos son tabulares por país, cantón o provincia, únalos a la capa correspondiente y verifique la unión con <code>anti_join()</code>. Anote qué preguntas podría responder al combinarlos con otras capas.</p></li>
 </ol>
 </section>
 </section>
 <section id="referencias-bibliográficas" class="level2">
 <h2 class="anchored" data-anchor-id="referencias-bibliográficas">Referencias bibliográficas</h2>
-<p>GBIF.org. (2026, 11 de octubre). <em>GBIF occurrence search: Felidae, Costa Rica, with coordinates</em> [consulta a la API]. <a href="https://www.gbif.org/occurrence/search?country=CR&amp;taxon_key=9703&amp;has_coordinate=true&amp;has_geospatial_issue=false" class="uri">https://www.gbif.org/occurrence/search?country=CR&amp;taxon_key=9703&amp;has_coordinate=true&amp;has_geospatial_issue=false</a></p>
-<p>Instituto Geográfico Nacional. (s. f.). <em>Límite cantonal 1:5000</em> y <em>Límite provincial 1:5000</em> [capas WFS]. Sistema Nacional de Información Territorial. Recuperado el 11 de octubre de 2026, de <a href="https://geos.snitcr.go.cr/be/IGN_5_CO/wfs" class="uri">https://geos.snitcr.go.cr/be/IGN_5_CO/wfs</a></p>
-<p>Instituto Nacional de Estadística y Censos. (2023). <em>Resultados de la Estimación de Población y Vivienda 2022</em> [archivo XLSX]. <a href="https://admin.inec.cr/sites/default/files/2023-11/reResultadosEstimacionPoblacionVivienda2022_3.xlsx" class="uri">https://admin.inec.cr/sites/default/files/2023-11/reResultadosEstimacionPoblacionVivienda2022_3.xlsx</a></p>
+<p>Banco Mundial. (2026). <em>Indicadores del desarrollo mundial</em> [conjunto de datos]. Recuperado el 6 de octubre de 2026, de <a href="https://datos.bancomundial.org/" class="uri">https://datos.bancomundial.org/</a></p>
 <p>Lovelace, R., Nowosad, J., y Münchow, J. (2025). <em>Geocomputation with R</em> (2.ª ed.). Chapman and Hall/CRC. <a href="https://r.geocompx.org/" class="uri">https://r.geocompx.org/</a></p>
+<p>Natural Earth. (s. f.). <em>Natural Earth: Free vector and raster map data</em> [conjunto de datos]. Recuperado el 4 de octubre de 2026, de <a href="https://www.naturalearthdata.com/" class="uri">https://www.naturalearthdata.com/</a></p>
 <p>Pebesma, E. (2018). Simple features for R: Standardized support for spatial vector data. <em>The R Journal, 10</em>(1), 439–446. <a href="https://doi.org/10.32614/RJ-2018-009" class="uri">https://doi.org/10.32614/RJ-2018-009</a></p>
 <p>Pebesma, E. (s. f.). <em>sf: Simple features for R</em>. Recuperado el 11 de octubre de 2026, de <a href="https://r-spatial.github.io/sf/" class="uri">https://r-spatial.github.io/sf/</a></p>
 <p>Pebesma, E., y Bivand, R. (2023). <em>Spatial data science: With applications in R</em>. Chapman and Hall/CRC. <a href="https://r-spatial.org/book/" class="uri">https://r-spatial.org/book/</a></p>
