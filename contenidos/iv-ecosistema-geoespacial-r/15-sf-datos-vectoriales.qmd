@@ -22,9 +22,11 @@ Antes de la clase, instale el paquete ejecutando en la consola de RStudio `insta
 
 El [capítulo anterior](14-datos-geoespaciales.qmd) presentó los conceptos: el modelo vectorial, el estándar Simple Features, los sistemas de referencia de coordenadas (SRC) y los formatos de archivo. Este los pone en práctica con [sf](https://r-spatial.github.io/sf/), el paquete de R para datos geoespaciales vectoriales, creado por Edzer Pebesma en 2016 (Pebesma, 2018). Su nombre proviene del estándar [Simple Features](https://www.ogc.org/standards/sfa), que implementa; y, como se adelantó en el [capítulo de tidyverse](../iii-tidyverse/10-tidyverse.qmd), sigue las convenciones del tidyverse sin formar parte de él, por lo que todo lo aprendido sobre dplyr y ggplot2 se aprovecha sin cambios.
 
-La idea central del paquete cabe en una frase: **un objeto sf es un data frame con una columna de geometrías**. Cada fila es una entidad geográfica (un cantón, un registro de presencia de una especie), las columnas son sus atributos (el nombre, la población, la fecha) y una columna especial, por lo general llamada `geometry` o `geom`, contiene la geometría de cada fila: un punto, una línea o un polígono. Por eso `filter()`, `select()`, `left_join()` y `group_by()` funcionan con un objeto sf como con cualquier otro data frame, y la geometría acompaña a los datos en cada operación. Por debajo, sf se apoya en tres bibliotecas de software que usan casi todas las herramientas geoespaciales, incluidos QGIS y PostGIS: [GDAL](https://gdal.org/), que lee y escribe los formatos de archivo; [GEOS](https://libgeos.org/), que ejecuta las operaciones geométricas; y [PROJ](https://proj.org/), que transforma coordenadas entre SRC.
+La idea central del paquete cabe en una frase: **un objeto sf es un data frame con una columna de geometrías**. Cada fila es una entidad geográfica (un país, una ciudad), las columnas son sus atributos (el nombre, la población, el continente) y una columna especial, por lo general llamada `geometry` o `geom`, contiene la geometría de cada fila: un punto, una línea o un polígono. Por eso `filter()`, `select()`, `left_join()` y `group_by()` funcionan con un objeto sf como con cualquier otro data frame, y la geometría acompaña a los datos en cada operación. Por debajo, sf se apoya en tres bibliotecas de software que usan casi todas las herramientas geoespaciales, incluidos QGIS y PostGIS: [GDAL](https://gdal.org/), que lee y escribe los formatos de archivo; [GEOS](https://libgeos.org/), que ejecuta las operaciones geométricas; y [PROJ](https://proj.org/), que transforma coordenadas entre SRC.
 
-Este capítulo cubre lo que hace falta para empezar: leer una capa, entender su estructura, dibujarla con ggplot2, convertir una tabla con coordenadas en puntos, manejar el SRC, unir la capa con datos tabulares y producir un mapa de coropletas. El capítulo siguiente trata las operaciones espaciales (relaciones entre capas, uniones espaciales, zonas de influencia, agregación) y, más adelante, el de leaflet produce mapas interactivos a partir de los mismos objetos. Los datos son los del hilo conductor del curso —los cantones de Costa Rica (INEC, 2023)— ahora con sus polígonos, publicados por el Instituto Geográfico Nacional (IGN, s. f.), más un conjunto de datos de puntos: registros de presencia de félidos silvestres descargados de GBIF (GBIF.org, 2026), como en el [ejemplo de la semana 1](../i-introduccion-ciencia-datos-programacion/02-ejemplo-procesos-ciencia-datos.qmd). Los tres archivos están descritos en el [directorio de datos](https://github.com/pf0953-programacionr/2026-ii/tree/main/datos) del repositorio del curso.
+Los datos de este capítulo cambian de escala. En lugar de los cantones de Costa Rica, se usan los **países del mundo** de [Natural Earth](https://www.naturalearthdata.com/), un conjunto de datos cartográficos de dominio público con capas de países, ciudades, aeropuertos, ríos y lagos a varias escalas, y los **indicadores del desarrollo mundial** del [Banco Mundial](https://datos.bancomundial.org/), con una fila por país. Ambos están preparados para el curso en los directorios [`datos/natural-earth/`](https://github.com/pf0953-programacionr/2026-ii/tree/main/datos/natural-earth) y [`datos/banco-mundial/`](https://github.com/pf0953-programacionr/2026-ii/tree/main/datos/banco-mundial) del repositorio, cada uno con un LEEME que describe sus archivos y variables. La escala mundial tiene una ventaja didáctica: con datos de todo el planeta, las consecuencias de elegir un sistema de referencia de coordenadas u otro se ven a simple vista en el mapa —un país que parece el doble de grande, un mapa estirado—, mientras que a la escala de un país solo se notan al medir. Los cantones de Costa Rica, con sus polígonos, y los registros de presencia de félidos de GBIF vuelven en el capítulo siguiente, con las operaciones espaciales, y en la tarea 3.
+
+Este capítulo cubre lo que hace falta para empezar: leer una capa, entender su estructura, dibujarla con ggplot2, convertir una tabla con coordenadas en puntos, manejar el SRC, unir la capa con datos tabulares y producir un mapa de coropletas. El capítulo siguiente trata las operaciones espaciales (relaciones entre capas, uniones espaciales, zonas de influencia, agregación) y, más adelante, el de leaflet produce mapas interactivos a partir de los mismos objetos.
 
 ```{r}
 #| label: preparacion
@@ -32,45 +34,56 @@ Este capítulo cubre lo que hace falta para empezar: leer una capa, entender su 
 library(tidyverse)
 library(sf)
 
-cantones <- read_csv("https://raw.githubusercontent.com/pf0953-programacionr/2026-ii/main/datos/cantones.csv") |>
-  mutate(
-    densidad = poblacion / area_km2,
-    tipo = if_else(densidad > 100, "urbano", "rural")
-  )
+# Directorios de datos en el repositorio del curso
+datos_ne <- "https://raw.githubusercontent.com/pf0953-programacionr/2026-ii/main/datos/natural-earth/"
+datos_bm <- "https://raw.githubusercontent.com/pf0953-programacionr/2026-ii/main/datos/banco-mundial/"
 ```
 
-Al cargar sf aparece un mensaje como `Linking to GEOS 3.12.1, GDAL 3.8.4, PROJ 9.4.0; sf_use_s2() is TRUE`: indica las versiones de las tres bibliotecas y que el paquete usa la biblioteca [s2](https://r-spatial.github.io/s2/) para las geometrías en coordenadas geográficas. No es un error; como en los capítulos anteriores, `message: false` lo oculta en el documento.
+Al cargar sf aparece un mensaje como `Linking to GEOS 3.12.1, GDAL 3.8.4, PROJ 9.4.0; sf_use_s2() is TRUE`: indica las versiones de las tres bibliotecas y que el paquete usa la biblioteca [s2](https://r-spatial.github.io/s2/) para las geometrías en coordenadas geográficas. No es un error; como en los capítulos anteriores, `message: false` lo oculta en el documento. Las dos direcciones se guardan en objetos para no repetirlas: `paste0()` las une con el nombre de cada archivo.
 
 ## Lectura de capas vectoriales
 
-La función [`st_read()`](https://r-spatial.github.io/sf/reference/st_read.html) lee cualquier formato vectorial que GDAL conozca —GeoPackage, shapefile, GeoJSON, KML y [muchos más](https://gdal.org/en/stable/drivers/vector/)— desde una ruta local o desde una URL, y devuelve un objeto sf. Casi todas las funciones de sf empiezan con el prefijo `st_` (de *spatial type*, heredado de PostGIS), lo que facilita encontrarlas con el autocompletado de RStudio. La capa de cantones del IGN, en formato GeoPackage:
+La función [`st_read()`](https://r-spatial.github.io/sf/reference/st_read.html) lee cualquier formato vectorial que GDAL conozca —GeoPackage, shapefile, GeoJSON, KML y [muchos más](https://gdal.org/en/stable/drivers/vector/)— desde una ruta local o desde una URL, y devuelve un objeto sf. Casi todas las funciones de sf empiezan con el prefijo `st_` (de *spatial type*, heredado de PostGIS), lo que facilita encontrarlas con el autocompletado de RStudio. La capa de países de Natural Earth a escala 1:110 millones, en formato GeoPackage:
 
 ```{r}
 #| label: st-read
-cantones_sf <- st_read("https://raw.githubusercontent.com/pf0953-programacionr/2026-ii/main/datos/cantones.gpkg")
+paises <- st_read(paste0(datos_ne, "paises.gpkg"))
 ```
 
-El mensaje describe lo que se leyó: la capa `cantones`, con el controlador (*driver*) GPKG, 84 entidades (*features*, las filas) y 4 campos (*fields*, las columnas de atributos); el tipo de geometría, `MULTIPOLYGON`; la **extensión** (*bounding box*), el rectángulo que encierra todas las geometrías; y el SRC, proyectado, CR-SIRGAS / CRTM05. Con `quiet = TRUE` el mensaje se omite. Al imprimir el objeto se repite ese encabezado y se muestran las primeras filas:
+El mensaje describe lo que se leyó: la capa `paises`, con el controlador (*driver*) GPKG, 177 entidades (*features*, las filas) y 9 campos (*fields*, las columnas de atributos); el tipo de geometría, `MULTIPOLYGON`; la **extensión** (*bounding box*), el rectángulo que encierra todas las geometrías, aquí el mundo entero; y el SRC, geodésico (geográfico), WGS 84. Con `quiet = TRUE` el mensaje se omite. Al imprimir el objeto se repite ese encabezado y se muestran las primeras filas:
 
 ```{r}
 #| label: print
-cantones_sf
+paises
 ```
 
-Es un data frame de 84 filas con las columnas `codigo_provincia`, `provincia`, `codigo_canton`, `canton` y `geom`, y esta última contiene un multipolígono por cantón, impreso en WKT y abreviado. Las coordenadas son números de seis y siete cifras: metros en la proyección CRTM05, como se vio en el capítulo anterior. Tres funciones describen la parte geoespacial del objeto:
+Es un data frame de 177 filas con el código y el nombre de cada país, su continente, su subregión, una estimación de población, el PIB y el grupo de ingreso, y una columna `geom` con un multipolígono por país, impreso en WKT y abreviado. Las coordenadas son grados de longitud y latitud. Tres funciones describen la parte geoespacial del objeto:
 
 ```{r}
 #| label: estructura
-class(cantones_sf)
-st_geometry(cantones_sf)
-st_crs(cantones_sf)$epsg
+class(paises)
+st_geometry(paises)
+st_crs(paises)$epsg
 ```
 
 - `class()` muestra que el objeto es a la vez de la clase `sf` y de la clase `data.frame`: lo primero le da las funciones geoespaciales; lo segundo, todas las de los data frames.
-- [`st_geometry()`](https://r-spatial.github.io/sf/reference/st_geometry.html) extrae la columna de geometrías, cualquiera que sea su nombre (`geom` aquí; `geometry` en otros archivos), como un objeto de la clase `sfc` (*simple feature column*).
-- [`st_crs()`](https://r-spatial.github.io/sf/reference/st_crs.html) devuelve el SRC completo; con `$epsg` se obtiene solo el código, más cómodo de comparar. Se retoma en la sección sobre SRC.
+- [`st_geometry()`](https://r-spatial.github.io/sf/reference/st_geometry.html) extrae la columna de geometrías, cualquiera que sea su nombre (`geom` aquí; `geometry` en otros archivos), como un objeto de la clase `sfc` (*simple feature column*). Todas son multipolígonos, aunque la mayoría de los países tiene un solo cuerpo: la capa se guardó con el tipo «multi» para toda ella, lo que permite representar los países con islas o partes separadas.
+- [`st_crs()`](https://r-spatial.github.io/sf/reference/st_crs.html) devuelve el SRC completo; con `$epsg` se obtiene solo el código, más cómodo de comparar. WGS84, EPSG:4326, es el SRC en que se distribuyen casi todos los datos globales. Se retoma en la sección sobre SRC.
 
-Un archivo GeoPackage puede contener varias capas; [`st_layers()`](https://r-spatial.github.io/sf/reference/st_layers.html) las lista, y el argumento `layer` de `st_read()` elige una. Para un shapefile se indica la ruta del archivo `.shp` (los demás archivos del conjunto deben estar en el mismo directorio) y para un GeoJSON, la del archivo `.geojson`. Las capas publicadas como servicios WFS se leen con la URL del servicio, como en el ejemplo siguiente (que no se ejecuta en el curso, para no depender de la disponibilidad del SNIT):
+La **escala** de una capa determina para qué sirve. A 1:110 M, Costa Rica es un polígono de unos pocos vértices; Natural Earth publica las mismas capas a 1:50 M y 1:10 M, y el repositorio del curso incluye los países de Centroamérica a 1:10 M, para mapas de la región. Las dos versiones del país, una sobre la otra (el mapa usa `geom_sf()`, de la sección sobre mapas):
+
+```{r}
+#| label: escalas
+centroamerica <- st_read(paste0(datos_ne, "centroamerica.gpkg"), quiet = TRUE)
+
+ggplot() +
+  geom_sf(data = filter(centroamerica, nombre == "Costa Rica"), fill = "#dce9f5", color = "#005da4") +
+  geom_sf(data = filter(paises, nombre == "Costa Rica"), fill = NA, color = "red", linewidth = 0.8) +
+  labs(title = "Costa Rica a escala 1:10 M (azul) y 1:110 M (rojo)") +
+  theme_minimal()
+```
+
+Las dos capas están en el mismo SRC; difieren en el detalle de las geometrías (y en el tamaño del archivo). Un archivo GeoPackage puede contener varias capas; [`st_layers()`](https://r-spatial.github.io/sf/reference/st_layers.html) las lista, y el argumento `layer` de `st_read()` elige una. Para un shapefile se indica la ruta del archivo `.shp` (los demás archivos del conjunto deben estar en el mismo directorio) y para un GeoJSON, la del archivo `.geojson`. Las capas publicadas como servicios WFS se leen con la URL del servicio, como en el ejemplo siguiente, con la capa de cantones del SNIT (que no se ejecuta en el curso, para no depender de la disponibilidad del servicio):
 
 ```r
 # Capa de cantones del SNIT, directamente del servicio WFS del IGN
@@ -84,309 +97,390 @@ cantones_wfs <- st_read(
 
 ## Un objeto sf es un data frame
 
-Todos los verbos de [dplyr](../iii-tidyverse/11-dplyr.qmd) funcionan con un objeto sf y el resultado conserva la geometría. Los cantones de Heredia:
+Todos los verbos de [dplyr](../iii-tidyverse/11-dplyr.qmd) funcionan con un objeto sf y el resultado conserva la geometría. Los países de América del Sur, ordenados por población:
 
 ```{r}
 #| label: filter
-cantones_sf |>
-  filter(provincia == "Heredia")
+america_sur <- paises |>
+  filter(continente == "América del Sur") |>
+  arrange(desc(poblacion_estimada))
+
+america_sur
 ```
 
-El resultado es otro objeto sf, de 10 entidades, y su extensión se recalculó: ahora encierra solo esa provincia. Con `select()` ocurre algo particular: la columna de geometría **siempre se conserva**, aunque no se pida, porque sin ella el objeto dejaría de ser geoespacial:
+El resultado es otro objeto sf, de 13 entidades, y su extensión se recalculó: ahora encierra solo ese continente. Con `select()` ocurre algo particular: la columna de geometría **siempre se conserva**, aunque no se pida, porque sin ella el objeto dejaría de ser geoespacial:
 
 ```{r}
 #| label: select
-cantones_sf |>
-  select(canton)
+america_sur |>
+  select(nombre, poblacion_estimada)
 ```
 
-Cuando se quiere solo la tabla de atributos —para mostrarla con `knitr::kable()` o `datatable()`, o para unirla a otra tabla—, [`st_drop_geometry()`](https://r-spatial.github.io/sf/reference/st_geometry.html) la quita y devuelve un data frame ordinario. Los cantones por provincia, con `count()`:
+Cuando se quiere solo la tabla de atributos —para mostrarla con `knitr::kable()` o `datatable()`, o para unirla a otra tabla—, [`st_drop_geometry()`](https://r-spatial.github.io/sf/reference/st_geometry.html) la quita y devuelve un data frame ordinario. Los países por continente, con `count()`:
 
 ```{r}
 #| label: st-drop-geometry
-cantones_sf |>
+paises |>
   st_drop_geometry() |>
-  count(provincia, sort = TRUE)
+  count(continente, sort = TRUE)
 ```
 
-El conteo funcionaría también sin quitar la geometría, pero con una diferencia importante que se verá en el capítulo siguiente: `summarize()` y `count()` sobre un objeto sf **unen las geometrías** de cada grupo, lo que aquí produciría el polígono de cada provincia, con el costo de cálculo correspondiente. Para resúmenes puramente tabulares, `st_drop_geometry()` primero.
+El conteo funcionaría también sin quitar la geometría, pero con una diferencia importante que se verá en el capítulo siguiente: `summarize()` y `count()` sobre un objeto sf **unen las geometrías** de cada grupo, lo que aquí produciría el polígono de cada continente, con el costo de cálculo correspondiente. Para resúmenes puramente tabulares, `st_drop_geometry()` primero.
 
-*Ejercicios de esta sección: [ejercicios sobre lectura y estructura](#ejercicios-lectura).*
-
-## Mapas con ggplot2
-
-La forma más rápida de ver una capa es `plot()`, la función de gráficos de R base, que sf adapta para dibujar mapas. Tiene una particularidad que sorprende la primera vez: dibuja **un mapa por cada columna de atributos**, coloreado según sus valores:
+La diferencia con un data frame común aparece al pedir un gráfico: `plot()`, la función de gráficos de R base, dibuja las **geometrías**, y tiene una particularidad que sorprende la primera vez: dibuja **un mapa por cada columna de atributos**, coloreado según sus valores.
 
 ```{r}
 #| label: plot
-plot(cantones_sf)
+plot(america_sur)
 ```
 
-Para ver solo las geometrías se le pasa `st_geometry()`, y para un solo atributo, el objeto con la columna entre corchetes (`cantones_sf["provincia"]`). `plot()` es suficiente para explorar; para comunicar se usa ggplot2, con lo aprendido en el [capítulo correspondiente](../iii-tidyverse/12-ggplot2.qmd) y una geometría nueva, [`geom_sf()`](https://ggplot2.tidyverse.org/reference/ggsf.html), que dibuja puntos, líneas o polígonos según lo que contenga la columna de geometrías, sin que haga falta mapear `x` ni `y`:
+Para ver solo las geometrías se le pasa `st_geometry()`, y para un solo atributo, el objeto con la columna entre corchetes (`america_sur["poblacion_estimada"]`). `plot()` es suficiente para explorar; para comunicar se usa ggplot2.
 
-```{r}
-#| label: geom-sf
-ggplot(cantones_sf) +
-  geom_sf()
-```
-
-Dos observaciones. Primera: aunque las coordenadas de la capa están en metros, los ejes muestran grados de longitud y latitud: `geom_sf()` dibuja los datos en su propio SRC, pero rotula los ejes con una **retícula** (*graticule*) geográfica. Segunda: el país ocupa menos de la mitad del mapa y hay un punto diminuto en la esquina inferior izquierda. Es la Isla del Coco, parte del cantón de Puntarenas, a unos 500 km de la costa: como está en la capa, la extensión la incluye. Para centrar el mapa en el territorio continental se fijan los límites de los ejes con [`coord_sf()`](https://ggplot2.tidyverse.org/reference/ggsf.html), en las unidades del SRC de los datos (metros de CRTM05); las estéticas y los argumentos son los de siempre (`fill` para el relleno de los polígonos, `color` para sus bordes, `linewidth` para el grosor de la línea), y los temas también:
-
-```{r}
-#| label: geom-sf-provincias
-ggplot(cantones_sf) +
-  geom_sf(aes(fill = provincia), color = "white", linewidth = 0.2) +
-  coord_sf(xlim = c(280000, 660000), ylim = c(880000, 1250000)) +
-  labs(title = "Cantones de Costa Rica, por provincia", fill = "Provincia") +
-  theme_minimal()
-```
-
-Como en cualquier gráfico de ggplot2, `aes(fill = provincia)` **mapea** una columna al relleno y produce una leyenda; `fill = "gray90"`, fuera de `aes()`, lo **fija**. Los rótulos se agregan con [`geom_sf_text()`](https://ggplot2.tidyverse.org/reference/ggsf.html) (o `geom_sf_label()`, con fondo), que coloca el texto en un punto interior de cada polígono. Los cantones de Heredia, con sus nombres:
-
-```{r}
-#| label: geom-sf-text
-cantones_sf |>
-  filter(provincia == "Heredia") |>
-  ggplot() +
-  geom_sf(fill = "#dce9f5", color = "#005da4") +
-  geom_sf_text(aes(label = canton), size = 3) +
-  labs(title = "Cantones de Heredia", x = NULL, y = NULL) +
-  theme_minimal()
-```
-
-Los nombres de los cantones pequeños del sur de la provincia se superponen; en un mapa para presentar, se resuelve con un acercamiento (`coord_sf()`), con un tamaño de letra menor o con un mapa interactivo, como los de leaflet. Y `theme_void()` quita por completo los ejes y la retícula, lo que es habitual en los mapas temáticos.
-
-*Ejercicios de esta sección: [ejercicios sobre mapas](#ejercicios-mapas).*
+*Ejercicios de esta sección: [ejercicios sobre lectura y estructura](#ejercicios-lectura).*
 
 ## De una tabla con coordenadas a un objeto sf
 
-Los datos de puntos rara vez llegan como capa geoespacial: lo usual es un CSV con dos columnas de coordenadas, como los registros de GBIF de la semana 1, los datos de estaciones o de encuestas, o los que cada estudiante recopile para la tarea 3. El archivo de félidos del repositorio del curso es un ejemplo: 1 041 registros de presencia de seis especies de félidos silvestres en Costa Rica, con las columnas `decimalLongitude` y `decimalLatitude` en WGS84, como entrega GBIF.
+Los datos de puntos rara vez llegan como capa geoespacial: lo usual es un CSV con dos columnas de coordenadas, como los registros de GBIF de la [semana 1](../i-introduccion-ciencia-datos-programacion/02-ejemplo-procesos-ciencia-datos.qmd), las ciudades de Natural Earth del repositorio, los datos de estaciones o de encuestas, o los que cada estudiante recopile para la tarea 3.
 
 ```{r}
-#| label: felidos-csv
+#| label: ciudades-csv
 #| message: false
-felidos <- read_csv("https://raw.githubusercontent.com/pf0953-programacionr/2026-ii/main/datos/felidos.csv")
+tabla_ciudades <- read_csv(paste0(datos_ne, "ciudades.csv"))
 
-felidos
+tabla_ciudades
 ```
 
 [`st_as_sf()`](https://r-spatial.github.io/sf/reference/st_as_sf.html) convierte el data frame en un objeto sf a partir de las columnas de coordenadas, indicadas en `coords`, y del SRC en que están esas coordenadas, en `crs`:
 
 ```{r}
 #| label: st-as-sf
-felidos_sf <- st_as_sf(
-  felidos,
-  coords = c("decimalLongitude", "decimalLatitude"),
+ciudades <- st_as_sf(
+  tabla_ciudades,
+  coords = c("longitud", "latitud"),
   crs = 4326
 )
 
-felidos_sf
+ciudades
 ```
 
-Las dos columnas de coordenadas desaparecieron y en su lugar hay una columna `geometry` con un punto por registro; el SRC es geodésico (geográfico), WGS 84, y la extensión está en grados. Dos detalles causan errores frecuentes. El orden en `coords` es **x, y**, es decir, **longitud, latitud**: al revés del «latitud, longitud» con que suelen escribirse las coordenadas, y si se invierte, los puntos quedan en la Antártida. Y `crs` es indispensable: sin él, el objeto se crea, pero no tiene SRC, por lo que no se puede reproyectar ni combinar con otras capas. Los datos de GBIF, de GPS y de casi cualquier fuente que hable de «latitud y longitud» están en WGS84, EPSG:4326.
-
-Para dibujar los puntos sobre los cantones se agregan dos capas de `geom_sf()`, cada una con sus datos, como las capas de puntos y texto del capítulo de ggplot2:
+Las dos columnas de coordenadas desaparecieron y en su lugar hay una columna `geometry` con un punto por ciudad; el SRC es WGS 84 y la extensión está en grados. Dos detalles causan errores frecuentes. El orden en `coords` es **x, y**, es decir, **longitud, latitud**: al revés del «latitud, longitud» con que suelen escribirse las coordenadas, y si se invierte, las ciudades caen en lugares absurdos. Y `crs` es indispensable: sin él, el objeto se crea, pero no tiene SRC, por lo que no se puede reproyectar ni combinar con otras capas. Los datos de GBIF, de GPS, de Google Maps y de casi cualquier fuente que hable de «latitud y longitud» están en WGS84, EPSG:4326. El camino inverso, de puntos a tabla, es [`st_coordinates()`](https://r-spatial.github.io/sf/reference/st_coordinates.html), que devuelve una matriz con las columnas `X` y `Y`:
 
 ```{r}
-#| label: felidos-mapa
-#| fig-height: 6
-ggplot() +
-  geom_sf(data = cantones_sf, fill = "white", color = "gray70") +
-  geom_sf(data = felidos_sf, aes(color = species), size = 1, alpha = 0.6) +
-  coord_sf(xlim = c(280000, 660000), ylim = c(880000, 1250000)) +
-  labs(title = "Registros de presencia de félidos en Costa Rica", color = "Especie") +
-  theme_minimal()
+#| label: st-coordinates
+ciudades |>
+  filter(nombre == "San José") |>
+  st_coordinates()
 ```
-
-Las dos capas se superponen correctamente aunque una esté en metros y la otra en grados: ggplot2 **reproyecta** todas las capas al SRC de la primera para dibujarlas. Es una comodidad del dibujo, no una regla general: en las operaciones espaciales del capítulo siguiente, las capas deben estar en el mismo SRC. Y el mapa ya responde preguntas: los registros de jaguar (*Panthera onca*) se concentran en las llanuras del Caribe norte, en Guanacaste y en la península de Osa, y los de puma (*Puma concolor*) se reparten por casi todo el país. Para responder «¿cuántos registros hay en cada cantón?» no sirve la columna `stateProvince` del archivo (tiene valores como «Puntarenas», «Puntarenas Prov» y «Puntarenas Province», y 421 registros sin provincia): hace falta averiguar en cuál polígono cae cada punto, una **unión espacial**, tema del capítulo siguiente.
 
 *Ejercicios de esta sección: [ejercicios sobre puntos](#ejercicios-puntos).*
 
+## Mapas con ggplot2
+
+Para comunicar, el mapa se construye con lo aprendido en el [capítulo de ggplot2](../iii-tidyverse/12-ggplot2.qmd) y una geometría nueva, [`geom_sf()`](https://ggplot2.tidyverse.org/reference/ggsf.html), que dibuja puntos, líneas o polígonos según lo que contenga la columna de geometrías, sin que haga falta mapear `x` ni `y`. Los argumentos son los de siempre: `fill` para el relleno de los polígonos, `color` para sus bordes o para los puntos, `linewidth` para el grosor de la línea, `size` para el tamaño de los puntos y `alpha` para la transparencia. Y, como las capas de puntos y texto del capítulo de ggplot2, cada `geom_sf()` puede tener sus propios datos, lo que permite **superponer capas**. Los países con las ciudades encima:
+
+```{r}
+#| label: geom-sf
+#| fig-height: 5
+ggplot() +
+  geom_sf(data = paises, fill = "#dce9f5", color = "white", linewidth = 0.2) +
+  geom_sf(data = ciudades, color = "#d97b1b", size = 0.8) +
+  labs(title = "Países y ciudades principales del mundo (Natural Earth, 1:110 M)") +
+  theme_minimal()
+```
+
+Como en cualquier gráfico de ggplot2, `fill = "#dce9f5"`, fuera de `aes()`, **fija** el relleno; `aes(fill = continente)` lo **mapearía** a una columna y produciría una leyenda, como se hace en la sección de coropletas. Los ejes muestran la **retícula** (*graticule*) de longitud y latitud; `theme_void()` la quita por completo, lo que es habitual en los mapas temáticos, y [`geom_sf_text()`](https://ggplot2.tidyverse.org/reference/ggsf.html) (o `geom_sf_label()`, con fondo) escribe rótulos en un punto interior de cada polígono, lo que se practica en los ejercicios.
+
+El mapa, sin embargo, tiene un defecto: está «estirado». Es el aspecto de un SRC geográfico dibujado directamente, con un grado de longitud tan ancho como uno de latitud en toda la figura, lo que deforma todo lo que está lejos del ecuador. Un mapa del mundo se dibuja en una proyección.
+
+*Ejercicios de esta sección: [ejercicios sobre mapas](#ejercicios-mapas).*
+
 ## Sistemas de referencia de coordenadas
 
-El SRC de una capa se consulta con `st_crs()` y se cambia, reproyectando todas sus geometrías, con [`st_transform()`](https://r-spatial.github.io/sf/reference/st_transform.html), que recibe un código EPSG y devuelve una capa nueva. Los cantones en WGS84:
+El SRC de una capa se consulta con `st_crs()` y se cambia, reproyectando todas sus geometrías, con [`st_transform()`](https://r-spatial.github.io/sf/reference/st_transform.html), que recibe un código EPSG y devuelve una capa nueva. Los países en Equal Earth, una proyección que conserva las áreas, y en Web Mercator, la de los mapas web, que conserva las formas:
 
 ```{r}
 #| label: st-transform
-cantones_wgs84 <- st_transform(cantones_sf, 4326)
+paises_ee <- st_transform(paises, 8857)
+paises_merc <- st_transform(paises, 3857)
 
-st_bbox(cantones_sf)
-st_bbox(cantones_wgs84)
+st_crs(paises_ee)$Name
+st_crs(paises_merc)$Name
+st_bbox(paises)
+st_bbox(paises_ee)
 ```
 
-Son los mismos cantones, con la extensión en metros desde el origen de la proyección y en grados de longitud y latitud. `st_crs()` también compara SRC, lo que conviene hacer antes de combinar dos capas:
+[`st_bbox()`](https://r-spatial.github.io/sf/reference/st_bbox.html) devuelve la extensión de la capa: los mismos países, en grados y en metros desde el origen de la proyección. El mismo mapa en las dos proyecciones (en Mercator se excluye la Antártida, cuyo polígono llega al polo, donde la proyección se extiende al infinito, y se limita el eje y con `coord_sf()`, en las unidades del SRC de los datos):
 
 ```{r}
-#| label: st-crs-comparacion
-st_crs(felidos_sf) == st_crs(cantones_sf)
-st_crs(felidos_sf) == st_crs(cantones_wgs84)
+#| label: equal-earth
+#| fig-height: 5
+ggplot(paises_ee) +
+  geom_sf(fill = "#dce9f5", color = "white", linewidth = 0.2) +
+  labs(title = "Equal Earth (EPSG:8857): conserva las áreas") +
+  theme_minimal()
 ```
 
-La consecuencia práctica más importante del SRC es la **medición**. [`st_area()`](https://r-spatial.github.io/sf/reference/geos_measures.html) calcula el área de cada geometría, y el resultado lleva sus **unidades**, gracias al paquete [units](https://r-quantities.github.io/units/): metros cuadrados, porque CRTM05 está en metros. Con `units::set_units()` se convierten a kilómetros cuadrados, y con `as.numeric()` se obtiene el número sin unidades, que es lo que conviene dentro de `mutate()`:
+```{r}
+#| label: mercator
+#| fig-height: 5
+paises_merc |>
+  filter(nombre != "Antártida") |>
+  ggplot() +
+  geom_sf(fill = "#dce9f5", color = "white", linewidth = 0.2) +
+  coord_sf(ylim = c(-9e6, 1.9e7)) +
+  labs(title = "Mercator (EPSG:3857): conserva las formas") +
+  theme_minimal()
+```
+
+Las dos proyecciones cuentan historias distintas sobre Groenlandia. No es un detalle menor: como se vio en el [capítulo anterior](14-datos-geoespaciales.qmd#src-proyectados), en setiembre de 2026 la Asamblea General de las Naciones Unidas aprobó una resolución que alienta a usar Equal Earth u otras proyecciones equivalentes en lugar de Mercator cuando importe el tamaño relativo de las regiones. ggplot2 ofrece además un atajo: `coord_sf(crs = 8857)` reproyecta las capas **solo para dibujarlas**, sin modificar los objetos; y cuando un mapa combina capas en SRC distintos, ggplot2 las reproyecta todas al SRC de la primera. Es una comodidad del dibujo, no una regla general: en las operaciones espaciales del capítulo siguiente, las capas deben estar en el mismo SRC.
+
+La consecuencia práctica más importante del SRC es la **medición**. [`st_area()`](https://r-spatial.github.io/sf/reference/geos_measures.html) calcula el área de cada geometría, y el resultado lleva sus **unidades**, gracias al paquete [units](https://r-quantities.github.io/units/); `as.numeric()` quita las unidades, que es lo que conviene dentro de `mutate()`. Groenlandia y Brasil en tres SRC:
 
 ```{r}
 #| label: st-area
-areas <- st_area(cantones_sf)
+seleccion <- paises$nombre %in% c("Groenlandia", "Brasil")
 
-head(areas, 3)
-head(units::set_units(areas, km^2), 3)
+tibble(
+  nombre = paises$nombre[seleccion],
+  area_wgs84_km2 = round(as.numeric(st_area(paises[seleccion, ])) / 1e6),
+  area_equal_earth_km2 = round(as.numeric(st_area(paises_ee[seleccion, ])) / 1e6),
+  area_mercator_km2 = round(as.numeric(st_area(paises_merc[seleccion, ])) / 1e6)
+)
 ```
 
-Los 44,7 km² de San José coinciden con los 44,62 km² del INEC. Si se calcula el área de `cantones_wgs84`, sf no devuelve grados cuadrados sin sentido: como las coordenadas son geográficas, calcula el área sobre una esfera con la biblioteca s2, y el resultado (44,9 km²) es una aproximación razonable, pero no la medida oficial. La regla del capítulo anterior sigue vigente: para medir en Costa Rica, CRTM05.
+En Equal Earth, Brasil es casi cuatro veces más grande que Groenlandia, como en la realidad (8,5 contra 2,2 millones de km²); en Mercator, Groenlandia resulta cuatro veces más grande que Brasil. La primera columna merece una explicación: con coordenadas geográficas, sf no devuelve grados cuadrados sin sentido, sino que calcula el área sobre una esfera con la biblioteca s2, y el resultado es una buena aproximación. Pero una proyección proyectada adecuada sigue siendo la referencia: para medir áreas a escala mundial, una proyección **equivalente**, como Equal Earth; para medir en un país, su proyección local. La de Costa Rica es CR-SIRGAS / CRTM05 (EPSG:8908):
+
+```{r}
+#| label: crtm05
+centroamerica_crtm05 <- centroamerica |>
+  st_transform(8908) |>
+  mutate(area_km2 = round(as.numeric(st_area(geom)) / 1e6))
+
+centroamerica_crtm05 |>
+  st_drop_geometry() |>
+  select(nombre, area_km2) |>
+  arrange(desc(area_km2))
+```
+
+Costa Rica mide unos 51 100 km², la cifra oficial. CRTM05 está diseñada para Costa Rica, y la deformación crece con la distancia a su meridiano central (−84°): el área de Guatemala, a unos 600 km, sale ya un 1 % mayor que en Equal Earth, y la de México, a más de 2 000 km, no sería confiable. La regla: medir en el SRC diseñado para la región de los datos.
 
 *Ejercicios de esta sección: [ejercicios sobre sistemas de referencia de coordenadas](#ejercicios-src).*
 
 ## Unión con datos tabulares
 
-La capa del IGN trae la geometría y unos pocos atributos; la población y el área están en la tabla del INEC, `cantones`, que se usa desde la sección II. Las dos fuentes identifican los cantones por el nombre de la provincia y el del cantón, así que se unen con [`left_join()`](../iii-tidyverse/11-dplyr.qmd#unión-de-conjuntos-de-datos), como cualquier par de tablas, con una regla: **el objeto sf va a la izquierda**. Si el objeto sf está a la derecha, el resultado es un data frame ordinario en el que la geometría es una columna más, sin funciones geoespaciales.
+Las capas de Natural Earth traen la geometría y unos pocos atributos; los indicadores actuales están en el CSV del Banco Mundial. Ambas fuentes identifican los países con códigos de tres letras, así que se unen con [`left_join()`](../iii-tidyverse/11-dplyr.qmd#unión-de-conjuntos-de-datos), como cualquier par de tablas, con una regla: **el objeto sf va a la izquierda**. Si el objeto sf está a la derecha, el resultado es un data frame ordinario en el que la geometría es una columna más, sin funciones geoespaciales.
+
+```{r}
+#| label: indicadores
+#| message: false
+indicadores <- read_csv(paste0(datos_bm, "indicadores-2024.csv"))
+
+indicadores
+```
 
 ```{r}
 #| label: left-join
-cantones_union <- cantones_sf |>
-  left_join(cantones, by = c("provincia", "canton"))
+paises_bm <- paises_ee |>
+  left_join(indicadores, by = "codigo")
 
-sum(is.na(cantones_union$poblacion))
+class(paises_bm)
+sum(is.na(paises_bm$poblacion))
 ```
 
-Dos cantones quedaron sin población. Como se advirtió en el capítulo de dplyr, una unión no falla cuando las claves no coinciden: deja `NA` en silencio. [`anti_join()`](https://dplyr.tidyverse.org/reference/filter-joins.html) muestra las filas sin pareja, en las dos direcciones:
+Diez países quedaron sin datos del Banco Mundial. Como se advirtió en el capítulo de dplyr, una unión no falla cuando las claves no coinciden: deja `NA` en silencio. [`anti_join()`](https://dplyr.tidyverse.org/reference/filter-joins.html) muestra las filas sin pareja:
 
 ```{r}
 #| label: anti-join
-anti_join(st_drop_geometry(cantones_sf), cantones, by = c("provincia", "canton"))
-anti_join(cantones, st_drop_geometry(cantones_sf), by = c("provincia", "canton"))
+paises_ee |>
+  st_drop_geometry() |>
+  anti_join(indicadores, by = "codigo") |>
+  select(codigo, nombre, poblacion_estimada)
 ```
 
-El IGN escribe «Vázquez de Coronado» y «León Cortés Castro»; el INEC, «Vásquez de Coronado» y «León Cortés». Las dos grafías circulan, y es un ejemplo de por qué conviene unir por códigos, cuando existen, y no por nombres: la capa del IGN tiene `codigo_canton`, pero la tabla del INEC del curso no. Las claves que no coinciden se corrigen **antes** de unir, en una de las dos tablas; aquí se ajustan los nombres de la capa a los de la tabla del curso, con [`case_when()`](https://dplyr.tidyverse.org/reference/case_when.html), que generaliza `if_else()` a varias condiciones:
+Son de dos clases. Algunos no están en el Banco Mundial (la Antártida, Taiwán, Somalilandia y otros territorios sin reconocimiento general). Pero Kosovo, Palestina y Sudán del Sur sí están: con **otro código** (`XKX`, `PSE` y `SSD` en lugar de `KOS`, `PSX` y `SDS`, como advierte el LEEME). Es el mismo problema de la unión por nombre del capítulo de dplyr: las claves que no coinciden se corrigen **antes** de unir, aquí con [`case_when()`](https://dplyr.tidyverse.org/reference/case_when.html), que generaliza `if_else()` a varias condiciones:
 
 ```{r}
 #| label: left-join-corregido
-cantones_sf <- cantones_sf |>
-  mutate(canton = case_when(
-    canton == "Vázquez de Coronado" ~ "Vásquez de Coronado",
-    canton == "León Cortés Castro" ~ "León Cortés",
-    .default = canton
+paises_ee <- paises_ee |>
+  mutate(codigo = case_when(
+    codigo == "KOS" ~ "XKX",
+    codigo == "PSX" ~ "PSE",
+    codigo == "SDS" ~ "SSD",
+    .default = codigo
   ))
 
-cantones_union <- cantones_sf |>
-  left_join(cantones, by = c("provincia", "canton"))
+paises_bm <- paises_ee |>
+  left_join(indicadores, by = "codigo")
 
-sum(is.na(cantones_union$poblacion))
-cantones_union
+sum(is.na(paises_bm$poblacion))
+paises_bm$nombre[is.na(paises_bm$poblacion)]
 ```
 
-Ahora los 84 cantones tienen población, área, densidad y tipo, además de su polígono. La unión permite también verificar la capa contra la fuente oficial: el área que publica el INEC frente a la que se calcula con `st_area()` sobre los polígonos del IGN.
+Los siete que quedan no tienen datos en la fuente: en los mapas aparecerán como «sin datos», lo que es correcto. Y la unión permite verificar las áreas calculadas contra la superficie que publica el Banco Mundial:
 
 ```{r}
 #| label: areas-comparacion
-cantones_union |>
-  mutate(area_ign_km2 = as.numeric(st_area(geom)) / 1e6, diferencia_km2 = area_ign_km2 - area_km2) |>
+paises_bm <- paises_bm |>
+  mutate(
+    area_calculada_km2 = round(as.numeric(st_area(geom)) / 1e6),
+    diferencia_pct = round((area_calculada_km2 - area_km2) / area_km2 * 100, 1)
+  )
+
+paises_bm |>
   st_drop_geometry() |>
-  select(canton, area_km2, area_ign_km2, diferencia_km2) |>
-  arrange(desc(abs(diferencia_km2))) |>
-  head(5)
+  select(nombre, area_calculada_km2, area_km2, diferencia_pct) |>
+  arrange(desc(abs(diferencia_pct))) |>
+  head()
 ```
 
-En 83 cantones la diferencia es de 1 km² o menos, atribuible a la simplificación de las geometrías de la capa del curso. Puntarenas difiere en casi 24 km²: la capa del IGN incluye la Isla del Coco y la cifra del INEC no. Verificar los datos aunque provengan de fuentes oficiales, y entender por qué difieren, es parte del trabajo.
+La mitad de los países difiere menos de un 3 %, lo razonable para geometrías a 1:110 M. Los casos extremos tienen explicación: el Banco Mundial reporta la superficie **terrestre**, sin aguas interiores ni, en Groenlandia, la capa de hielo (410 000 km² de los 2,2 millones); y en las islas pequeñas, como Brunéi o Bahamas, la geometría a 1:110 M es demasiado gruesa. Verificar los datos aunque provengan de fuentes oficiales, y entender por qué difieren, es parte del trabajo.
 
 *Ejercicios de esta sección: [ejercicios sobre unión y coropletas](#ejercicios-coropletas).*
 
 ## Mapas de coropletas
 
-Un [mapa de coropletas](https://es.wikipedia.org/wiki/Mapa_coropl%C3%A9tico) colorea cada polígono según el valor de una variable. En ggplot2 basta con mapear la variable a `fill`; la **escala de color** se elige como cualquier otra escala del [capítulo de ggplot2](../iii-tidyverse/12-ggplot2.qmd#escalas). La densidad de población tiene la misma asimetría que la población y el área —muchos valores pequeños y unos pocos enormes—, de modo que con una escala lineal casi todo el país queda del mismo color y solo Tibás destaca; la solución es la misma que entonces: una transformación logarítmica, aquí con el argumento `transform` de [`scale_fill_viridis_c()`](https://ggplot2.tidyverse.org/reference/scale_viridis.html).
+Un [mapa de coropletas](https://es.wikipedia.org/wiki/Mapa_coropl%C3%A9tico) colorea cada polígono según el valor de una variable. En ggplot2 basta con mapear la variable a `fill`; la **escala de color** se elige como cualquier otra escala del [capítulo de ggplot2](../iii-tidyverse/12-ggplot2.qmd#escalas). El PIB per cápita, en un primer intento con [`scale_fill_viridis_c()`](https://ggplot2.tidyverse.org/reference/scale_viridis.html):
 
 ```{r}
 #| label: coropletas
-#| fig-height: 6
-ggplot(cantones_union) +
-  geom_sf(aes(fill = densidad), color = "white", linewidth = 0.2) +
-  scale_fill_viridis_c(transform = "log10", labels = scales::label_number(big.mark = " ")) +
-  coord_sf(xlim = c(280000, 660000), ylim = c(880000, 1250000)) +
+#| fig-height: 5
+ggplot(paises_bm) +
+  geom_sf(aes(fill = pib_per_capita), color = "white", linewidth = 0.2) +
+  scale_fill_viridis_c(option = "mako", direction = -1) +
+  labs(title = "PIB per cápita, 2024 (US$): primer intento") +
+  theme_void()
+```
+
+Dos problemas. El mapa es casi todo del color más claro: unos pocos países muy ricos estiran la escala y el resto queda indistinguible, la misma asimetría que en el capítulo de ggplot2 obligó a usar escalas logarítmicas, y la solución es la misma: el argumento `transform = "log10"` de la escala. Y los países sin datos se dibujan en un gris oscuro que se confunde con los valores altos de la escala: `na.value` fija su color, con un gris claro que se distinga. Además, `labels` formatea los números de la leyenda y `labs()` le da nombre y unidades:
+
+```{r}
+#| label: coropletas-log
+#| fig-height: 5
+ggplot(paises_bm) +
+  geom_sf(aes(fill = pib_per_capita), color = "white", linewidth = 0.2) +
+  scale_fill_viridis_c(
+    option = "mako",
+    direction = -1,
+    transform = "log10",
+    labels = scales::label_number(big.mark = " "),
+    na.value = "gray85"
+  ) +
   labs(
-    title = "Densidad de población de los cantones de Costa Rica",
-    subtitle = "Estimación de población de 2022",
-    fill = "Habitantes por km²",
-    caption = "Fuentes: INEC (2023) e IGN (s. f.)"
+    title = "PIB per cápita, 2024",
+    fill = "US$ por habitante\n(escala logarítmica)",
+    caption = "Fuentes: Banco Mundial (2026) y Natural Earth (s. f.)"
   ) +
   theme_void()
 ```
 
-El mapa muestra lo que las tablas y los gráficos de las secciones anteriores solo sugerían: la densidad alta se concentra en la Gran Área Metropolitana, en un corredor continuo del Valle Central, y cae en todas direcciones hacia las costas y las fronteras; los cantones extensos del norte, del Caribe y del Pacífico sur están entre los menos densos.
+Ahora se lee el gradiente completo, de los 200 dólares de Burundi a los 140 000 de Luxemburgo, y la Antártida, Groenlandia y los demás países sin datos quedan en gris.
 
-La alternativa a la escala continua es **clasificar** los valores en pocas clases, cada una con un color, como hacen los SIG de escritorio y los mapas impresos. [`scale_fill_fermenter()`](https://ggplot2.tidyverse.org/reference/scale_brewer.html) lo hace con las paletas de ColorBrewer y acepta la misma transformación; `n.breaks` sugiere la cantidad de clases:
+### Clasificación
+
+La alternativa a la escala continua es **clasificar** los valores en pocas clases, cada una con un color, como hacen los SIG de escritorio y los mapas impresos. [`scale_fill_fermenter()`](https://ggplot2.tidyverse.org/reference/scale_brewer.html) lo hace con las paletas de ColorBrewer: con `n.breaks` elige cortes «bonitos» (intervalos iguales en la escala, logarítmica si se indica `transform`), y con `breaks` acepta los cortes que se le den. Los **cuantiles** ponen la misma cantidad de países en cada clase y se calculan con `quantile()`:
 
 ```{r}
 #| label: coropletas-clases
-#| fig-height: 6
-ggplot(cantones_union) +
-  geom_sf(aes(fill = densidad), color = "white", linewidth = 0.2) +
+#| fig-height: 5
+cortes <- quantile(paises_bm$pib_per_capita, probs = c(0.2, 0.4, 0.6, 0.8), na.rm = TRUE)
+cortes
+
+ggplot(paises_bm) +
+  geom_sf(aes(fill = pib_per_capita), color = "white", linewidth = 0.2) +
   scale_fill_fermenter(
-    palette = "YlOrRd",
+    palette = "YlGnBu",
     direction = 1,
-    transform = "log10",
-    n.breaks = 6,
-    labels = scales::label_number(big.mark = " ")
+    breaks = cortes,
+    labels = scales::label_number(big.mark = " "),
+    na.value = "gray85"
   ) +
-  coord_sf(xlim = c(280000, 660000), ylim = c(880000, 1250000)) +
   labs(
-    title = "Densidad de población de los cantones de Costa Rica",
-    fill = "Habitantes por km²",
-    caption = "Fuentes: INEC (2023) e IGN (s. f.)"
+    title = "PIB per cápita, 2024 (cuantiles)",
+    fill = "US$ por habitante",
+    caption = "Fuentes: Banco Mundial (2026) y Natural Earth (s. f.)"
   ) +
   theme_void()
 ```
 
-La clasificación simplifica la lectura a costa de ocultar las diferencias dentro de cada clase; la cantidad de clases y los cortes cambian el mapa, por lo que conviene indicarlos en la leyenda o en el texto. Y para una variable **categórica**, como `tipo`, la escala es discreta y los colores pueden fijarse a mano, como en los gráficos anteriores:
+Cada clase tiene unos 33 países, y los cortes (unos 1 800, 4 500, 9 300 y 31 700 dólares) resumen la distribución: tres de cada cinco países tienen un PIB per cápita menor de 9 300 dólares. La clasificación simplifica la lectura a costa de ocultar las diferencias dentro de cada clase; el método elegido cambia el mapa, por lo que debe indicarse en el título o en la leyenda.
+
+### Paletas divergentes
+
+Para una variable con un valor central significativo, como el crecimiento de la población (positivo o negativo), lo adecuado es una paleta **divergente** (`"RdBu"`, `"PiYG"`, `"BrBG"`) centrada en ese valor. [`scale_fill_distiller()`](https://ggplot2.tidyverse.org/reference/scale_brewer.html) usa esas paletas de forma continua; con `limits` simétricos respecto al cero, el blanco queda en el centro, y `oob = scales::squish` lleva al extremo los valores que se salen de los límites en lugar de omitirlos:
 
 ```{r}
-#| label: coropletas-tipo
-#| fig-height: 6
-ggplot(cantones_union) +
-  geom_sf(aes(fill = tipo), color = "white", linewidth = 0.2) +
-  scale_fill_manual(values = c(rural = "#4f7d3a", urbano = "#005da4")) +
-  coord_sf(xlim = c(280000, 660000), ylim = c(880000, 1250000)) +
-  labs(title = "Cantones urbanos y rurales de Costa Rica", fill = "Tipo de cantón") +
+#| label: coropletas-divergente
+#| fig-height: 5
+ggplot(paises_bm) +
+  geom_sf(aes(fill = crecimiento_poblacion), color = "white", linewidth = 0.2) +
+  scale_fill_distiller(
+    palette = "RdBu",
+    direction = 1,
+    limits = c(-4, 4),
+    oob = scales::squish,
+    na.value = "gray85"
+  ) +
+  labs(
+    title = "Crecimiento anual de la población, 2024",
+    fill = "% anual",
+    caption = "Fuentes: Banco Mundial (2026) y Natural Earth (s. f.)"
+  ) +
   theme_void()
 ```
 
-Una advertencia de la cartografía temática, que se retoma en los ejercicios: un mapa de coropletas debe mostrar **variables normalizadas** —densidades, tasas, porcentajes—, no conteos absolutos. Un mapa de la población total colorea de forma más intensa los cantones más poblados, que suelen ser también los más grandes o los más urbanos, y el ojo confunde el tamaño del polígono con la magnitud del fenómeno; la densidad corrige ese efecto. Los conteos absolutos se representan mejor con símbolos proporcionales, que se construyen en el capítulo siguiente a partir de los centroides.
+El patrón geográfico es claro: la población decrece (rojo) en Europa oriental y en Japón, y crece más rápido (azul intenso) en el África subsahariana y en la península arábiga. Por último, para una variable **categórica**, como el continente o el grupo de ingreso, la escala es discreta (`scale_fill_brewer()`, `scale_fill_viridis_d()` o `scale_fill_manual()`, con un color por categoría), lo que se practica en los ejercicios.
+
+Una advertencia de la cartografía temática: un mapa de coropletas debe mostrar **variables normalizadas** —densidades, tasas, porcentajes, valores per cápita—, no conteos absolutos. Un mapa de la población total colorea de forma más intensa los países más poblados, que suelen ser también los más grandes, y el ojo confunde el tamaño del polígono con la magnitud del fenómeno. Los conteos absolutos se representan mejor con símbolos proporcionales, que se construyen en el capítulo siguiente a partir de los centroides.
 
 *Ejercicios de esta sección: [ejercicios sobre unión y coropletas](#ejercicios-coropletas).*
 
 ## Escritura de capas
 
-[`st_write()`](https://r-spatial.github.io/sf/reference/st_write.html) guarda un objeto sf en el formato que indique la extensión del archivo. GeoPackage es la opción recomendada, porque conserva el SRC, los tipos de las columnas y los nombres largos; GeoJSON es útil para la web y, por su especificación, debe guardarse en WGS84, por lo que se reproyecta antes. Como con `ggsave()` en el capítulo de ggplot2, estos bloques se ejecutan una vez (en el documento llevan `eval: false`) y los archivos quedan en la carpeta del proyecto:
+[`st_write()`](https://r-spatial.github.io/sf/reference/st_write.html) guarda un objeto sf en el formato que indique la extensión del archivo. GeoPackage es la opción recomendada, porque conserva el SRC, los tipos de las columnas y los nombres largos; GeoJSON es útil para la web y, por su especificación, debe guardarse en WGS84. Los países de América del Sur con los indicadores, en los dos formatos (como con `ggsave()` en el capítulo de ggplot2, estos bloques se ejecutan una vez, llevan `eval: false` en el documento y los archivos quedan en la carpeta del proyecto):
 
 ```{r}
 #| label: st-write
 #| eval: false
-st_write(cantones_union, "cantones-densidad.gpkg")
+america_sur_bm <- paises_bm |>
+  filter(continente == "América del Sur") |>
+  st_transform(4326)
 
-cantones_union |>
-  st_transform(4326) |>
-  st_write("cantones-densidad.geojson")
+st_write(america_sur_bm, "america-sur.gpkg")
+st_write(america_sur_bm, "america-sur.geojson")
+
+# Comprobación: se vuelve a leer el GeoPackage
+st_read("america-sur.gpkg", quiet = TRUE)
 ```
 
 Si el archivo ya existe, `st_write()` se detiene con un error; `delete_dsn = TRUE` lo sobrescribe.
 
+*Ejercicios de esta sección: [ejercicios sobre publicación, asistentes y datos propios](#ejercicios-publicacion).*
+
 ## Mapas en documentos Quarto
 
-Un mapa de ggplot2 es una figura más: las [opciones de figura](../iii-tidyverse/12-ggplot2.qmd#gráficos-en-documentos-quarto) de Quarto (`fig-cap`, `fig-alt`, `fig-width`, `fig-height`) funcionan igual y, con una etiqueta que empiece con `fig-`, el mapa se numera y se cita con `@fig-…`. Dos particularidades. Los mapas suelen necesitar más alto que los gráficos: Costa Rica es más ancha que alta, pero con la leyenda a la derecha, `fig-height: 6` suele quedar bien. Y la lectura de las capas por URL ocurre en cada *Render*, lo que tarda unos segundos con los archivos del curso; con capas grandes (decenas de megabytes), conviene guardar una versión simplificada o recortada con `st_write()` y leerla desde el proyecto. Los mapas interactivos, con leaflet, siguen las reglas de los htmlwidgets del [capítulo de plotly y DT](../iii-tidyverse/13-plotly-dt.qmd).
+Un mapa de ggplot2 es una figura más: las [opciones de figura](../iii-tidyverse/12-ggplot2.qmd#gráficos-en-documentos-quarto) de Quarto (`fig-cap`, `fig-alt`, `fig-width`, `fig-height`) funcionan igual y, con una etiqueta que empiece con `fig-`, el mapa se numera y se cita con `@fig-…`. Dos particularidades. Los mapas del mundo son más anchos que altos y quedan bien con `fig-height: 5`; los de un país suelen necesitar más alto. Y la lectura de las capas por URL ocurre en cada *Render*, lo que tarda unos segundos con los archivos del curso; con capas grandes (decenas de megabytes), conviene guardar una versión simplificada o recortada con `st_write()` y leerla desde el proyecto. Los mapas interactivos, con leaflet, siguen las reglas de los htmlwidgets del [capítulo de plotly y DT](../iii-tidyverse/13-plotly-dt.qmd).
 
 *Ejercicios de esta sección: [ejercicios sobre publicación, asistentes y datos propios](#ejercicios-publicacion).*
 
 ## Asistentes de IA para generar mapas
 
-Los [lineamientos del curso](../i-introduccion-ciencia-datos-programacion/05-asistentes-ia.qmd) aplican: los asistentes de IA sirven para explicar, depurar, generar y verificar código, se declara su uso y se comprende todo lo que se entrega. Para generar código de mapas, el prompt debe describir el objeto sf —las columnas y, ahora, también el **SRC** y el tipo de geometría—, pedir el patrón del curso (ggplot2 con `geom_sf()`) y el resultado debe **verificarse** con tres comprobaciones específicas: que el código no mezcle SRC en operaciones espaciales (todas las capas en el mismo, reproyectadas antes de medir), que la escala de color sea adecuada a la distribución de la variable (logarítmica o clasificada si es asimétrica; discreta si es categórica) y que la leyenda tenga unidades. Un prompt de ejemplo, con las cuatro partes del capítulo de asistentes:
+Los [lineamientos del curso](../i-introduccion-ciencia-datos-programacion/05-asistentes-ia.qmd) aplican: los asistentes de IA sirven para explicar, depurar, generar y verificar código, se declara su uso y se comprende todo lo que se entrega. Para generar código de mapas, el prompt debe describir el objeto sf —las columnas y, ahora, también el **SRC** y el tipo de geometría—, pedir el patrón del curso (ggplot2 con `geom_sf()`) y el resultado debe **verificarse** con tres comprobaciones específicas: que el código no mezcle SRC en operaciones espaciales (todas las capas en el mismo, reproyectadas antes de medir), que la escala de color sea adecuada a la distribución de la variable (logarítmica o clasificada si es asimétrica; divergente si tiene un valor central; discreta si es categórica) y que la leyenda tenga unidades. Un prompt de ejemplo, con las cuatro partes del capítulo de asistentes:
 
-> Actúe como asistente de visualización de datos geoespaciales con R, sf y ggplot2 **(rol)**. Tengo un objeto sf llamado `cantones_union`, con un multipolígono por cantón de Costa Rica en el SRC EPSG:8908 (CR-SIRGAS / CRTM05, metros) y las columnas `provincia` (texto), `canton` (texto), `poblacion` (entero) y `area_km2` (decimal) **(contexto)**. Escriba el código de un mapa de coropletas de la población por kilómetro cuadrado de cada cantón, con una paleta secuencial, escala de color logarítmica con etiquetas con separador de miles, bordes blancos, título, leyenda con unidades, fuente de los datos en la nota al pie, sin ejes y con los límites del mapa fijados para excluir la Isla del Coco **(tarea)**. Use `ggplot(cantones_union) + geom_sf(...)` y escalas de ggplot2; no use otros paquetes **(formato)**.
+> Actúe como asistente de visualización de datos geoespaciales con R, sf y ggplot2 **(rol)**. Tengo un objeto sf llamado `paises_bm`, con un multipolígono por país del mundo en el SRC EPSG:8857 (Equal Earth) y las columnas `nombre` (texto), `continente` (texto), `poblacion` (entero) y `poblacion_urbana_pct` (decimal: porcentaje de población urbana en 2024, entre 0 y 100, con valores faltantes) **(contexto)**. Escriba el código de un mapa de coropletas del porcentaje de población urbana, con una paleta secuencial, los países sin datos en gris, leyenda con título y unidades, título, bordes blancos, fuente de los datos en la nota al pie y sin ejes **(tarea)**. Use `ggplot(paises_bm) + geom_sf(...)` y escalas de ggplot2; no use otros paquetes **(formato)**.
 
-Al verificar el código generado, además de las tres comprobaciones, compare el color de dos o tres cantones conocidos con sus valores en la tabla: Tibás debe ser el más intenso y Talamanca, Puerto Jiménez o Turrubares, los más claros.
+Al verificar el código generado, además de las tres comprobaciones, compare el color de dos o tres países conocidos con sus valores en la tabla.
 
 *Ejercicios de esta sección: [ejercicios sobre publicación, asistentes y datos propios](#ejercicios-publicacion).*
 
 ## Clínica de errores
 
-La tabla 1 recoge los problemas más frecuentes al empezar con sf.
+La tabla 1 recoge los problemas más frecuentes al empezar con sf. El primero de la lista de síntomas sin mensaje merece verse una vez: con `plot()` de R base, dos capas en SRC distintos no se superponen y no hay ningún aviso; las ciudades en grados sobre los países en metros quedan todas amontonadas cerca del origen, a la escala de los grados. ggplot2 evita ese error al reproyectar, pero las operaciones espaciales del capítulo siguiente no.
+
+```{r}
+#| label: error-src
+plot(st_geometry(paises_ee), col = "#dce9f5")
+plot(st_geometry(ciudades), add = TRUE, col = "red", pch = 16)
+```
 
 <figure style="text-align: center; margin: 20px 0;">
     <figcaption><strong>Tabla 1</strong>. Clínica de errores de sf. Fuente: elaboración propia.</figcaption>
@@ -400,16 +494,18 @@ La tabla 1 recoge los problemas más frecuentes al empezar con sf.
     <tr><td><code>Cannot open &quot;https://…&quot;; The file doesn&#39;t seem to exist.</code> con <code>HTTP error code : 404</code></td><td>La URL está mal escrita, o no es la URL cruda (<em>Raw</em>) del archivo.</td><td>Probar la URL en el navegador: debe descargar el archivo, no mostrar una página de GitHub.</td></tr>
     <tr><td><code>Opening layer failed</code></td><td>El argumento <code>layer</code> nombra una capa que el archivo no contiene.</td><td><code>st_layers(&quot;archivo.gpkg&quot;)</code> lista las capas disponibles.</td></tr>
     <tr><td><code>plot()</code> dibuja muchos mapas pequeños</td><td>Es el comportamiento de <code>plot()</code> con un objeto sf: un mapa por atributo.</td><td><code>plot(st_geometry(x))</code> o <code>x[&quot;columna&quot;]</code>; para presentar, ggplot2.</td></tr>
-    <tr><td>El mapa de ggplot2 es diminuto y hay un punto en una esquina</td><td>La extensión incluye la Isla del Coco (o cualquier geometría lejana).</td><td><code>coord_sf(xlim = …, ylim = …)</code> con los límites en las unidades del SRC.</td></tr>
+    <tr><td>Con <code>plot(…, add = TRUE)</code>, la segunda capa no aparece o queda amontonada en un punto</td><td>Capas en SRC distintos: no hay mensaje.</td><td>Reproyectar con <code>st_transform()</code> al SRC de la primera capa.</td></tr>
+    <tr><td>El mapa de ggplot2 es diminuto, o el mapa en Mercator es una franja</td><td>La extensión incluye una geometría lejana (la Isla del Coco en los cantones) o la Antártida, que en Mercator se extiende al infinito.</td><td><code>coord_sf(xlim = …, ylim = …)</code> con los límites en las unidades del SRC, o <code>filter()</code> para excluir la geometría.</td></tr>
     <tr><td><code>Can&#39;t subset columns that don&#39;t exist</code> en <code>st_as_sf()</code></td><td>Los nombres de <code>coords</code> no son los de las columnas del data frame.</td><td>Revisar los nombres con <code>names()</code>; en GBIF son <code>decimalLongitude</code> y <code>decimalLatitude</code>.</td></tr>
     <tr><td><code>missing values in coordinates not allowed</code></td><td>Filas con <code>NA</code> en la longitud o la latitud.</td><td><code>filter(!is.na(longitud), !is.na(latitud))</code> antes de <code>st_as_sf()</code>.</td></tr>
-    <tr><td>Los puntos aparecen en la Antártida o en el océano, lejos del país</td><td>Las columnas de <code>coords</code> están al revés (latitud, longitud).</td><td>El orden es <code>c(&quot;longitud&quot;, &quot;latitud&quot;)</code>: x, y.</td></tr>
+    <tr><td>Los puntos aparecen en lugares absurdos (el océano, la Antártida)</td><td>Las columnas de <code>coords</code> están al revés (latitud, longitud).</td><td>El orden es <code>c(&quot;longitud&quot;, &quot;latitud&quot;)</code>: x, y.</td></tr>
     <tr><td><code>cannot transform sfc object with missing crs</code></td><td>El objeto no tiene SRC: se creó con <code>st_as_sf()</code> sin <code>crs</code>.</td><td>Agregar <code>crs = 4326</code> (o el código que corresponda a las coordenadas).</td></tr>
     <tr><td><code>st_crs(x) == st_crs(y) is not TRUE</code></td><td>Una operación espacial entre capas con SRC distintos.</td><td>Reproyectar una de ellas con <code>st_transform()</code> al SRC de la otra.</td></tr>
-    <tr><td>Después de <code>left_join()</code> el objeto ya no tiene funciones de sf (<code>geom_sf()</code> falla o la geometría es una columna más)</td><td>El objeto sf quedó a la derecha de la unión.</td><td>El objeto sf va a la izquierda: <code>capa |&gt; left_join(tabla, by = …)</code>.</td></tr>
-    <tr><td>La unión deja <code>NA</code> en las columnas nuevas</td><td>Claves que no coinciden exactamente (tildes, grafías, espacios).</td><td><code>anti_join()</code> en las dos direcciones; corregir con <code>case_when()</code> antes de unir, o unir por códigos.</td></tr>
+    <tr><td><code>stat_sf() requires the following missing aesthetics: geometry</code> después de una unión</td><td>El objeto sf quedó a la derecha de <code>left_join()</code> y el resultado es un data frame común.</td><td>El objeto sf va a la izquierda: <code>capa |&gt; left_join(tabla, by = …)</code>.</td></tr>
+    <tr><td>La unión deja <code>NA</code> en las columnas nuevas</td><td>Claves que no coinciden exactamente (códigos distintos, tildes, grafías).</td><td><code>anti_join()</code> en las dos direcciones; corregir con <code>case_when()</code> antes de unir.</td></tr>
     <tr><td>El mapa de coropletas es casi todo de un solo color</td><td>Variable asimétrica con escala lineal.</td><td><code>transform = &quot;log10&quot;</code> en la escala, o clases con <code>scale_fill_fermenter()</code>.</td></tr>
-    <tr><td><code>Discrete value supplied to a continuous scale</code></td><td>Se mapeó una columna de texto a <code>fill</code> con una escala continua (viridis_c, fermenter).</td><td>Usar una escala discreta (<code>scale_fill_viridis_d()</code>, <code>scale_fill_manual()</code>, <code>scale_fill_brewer()</code>).</td></tr>
+    <tr><td><code>Discrete value supplied to a continuous scale</code></td><td>Se mapeó una columna de texto a <code>fill</code> con una escala continua (viridis_c, fermenter, distiller).</td><td>Usar una escala discreta (<code>scale_fill_viridis_d()</code>, <code>scale_fill_manual()</code>, <code>scale_fill_brewer()</code>).</td></tr>
+    <tr><td><code>Removed n rows containing missing values</code> en un mapa de coropletas</td><td>Advertencia, no error: países sin datos en la variable mapeada.</td><td><code>na.value = &quot;gray85&quot;</code> en la escala, para que aparezcan como «sin datos».</td></tr>
     <tr><td><code>Dataset already exists</code> en <code>st_write()</code></td><td>El archivo ya existe.</td><td><code>delete_dsn = TRUE</code> para sobrescribirlo.</td></tr>
     <tr><td>El <em>Render</em> tarda mucho o el HTML pesa decenas de megabytes</td><td>Capas muy detalladas leídas y dibujadas en cada <em>Render</em>.</td><td>Simplificar (<code>st_simplify()</code>) o recortar la capa, guardarla con <code>st_write()</code> y leer esa versión.</td></tr>
     </tbody>
@@ -419,77 +515,73 @@ La tabla 1 recoge los problemas más frecuentes al empezar con sf.
 ## Resumen
 
 - **sf** implementa el estándar Simple Features en R sobre GDAL, GEOS y PROJ. Un **objeto sf es un data frame con una columna de geometrías**: los verbos de dplyr funcionan y conservan la geometría; `st_drop_geometry()` la quita para trabajar solo con los atributos.
-- `st_read()` lee cualquier formato vectorial, desde rutas o URL; `st_write()` escribe, preferiblemente en **GeoPackage**. `st_geometry()`, `st_crs()` y `st_bbox()` describen la geometría, el SRC y la extensión.
-- Una tabla con coordenadas se convierte en puntos con `st_as_sf(coords = c("longitud", "latitud"), crs = 4326)`: en ese orden y con el SRC declarado.
-- `st_transform()` **reproyecta**; `st_area()` mide, con unidades, y se mide en el SRC proyectado de la región (CR-SIRGAS / CRTM05 en Costa Rica). Para dibujar, ggplot2 reproyecta las capas por su cuenta; para las operaciones espaciales, deben estar en el mismo SRC.
-- `left_join()` une una capa con una tabla **con el objeto sf a la izquierda**; las claves que no coinciden se detectan con `anti_join()` y se corrigen antes de unir.
-- `geom_sf()` dibuja mapas con ggplot2; `coord_sf()` fija los límites; `geom_sf_text()` rotula. Un **mapa de coropletas** mapea una variable normalizada a `fill`, con una escala logarítmica o clasificada (`scale_fill_fermenter()`) si la variable es asimétrica.
+- `st_read()` lee cualquier formato vectorial, desde rutas o URL; `st_write()` escribe, preferiblemente en **GeoPackage**. `st_geometry()`, `st_crs()` y `st_bbox()` describen la geometría, el SRC y la extensión. La **escala** de la capa determina su uso.
+- Una tabla con coordenadas se convierte en puntos con `st_as_sf(coords = c("longitud", "latitud"), crs = 4326)`: en ese orden y con el SRC declarado; `st_coordinates()` hace el camino inverso.
+- `st_transform()` **reproyecta**. Un mapa del mundo se dibuja en una proyección (Equal Earth, EPSG:8857), no en WGS84; `st_area()` mide, con unidades, y se mide en una proyección equivalente a escala mundial o en la local del país (CR-SIRGAS / CRTM05 en Costa Rica). Para dibujar, ggplot2 reproyecta las capas por su cuenta; para las operaciones espaciales, deben estar en el mismo SRC.
+- `left_join()` une una capa con una tabla **con el objeto sf a la izquierda**; las claves que no coinciden (los códigos de Kosovo, Palestina y Sudán del Sur) se detectan con `anti_join()` y se corrigen antes de unir.
+- `geom_sf()` dibuja mapas con ggplot2, superponiendo capas con `data`; `coord_sf()` fija los límites o la proyección del dibujo. Un **mapa de coropletas** mapea una variable normalizada a `fill`, con una escala logarítmica si es asimétrica, clasificada con `scale_fill_fermenter()`, divergente con `scale_fill_distiller()` si tiene un valor central, y con `na.value` para los valores faltantes.
 
 ## Ejercicios
 
-Los ejercicios se agrupan según la sección del capítulo a la que corresponden y se resuelven en un documento Quarto nuevo del proyecto `pf0953`, `mapas.qmd`, con el mismo encabezado YAML de `graficos.qmd` y un bloque `preparacion` igual al del inicio del capítulo (más `library(plotly)` y `library(DT)` si los usa). Como en los capítulos anteriores, use la provincia y el cantón elegidos como ejemplo propio.
+Los ejercicios se agrupan según la sección del capítulo a la que corresponden y se resuelven en un documento Quarto nuevo del proyecto `pf0953`, `mapas.qmd`, con el mismo encabezado YAML de `graficos.qmd` y un bloque `preparacion` igual al del inicio del capítulo. Varios suponen ejecutados los bloques de las secciones anteriores (`paises`, `paises_ee` con los códigos corregidos, `centroamerica`, `centroamerica_crtm05`, `ciudades`, `indicadores` y `paises_bm`).
 
 ### Lectura y estructura {#ejercicios-lectura}
 
-1. Lea en un objeto `provincias` la capa de provincias del repositorio del curso (`https://raw.githubusercontent.com/pf0953-programacionr/2026-ii/main/datos/provincias.gpkg`) e imprímalo. ¿Cuántas entidades y cuántos campos tiene, cuál es el tipo de geometría y cuál el SRC? Compare su extensión con la de `cantones_sf`: ¿por qué son casi iguales?
+1. Lea en un objeto `aeropuertos` la capa de aeropuertos de Natural Earth (`paste0(datos_ne, "aeropuertos.gpkg")`) e imprímalo. ¿Cuántas entidades y cuántos campos tiene, cuál es el tipo de geometría y cuál el SRC? Luego, con `paises`, cuente los países de cada continente: ¿cuál continente tiene más países en la capa?
 
-2. Obtenga los cantones de su provincia a partir de `cantones_sf` con `filter()` y compruebe, imprimiendo el resultado, que sigue siendo un objeto sf y que la extensión cambió. Luego, con `st_drop_geometry()`, `select()` y `knitr::kable()`, muestre una tabla con los códigos y los nombres de esos cantones.
+2. Obtenga en `africa` los países de África a partir de `paises_ee` y compruebe, imprimiendo el resultado, que sigue siendo un objeto sf, en Equal Earth, y que la extensión cambió. Luego, con `st_drop_geometry()`, `select()`, `arrange()` y `knitr::kable()`, muestre una tabla con los diez países más poblados del continente.
+
+### Puntos {#ejercicios-puntos}
+
+3. Construya a mano, con `tribble()`, una tabla con tres lugares que conozca (por ejemplo, su casa, la Escuela de Geografía y un sitio de interés), con columnas `nombre`, `longitud` y `latitud` obtenidas de Google Maps u OpenStreetMap, y conviértala en el objeto sf `lugares` con el SRC correcto. Dibújelo sobre `centroamerica` (o sobre `paises`, si los lugares están en otra región) y verifique que los puntos caen donde deben. Luego reproyecte `lugares` a CR-SIRGAS / CRTM05 (o al SRC proyectado de su país) y observe las coordenadas con `st_coordinates()`: ¿en qué unidades están y qué tan grandes son los números?
+
+4. **Prediga antes de ejecutar**: ¿dónde quedan las ciudades si `st_as_sf()` recibe `coords = c("latitud", "longitud")`? Compruébelo con `st_bbox()` del resultado y explique los valores. Luego cree el objeto sin el argumento `crs`, consulte `st_crs()` e intente `st_transform(…, 8857)`: anote el mensaje de error y búsquelo en la clínica de errores.
 
 ### Mapas {#ejercicios-mapas}
 
-3. Dibuje con ggplot2 el mapa de los cantones de su provincia, con un relleno fijo, los bordes del color de su preferencia, el nombre de cada cantón con `geom_sf_text()`, título y `theme_minimal()` o `theme_void()`. Si los nombres se superponen, pruebe con `size` y con `coord_sf()`.
+5. Dibuje el mapa de `africa` (ejercicio 2) con los países en un color claro, los límites en blanco, las ciudades del continente encima (filtre `ciudades` por los códigos de país de `africa`), el nombre de cada país con `geom_sf_text()`, título y `theme_void()`. Recuerde que ggplot2 reproyecta las ciudades para dibujarlas. ¿Cuántos países tiene el continente en la capa y cuántas ciudades quedaron en el mapa?
 
-4. **Prediga antes de ejecutar** qué dibuja cada instrucción: cuántos mapas, de qué colores y con qué leyenda; luego ejecute:
+6. **Prediga antes de ejecutar** qué dibuja cada instrucción: de qué color es cada país, cuántos colores hay y qué muestra la leyenda; luego ejecute:
 
     ```r
-    plot(cantones_sf)
-    plot(st_geometry(cantones_sf))
-    plot(cantones_sf["provincia"])
-    ggplot(cantones_sf) + geom_sf(aes(fill = codigo_provincia))
+    ggplot(paises_ee) + geom_sf(aes(fill = continente), color = "white", linewidth = 0.2)
+    ggplot(paises_ee) + geom_sf(aes(fill = poblacion_estimada), color = "white", linewidth = 0.2)
     ```
 
     <details>
     <summary>Después de ejecutar, haga clic aquí para ver la explicación</summary>
-    <code>plot()</code> sobre el objeto completo dibuja un mapa por cada columna de atributos (cuatro), cada uno coloreado según los valores de esa columna, sin leyenda; sobre <code>st_geometry()</code>, un solo mapa con los contornos; sobre <code>cantones_sf[&quot;provincia&quot;]</code>, un mapa coloreado por provincia, con leyenda. En ggplot2, <code>codigo_provincia</code> es una columna <strong>numérica</strong>, de modo que el relleno usa una escala continua (una barra de color de 1 a 7) aunque la variable sea en realidad categórica: para un color por provincia hay que mapear <code>provincia</code>, que es texto, o convertir el código con <code>factor()</code>.
+    Cuando <code>fill</code> es una columna de <strong>texto</strong>, ggplot2 usa una escala discreta: un color distinto por valor (ocho, uno por continente, con la paleta categórica por defecto) y una leyenda con la lista de categorías. Es la forma más rápida de ver a qué grupo pertenece cada polígono. Cuando es una columna <strong>numérica</strong>, usa una escala continua, con una barra de color; y como la población es muy asimétrica (China e India tienen más de mil millones de habitantes; la mitad de los países, menos de diez millones), casi todos los países quedan del color más oscuro y solo esos dos se distinguen: es la razón de las escalas logarítmicas y de las clases de la sección de coropletas.
     </details>
-
-### Puntos {#ejercicios-puntos}
-
-5. A partir de `felidos_sf`, cuente los registros por especie y dibuje un mapa con los registros de **una** especie (la que prefiera) sobre las provincias (`provincias` del ejercicio 1), con los puntos de un color fijo y las provincias rotuladas. ¿En cuáles regiones del país se concentra la especie? Mencione dos.
-
-6. **Prediga antes de ejecutar**: ¿dónde quedan los puntos si `st_as_sf()` recibe `coords = c("decimalLatitude", "decimalLongitude")`? Compruébelo con `st_bbox()` del resultado y explique los valores. Luego cree el objeto sin el argumento `crs`, consulte `st_crs()` e intente `st_transform(…, 8908)`: anote el mensaje de error y búsquelo en la clínica de errores.
 
 ### Sistemas de referencia de coordenadas {#ejercicios-src}
 
-7. Reproyecte `felidos_sf` a CR-SIRGAS / CRTM05 en `felidos_crtm05` y compare `st_bbox()` de los dos objetos: ¿en qué unidades está cada uno y qué tan grandes son los números? Verifique con `st_crs()` que el nuevo objeto tiene el mismo SRC que `cantones_sf`.
+7. Reproyecte `ciudades` a Web Mercator en `ciudades_merc` y a Equal Earth en `ciudades_ee`. Obtenga con `st_coordinates()` las coordenadas de San José de Costa Rica en los tres SRC y explique en el texto por qué los tres pares de números representan el mismo lugar.
 
-8. Calcule con `st_area()` el área de cada provincia en km² (a partir de `provincias`) y compárela con la suma de `area_km2` de sus cantones en la tabla `cantones` (con `group_by()` y `summarize()`, y una unión). ¿En cuál provincia es mayor la diferencia y por qué?
+8. Una `centroamerica_crtm05` con los indicadores del Banco Mundial (por `codigo`, con el objeto sf a la izquierda; como las dos tablas tienen una columna `area_km2`, renombre antes la calculada, por ejemplo a `area_calculada_km2`) y agregue la columna `diferencia_pct` entre el área calculada en CRTM05 y la superficie terrestre del Banco Mundial. ¿En cuál país es mayor la diferencia y por qué? Pista: el Banco Mundial reporta superficie **terrestre**; piense qué tiene ese país que los demás no. Luego calcule el área de cada país también en Equal Earth y compárela con la de CRTM05: ¿cuánto de la diferencia se debe a la proyección y en cuál país es mayor ese efecto?
 
 ### Unión y coropletas {#ejercicios-coropletas}
 
-9. Una `provincias` con un resumen por provincia de la tabla `cantones` (población, área y densidad, como `resumen_provincias` del capítulo de dplyr) y dibuje un mapa de coropletas de la densidad de población de las provincias, con la paleta viridis, los nombres de las provincias y la leyenda con unidades. Compárelo con el mapa de los cantones: ¿qué se gana y qué se pierde al agregar?
+9. Dibuje un mapa de coropletas de la **esperanza de vida** de los países de América del Sur (filtre `paises_bm` por continente), con la paleta viridis, leyenda con unidades, los países sin datos en gris, el nombre de cada país con `geom_sf_text()` y título. ¿Cuál país tiene la mayor esperanza de vida y cuál la menor? Compruébelo con `arrange()` sobre la tabla.
 
-10. Dibuje un mapa de coropletas de la **población** (no de la densidad) de los cantones, con `scale_fill_viridis_c(transform = "log10")`, y compárelo con el de la densidad de la sección. ¿Cuáles cantones cambian más de color entre los dos mapas? Explique en un párrafo por qué el mapa de población absoluta puede inducir a error y cuál de los dos conviene publicar.
+10. Dibuje un mapa de coropletas del porcentaje de personas que usan Internet (`usuarios_internet_pct` de `paises_bm`) clasificado en cinco clases por cuantiles con `scale_fill_fermenter()`, con la paleta `"YlGnBu"`, los países sin datos en gris, leyenda con título y unidades, y título. Compárelo con una versión de escala continua: ¿qué muestra la clasificación que la escala continua no, y viceversa?
 
-11. Dibuje el mapa de coropletas de la densidad de los cantones de **su provincia**, clasificada en cuatro clases con `scale_fill_fermenter()` (sin transformación logarítmica, si los valores de su provincia lo permiten), con los nombres de los cantones, título, leyenda con unidades y fuente. ¿Cuál cantón de su provincia es el más denso y cuál el menos denso? Compruébelo con `arrange()` sobre la tabla.
+11. Dibuje un mapa de coropletas del **porcentaje de población urbana** (`poblacion_urbana_pct`) con la paleta divergente `"BrBG"` centrada en el 50 % (con `limits = c(0, 100)`, el centro de la paleta queda en 50). ¿En qué regiones del mundo predomina la población rural? Interprete el patrón geográfico en un párrafo.
 
 ### Publicación, asistentes y datos propios {#ejercicios-publicacion}
 
-12. Dele al mapa del ejercicio 11 un bloque con etiqueta `fig-densidad-provincia`, `fig-cap`, `fig-alt` y `fig-height`, cítelo en el texto, procese `mapas.qmd` con *Render* y publíquelo en el repositorio `practica-quarto`, junto con los documentos anteriores. Compruebe en la dirección pública que el mapa se ve con su leyenda numerada.
+12. Guarde `africa` con los indicadores del Banco Mundial (únalos primero, con los códigos ya corregidos) en un GeoPackage `africa.gpkg` y vuelva a leerlo en `africa_leido`. Compruebe que el SRC y la cantidad de entidades se conservaron. Luego dele al mapa del ejercicio 9 un bloque con etiqueta `fig-esperanza-vida`, `fig-cap`, `fig-alt` y `fig-height`, cítelo en el texto, procese `mapas.qmd` con *Render* y publíquelo en el repositorio `practica-quarto`, junto con los documentos anteriores.
 
-13. Pida a un asistente de IA el código del prompt de ejemplo de la sección de asistentes y verifíquelo: lea el código, compruebe que calcula la densidad a partir de las columnas indicadas y no inventa otras, que la escala es logarítmica y la leyenda tiene unidades, que los límites excluyen la Isla del Coco, y compare el color de Tibás, San Carlos y Talamanca con sus densidades en `cantones`. Documente en el texto del documento el asistente, el prompt, el código y el resultado de las comprobaciones, como en la declaración de uso de IA de la tarea 2.
+13. Pida a un asistente de IA el código del prompt de ejemplo de la sección de asistentes (coropletas de la población urbana) y verifíquelo: lea el código, compruebe que usa la columna indicada y no inventa otras, que los países sin datos aparecen en gris, que la leyenda tiene unidades, y compare el color de tres países con sus valores en `paises_bm`. Documente en el texto del documento el asistente, el prompt, el código y el resultado de las comprobaciones, como en la declaración de uso de IA de la tarea 2.
 
-14. Para la tarea 3, que agrega el componente geoespacial a los datos de su tema, cargue en un objeto sf la fuente que identificó en el ejercicio 6 del capítulo anterior (con `st_read()`, o con `st_as_sf()` si es un CSV con coordenadas), imprímalo, anote su SRC, su cantidad de entidades y su tipo de geometría, y dibújelo sobre `cantones_sf` o `provincias`. Si sus datos son tabulares por cantón, provincia o distrito, únalos a la capa correspondiente y verifique la unión con `anti_join()`. Anote qué preguntas podría responder al combinarlos con otras capas.
+14. Para la tarea 3, que agrega el componente geoespacial a los datos de su tema, cargue en un objeto sf la fuente que identificó en el ejercicio 6 del capítulo anterior (con `st_read()`, o con `st_as_sf()` si es un CSV con coordenadas), imprímalo, anote su SRC, su cantidad de entidades y su tipo de geometría, y dibújelo sobre la capa que corresponda a su extensión: `paises`, `centroamerica` o, para Costa Rica, los cantones del repositorio del curso (`https://raw.githubusercontent.com/pf0953-programacionr/2026-ii/main/datos/cantones.gpkg`, en CRTM05). Si sus datos son tabulares por país, cantón o provincia, únalos a la capa correspondiente y verifique la unión con `anti_join()`. Anote qué preguntas podría responder al combinarlos con otras capas.
 
 ## Referencias bibliográficas
 
-GBIF.org. (2026, 11 de octubre). *GBIF occurrence search: Felidae, Costa Rica, with coordinates* [consulta a la API]. <https://www.gbif.org/occurrence/search?country=CR&taxon_key=9703&has_coordinate=true&has_geospatial_issue=false>
-
-Instituto Geográfico Nacional. (s. f.). *Límite cantonal 1:5000* y *Límite provincial 1:5000* [capas WFS]. Sistema Nacional de Información Territorial. Recuperado el 11 de octubre de 2026, de <https://geos.snitcr.go.cr/be/IGN_5_CO/wfs>
-
-Instituto Nacional de Estadística y Censos. (2023). *Resultados de la Estimación de Población y Vivienda 2022* [archivo XLSX]. <https://admin.inec.cr/sites/default/files/2023-11/reResultadosEstimacionPoblacionVivienda2022_3.xlsx>
+Banco Mundial. (2026). *Indicadores del desarrollo mundial* [conjunto de datos]. Recuperado el 6 de octubre de 2026, de <https://datos.bancomundial.org/>
 
 Lovelace, R., Nowosad, J., y Münchow, J. (2025). *Geocomputation with R* (2.ª ed.). Chapman and Hall/CRC. <https://r.geocompx.org/>
+
+Natural Earth. (s. f.). *Natural Earth: Free vector and raster map data* [conjunto de datos]. Recuperado el 4 de octubre de 2026, de <https://www.naturalearthdata.com/>
 
 Pebesma, E. (2018). Simple features for R: Standardized support for spatial vector data. *The R Journal, 10*(1), 439–446. <https://doi.org/10.32614/RJ-2018-009>
 
