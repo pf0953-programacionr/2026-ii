@@ -2,6 +2,9 @@
 
 Conjuntos de datos que se usan en las lecciones y en los ejercicios del curso. Todos pueden leerse directamente desde GitHub con la URL cruda del archivo (`https://raw.githubusercontent.com/pf0953-programacionr/2026-ii/main/datos/<archivo>`), como hacen las lecciones.
 
+- Datos de Costa Rica, en este directorio: `cantones.csv`, `cantones.gpkg`, `provincias.gpkg` y `felidos.csv` (secciones II a IV).
+- [`natural-earth/`](natural-earth/LEEME.md): países, ciudades, aeropuertos, ríos y lagos del mundo, de Natural Earth (dominio público), y [`banco-mundial/`](banco-mundial/LEEME.md): indicadores del desarrollo mundial por país (CC BY 4.0). Se usan en el capítulo de sf para introducir los datos geoespaciales a escala mundial, donde las consecuencias de elegir un sistema de referencia de coordenadas se ven a simple vista. Cada directorio tiene su LEEME.
+
 ## `cantones.csv`
 
 Población y extensión territorial de los 84 cantones de Costa Rica.
