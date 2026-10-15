@@ -1,0 +1,1397 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Datos geoespaciales: modelos, formatos y sistemas de referencia de coordenadas – PF-0953 Programación en R - 2026-II</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../favicon.ico" rel="icon">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark-0a6b7249c26820e032cb0bd839ff02b1.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-4f3632f0866db833f55d269f2223b949.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark-acda045fd7e50dbf0b610784e976f157.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../../site_libs/bootstrap/bootstrap-4f3632f0866db833f55d269f2223b949.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "language": {
+    "search-no-results-text": "No se han encontrado resultados",
+    "search-matching-documents-text": "documentos encontrados",
+    "search-copy-link-title": "Copiar el enlace en la búsqueda",
+    "search-hide-matches-text": "Ocultar resultados adicionales",
+    "search-more-match-text": "resultado adicional en este documento",
+    "search-more-matches-text": "resultados adicionales en este documento",
+    "search-clear-button-title": "Borrar",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancelar",
+    "search-submit-button-title": "Enviar",
+    "search-label": "Buscar"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-sidebar docked nav-fixed quarto-light"><script id="quarto-html-before-body" type="application/javascript">
+    const toggleBodyColorMode = (bsSheetEl) => {
+      const mode = bsSheetEl.getAttribute("data-mode");
+      const bodyEl = window.document.querySelector("body");
+      if (mode === "dark") {
+        bodyEl.classList.add("quarto-dark");
+        bodyEl.classList.remove("quarto-light");
+      } else {
+        bodyEl.classList.add("quarto-light");
+        bodyEl.classList.remove("quarto-dark");
+      }
+    }
+    const toggleBodyColorPrimary = () => {
+      const bsSheetEl = window.document.querySelector("link#quarto-bootstrap:not([rel=disabled-stylesheet])");
+      if (bsSheetEl) {
+        toggleBodyColorMode(bsSheetEl);
+      }
+    }
+    const setColorSchemeToggle = (alternate) => {
+      const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+      for (let i=0; i < toggles.length; i++) {
+        const toggle = toggles[i];
+        if (toggle) {
+          if (alternate) {
+            toggle.classList.add("alternate");
+          } else {
+            toggle.classList.remove("alternate");
+          }
+        }
+      }
+    };
+    const toggleColorMode = (alternate) => {
+      // Switch the stylesheets
+      const primaryStylesheets = window.document.querySelectorAll('link.quarto-color-scheme:not(.quarto-color-alternate)');
+      const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+      manageTransitions('#quarto-margin-sidebar .nav-link', false);
+      if (alternate) {
+        // note: dark is layered on light, we don't disable primary!
+        enableStylesheet(alternateStylesheets);
+        for (const sheetNode of alternateStylesheets) {
+          if (sheetNode.id === "quarto-bootstrap") {
+            toggleBodyColorMode(sheetNode);
+          }
+        }
+      } else {
+        disableStylesheet(alternateStylesheets);
+        enableStylesheet(primaryStylesheets)
+        toggleBodyColorPrimary();
+      }
+      manageTransitions('#quarto-margin-sidebar .nav-link', true);
+      // Switch the toggles
+      setColorSchemeToggle(alternate)
+      // Hack to workaround the fact that safari doesn't
+      // properly recolor the scrollbar when toggling (#1455)
+      if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+        manageTransitions("body", false);
+        window.scrollTo(0, 1);
+        setTimeout(() => {
+          window.scrollTo(0, 0);
+          manageTransitions("body", true);
+        }, 40);
+      }
+    }
+    const disableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        stylesheet.rel = 'disabled-stylesheet';
+      }
+    }
+    const enableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        if(stylesheet.rel !== 'stylesheet') { // for Chrome, which will still FOUC without this check
+          stylesheet.rel = 'stylesheet';
+        }
+      }
+    }
+    const manageTransitions = (selector, allowTransitions) => {
+      const els = window.document.querySelectorAll(selector);
+      for (let i=0; i < els.length; i++) {
+        const el = els[i];
+        if (allowTransitions) {
+          el.classList.remove('notransition');
+        } else {
+          el.classList.add('notransition');
+        }
+      }
+    }
+    const isFileUrl = () => {
+      return window.location.protocol === 'file:';
+    }
+    const hasAlternateSentinel = () => {
+      let styleSentinel = getColorSchemeSentinel();
+      if (styleSentinel !== null) {
+        return styleSentinel === "alternate";
+      } else {
+        return false;
+      }
+    }
+    const setStyleSentinel = (alternate) => {
+      const value = alternate ? "alternate" : "default";
+      if (!isFileUrl()) {
+        window.localStorage.setItem("quarto-color-scheme", value);
+      } else {
+        localAlternateSentinel = value;
+      }
+    }
+    const getColorSchemeSentinel = () => {
+      if (!isFileUrl()) {
+        const storageValue = window.localStorage.getItem("quarto-color-scheme");
+        return storageValue != null ? storageValue : localAlternateSentinel;
+      } else {
+        return localAlternateSentinel;
+      }
+    }
+    const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+      const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+      const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+      let newTheme = '';
+      if(authorPrefersDark) {
+        newTheme = isAlternate ? baseTheme : alternateTheme;
+      } else {
+        newTheme = isAlternate ? alternateTheme : baseTheme;
+      }
+      const changeGiscusTheme = () => {
+        // From: https://github.com/giscus/giscus/issues/336
+        const sendMessage = (message) => {
+          const iframe = document.querySelector('iframe.giscus-frame');
+          if (!iframe) return;
+          iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+        }
+        sendMessage({
+          setConfig: {
+            theme: newTheme
+          }
+        });
+      }
+      const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+      if (isGiscussLoaded) {
+        changeGiscusTheme();
+      }
+    };
+    const authorPrefersDark = false;
+    const darkModeDefault = authorPrefersDark;
+      document.querySelector('link#quarto-text-highlighting-styles.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+      document.querySelector('link#quarto-bootstrap.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+    let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+    // Dark / light mode switch
+    window.quartoToggleColorScheme = () => {
+      // Read the current dark / light value
+      let toAlternate = !hasAlternateSentinel();
+      toggleColorMode(toAlternate);
+      setStyleSentinel(toAlternate);
+      toggleGiscusIfUsed(toAlternate, darkModeDefault);
+      window.dispatchEvent(new Event('resize'));
+    };
+    // Switch to dark mode if need be
+    if (hasAlternateSentinel()) {
+      toggleColorMode(true);
+    } else {
+      toggleColorMode(false);
+    }
+  </script>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../logo.svg" alt="" class="navbar-logo light-content">
+    <img src="../../logo-oscuro.svg" alt="" class="navbar-logo dark-content">
+    </a>
+  </div>
+        <div class="quarto-navbar-tools tools-end">
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Alternar modo oscuro"><i class="bi"></i></a>
+</div>
+          <div id="quarto-search" class="" title="Buscar"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../contenidos/iv-ecosistema-geoespacial-r/14-datos-geoespaciales.html">IV. El ecosistema geoespacial de R</a></li><li class="breadcrumb-item"><a href="../../contenidos/iv-ecosistema-geoespacial-r/14-datos-geoespaciales.html">Datos geoespaciales: modelos, formatos y sistemas de referencia de coordenadas</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../programa/programa.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Programa del curso</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">I. Introducción a la ciencia de datos y a la programación de computadoras</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../contenidos/i-introduccion-ciencia-datos-programacion/01-introduccion-ciencia-datos.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introducción a la ciencia de datos</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../contenidos/i-introduccion-ciencia-datos-programacion/02-ejemplo-procesos-ciencia-datos.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Ejemplo de procesos de ciencia de datos</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../contenidos/i-introduccion-ciencia-datos-programacion/03-markdown.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">El lenguaje de marcado Markdown</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../contenidos/i-introduccion-ciencia-datos-programacion/04-git-github.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Git, GitHub y GitHub Pages</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../contenidos/i-introduccion-ciencia-datos-programacion/05-asistentes-ia.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Asistentes de programación basados en inteligencia artificial</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">II. El lenguaje de programación R</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../contenidos/ii-lenguaje-programacion-r/06-introduccion-r.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introducción a R</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../contenidos/ii-lenguaje-programacion-r/07-fundamentos-r-i.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Fundamentos de R I: objetos, vectores y data frames</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../contenidos/ii-lenguaje-programacion-r/08-fundamentos-r-ii.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Fundamentos de R II: condicionales, ciclos y funciones</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../contenidos/ii-lenguaje-programacion-r/09-quarto.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Quarto: documentos computacionales</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">III. El conjunto de paquetes tidyverse</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../contenidos/iii-tidyverse/10-tidyverse.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">tidyverse: paquetes para ciencia de datos</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../contenidos/iii-tidyverse/11-dplyr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">dplyr: transformación de datos</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../contenidos/iii-tidyverse/12-ggplot2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">ggplot2: gramática de gráficos</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../contenidos/iii-tidyverse/13-plotly-dt.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">plotly y DT: gráficos y tablas interactivos</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">IV. El ecosistema geoespacial de R</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../contenidos/iv-ecosistema-geoespacial-r/14-datos-geoespaciales.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Datos geoespaciales: modelos, formatos y sistemas de referencia de coordenadas</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../contenidos/iv-ecosistema-geoespacial-r/15-sf-datos-vectoriales.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">sf: datos geoespaciales vectoriales</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
+ <span class="menu-text">Evaluaciones</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../contenidos/evaluaciones/tarea-01.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Tarea 1</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true">
+ <span class="menu-text">Software</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../contenidos/software/r-rstudio.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">R y RStudio</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">En esta página</h2>
+   
+  <ul>
+  <li><a href="#trabajo-previo" id="toc-trabajo-previo" class="nav-link active" data-scroll-target="#trabajo-previo">Trabajo previo</a>
+  <ul class="collapse">
+  <li><a href="#lecturas" id="toc-lecturas" class="nav-link" data-scroll-target="#lecturas">Lecturas</a></li>
+  <li><a href="#otros-recursos" id="toc-otros-recursos" class="nav-link" data-scroll-target="#otros-recursos">Otros recursos</a></li>
+  </ul></li>
+  <li><a href="#introducción" id="toc-introducción" class="nav-link" data-scroll-target="#introducción">Introducción</a></li>
+  <li><a href="#modelos-de-datos" id="toc-modelos-de-datos" class="nav-link" data-scroll-target="#modelos-de-datos">Modelos de datos</a>
+  <ul class="collapse">
+  <li><a href="#el-modelo-vectorial" id="toc-el-modelo-vectorial" class="nav-link" data-scroll-target="#el-modelo-vectorial">El modelo vectorial</a></li>
+  <li><a href="#el-modelo-raster" id="toc-el-modelo-raster" class="nav-link" data-scroll-target="#el-modelo-raster">El modelo raster</a></li>
+  <li><a href="#cuál-modelo-usar" id="toc-cuál-modelo-usar" class="nav-link" data-scroll-target="#cuál-modelo-usar">¿Cuál modelo usar?</a></li>
+  </ul></li>
+  <li><a href="#sistemas-de-referencia-de-coordenadas" id="toc-sistemas-de-referencia-de-coordenadas" class="nav-link" data-scroll-target="#sistemas-de-referencia-de-coordenadas">Sistemas de referencia de coordenadas</a>
+  <ul class="collapse">
+  <li><a href="#src-geográficos" id="toc-src-geográficos" class="nav-link" data-scroll-target="#src-geográficos">SRC geográficos</a></li>
+  <li><a href="#src-proyectados" id="toc-src-proyectados" class="nav-link" data-scroll-target="#src-proyectados">SRC proyectados</a></li>
+  <li><a href="#códigos-epsg" id="toc-códigos-epsg" class="nav-link" data-scroll-target="#códigos-epsg">Códigos EPSG</a></li>
+  </ul></li>
+  <li><a href="#formatos-de-archivo" id="toc-formatos-de-archivo" class="nav-link" data-scroll-target="#formatos-de-archivo">Formatos de archivo</a></li>
+  <li><a href="#fuentes-de-datos" id="toc-fuentes-de-datos" class="nav-link" data-scroll-target="#fuentes-de-datos">Fuentes de datos</a></li>
+  <li><a href="#resumen" id="toc-resumen" class="nav-link" data-scroll-target="#resumen">Resumen</a></li>
+  <li><a href="#ejercicios" id="toc-ejercicios" class="nav-link" data-scroll-target="#ejercicios">Ejercicios</a></li>
+  <li><a href="#referencias-bibliográficas" id="toc-referencias-bibliográficas" class="nav-link" data-scroll-target="#referencias-bibliográficas">Referencias bibliográficas</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/pf0953-programacionr/2026-ii/blob/main/contenidos/iv-ecosistema-geoespacial-r/14-datos-geoespaciales.qmd" class="toc-action"><i class="bi bi-github"></i>Ver el código</a></li><li><a href="https://github.com/pf0953-programacionr/2026-ii/edit/main/contenidos/iv-ecosistema-geoespacial-r/14-datos-geoespaciales.qmd" class="toc-action"><i class="bi empty"></i>Editar esta página</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../contenidos/iv-ecosistema-geoespacial-r/14-datos-geoespaciales.html">IV. El ecosistema geoespacial de R</a></li><li class="breadcrumb-item"><a href="../../contenidos/iv-ecosistema-geoespacial-r/14-datos-geoespaciales.html">Datos geoespaciales: modelos, formatos y sistemas de referencia de coordenadas</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">Datos geoespaciales: modelos, formatos y sistemas de referencia de coordenadas</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="trabajo-previo" class="level2">
+<h2 class="anchored" data-anchor-id="trabajo-previo">Trabajo previo</h2>
+<section id="lecturas" class="level3">
+<h3 class="anchored" data-anchor-id="lecturas">Lecturas</h3>
+<p>Antes de la clase, revise las siguientes lecturas. El capítulo de Olaya, en español, presenta los dos modelos de datos geoespaciales; el de Lovelace et al., en inglés, es la lectura obligatoria de esta semana según el programa del curso y desarrolla los mismos conceptos con ejemplos en R, con los paquetes sf y terra que se usan en esta sección (interesan sobre todo las secciones 2.1 a 2.2, sobre datos vectoriales, y 2.4, sobre sistemas de referencia de coordenadas).</p>
+<p>Olaya, V. (2020). Modelos para la información geográfica. En <em>Sistemas de información geográfica</em> (3.ª ed.). <a href="https://volaya.github.io/libro-sig/" class="uri">https://volaya.github.io/libro-sig/</a></p>
+<p>Lovelace, R., Nowosad, J., y Münchow, J. (2025). Geographic data in R. En <em>Geocomputation with R</em> (2.ª ed.). Chapman and Hall/CRC. <a href="https://r.geocompx.org/spatial-class" class="uri">https://r.geocompx.org/spatial-class</a></p>
+</section>
+<section id="otros-recursos" class="level3">
+<h3 class="anchored" data-anchor-id="otros-recursos">Otros recursos</h3>
+<p>El sitio <a href="https://epsg.io/">epsg.io</a> permite buscar cualquier sistema de referencia de coordenadas por nombre o por código y ver su definición, su área de uso y sus unidades. El <a href="https://www.snitcr.go.cr/">Sistema Nacional de Información Territorial (SNIT)</a> publica las capas oficiales de Costa Rica, entre ellas la división territorial administrativa que se usa en esta sección.</p>
+<p>Este capítulo está pensado como <strong>lectura previa</strong>: léalo completo antes de la sesión de la semana 10. En la clase solo se repasan sus ideas principales —los dos modelos, los sistemas de referencia de coordenadas y los formatos— en unos diez minutos; el resto de la sesión se dedica al <a href="../../contenidos/iv-ecosistema-geoespacial-r/15-sf-datos-vectoriales.html">capítulo de sf</a>.</p>
+</section>
+</section>
+<section id="introducción" class="level2">
+<h2 class="anchored" data-anchor-id="introducción">Introducción</h2>
+<p>Este capítulo abre la sección IV del curso, dedicada al <strong>ecosistema geoespacial de R</strong>. En las secciones anteriores, los datos del INEC se trabajaron como tablas: una fila por cantón, con su población, su área y su densidad. Lo que faltaba era la pregunta geográfica por excelencia: <strong>¿dónde?</strong> Un <strong>dato geoespacial</strong> (o geográfico) es un dato que, además de sus atributos, tiene una <strong>ubicación</strong> sobre la superficie terrestre. Con esa ubicación, los cantones —o los países— dejan de ser filas y se vuelven polígonos en un mapa; la densidad se ve, no solo se lee; y aparecen preguntas nuevas: ¿cuáles cantones son vecinos?, ¿qué hay a menos de 10 km de un punto?, ¿en cuál país cae esta coordenada?</p>
+<p>Para responderlas en R hace falta entender primero tres asuntos que este capítulo presenta y que el resto de la sección usa continuamente: los dos <strong>modelos</strong> con que se representan los datos geoespaciales (vectorial y raster), los <strong>sistemas de referencia de coordenadas</strong> que dan significado a los números de una ubicación y los <strong>formatos de archivo</strong> en que se guardan. El <a href="../../contenidos/iv-ecosistema-geoespacial-r/15-sf-datos-vectoriales.html">capítulo siguiente</a> pone todo esto en práctica con el paquete sf y datos de los países del mundo, donde las consecuencias de elegir un sistema de referencia de coordenadas se ven a simple vista.</p>
+</section>
+<section id="modelos-de-datos" class="level2">
+<h2 class="anchored" data-anchor-id="modelos-de-datos">Modelos de datos</h2>
+<p>Un fenómeno geográfico puede representarse en una computadora de dos maneras. El <strong>modelo vectorial</strong> lo describe con geometrías —puntos, líneas y polígonos— definidas por las coordenadas de sus vértices; el <strong>modelo raster</strong> lo describe con una malla de celdas del mismo tamaño, cada una con un valor. La figura 1 muestra los tipos de geometrías del modelo vectorial; las figuras 2 y 3, el modelo raster.</p>
+<figure style="text-align: center;" class="figure">
+<img style="max-width: 100%; height: auto;" src="img/tipos-geometrias-sf.png" alt="Tipos de geometrías de Simple Features más usadas" class="figure-img">
+<figcaption>
+<strong>Figura 1</strong>. Los siete tipos de geometrías vectoriales más usados, del estándar Simple Features. Fuente: Lovelace et al.&nbsp;(2019).
+</figcaption>
+</figure>
+<section id="el-modelo-vectorial" class="level3">
+<h3 class="anchored" data-anchor-id="el-modelo-vectorial">El modelo vectorial</h3>
+<p>El modelo vectorial se basa en <strong>puntos</strong> ubicados en un sistema de referencia de coordenadas. Un punto aislado representa un objeto que, a la escala de trabajo, no tiene extensión: un aeródromo, una estación meteorológica, el registro de presencia de una especie. Una secuencia de puntos conectados forma una <strong>línea</strong> (una carretera, un río) y una línea cerrada forma un <strong>polígono</strong> (un cantón, un lago, un área protegida). Cada geometría tiene asociados <strong>atributos</strong>: el nombre del cantón, su población, la fecha del registro. Por lo general las coordenadas tienen dos dimensiones (<em>x</em>, <em>y</em>), a las que puede agregarse una tercera, <em>z</em>, usualmente la altitud.</p>
+<p>Las bibliotecas y las bases de datos geoespaciales comparten una definición común de estas geometrías: el estándar <a href="https://www.ogc.org/standards/sfa">Simple Features</a> del <a href="https://www.ogc.org/">Open Geospatial Consortium (OGC)</a> y de la <a href="https://www.iso.org/">Organización Internacional de Normalización (ISO)</a>. El estándar define 18 tipos de geometrías; los siete de la figura 1 son los que se usan casi siempre. Los tipos «multi» permiten que una sola entidad tenga varias partes: el cantón de Puntarenas es un <em>multipolígono</em>, porque incluye islas (entre ellas la Isla del Coco, a más de 500 km de la costa), y la provincia de Limón, con un solo cuerpo, puede guardarse también como multipolígono para que toda la capa tenga el mismo tipo.</p>
+<p>Simple Features define además una representación de las geometrías como texto, <strong>WKT</strong> (<em>well-known text</em>), que es la que muestran sf y otras herramientas al imprimir una geometría:</p>
+<pre class="text"><code>POINT (-84.0512 9.9377)
+LINESTRING (-84.05 9.93, -84.04 9.94, -84.03 9.94)
+POLYGON ((-84.1 9.9, -84.0 9.9, -84.0 10.0, -84.1 10.0, -84.1 9.9))</code></pre>
+<p>En R, Simple Features está implementado en el paquete <a href="https://r-spatial.github.io/sf/">sf</a>, cuyo nombre proviene precisamente del estándar. Las mismas definiciones están en <a href="https://gdal.org/">GDAL</a>, la biblioteca que lee y escribe los formatos de archivo geoespaciales, en <a href="https://libgeos.org/">GEOS</a>, la biblioteca que implementa las operaciones geométricas, y en bases de datos como <a href="https://postgis.net/">PostGIS</a> y <a href="https://www.gaia-gis.it/fossil/libspatialite/">SpatiaLite</a>.</p>
+</section>
+<section id="el-modelo-raster" class="level3">
+<h3 class="anchored" data-anchor-id="el-modelo-raster">El modelo raster</h3>
+<p>El modelo raster consiste en una <strong>matriz de celdas</strong> (o píxeles) del mismo tamaño y un <strong>encabezado</strong> que indica el sistema de referencia de coordenadas, el punto de origen (una esquina de la matriz) y la <strong>resolución</strong>, es decir, el tamaño de cada celda en el terreno (figura 2). Con esa información, la ubicación de cualquier celda se calcula a partir de su fila y su columna: el raster no necesita almacenar coordenadas, lo que lo hace compacto y muy eficiente de procesar mediante el <a href="https://es.wikipedia.org/wiki/%C3%81lgebra_de_mapas">álgebra de mapas</a>.</p>
+<figure style="text-align: center;" class="figure">
+<img style="max-width: 100%; height: auto;" src="img/modelo-raster.png" alt="El modelo raster" class="figure-img">
+<figcaption>
+<strong>Figura 2</strong>. El modelo raster: (A) identificador de las celdas, (B) valores de las celdas, (C) mapa raster de colores. Fuente: Lovelace et al.&nbsp;(2019).
+</figcaption>
+</figure>
+<p>Cada celda guarda <strong>un solo valor</strong>, numérico o categórico. Los rasters representan bien fenómenos <strong>continuos</strong>, que tienen un valor en todo punto del territorio: elevación, temperatura, precipitación, reflectancia de una imagen satelital. También pueden representar fenómenos <strong>discretos</strong>, como el tipo de cobertura de la tierra, con un código por clase (figura 3). Una imagen satelital es un raster con varias <strong>bandas</strong>, una matriz por región del espectro electromagnético.</p>
+<figure style="text-align: center;" class="figure">
+<img style="max-width: 100%; height: auto;" src="img/raster-continuo-categorico.png" alt="Ejemplos de mapas raster continuos y categóricos" class="figure-img">
+<figcaption>
+<strong>Figura 3</strong>. Ejemplos de rasters continuos (elevación, temperatura) y categóricos (cobertura de la tierra). Fuente: Lovelace et al.&nbsp;(2019).
+</figcaption>
+</figure>
+</section>
+<section id="cuál-modelo-usar" class="level3">
+<h3 class="anchored" data-anchor-id="cuál-modelo-usar">¿Cuál modelo usar?</h3>
+<p>Depende del fenómeno y de la pregunta. Los objetos con límites definidos (cantones, carreteras, aeródromos) y los datos con muchos atributos por entidad se representan mejor como vectores: un polígono de cantón puede llevar todas las columnas del INEC. Los fenómenos continuos y las imágenes se representan mejor como rasters, y las operaciones celda a celda (restar dos elevaciones, clasificar temperaturas) son mucho más rápidas en ellos. En la práctica los análisis combinan ambos: por ejemplo, calcular la elevación promedio (raster) de cada cantón (vector). En R, el modelo vectorial lo implementa el paquete <strong>sf</strong> y el raster, el paquete <strong>terra</strong>; esta sección del curso dedica dos semanas al primero, una a los mapas interactivos con <strong>leaflet</strong> y deja terra como lectura complementaria.</p>
+</section>
+</section>
+<section id="sistemas-de-referencia-de-coordenadas" class="level2">
+<h2 class="anchored" data-anchor-id="sistemas-de-referencia-de-coordenadas">Sistemas de referencia de coordenadas</h2>
+<p>Las coordenadas de un punto, <code>(-84.0512, 9.9377)</code>, no significan nada por sí solas: hacen falta las reglas que indican qué miden esos números y respecto a qué. Esas reglas son el <strong>sistema de referencia de coordenadas</strong> (SRC; en inglés, <em>coordinate reference system</em>, CRS, la sigla que usan sf y la documentación). Toda capa de datos geoespaciales tiene uno, y buena parte de los errores en el trabajo geoespacial —capas que no se superponen, áreas en unidades absurdas, distancias imposibles— provienen de ignorarlo. Hay dos familias (figura 4).</p>
+<figure style="text-align: center;" class="figure">
+<img style="max-width: 100%; height: auto;" src="img/src-geografico-proyectado.png" alt="Los países del mundo en un SRC geográfico y en dos proyectados" class="figure-img">
+<figcaption>
+<strong>Figura 4</strong>. Los países del mundo en un SRC geográfico (WGS84, coordenadas en grados) y en dos proyectados (Mercator y Equal Earth, coordenadas en metros). Mercator conserva las formas pero infla las áreas lejos del ecuador: Groenlandia parece tan grande como Sudamérica; Equal Earth conserva las áreas. Fuente: elaboración propia con datos de Natural Earth (s. f.).
+</figcaption>
+</figure>
+<section id="src-geográficos" class="level3">
+<h3 class="anchored" data-anchor-id="src-geográficos">SRC geográficos</h3>
+<p>Un <strong>SRC geográfico</strong> ubica los puntos sobre un modelo matemático de la Tierra, un elipsoide, mediante dos ángulos: la <strong>longitud</strong> (este-oeste, de −180° a 180°) y la <strong>latitud</strong> (norte-sur, de −90° a 90°). El más usado es <strong>WGS84</strong> (<em>World Geodetic System 1984</em>): es el sistema en que los receptores GPS y los teléfonos entregan sus posiciones, en que servicios como Google Maps y OpenStreetMap reciben y muestran las coordenadas (aunque, como se verá más adelante, dibujan sus mapas en una proyección), y en que suelen distribuirse los datos globales (GBIF, Natural Earth). Costa Rica queda, aproximadamente, entre las longitudes −86° y −82,5° y las latitudes 8° y 11,2°; la Isla del Coco, cerca de −87°, 5,5°.</p>
+<p>Las coordenadas geográficas son universales, pero tienen un inconveniente: sus unidades son <strong>grados</strong>, y un grado no mide lo mismo en todas partes. Un grado de latitud equivale a unos 111 km en cualquier lugar, pero un grado de longitud mide 111 km en el ecuador, unos 109 km en Costa Rica y cero en los polos. Por eso un mapa dibujado directamente con coordenadas geográficas se ve «estirado» lejos del ecuador, y las mediciones en grados no tienen interpretación directa.</p>
+</section>
+<section id="src-proyectados" class="level3">
+<h3 class="anchored" data-anchor-id="src-proyectados">SRC proyectados</h3>
+<p>Un <strong>SRC proyectado</strong> aplica una <strong>proyección cartográfica</strong>, una transformación matemática que lleva la superficie curva del elipsoide a un plano, y expresa las coordenadas en unidades lineales, casi siempre <strong>metros</strong>, como «este» (<em>x</em>) y «norte» (<em>y</em>). Toda proyección deforma algo (áreas, formas, distancias o direcciones), por lo que cada una se diseña para conservar una propiedad o para minimizar la deformación en una región determinada. La figura 4 lo muestra a escala mundial: la proyección de <strong>Mercator</strong>, conforme (conserva las formas y los ángulos, por lo que sirvió a la navegación), infla las áreas conforme se aleja del ecuador, hasta hacer que Groenlandia (2,2 millones de km²) parezca tan grande como Sudamérica (17,8 millones); la proyección <strong>Equal Earth</strong> (2018) conserva las áreas a costa de deformar las formas. Esa deformación dejó de ser un asunto solo técnico: el 4 de setiembre de 2026 la Asamblea General de las Naciones Unidas aprobó la resolución «Correct the map», que señala que Mercator minimiza el tamaño percibido de África, América Latina y el sur de Asia, y alienta a usar Equal Earth u otras proyecciones equivalentes cuando importe el tamaño relativo (Noticias ONU, 2026). La <strong>Web Mercator</strong> (EPSG:3857), una variante de Mercator, es la que usan los mapas web (Google Maps, OpenStreetMap, leaflet) para dibujar sus teselas: reciben las coordenadas en WGS84 y las proyectan para mostrarlas, de modo que esa deformación está en casi todos los mapas que se ven en pantalla.</p>
+<p>Para medir en un país o una región se usan proyecciones locales, con deformaciones mínimas en su zona. El SRC oficial de Costa Rica es <strong>CR-SIRGAS / CRTM05</strong> (EPSG:8908), que combina el datum CR-SIRGAS, vinculado al marco de referencia de las Américas (SIRGAS), con la proyección <strong>CRTM05</strong> (<em>Costa Rica Transversal de Mercator 2005</em>), una transversal de Mercator centrada en el meridiano −84° que cubre todo el país con una sola zona y en la que las coordenadas van, aproximadamente, de 280 000 a 660 000 m en <em>x</em> y de 880 000 a 1 250 000 m en <em>y</em>. Sustituyó a <strong>CR05 / CRTM05</strong> (EPSG:5367), la misma proyección sobre el datum anterior, en el que todavía están publicadas muchas capas del SNIT (las diferencias entre ambos son de centímetros, pero conviene usar y declarar el oficial). Otros SRC proyectados frecuentes son las zonas <strong>UTM</strong> (<em>Universal Transversal de Mercator</em>), que dividen el mundo en 60 franjas de 6° (Costa Rica cae en las zonas 16 y 17 norte).</p>
+</section>
+<section id="códigos-epsg" class="level3">
+<h3 class="anchored" data-anchor-id="códigos-epsg">Códigos EPSG</h3>
+<p>Para no describir un SRC con todos sus parámetros cada vez, se usan los <strong>códigos EPSG</strong>, un catálogo numérico mantenido por la <a href="https://epsg.org/">International Association of Oil &amp; Gas Producers</a> que identifica cada sistema con un entero. La tabla 1 reúne los que se usan en el curso. Con el código, cambiar una capa de un SRC a otro —<strong>reproyectarla</strong>— es una sola instrucción en sf: <code>st_transform(capa, 8908)</code>.</p>
+<figure style="text-align: center; margin: 20px 0;" class="figure">
+<figcaption>
+<strong>Tabla 1</strong>. Sistemas de referencia de coordenadas usados en el curso. Fuente: elaboración propia con datos de epsg.io (MapTiler, s. f.).
+</figcaption>
+<table class="table table-bordered table-striped" style="margin: 0 auto;">
+<thead>
+<tr>
+<th>
+Código EPSG
+</th>
+<th>
+Nombre
+</th>
+<th>
+Tipo
+</th>
+<th>
+Unidades
+</th>
+<th>
+Uso típico
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="align-right">
+4326
+</td>
+<td>
+WGS84
+</td>
+<td>
+Geográfico
+</td>
+<td>
+Grados
+</td>
+<td>
+GPS, datos globales (GBIF, Natural Earth), intercambio de datos; SRC de entrada de los mapas web (leaflet)
+</td>
+</tr>
+<tr>
+<td class="align-right">
+3857
+</td>
+<td>
+WGS84 / Pseudo-Mercator (Web Mercator)
+</td>
+<td>
+Proyectado, conforme
+</td>
+<td>
+Metros
+</td>
+<td>
+Teselas de los mapas base de leaflet, Google Maps y OpenStreetMap
+</td>
+</tr>
+<tr>
+<td class="align-right">
+8857
+</td>
+<td>
+WGS84 / Equal Earth Greenwich
+</td>
+<td>
+Proyectado, equivalente
+</td>
+<td>
+Metros
+</td>
+<td>
+Mapas del mundo y medición de áreas a escala global
+</td>
+</tr>
+<tr>
+<td class="align-right">
+8908
+</td>
+<td>
+CR-SIRGAS / CRTM05
+</td>
+<td>
+Proyectado, conforme
+</td>
+<td>
+Metros
+</td>
+<td>
+SRC oficial de Costa Rica; medición de áreas y distancias en el país; capas del curso
+</td>
+</tr>
+<tr>
+<td class="align-right">
+5367
+</td>
+<td>
+CR05 / CRTM05
+</td>
+<td>
+Proyectado, conforme
+</td>
+<td>
+Metros
+</td>
+<td>
+SRC oficial anterior; muchas capas del SNIT siguen en él
+</td>
+</tr>
+<tr>
+<td class="align-right">
+32616, 32617
+</td>
+<td>
+WGS84 / UTM zonas 16N y 17N
+</td>
+<td>
+Proyectado, conforme
+</td>
+<td>
+Metros
+</td>
+<td>
+Datos de Costa Rica de fuentes internacionales
+</td>
+</tr>
+</tbody>
+</table>
+</figure>
+<p>Dos reglas prácticas resumen esta sección. Primera: para <strong>medir</strong> (áreas, longitudes, distancias, zonas de influencia) se usa un SRC proyectado adecuado a la región y a la magnitud: uno equivalente, como Equal Earth, para áreas a escala mundial; en Costa Rica, CR-SIRGAS / CRTM05. Segunda: para <strong>combinar</strong> capas en una operación espacial, todas deben estar en el <strong>mismo</strong> SRC; si no, se reproyectan antes. Los mapas web requieren WGS84, y leaflet se encarga de la conversión a Web Mercator para dibujarlos.</p>
+</section>
+</section>
+<section id="formatos-de-archivo" class="level2">
+<h2 class="anchored" data-anchor-id="formatos-de-archivo">Formatos de archivo</h2>
+<p>Los datos vectoriales y raster se guardan en archivos de formatos específicos, que GDAL (y, a través de ella, sf y terra) sabe leer y escribir. La tabla 2 presenta los que aparecen en el curso.</p>
+<figure style="text-align: center; margin: 20px 0;" class="figure">
+<figcaption>
+<strong>Tabla 2</strong>. Formatos de archivo geoespaciales usados en el curso. Fuente: elaboración propia.
+</figcaption>
+<table class="table table-bordered table-striped" style="margin: 0 auto;">
+<thead>
+<tr>
+<th>
+Formato
+</th>
+<th>
+Modelo
+</th>
+<th>
+Extensión
+</th>
+<th>
+Características
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+GeoPackage
+</td>
+<td>
+Vectorial (y raster)
+</td>
+<td>
+<code>.gpkg</code>
+</td>
+<td>
+Estándar del OGC basado en SQLite. Un solo archivo que puede contener varias capas, sin límites de tamaño ni de nombres de columnas. El formato recomendado para guardar datos vectoriales; es el de las capas del curso (países de Natural Earth, cantones del IGN).
+</td>
+</tr>
+<tr>
+<td>
+Shapefile
+</td>
+<td>
+Vectorial
+</td>
+<td>
+<code>.shp</code> + <code>.shx</code>, <code>.dbf</code>, <code>.prj</code>…
+</td>
+<td>
+Formato de Esri de 1990, todavía el más común. Una capa son al menos tres archivos que deben ir siempre juntos; nombres de columnas de 10 caracteres como máximo; 2 GB por archivo; una sola geometría por capa.
+</td>
+</tr>
+<tr>
+<td>
+GeoJSON
+</td>
+<td>
+Vectorial
+</td>
+<td>
+<code>.geojson</code>, <code>.json</code>
+</td>
+<td>
+Texto en formato JSON, el mismo que entregan las API como la de GBIF. Legible, ideal para la web y para archivos pequeños; siempre en WGS84 según su especificación.
+</td>
+</tr>
+<tr>
+<td>
+CSV con coordenadas
+</td>
+<td>
+Vectorial (puntos)
+</td>
+<td>
+<code>.csv</code>
+</td>
+<td>
+Una tabla con columnas de longitud y latitud (o <em>x</em> y <em>y</em>). No es un formato geoespacial: no guarda el SRC ni geometrías que no sean puntos, pero es la forma más frecuente de recibir datos de puntos (GBIF, sensores, encuestas).
+</td>
+</tr>
+<tr>
+<td>
+GeoTIFF
+</td>
+<td>
+Raster
+</td>
+<td>
+<code>.tif</code>, <code>.tiff</code>
+</td>
+<td>
+Imagen TIFF con el SRC, el origen y la resolución en su encabezado. El formato estándar para elevación, clima e imágenes satelitales.
+</td>
+</tr>
+</tbody>
+</table>
+</figure>
+<p>Además de los archivos, los datos geoespaciales se publican mediante <strong>servicios web</strong> estandarizados por el OGC. El <strong>WFS</strong> (<em>Web Feature Service</em>) entrega datos vectoriales con sus atributos, como el SNIT hace con las capas del IGN; el <strong>WMS</strong> (<em>Web Map Service</em>) entrega mapas ya dibujados como imágenes. sf puede leer directamente una capa WFS a partir de su URL, lo que evita descargar y versionar archivos; en el curso, sin embargo, las capas se leen de archivos del repositorio, que no dependen de la disponibilidad del servicio.</p>
+</section>
+<section id="fuentes-de-datos" class="level2">
+<h2 class="anchored" data-anchor-id="fuentes-de-datos">Fuentes de datos</h2>
+<p>La tabla 3 reúne fuentes de datos geoespaciales abiertos útiles para la tarea 3 y el proyecto final; las dos primeras se usan en el capítulo siguiente.</p>
+<figure style="text-align: center; margin: 20px 0;" class="figure">
+<figcaption>
+<strong>Tabla 3</strong>. Fuentes de datos geoespaciales abiertos. Fuente: elaboración propia.
+</figcaption>
+<table class="table table-bordered table-striped" style="margin: 0 auto;">
+<thead>
+<tr>
+<th>
+Fuente
+</th>
+<th>
+Contenido
+</th>
+<th>
+Acceso
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://www.naturalearthdata.com/">Natural Earth</a>
+</td>
+<td>
+Países, ciudades, aeropuertos, ríos, lagos y relieve a escalas de 1:10 M a 1:110 M, de dominio público
+</td>
+<td>
+Descarga de archivos vectoriales y raster; paquete rnaturalearth
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://www.snitcr.go.cr/">SNIT</a> (IGN y otras instituciones de Costa Rica)
+</td>
+<td>
+División territorial, red vial, hidrografía, curvas de nivel, aeródromos, áreas protegidas, uso de la tierra
+</td>
+<td>
+Visor y servicios WFS/WMS
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://inec.cr/">INEC</a>
+</td>
+<td>
+Censos y estimaciones de población y vivienda por provincia, cantón y distrito
+</td>
+<td>
+Cuadros en Excel y CSV; se unen a las capas del IGN por código o por nombre
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://datos.bancomundial.org/">Banco Mundial</a>
+</td>
+<td>
+Indicadores del desarrollo mundial por país y año (población, economía, salud, educación, ambiente); se unen a los países de Natural Earth por código ISO
+</td>
+<td>
+Descarga de CSV y API REST (paquete WDI)
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://www.gbif.org/">GBIF</a>
+</td>
+<td>
+Registros de presencia de especies (puntos) de todo el mundo
+</td>
+<td>
+API REST (paquete rgbif, como en la semana 1) y descargas CSV
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://www.openstreetmap.org/">OpenStreetMap</a>
+</td>
+<td>
+Cartografía colaborativa: vías, edificios, servicios
+</td>
+<td>
+Descargas (Geofabrik) y API Overpass (paquete osmdata)
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://www.worldclim.org/">WorldClim</a>, <a href="https://www.usgs.gov/">USGS</a>, <a href="https://dataspace.copernicus.eu/">Copernicus</a>
+</td>
+<td>
+Clima, elevación e imágenes satelitales (rasters)
+</td>
+<td>
+Descarga de GeoTIFF; paquete geodata
+</td>
+</tr>
+</tbody>
+</table>
+</figure>
+</section>
+<section id="resumen" class="level2">
+<h2 class="anchored" data-anchor-id="resumen">Resumen</h2>
+<ul>
+<li>Un <strong>dato geoespacial</strong> tiene atributos y una <strong>ubicación</strong>. Se representa con el <strong>modelo vectorial</strong> (puntos, líneas y polígonos definidos por coordenadas, con atributos) o con el <strong>modelo raster</strong> (una matriz de celdas con un valor cada una, más un encabezado).</li>
+<li>El estándar <strong>Simple Features</strong> define las geometrías vectoriales (siete tipos usuales, incluidos los «multi») y su representación en texto <strong>WKT</strong>; en R lo implementa el paquete <strong>sf</strong>, y los rasters, el paquete <strong>terra</strong>.</li>
+<li>Los rasters representan bien fenómenos <strong>continuos</strong> (elevación, clima, imágenes) y los vectores, objetos con <strong>límites definidos</strong> y muchos atributos.</li>
+<li>Un <strong>SRC</strong> da significado a las coordenadas. Los <strong>geográficos</strong> (WGS84, EPSG:4326) usan grados y sirven para intercambiar datos y como entrada de los mapas web; los <strong>proyectados</strong> usan metros y sirven para medir, pero toda proyección deforma algo: Mercator conserva formas e infla áreas, Equal Earth (EPSG:8857) conserva áreas. El oficial de Costa Rica es CR-SIRGAS / CRTM05 (EPSG:8908), que sustituyó a CR05 / CRTM05 (EPSG:5367). Para combinar capas, todas deben estar en el mismo SRC.</li>
+<li>Los <strong>códigos EPSG</strong> identifican cada SRC con un número; reproyectar es <code>st_transform(capa, codigo)</code>.</li>
+<li><strong>GeoPackage</strong> es el formato recomendado para vectores; <strong>Shapefile</strong> es el más común pero tiene limitaciones; <strong>GeoJSON</strong> es texto para la web; un <strong>CSV con coordenadas</strong> es la forma usual de recibir puntos; <strong>GeoTIFF</strong> es el estándar raster. Los servicios <strong>WFS</strong> entregan capas vectoriales por la web.</li>
+</ul>
+</section>
+<section id="ejercicios" class="level2">
+<h2 class="anchored" data-anchor-id="ejercicios">Ejercicios</h2>
+<p>Los ejercicios de este capítulo son conceptuales y no requieren código. Responda en prosa, en un documento aparte o en su cuaderno de notas; se retoman en la clase.</p>
+<ol type="1">
+<li><p>Para cada uno de los siguientes conjuntos de datos, indique si lo representaría con el modelo vectorial o con el raster y, en el primer caso, con qué tipo de geometría: (a) las paradas de autobús de San José; (b) la temperatura promedio anual de Costa Rica; (c) los distritos del país; (d) la red de senderos de un parque nacional; (e) una imagen del satélite Sentinel-2; (f) los registros de presencia de una especie descargados de GBIF. Justifique cada elección en una oración.</p></li>
+<li><p>Busque en <a href="https://epsg.io/">epsg.io</a> los códigos 4326, 3857, 8908 y 5367 y anote, para cada uno, el nombre, el tipo (geográfico o proyectado), las unidades y el área de uso. Luego busque el SRC «Costa Rica Lambert Norte» (usado en la cartografía anterior a CRTM05) y anote su código.</p></li>
+<li><p>Escriba en WKT (a) un punto con las coordenadas geográficas de la Escuela de Geografía de la UCR, que puede obtener de Google Maps u OpenStreetMap (recuerde el orden: longitud y luego latitud), y (b) un polígono rectangular que encierre aproximadamente el campus Rodrigo Facio. Verifique el polígono dibujándolo en <a href="https://geojson.io/">geojson.io</a> o en <a href="https://wktmap.com/">wktmap.com</a>.</p></li>
+<li><p>Entre al <a href="https://www.snitcr.go.cr/">visor del SNIT</a> y ubique la capa de la división territorial administrativa (límite cantonal) del IGN. Anote el SRC en que se publica y la escala. Si la capa está disponible como servicio WFS, copie la URL del servicio. Si su tema es de otro país, haga lo mismo con el portal de datos geoespaciales de ese país (o con <a href="https://gadm.org/">GADM</a>, que publica la división administrativa de todos los países).</p></li>
+<li><p>Explique (a) por qué en un mapa web, dibujado en Web Mercator, Groenlandia parece más grande que Brasil, cuando en realidad es cuatro veces más pequeña, y qué SRC convendría usar para comparar las áreas de los países del mundo; y (b) por qué CR-SIRGAS / CRTM05, que es el SRC adecuado para medir en Costa Rica, no lo es para medir en México.</p></li>
+<li><p>Para el tema de sus tareas, identifique en la tabla 3 (o fuera de ella) una fuente de datos geoespaciales relacionada: una capa del SNIT, un CSV con coordenadas, un GeoJSON, registros de GBIF u otra. Anote el formato, el SRC (si la fuente lo indica) y el tipo de geometría. Se usará en los ejercicios del capítulo siguiente y en la tarea 3.</p></li>
+</ol>
+</section>
+<section id="referencias-bibliográficas" class="level2">
+<h2 class="anchored" data-anchor-id="referencias-bibliográficas">Referencias bibliográficas</h2>
+<p>Lovelace, R., Nowosad, J., y Münchow, J. (2019). <em>Geocomputation with R</em>. CRC Press. <a href="https://geocompr.robinlovelace.net/" class="uri">https://geocompr.robinlovelace.net/</a></p>
+<p>Lovelace, R., Nowosad, J., y Münchow, J. (2025). Geographic data in R. En <em>Geocomputation with R</em> (2.ª ed.). Chapman and Hall/CRC. <a href="https://r.geocompx.org/spatial-class" class="uri">https://r.geocompx.org/spatial-class</a></p>
+<p>MapTiler. (s. f.). <em>epsg.io: Coordinate systems worldwide</em>. Recuperado el 11 de octubre de 2026, de <a href="https://epsg.io/" class="uri">https://epsg.io/</a></p>
+<p>Natural Earth. (s. f.). <em>Natural Earth: Free vector and raster map data</em> [conjunto de datos]. Recuperado el 11 de octubre de 2026, de <a href="https://www.naturalearthdata.com/" class="uri">https://www.naturalearthdata.com/</a></p>
+<p>Noticias ONU. (2026, 4 de setiembre). <em>UN tells the world: Stop making Africa look small</em>. Naciones Unidas. <a href="https://news.un.org/en/story/2026/09/1168284" class="uri">https://news.un.org/en/story/2026/09/1168284</a></p>
+<p>Olaya, V. (2020). <em>Sistemas de información geográfica</em> (3.ª ed.). <a href="https://volaya.github.io/libro-sig/" class="uri">https://volaya.github.io/libro-sig/</a></p>
+<p>Open Geospatial Consortium. (2011). <em>OpenGIS implementation standard for geographic information: Simple feature access. Part 1: Common architecture</em> (OGC 06-103r4). <a href="https://www.ogc.org/standards/sfa" class="uri">https://www.ogc.org/standards/sfa</a></p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    // Ensure there is a toggle, if there isn't float one in the top right
+    if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+      const a = window.document.createElement('a');
+      a.classList.add('top-right');
+      a.classList.add('quarto-color-scheme-toggle');
+      a.href = "";
+      a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+      const i = window.document.createElement("i");
+      i.classList.add('bi');
+      a.appendChild(i);
+      window.document.body.appendChild(a);
+    }
+    setColorSchemeToggle(hasAlternateSentinel())
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copiado");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copiado");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/pf0953-programacionr\.github\.io\/2026-ii\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>Los contenidos de este curso, a menos que se especifique de otra forma, se comparten mediante una <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.es">licencia de Creative Commons Reconocimiento-CompartirIgual 4.0 Internacional</a>.</p>
+<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/pf0953-programacionr/2026-ii/blob/main/contenidos/iv-ecosistema-geoespacial-r/14-datos-geoespaciales.qmd" class="toc-action"><i class="bi bi-github"></i>Ver el código</a></li><li><a href="https://github.com/pf0953-programacionr/2026-ii/edit/main/contenidos/iv-ecosistema-geoespacial-r/14-datos-geoespaciales.qmd" class="toc-action"><i class="bi empty"></i>Editar esta página</a></li></ul></div></div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

@@ -1,0 +1,2018 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>sf: datos geoespaciales vectoriales – PF-0953 Programación en R - 2026-II</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../favicon.ico" rel="icon">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark-0a6b7249c26820e032cb0bd839ff02b1.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-4f3632f0866db833f55d269f2223b949.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark-acda045fd7e50dbf0b610784e976f157.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../../site_libs/bootstrap/bootstrap-4f3632f0866db833f55d269f2223b949.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "language": {
+    "search-no-results-text": "No se han encontrado resultados",
+    "search-matching-documents-text": "documentos encontrados",
+    "search-copy-link-title": "Copiar el enlace en la búsqueda",
+    "search-hide-matches-text": "Ocultar resultados adicionales",
+    "search-more-match-text": "resultado adicional en este documento",
+    "search-more-matches-text": "resultados adicionales en este documento",
+    "search-clear-button-title": "Borrar",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancelar",
+    "search-submit-button-title": "Enviar",
+    "search-label": "Buscar"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-sidebar docked nav-fixed quarto-light"><script id="quarto-html-before-body" type="application/javascript">
+    const toggleBodyColorMode = (bsSheetEl) => {
+      const mode = bsSheetEl.getAttribute("data-mode");
+      const bodyEl = window.document.querySelector("body");
+      if (mode === "dark") {
+        bodyEl.classList.add("quarto-dark");
+        bodyEl.classList.remove("quarto-light");
+      } else {
+        bodyEl.classList.add("quarto-light");
+        bodyEl.classList.remove("quarto-dark");
+      }
+    }
+    const toggleBodyColorPrimary = () => {
+      const bsSheetEl = window.document.querySelector("link#quarto-bootstrap:not([rel=disabled-stylesheet])");
+      if (bsSheetEl) {
+        toggleBodyColorMode(bsSheetEl);
+      }
+    }
+    const setColorSchemeToggle = (alternate) => {
+      const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+      for (let i=0; i < toggles.length; i++) {
+        const toggle = toggles[i];
+        if (toggle) {
+          if (alternate) {
+            toggle.classList.add("alternate");
+          } else {
+            toggle.classList.remove("alternate");
+          }
+        }
+      }
+    };
+    const toggleColorMode = (alternate) => {
+      // Switch the stylesheets
+      const primaryStylesheets = window.document.querySelectorAll('link.quarto-color-scheme:not(.quarto-color-alternate)');
+      const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+      manageTransitions('#quarto-margin-sidebar .nav-link', false);
+      if (alternate) {
+        // note: dark is layered on light, we don't disable primary!
+        enableStylesheet(alternateStylesheets);
+        for (const sheetNode of alternateStylesheets) {
+          if (sheetNode.id === "quarto-bootstrap") {
+            toggleBodyColorMode(sheetNode);
+          }
+        }
+      } else {
+        disableStylesheet(alternateStylesheets);
+        enableStylesheet(primaryStylesheets)
+        toggleBodyColorPrimary();
+      }
+      manageTransitions('#quarto-margin-sidebar .nav-link', true);
+      // Switch the toggles
+      setColorSchemeToggle(alternate)
+      // Hack to workaround the fact that safari doesn't
+      // properly recolor the scrollbar when toggling (#1455)
+      if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+        manageTransitions("body", false);
+        window.scrollTo(0, 1);
+        setTimeout(() => {
+          window.scrollTo(0, 0);
+          manageTransitions("body", true);
+        }, 40);
+      }
+    }
+    const disableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        stylesheet.rel = 'disabled-stylesheet';
+      }
+    }
+    const enableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        if(stylesheet.rel !== 'stylesheet') { // for Chrome, which will still FOUC without this check
+          stylesheet.rel = 'stylesheet';
+        }
+      }
+    }
+    const manageTransitions = (selector, allowTransitions) => {
+      const els = window.document.querySelectorAll(selector);
+      for (let i=0; i < els.length; i++) {
+        const el = els[i];
+        if (allowTransitions) {
+          el.classList.remove('notransition');
+        } else {
+          el.classList.add('notransition');
+        }
+      }
+    }
+    const isFileUrl = () => {
+      return window.location.protocol === 'file:';
+    }
+    const hasAlternateSentinel = () => {
+      let styleSentinel = getColorSchemeSentinel();
+      if (styleSentinel !== null) {
+        return styleSentinel === "alternate";
+      } else {
+        return false;
+      }
+    }
+    const setStyleSentinel = (alternate) => {
+      const value = alternate ? "alternate" : "default";
+      if (!isFileUrl()) {
+        window.localStorage.setItem("quarto-color-scheme", value);
+      } else {
+        localAlternateSentinel = value;
+      }
+    }
+    const getColorSchemeSentinel = () => {
+      if (!isFileUrl()) {
+        const storageValue = window.localStorage.getItem("quarto-color-scheme");
+        return storageValue != null ? storageValue : localAlternateSentinel;
+      } else {
+        return localAlternateSentinel;
+      }
+    }
+    const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+      const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+      const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+      let newTheme = '';
+      if(authorPrefersDark) {
+        newTheme = isAlternate ? baseTheme : alternateTheme;
+      } else {
+        newTheme = isAlternate ? alternateTheme : baseTheme;
+      }
+      const changeGiscusTheme = () => {
+        // From: https://github.com/giscus/giscus/issues/336
+        const sendMessage = (message) => {
+          const iframe = document.querySelector('iframe.giscus-frame');
+          if (!iframe) return;
+          iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+        }
+        sendMessage({
+          setConfig: {
+            theme: newTheme
+          }
+        });
+      }
+      const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+      if (isGiscussLoaded) {
+        changeGiscusTheme();
+      }
+    };
+    const authorPrefersDark = false;
+    const darkModeDefault = authorPrefersDark;
+      document.querySelector('link#quarto-text-highlighting-styles.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+      document.querySelector('link#quarto-bootstrap.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+    let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+    // Dark / light mode switch
+    window.quartoToggleColorScheme = () => {
+      // Read the current dark / light value
+      let toAlternate = !hasAlternateSentinel();
+      toggleColorMode(toAlternate);
+      setStyleSentinel(toAlternate);
+      toggleGiscusIfUsed(toAlternate, darkModeDefault);
+      window.dispatchEvent(new Event('resize'));
+    };
+    // Switch to dark mode if need be
+    if (hasAlternateSentinel()) {
+      toggleColorMode(true);
+    } else {
+      toggleColorMode(false);
+    }
+  </script>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../logo.svg" alt="" class="navbar-logo light-content">
+    <img src="../../logo-oscuro.svg" alt="" class="navbar-logo dark-content">
+    </a>
+  </div>
+        <div class="quarto-navbar-tools tools-end">
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Alternar modo oscuro"><i class="bi"></i></a>
+</div>
+          <div id="quarto-search" class="" title="Buscar"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../contenidos/iv-ecosistema-geoespacial-r/14-datos-geoespaciales.html">IV. El ecosistema geoespacial de R</a></li><li class="breadcrumb-item"><a href="../../contenidos/iv-ecosistema-geoespacial-r/15-sf-datos-vectoriales.html">sf: datos geoespaciales vectoriales</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../programa/programa.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Programa del curso</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">I. Introducción a la ciencia de datos y a la programación de computadoras</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../contenidos/i-introduccion-ciencia-datos-programacion/01-introduccion-ciencia-datos.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introducción a la ciencia de datos</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../contenidos/i-introduccion-ciencia-datos-programacion/02-ejemplo-procesos-ciencia-datos.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Ejemplo de procesos de ciencia de datos</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../contenidos/i-introduccion-ciencia-datos-programacion/03-markdown.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">El lenguaje de marcado Markdown</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../contenidos/i-introduccion-ciencia-datos-programacion/04-git-github.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Git, GitHub y GitHub Pages</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../contenidos/i-introduccion-ciencia-datos-programacion/05-asistentes-ia.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Asistentes de programación basados en inteligencia artificial</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">II. El lenguaje de programación R</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../contenidos/ii-lenguaje-programacion-r/06-introduccion-r.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introducción a R</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../contenidos/ii-lenguaje-programacion-r/07-fundamentos-r-i.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Fundamentos de R I: objetos, vectores y data frames</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../contenidos/ii-lenguaje-programacion-r/08-fundamentos-r-ii.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Fundamentos de R II: condicionales, ciclos y funciones</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../contenidos/ii-lenguaje-programacion-r/09-quarto.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Quarto: documentos computacionales</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">III. El conjunto de paquetes tidyverse</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../contenidos/iii-tidyverse/10-tidyverse.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">tidyverse: paquetes para ciencia de datos</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../contenidos/iii-tidyverse/11-dplyr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">dplyr: transformación de datos</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../contenidos/iii-tidyverse/12-ggplot2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">ggplot2: gramática de gráficos</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../contenidos/iii-tidyverse/13-plotly-dt.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">plotly y DT: gráficos y tablas interactivos</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">IV. El ecosistema geoespacial de R</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../contenidos/iv-ecosistema-geoespacial-r/14-datos-geoespaciales.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Datos geoespaciales: modelos, formatos y sistemas de referencia de coordenadas</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../contenidos/iv-ecosistema-geoespacial-r/15-sf-datos-vectoriales.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">sf: datos geoespaciales vectoriales</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
+ <span class="menu-text">Evaluaciones</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../contenidos/evaluaciones/tarea-01.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Tarea 1</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true">
+ <span class="menu-text">Software</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../contenidos/software/r-rstudio.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">R y RStudio</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">En esta página</h2>
+   
+  <ul>
+  <li><a href="#trabajo-previo" id="toc-trabajo-previo" class="nav-link active" data-scroll-target="#trabajo-previo">Trabajo previo</a>
+  <ul class="collapse">
+  <li><a href="#lecturas" id="toc-lecturas" class="nav-link" data-scroll-target="#lecturas">Lecturas</a></li>
+  <li><a href="#otros-recursos" id="toc-otros-recursos" class="nav-link" data-scroll-target="#otros-recursos">Otros recursos</a></li>
+  </ul></li>
+  <li><a href="#introducción" id="toc-introducción" class="nav-link" data-scroll-target="#introducción">Introducción</a></li>
+  <li><a href="#lectura-de-capas-vectoriales" id="toc-lectura-de-capas-vectoriales" class="nav-link" data-scroll-target="#lectura-de-capas-vectoriales">Lectura de capas vectoriales</a></li>
+  <li><a href="#un-objeto-sf-es-un-data-frame" id="toc-un-objeto-sf-es-un-data-frame" class="nav-link" data-scroll-target="#un-objeto-sf-es-un-data-frame">Un objeto sf es un data frame</a></li>
+  <li><a href="#de-una-tabla-con-coordenadas-a-un-objeto-sf" id="toc-de-una-tabla-con-coordenadas-a-un-objeto-sf" class="nav-link" data-scroll-target="#de-una-tabla-con-coordenadas-a-un-objeto-sf">De una tabla con coordenadas a un objeto sf</a></li>
+  <li><a href="#mapas-con-ggplot2" id="toc-mapas-con-ggplot2" class="nav-link" data-scroll-target="#mapas-con-ggplot2">Mapas con ggplot2</a></li>
+  <li><a href="#sistemas-de-referencia-de-coordenadas" id="toc-sistemas-de-referencia-de-coordenadas" class="nav-link" data-scroll-target="#sistemas-de-referencia-de-coordenadas">Sistemas de referencia de coordenadas</a></li>
+  <li><a href="#unión-con-datos-tabulares" id="toc-unión-con-datos-tabulares" class="nav-link" data-scroll-target="#unión-con-datos-tabulares">Unión con datos tabulares</a></li>
+  <li><a href="#mapas-de-coropletas" id="toc-mapas-de-coropletas" class="nav-link" data-scroll-target="#mapas-de-coropletas">Mapas de coropletas</a>
+  <ul class="collapse">
+  <li><a href="#clasificación" id="toc-clasificación" class="nav-link" data-scroll-target="#clasificación">Clasificación</a></li>
+  <li><a href="#paletas-divergentes" id="toc-paletas-divergentes" class="nav-link" data-scroll-target="#paletas-divergentes">Paletas divergentes</a></li>
+  </ul></li>
+  <li><a href="#escritura-de-capas" id="toc-escritura-de-capas" class="nav-link" data-scroll-target="#escritura-de-capas">Escritura de capas</a></li>
+  <li><a href="#mapas-en-documentos-quarto" id="toc-mapas-en-documentos-quarto" class="nav-link" data-scroll-target="#mapas-en-documentos-quarto">Mapas en documentos Quarto</a></li>
+  <li><a href="#asistentes-de-ia-para-generar-mapas" id="toc-asistentes-de-ia-para-generar-mapas" class="nav-link" data-scroll-target="#asistentes-de-ia-para-generar-mapas">Asistentes de IA para generar mapas</a></li>
+  <li><a href="#clínica-de-errores" id="toc-clínica-de-errores" class="nav-link" data-scroll-target="#clínica-de-errores">Clínica de errores</a></li>
+  <li><a href="#resumen" id="toc-resumen" class="nav-link" data-scroll-target="#resumen">Resumen</a></li>
+  <li><a href="#ejercicios" id="toc-ejercicios" class="nav-link" data-scroll-target="#ejercicios">Ejercicios</a>
+  <ul class="collapse">
+  <li><a href="#ejercicios-lectura" id="toc-ejercicios-lectura" class="nav-link" data-scroll-target="#ejercicios-lectura">Lectura y estructura</a></li>
+  <li><a href="#ejercicios-puntos" id="toc-ejercicios-puntos" class="nav-link" data-scroll-target="#ejercicios-puntos">Puntos</a></li>
+  <li><a href="#ejercicios-mapas" id="toc-ejercicios-mapas" class="nav-link" data-scroll-target="#ejercicios-mapas">Mapas</a></li>
+  <li><a href="#ejercicios-src" id="toc-ejercicios-src" class="nav-link" data-scroll-target="#ejercicios-src">Sistemas de referencia de coordenadas</a></li>
+  <li><a href="#ejercicios-coropletas" id="toc-ejercicios-coropletas" class="nav-link" data-scroll-target="#ejercicios-coropletas">Unión y coropletas</a></li>
+  <li><a href="#ejercicios-publicacion" id="toc-ejercicios-publicacion" class="nav-link" data-scroll-target="#ejercicios-publicacion">Publicación, asistentes y datos propios</a></li>
+  </ul></li>
+  <li><a href="#referencias-bibliográficas" id="toc-referencias-bibliográficas" class="nav-link" data-scroll-target="#referencias-bibliográficas">Referencias bibliográficas</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/pf0953-programacionr/2026-ii/blob/main/contenidos/iv-ecosistema-geoespacial-r/15-sf-datos-vectoriales.qmd" class="toc-action"><i class="bi bi-github"></i>Ver el código</a></li><li><a href="https://github.com/pf0953-programacionr/2026-ii/edit/main/contenidos/iv-ecosistema-geoespacial-r/15-sf-datos-vectoriales.qmd" class="toc-action"><i class="bi empty"></i>Editar esta página</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../contenidos/iv-ecosistema-geoespacial-r/14-datos-geoespaciales.html">IV. El ecosistema geoespacial de R</a></li><li class="breadcrumb-item"><a href="../../contenidos/iv-ecosistema-geoespacial-r/15-sf-datos-vectoriales.html">sf: datos geoespaciales vectoriales</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">sf: datos geoespaciales vectoriales</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="trabajo-previo" class="level2">
+<h2 class="anchored" data-anchor-id="trabajo-previo">Trabajo previo</h2>
+<section id="lecturas" class="level3">
+<h3 class="anchored" data-anchor-id="lecturas">Lecturas</h3>
+<p>Antes de la clase, revise las siguientes lecturas. Las dos primeras son los capítulos 1 y 2 de <em>Geocomputation with R</em>, el libro de referencia de esta sección, asignados por el programa del curso: el primero presenta la geocomputación y el ecosistema geoespacial de R, y del segundo interesa la sección 2.2, sobre los datos vectoriales y el paquete sf (la sección 2.3, sobre rasters, es lectura complementaria). La tercera es la primera viñeta de la documentación de sf, por su autor, y presenta la estructura de los objetos sf con ejemplos cortos.</p>
+<p>Lovelace, R., Nowosad, J., y Münchow, J. (2025). Introduction. En <em>Geocomputation with R</em> (2.ª ed.). Chapman and Hall/CRC. <a href="https://r.geocompx.org/intro" class="uri">https://r.geocompx.org/intro</a></p>
+<p>Lovelace, R., Nowosad, J., y Münchow, J. (2025). Geographic data in R. En <em>Geocomputation with R</em> (2.ª ed.). Chapman and Hall/CRC. <a href="https://r.geocompx.org/spatial-class" class="uri">https://r.geocompx.org/spatial-class</a></p>
+<p>Pebesma, E. (s. f.). Simple features for R. En <em>sf: Simple features for R</em>. Recuperado el 11 de octubre de 2026, de <a href="https://r-spatial.github.io/sf/articles/sf1.html" class="uri">https://r-spatial.github.io/sf/articles/sf1.html</a></p>
+</section>
+<section id="otros-recursos" class="level3">
+<h3 class="anchored" data-anchor-id="otros-recursos">Otros recursos</h3>
+<p>Antes de la clase, instale el paquete ejecutando en la consola de RStudio <code>install.packages("sf")</code>. En Windows y macOS se instala una versión precompilada que incluye las bibliotecas GDAL, GEOS y PROJ, y tarda unos minutos; en Linux hay que instalar antes esas bibliotecas con el gestor de paquetes del sistema (las instrucciones están en la <a href="https://r-spatial.github.io/sf/#installing">página de instalación de sf</a>). Compruebe la instalación con <code>library(sf)</code>: debe mostrar un mensaje con las versiones de GEOS, GDAL y PROJ. Tenga a mano el proyecto <code>pf0953</code> y el <a href="../../contenidos/iv-ecosistema-geoespacial-r/14-datos-geoespaciales.html">capítulo anterior</a>, que presenta los conceptos que aquí se usan; la <a href="https://github.com/rstudio/cheatsheets/blob/main/sf.pdf">hoja de referencia de sf</a> es útil mientras se practica.</p>
+</section>
+</section>
+<section id="introducción" class="level2">
+<h2 class="anchored" data-anchor-id="introducción">Introducción</h2>
+<p>El <a href="../../contenidos/iv-ecosistema-geoespacial-r/14-datos-geoespaciales.html">capítulo anterior</a> presentó los conceptos: el modelo vectorial, el estándar Simple Features, los sistemas de referencia de coordenadas (SRC) y los formatos de archivo. Este los pone en práctica con <a href="https://r-spatial.github.io/sf/">sf</a>, el paquete de R para datos geoespaciales vectoriales, creado por Edzer Pebesma en 2016 (Pebesma, 2018). Su nombre proviene del estándar <a href="https://www.ogc.org/standards/sfa">Simple Features</a>, que implementa; y, como se adelantó en el <a href="../../contenidos/iii-tidyverse/10-tidyverse.html">capítulo de tidyverse</a>, sigue las convenciones del tidyverse sin formar parte de él, por lo que todo lo aprendido sobre dplyr y ggplot2 se aprovecha sin cambios.</p>
+<p>La idea central del paquete cabe en una frase: <strong>un objeto sf es un data frame con una columna de geometrías</strong>. Cada fila es una entidad geográfica (un país, una ciudad), las columnas son sus atributos (el nombre, la población, el continente) y una columna especial, por lo general llamada <code>geometry</code> o <code>geom</code>, contiene la geometría de cada fila: un punto, una línea o un polígono. Por eso <code>filter()</code>, <code>select()</code>, <code>left_join()</code> y <code>group_by()</code> funcionan con un objeto sf como con cualquier otro data frame, y la geometría acompaña a los datos en cada operación. Por debajo, sf se apoya en tres bibliotecas de software que usan casi todas las herramientas geoespaciales, incluidos QGIS y PostGIS: <a href="https://gdal.org/">GDAL</a>, que lee y escribe los formatos de archivo; <a href="https://libgeos.org/">GEOS</a>, que ejecuta las operaciones geométricas; y <a href="https://proj.org/">PROJ</a>, que transforma coordenadas entre SRC.</p>
+<p>Los datos de este capítulo cambian de escala. En lugar de los cantones de Costa Rica, se usan los <strong>países del mundo</strong> de <a href="https://www.naturalearthdata.com/">Natural Earth</a>, un conjunto de datos cartográficos de dominio público con capas de países, ciudades, aeropuertos, ríos y lagos a varias escalas, y los <strong>indicadores del desarrollo mundial</strong> del <a href="https://datos.bancomundial.org/">Banco Mundial</a>, con una fila por país. Ambos están preparados para el curso en los directorios <a href="https://github.com/pf0953-programacionr/2026-ii/tree/main/datos/natural-earth"><code>datos/natural-earth/</code></a> y <a href="https://github.com/pf0953-programacionr/2026-ii/tree/main/datos/banco-mundial"><code>datos/banco-mundial/</code></a> del repositorio, cada uno con un LEEME que describe sus archivos y variables. La escala mundial tiene una ventaja didáctica: con datos de todo el planeta, las consecuencias de elegir un sistema de referencia de coordenadas u otro se ven a simple vista en el mapa —un país que parece el doble de grande, un mapa estirado—, mientras que a la escala de un país solo se notan al medir. Los cantones de Costa Rica, con sus polígonos, y los registros de presencia de félidos de GBIF vuelven en el capítulo siguiente, con las operaciones espaciales, y en la tarea 3.</p>
+<p>Este capítulo cubre lo que hace falta para empezar: leer una capa, entender su estructura, dibujarla con ggplot2, convertir una tabla con coordenadas en puntos, manejar el SRC, unir la capa con datos tabulares y producir un mapa de coropletas. El capítulo siguiente trata las operaciones espaciales (relaciones entre capas, uniones espaciales, zonas de influencia, agregación) y, más adelante, el de leaflet produce mapas interactivos a partir de los mismos objetos.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Directorios de datos en el repositorio del curso</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>datos_ne <span class="ot">&lt;-</span> <span class="st">"https://raw.githubusercontent.com/pf0953-programacionr/2026-ii/main/datos/natural-earth/"</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>datos_bm <span class="ot">&lt;-</span> <span class="st">"https://raw.githubusercontent.com/pf0953-programacionr/2026-ii/main/datos/banco-mundial/"</span></span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Al cargar sf aparece un mensaje como <code>Linking to GEOS 3.12.1, GDAL 3.8.4, PROJ 9.4.0; sf_use_s2() is TRUE</code>: indica las versiones de las tres bibliotecas y que el paquete usa la biblioteca <a href="https://r-spatial.github.io/s2/">s2</a> para las geometrías en coordenadas geográficas. No es un error; como en los capítulos anteriores, <code>message: false</code> lo oculta en el documento. Las dos direcciones se guardan en objetos para no repetirlas: <code>paste0()</code> las une con el nombre de cada archivo.</p>
+</section>
+<section id="lectura-de-capas-vectoriales" class="level2">
+<h2 class="anchored" data-anchor-id="lectura-de-capas-vectoriales">Lectura de capas vectoriales</h2>
+<p>La función <a href="https://r-spatial.github.io/sf/reference/st_read.html"><code>st_read()</code></a> lee cualquier formato vectorial que GDAL conozca —GeoPackage, shapefile, GeoJSON, KML y <a href="https://gdal.org/en/stable/drivers/vector/">muchos más</a>— desde una ruta local o desde una URL, y devuelve un objeto sf. Casi todas las funciones de sf empiezan con el prefijo <code>st_</code> (de <em>spatial type</em>, heredado de PostGIS), lo que facilita encontrarlas con el autocompletado de RStudio. La capa de países de Natural Earth a escala 1:110 millones, en formato GeoPackage:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>paises <span class="ot">&lt;-</span> <span class="fu">st_read</span>(<span class="fu">paste0</span>(datos_ne, <span class="st">"paises.gpkg"</span>))</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Reading layer `paises' from data source 
+  `https://raw.githubusercontent.com/pf0953-programacionr/2026-ii/main/datos/natural-earth/paises.gpkg' 
+  using driver `GPKG'
+Simple feature collection with 177 features and 9 fields
+Geometry type: MULTIPOLYGON
+Dimension:     XY
+Bounding box:  xmin: -180 ymin: -90 xmax: 180 ymax: 83.64513
+Geodetic CRS:  WGS 84</code></pre>
+</div>
+</div>
+<p>El mensaje describe lo que se leyó: la capa <code>paises</code>, con el controlador (<em>driver</em>) GPKG, 177 entidades (<em>features</em>, las filas) y 9 campos (<em>fields</em>, las columnas de atributos); el tipo de geometría, <code>MULTIPOLYGON</code>; la <strong>extensión</strong> (<em>bounding box</em>), el rectángulo que encierra todas las geometrías, aquí el mundo entero; y el SRC, geodésico (geográfico), WGS 84. Con <code>quiet = TRUE</code> el mensaje se omite. Al imprimir el objeto se repite ese encabezado y se muestran las primeras filas:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>paises</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Simple feature collection with 177 features and 9 fields
+Geometry type: MULTIPOLYGON
+Dimension:     XY
+Bounding box:  xmin: -180 ymin: -90 xmax: 180 ymax: 83.64513
+Geodetic CRS:  WGS 84
+First 10 features:
+   codigo iso3             nombre                nombre_en        continente
+1     FJI  FJI               Fiyi                     Fiji           Oceanía
+2     TZA  TZA           Tanzania                 Tanzania            África
+3     SAH  ESH  Sahara Occidental                W. Sahara            África
+4     CAN  CAN             Canadá                   Canada América del Norte
+5     USA  USA     Estados Unidos United States of America América del Norte
+6     KAZ  KAZ         Kazajistán               Kazakhstan              Asia
+7     UZB  UZB         Uzbekistán               Uzbekistan              Asia
+8     PNG  PNG Papúa Nueva Guinea         Papua New Guinea           Oceanía
+9     IDN  IDN          Indonesia                Indonesia              Asia
+10    ARG  ARG          Argentina                Argentina   América del Sur
+               subregion poblacion_estimada pib_millones
+1              Melanesia             889953         5496
+2        África oriental           58005463        63177
+3   África septentrional             603253          907
+4  América septentrional           37589262      1736425
+5  América septentrional          328239523     21433226
+6           Asia central           18513930       181665
+7           Asia central           33580650        57921
+8              Melanesia            8776109        24829
+9       Asia sudoriental          270625568      1119190
+10       América del Sur           44938712       445445
+             grupo_ingreso                           geom
+1  4. Ingreso mediano bajo MULTIPOLYGON (((180 -16.067...
+2          5. Ingreso bajo MULTIPOLYGON (((33.90371 -0...
+3          5. Ingreso bajo MULTIPOLYGON (((-8.66559 27...
+4    1. Ingreso alto: OCDE MULTIPOLYGON (((-122.84 49,...
+5    1. Ingreso alto: OCDE MULTIPOLYGON (((-122.84 49,...
+6  3. Ingreso mediano alto MULTIPOLYGON (((87.35997 49...
+7  4. Ingreso mediano bajo MULTIPOLYGON (((55.96819 41...
+8  4. Ingreso mediano bajo MULTIPOLYGON (((141.0002 -2...
+9  4. Ingreso mediano bajo MULTIPOLYGON (((141.0002 -2...
+10 3. Ingreso mediano alto MULTIPOLYGON (((-68.63401 -...</code></pre>
+</div>
+</div>
+<p>Es un data frame de 177 filas con el código y el nombre de cada país, su continente, su subregión, una estimación de población, el PIB y el grupo de ingreso, y una columna <code>geom</code> con un multipolígono por país, impreso en WKT y abreviado. Las coordenadas son grados de longitud y latitud. Tres funciones describen la parte geoespacial del objeto:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(paises)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "sf"         "data.frame"</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">st_geometry</span>(paises)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Geometry set for 177 features 
+Geometry type: MULTIPOLYGON
+Dimension:     XY
+Bounding box:  xmin: -180 ymin: -90 xmax: 180 ymax: 83.64513
+Geodetic CRS:  WGS 84
+First 5 geometries:</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>MULTIPOLYGON (((180 -16.06713, 180 -16.55522, 1...</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>MULTIPOLYGON (((33.90371 -0.95, 34.07262 -1.059...</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>MULTIPOLYGON (((-8.66559 27.65643, -8.665124 27...</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>MULTIPOLYGON (((-122.84 49, -122.9742 49.00254,...</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>MULTIPOLYGON (((-122.84 49, -120 49, -117.0312 ...</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">st_crs</span>(paises)<span class="sc">$</span>epsg</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 4326</code></pre>
+</div>
+</div>
+<ul>
+<li><code>class()</code> muestra que el objeto es a la vez de la clase <code>sf</code> y de la clase <code>data.frame</code>: lo primero le da las funciones geoespaciales; lo segundo, todas las de los data frames.</li>
+<li><a href="https://r-spatial.github.io/sf/reference/st_geometry.html"><code>st_geometry()</code></a> extrae la columna de geometrías, cualquiera que sea su nombre (<code>geom</code> aquí; <code>geometry</code> en otros archivos), como un objeto de la clase <code>sfc</code> (<em>simple feature column</em>). Todas son multipolígonos, aunque la mayoría de los países tiene un solo cuerpo: la capa se guardó con el tipo «multi» para toda ella, lo que permite representar los países con islas o partes separadas.</li>
+<li><a href="https://r-spatial.github.io/sf/reference/st_crs.html"><code>st_crs()</code></a> devuelve el SRC completo; con <code>$epsg</code> se obtiene solo el código, más cómodo de comparar. WGS84, EPSG:4326, es el SRC en que se distribuyen casi todos los datos globales. Se retoma en la sección sobre SRC.</li>
+</ul>
+<p>La <strong>escala</strong> de una capa determina para qué sirve. A 1:110 M, Costa Rica es un polígono de unos pocos vértices; Natural Earth publica las mismas capas a 1:50 M y 1:10 M, y el repositorio del curso incluye los países de Centroamérica a 1:10 M, para mapas de la región. Las dos versiones del país, una sobre la otra (el mapa usa <code>geom_sf()</code>, de la sección sobre mapas):</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>centroamerica <span class="ot">&lt;-</span> <span class="fu">st_read</span>(<span class="fu">paste0</span>(datos_ne, <span class="st">"centroamerica.gpkg"</span>), <span class="at">quiet =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">data =</span> <span class="fu">filter</span>(centroamerica, nombre <span class="sc">==</span> <span class="st">"Costa Rica"</span>), <span class="at">fill =</span> <span class="st">"#dce9f5"</span>, <span class="at">color =</span> <span class="st">"#005da4"</span>) <span class="sc">+</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">data =</span> <span class="fu">filter</span>(paises, nombre <span class="sc">==</span> <span class="st">"Costa Rica"</span>), <span class="at">fill =</span> <span class="cn">NA</span>, <span class="at">color =</span> <span class="st">"red"</span>, <span class="at">linewidth =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Costa Rica a escala 1:10 M (azul) y 1:110 M (rojo)"</span>) <span class="sc">+</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="15-sf-datos-vectoriales_files/figure-html/escalas-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Las dos capas están en el mismo SRC; difieren en el detalle de las geometrías (y en el tamaño del archivo). Un archivo GeoPackage puede contener varias capas; <a href="https://r-spatial.github.io/sf/reference/st_layers.html"><code>st_layers()</code></a> las lista, y el argumento <code>layer</code> de <code>st_read()</code> elige una. Para un shapefile se indica la ruta del archivo <code>.shp</code> (los demás archivos del conjunto deben estar en el mismo directorio) y para un GeoJSON, la del archivo <code>.geojson</code>. Las capas publicadas como servicios WFS se leen con la URL del servicio, como en el ejemplo siguiente, con la capa de cantones del SNIT (que no se ejecuta en el curso, para no depender de la disponibilidad del servicio):</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Capa de cantones del SNIT, directamente del servicio WFS del IGN</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>cantones_wfs <span class="ot">&lt;-</span> <span class="fu">st_read</span>(</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"WFS:https://geos.snitcr.go.cr/be/IGN_5_CO/wfs"</span>,</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">layer =</span> <span class="st">"IGN_5_CO:limitecantonal_5k"</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<p><em>Ejercicios de esta sección: <a href="#ejercicios-lectura">ejercicios sobre lectura y estructura</a>.</em></p>
+</section>
+<section id="un-objeto-sf-es-un-data-frame" class="level2">
+<h2 class="anchored" data-anchor-id="un-objeto-sf-es-un-data-frame">Un objeto sf es un data frame</h2>
+<p>Todos los verbos de <a href="../../contenidos/iii-tidyverse/11-dplyr.html">dplyr</a> funcionan con un objeto sf y el resultado conserva la geometría. Los países de América del Sur, ordenados por población:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>america_sur <span class="ot">&lt;-</span> paises <span class="sc">|&gt;</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(continente <span class="sc">==</span> <span class="st">"América del Sur"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(poblacion_estimada))</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>america_sur</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Simple feature collection with 13 features and 9 fields
+Geometry type: MULTIPOLYGON
+Dimension:     XY
+Bounding box:  xmin: -81.41094 ymin: -55.61183 xmax: -34.72999 ymax: 12.4373
+Geodetic CRS:  WGS 84
+First 10 features:
+   codigo iso3    nombre nombre_en      continente       subregion
+1     BRA  BRA    Brasil    Brazil América del Sur América del Sur
+2     COL  COL  Colombia  Colombia América del Sur América del Sur
+3     ARG  ARG Argentina Argentina América del Sur América del Sur
+4     PER  PER      Perú      Peru América del Sur América del Sur
+5     VEN  VEN Venezuela Venezuela América del Sur América del Sur
+6     CHL  CHL     Chile     Chile América del Sur América del Sur
+7     ECU  ECU   Ecuador   Ecuador América del Sur América del Sur
+8     BOL  BOL   Bolivia   Bolivia América del Sur América del Sur
+9     PRY  PRY  Paraguay  Paraguay América del Sur América del Sur
+10    URY  URY   Uruguay   Uruguay América del Sur América del Sur
+   poblacion_estimada pib_millones           grupo_ingreso
+1           211049527      1839758 3. Ingreso mediano alto
+2            50339443       323615 3. Ingreso mediano alto
+3            44938712       445445 3. Ingreso mediano alto
+4            32510453       226848 3. Ingreso mediano alto
+5            28515829       482359 3. Ingreso mediano alto
+6            18952038       282318 3. Ingreso mediano alto
+7            17373662       107435 3. Ingreso mediano alto
+8            11513100        40895 4. Ingreso mediano bajo
+9             7044636        38145 4. Ingreso mediano bajo
+10            3461734        56045 3. Ingreso mediano alto
+                             geom
+1  MULTIPOLYGON (((-53.37366 -...
+2  MULTIPOLYGON (((-66.87633 1...
+3  MULTIPOLYGON (((-68.63401 -...
+4  MULTIPOLYGON (((-69.89364 -...
+5  MULTIPOLYGON (((-60.73357 5...
+6  MULTIPOLYGON (((-68.63401 -...
+7  MULTIPOLYGON (((-75.37322 -...
+8  MULTIPOLYGON (((-69.52968 -...
+9  MULTIPOLYGON (((-58.16639 -...
+10 MULTIPOLYGON (((-57.62513 -...</code></pre>
+</div>
+</div>
+<p>El resultado es otro objeto sf, de 13 entidades, y su extensión se recalculó: ahora encierra solo ese continente. Con <code>select()</code> ocurre algo particular: la columna de geometría <strong>siempre se conserva</strong>, aunque no se pida, porque sin ella el objeto dejaría de ser geoespacial:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>america_sur <span class="sc">|&gt;</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(nombre, poblacion_estimada)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Simple feature collection with 13 features and 2 fields
+Geometry type: MULTIPOLYGON
+Dimension:     XY
+Bounding box:  xmin: -81.41094 ymin: -55.61183 xmax: -34.72999 ymax: 12.4373
+Geodetic CRS:  WGS 84
+First 10 features:
+      nombre poblacion_estimada                           geom
+1     Brasil          211049527 MULTIPOLYGON (((-53.37366 -...
+2   Colombia           50339443 MULTIPOLYGON (((-66.87633 1...
+3  Argentina           44938712 MULTIPOLYGON (((-68.63401 -...
+4       Perú           32510453 MULTIPOLYGON (((-69.89364 -...
+5  Venezuela           28515829 MULTIPOLYGON (((-60.73357 5...
+6      Chile           18952038 MULTIPOLYGON (((-68.63401 -...
+7    Ecuador           17373662 MULTIPOLYGON (((-75.37322 -...
+8    Bolivia           11513100 MULTIPOLYGON (((-69.52968 -...
+9   Paraguay            7044636 MULTIPOLYGON (((-58.16639 -...
+10   Uruguay            3461734 MULTIPOLYGON (((-57.62513 -...</code></pre>
+</div>
+</div>
+<p>Cuando se quiere solo la tabla de atributos —para mostrarla con <code>knitr::kable()</code> o <code>datatable()</code>, o para unirla a otra tabla—, <a href="https://r-spatial.github.io/sf/reference/st_geometry.html"><code>st_drop_geometry()</code></a> la quita y devuelve un data frame ordinario. Los países por continente, con <code>count()</code>:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>paises <span class="sc">|&gt;</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_drop_geometry</span>() <span class="sc">|&gt;</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(continente, <span class="at">sort =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                    continente  n
+1                       África 51
+2                         Asia 47
+3                       Europa 39
+4            América del Norte 18
+5              América del Sur 13
+6                      Oceanía  7
+7                    Antártida  1
+8 Siete mares (océano abierto)  1</code></pre>
+</div>
+</div>
+<p>El conteo funcionaría también sin quitar la geometría, pero con una diferencia importante que se verá en el capítulo siguiente: <code>summarize()</code> y <code>count()</code> sobre un objeto sf <strong>unen las geometrías</strong> de cada grupo, lo que aquí produciría el polígono de cada continente, con el costo de cálculo correspondiente. Para resúmenes puramente tabulares, <code>st_drop_geometry()</code> primero.</p>
+<p>La diferencia con un data frame común aparece al pedir un gráfico: <code>plot()</code>, la función de gráficos de R base, dibuja las <strong>geometrías</strong>, y tiene una particularidad que sorprende la primera vez: dibuja <strong>un mapa por cada columna de atributos</strong>, coloreado según sus valores.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(america_sur)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="15-sf-datos-vectoriales_files/figure-html/plot-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Para ver solo las geometrías se le pasa <code>st_geometry()</code>, y para un solo atributo, el objeto con la columna entre corchetes (<code>america_sur["poblacion_estimada"]</code>). <code>plot()</code> es suficiente para explorar; para comunicar se usa ggplot2.</p>
+<p><em>Ejercicios de esta sección: <a href="#ejercicios-lectura">ejercicios sobre lectura y estructura</a>.</em></p>
+</section>
+<section id="de-una-tabla-con-coordenadas-a-un-objeto-sf" class="level2">
+<h2 class="anchored" data-anchor-id="de-una-tabla-con-coordenadas-a-un-objeto-sf">De una tabla con coordenadas a un objeto sf</h2>
+<p>Los datos de puntos rara vez llegan como capa geoespacial: lo usual es un CSV con dos columnas de coordenadas, como los registros de GBIF de la <a href="../../contenidos/i-introduccion-ciencia-datos-programacion/02-ejemplo-procesos-ciencia-datos.html">semana 1</a>, las ciudades de Natural Earth del repositorio, los datos de estaciones o de encuestas, o los que cada estudiante recopile para la tarea 3.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>tabla_ciudades <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="fu">paste0</span>(datos_ne, <span class="st">"ciudades.csv"</span>))</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>tabla_ciudades</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 243 × 7
+   nombre       pais              codigo_pais capital poblacion longitud latitud
+   &lt;chr&gt;        &lt;chr&gt;             &lt;chr&gt;       &lt;lgl&gt;       &lt;dbl&gt;    &lt;dbl&gt;   &lt;dbl&gt;
+ 1 Vatican City Vatican           VAT         TRUE          832    12.5    41.9 
+ 2 San Marino   San Marino        SMR         TRUE        29579    12.4    43.9 
+ 3 Vaduz        Liechtenstein     LIE         TRUE        36281     9.52   47.1 
+ 4 Lobamba      eSwatini          SWZ         FALSE        9782    31.2   -26.5 
+ 5 Luxembourg   Luxembourg        LUX         TRUE       107260     6.13   49.6 
+ 6 Palikir      Federated States… FSM         TRUE         4645   158.      6.92
+ 7 Majuro       Marshall Islands  MHL         TRUE        25400   171.      7.10
+ 8 Funafuti     Tuvalu            TUV         TRUE         4749   179.     -8.52
+ 9 Melekeok     Palau             PLW         TRUE         7026   135.      7.49
+10 Bir Lehlou   Western Sahara    SAH         FALSE         500    -9.65   26.1 
+# ℹ 233 more rows</code></pre>
+</div>
+</div>
+<p><a href="https://r-spatial.github.io/sf/reference/st_as_sf.html"><code>st_as_sf()</code></a> convierte el data frame en un objeto sf a partir de las columnas de coordenadas, indicadas en <code>coords</code>, y del SRC en que están esas coordenadas, en <code>crs</code>:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>ciudades <span class="ot">&lt;-</span> <span class="fu">st_as_sf</span>(</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  tabla_ciudades,</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">coords =</span> <span class="fu">c</span>(<span class="st">"longitud"</span>, <span class="st">"latitud"</span>),</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">crs =</span> <span class="dv">4326</span></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>ciudades</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Simple feature collection with 243 features and 5 fields
+Geometry type: POINT
+Dimension:     XY
+Bounding box:  xmin: -175.2206 ymin: -41.29999 xmax: 179.2166 ymax: 64.15002
+Geodetic CRS:  WGS 84
+# A tibble: 243 × 6
+   nombre       pais     codigo_pais capital poblacion             geometry
+ * &lt;chr&gt;        &lt;chr&gt;    &lt;chr&gt;       &lt;lgl&gt;       &lt;dbl&gt;          &lt;POINT [°]&gt;
+ 1 Vatican City Vatican  VAT         TRUE          832  (12.45339 41.90328)
+ 2 San Marino   San Mar… SMR         TRUE        29579   (12.44177 43.9361)
+ 3 Vaduz        Liechte… LIE         TRUE        36281   (9.51667 47.13372)
+ 4 Lobamba      eSwatini SWZ         FALSE        9782     (31.2 -26.46667)
+ 5 Luxembourg   Luxembo… LUX         TRUE       107260  (6.130003 49.61166)
+ 6 Palikir      Federat… FSM         TRUE         4645    (158.15 6.916644)
+ 7 Majuro       Marshal… MHL         TRUE        25400    (171.38 7.103004)
+ 8 Funafuti     Tuvalu   TUV         TRUE         4749 (179.2166 -8.516652)
+ 9 Melekeok     Palau    PLW         TRUE         7026  (134.6265 7.487396)
+10 Bir Lehlou   Western… SAH         FALSE         500 (-9.652522 26.11917)
+# ℹ 233 more rows</code></pre>
+</div>
+</div>
+<p>Las dos columnas de coordenadas desaparecieron y en su lugar hay una columna <code>geometry</code> con un punto por ciudad; el SRC es WGS 84 y la extensión está en grados. Dos detalles causan errores frecuentes. El orden en <code>coords</code> es <strong>x, y</strong>, es decir, <strong>longitud, latitud</strong>: al revés del «latitud, longitud» con que suelen escribirse las coordenadas, y si se invierte, las ciudades caen en lugares absurdos. Y <code>crs</code> es indispensable: sin él, el objeto se crea, pero no tiene SRC, por lo que no se puede reproyectar ni combinar con otras capas. Los datos de GBIF, de GPS, de Google Maps y de casi cualquier fuente que hable de «latitud y longitud» están en WGS84, EPSG:4326. El camino inverso, de puntos a tabla, es <a href="https://r-spatial.github.io/sf/reference/st_coordinates.html"><code>st_coordinates()</code></a>, que devuelve una matriz con las columnas <code>X</code> y <code>Y</code>:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>ciudades <span class="sc">|&gt;</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(nombre <span class="sc">==</span> <span class="st">"San José"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_coordinates</span>()</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>           X        Y
+[1,] -84.086 9.936958</code></pre>
+</div>
+</div>
+<p><em>Ejercicios de esta sección: <a href="#ejercicios-puntos">ejercicios sobre puntos</a>.</em></p>
+</section>
+<section id="mapas-con-ggplot2" class="level2">
+<h2 class="anchored" data-anchor-id="mapas-con-ggplot2">Mapas con ggplot2</h2>
+<p>Para comunicar, el mapa se construye con lo aprendido en el <a href="../../contenidos/iii-tidyverse/12-ggplot2.html">capítulo de ggplot2</a> y una geometría nueva, <a href="https://ggplot2.tidyverse.org/reference/ggsf.html"><code>geom_sf()</code></a>, que dibuja puntos, líneas o polígonos según lo que contenga la columna de geometrías, sin que haga falta mapear <code>x</code> ni <code>y</code>. Los argumentos son los de siempre: <code>fill</code> para el relleno de los polígonos, <code>color</code> para sus bordes o para los puntos, <code>linewidth</code> para el grosor de la línea, <code>size</code> para el tamaño de los puntos y <code>alpha</code> para la transparencia. Y, como las capas de puntos y texto del capítulo de ggplot2, cada <code>geom_sf()</code> puede tener sus propios datos, lo que permite <strong>superponer capas</strong>. Los países con las ciudades encima:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">data =</span> paises, <span class="at">fill =</span> <span class="st">"#dce9f5"</span>, <span class="at">color =</span> <span class="st">"white"</span>, <span class="at">linewidth =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">data =</span> ciudades, <span class="at">color =</span> <span class="st">"#d97b1b"</span>, <span class="at">size =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Países y ciudades principales del mundo (Natural Earth, 1:110 M)"</span>) <span class="sc">+</span></span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="15-sf-datos-vectoriales_files/figure-html/geom-sf-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Como en cualquier gráfico de ggplot2, <code>fill = "#dce9f5"</code>, fuera de <code>aes()</code>, <strong>fija</strong> el relleno; <code>aes(fill = continente)</code> lo <strong>mapearía</strong> a una columna y produciría una leyenda, como se hace en la sección de coropletas. Los ejes muestran la <strong>retícula</strong> (<em>graticule</em>) de longitud y latitud; <code>theme_void()</code> la quita por completo, lo que es habitual en los mapas temáticos, y <a href="https://ggplot2.tidyverse.org/reference/ggsf.html"><code>geom_sf_text()</code></a> (o <code>geom_sf_label()</code>, con fondo) escribe rótulos en un punto interior de cada polígono, lo que se practica en los ejercicios.</p>
+<p>El mapa, sin embargo, tiene un defecto: está «estirado». Es el aspecto de un SRC geográfico dibujado directamente, con un grado de longitud tan ancho como uno de latitud en toda la figura, lo que deforma todo lo que está lejos del ecuador. Un mapa del mundo se dibuja en una proyección.</p>
+<p><em>Ejercicios de esta sección: <a href="#ejercicios-mapas">ejercicios sobre mapas</a>.</em></p>
+</section>
+<section id="sistemas-de-referencia-de-coordenadas" class="level2">
+<h2 class="anchored" data-anchor-id="sistemas-de-referencia-de-coordenadas">Sistemas de referencia de coordenadas</h2>
+<p>El SRC de una capa se consulta con <code>st_crs()</code> y se cambia, reproyectando todas sus geometrías, con <a href="https://r-spatial.github.io/sf/reference/st_transform.html"><code>st_transform()</code></a>, que recibe un código EPSG y devuelve una capa nueva. Los países en Equal Earth, una proyección que conserva las áreas, y en Web Mercator, la de los mapas web, que conserva las formas:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>paises_ee <span class="ot">&lt;-</span> <span class="fu">st_transform</span>(paises, <span class="dv">8857</span>)</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>paises_merc <span class="ot">&lt;-</span> <span class="fu">st_transform</span>(paises, <span class="dv">3857</span>)</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a><span class="fu">st_crs</span>(paises_ee)<span class="sc">$</span>Name</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "WGS 84 / Equal Earth Greenwich"</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">st_crs</span>(paises_merc)<span class="sc">$</span>Name</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "WGS 84 / Pseudo-Mercator"</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">st_bbox</span>(paises)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      xmin       ymin       xmax       ymax 
+-180.00000  -90.00000  180.00000   83.64513 </code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">st_bbox</span>(paises_ee)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     xmin      ymin      xmax      ymax 
+-16923980  -8392928  16923980   8316222 </code></pre>
+</div>
+</div>
+<p><a href="https://r-spatial.github.io/sf/reference/st_bbox.html"><code>st_bbox()</code></a> devuelve la extensión de la capa: los mismos países, en grados y en metros desde el origen de la proyección. El mismo mapa en las dos proyecciones (en Mercator se excluye la Antártida, cuyo polígono llega al polo, donde la proyección se extiende al infinito, y se limita el eje y con <code>coord_sf()</code>, en las unidades del SRC de los datos):</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(paises_ee) <span class="sc">+</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">fill =</span> <span class="st">"#dce9f5"</span>, <span class="at">color =</span> <span class="st">"white"</span>, <span class="at">linewidth =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Equal Earth (EPSG:8857): conserva las áreas"</span>) <span class="sc">+</span></span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="15-sf-datos-vectoriales_files/figure-html/equal-earth-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>paises_merc <span class="sc">|&gt;</span></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(nombre <span class="sc">!=</span> <span class="st">"Antártida"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">fill =</span> <span class="st">"#dce9f5"</span>, <span class="at">color =</span> <span class="st">"white"</span>, <span class="at">linewidth =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_sf</span>(<span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">9e6</span>, <span class="fl">1.9e7</span>)) <span class="sc">+</span></span>
+<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Mercator (EPSG:3857): conserva las formas"</span>) <span class="sc">+</span></span>
+<span id="cb42-7"><a href="#cb42-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="15-sf-datos-vectoriales_files/figure-html/mercator-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Las dos proyecciones cuentan historias distintas sobre Groenlandia. No es un detalle menor: como se vio en el <a href="../../contenidos/iv-ecosistema-geoespacial-r/14-datos-geoespaciales.html#src-proyectados">capítulo anterior</a>, en setiembre de 2026 la Asamblea General de las Naciones Unidas aprobó una resolución que alienta a usar Equal Earth u otras proyecciones equivalentes en lugar de Mercator cuando importe el tamaño relativo de las regiones. ggplot2 ofrece además un atajo: <code>coord_sf(crs = 8857)</code> reproyecta las capas <strong>solo para dibujarlas</strong>, sin modificar los objetos; y cuando un mapa combina capas en SRC distintos, ggplot2 las reproyecta todas al SRC de la primera. Es una comodidad del dibujo, no una regla general: en las operaciones espaciales del capítulo siguiente, las capas deben estar en el mismo SRC.</p>
+<p>La consecuencia práctica más importante del SRC es la <strong>medición</strong>. <a href="https://r-spatial.github.io/sf/reference/geos_measures.html"><code>st_area()</code></a> calcula el área de cada geometría, y el resultado lleva sus <strong>unidades</strong>, gracias al paquete <a href="https://r-quantities.github.io/units/">units</a>; <code>as.numeric()</code> quita las unidades, que es lo que conviene dentro de <code>mutate()</code>. Groenlandia y Brasil en tres SRC:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>seleccion <span class="ot">&lt;-</span> paises<span class="sc">$</span>nombre <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Groenlandia"</span>, <span class="st">"Brasil"</span>)</span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a><span class="fu">tibble</span>(</span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">nombre =</span> paises<span class="sc">$</span>nombre[seleccion],</span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">area_wgs84_km2 =</span> <span class="fu">round</span>(<span class="fu">as.numeric</span>(<span class="fu">st_area</span>(paises[seleccion, ])) <span class="sc">/</span> <span class="fl">1e6</span>),</span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">area_equal_earth_km2 =</span> <span class="fu">round</span>(<span class="fu">as.numeric</span>(<span class="fu">st_area</span>(paises_ee[seleccion, ])) <span class="sc">/</span> <span class="fl">1e6</span>),</span>
+<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">area_mercator_km2 =</span> <span class="fu">round</span>(<span class="fu">as.numeric</span>(<span class="fu">st_area</span>(paises_merc[seleccion, ])) <span class="sc">/</span> <span class="fl">1e6</span>)</span>
+<span id="cb43-8"><a href="#cb43-8" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 4
+  nombre      area_wgs84_km2 area_equal_earth_km2 area_mercator_km2
+  &lt;chr&gt;                &lt;dbl&gt;                &lt;dbl&gt;             &lt;dbl&gt;
+1 Groenlandia        2189752              2206879          36285503
+2 Brasil             8540954              8508179           9059541</code></pre>
+</div>
+</div>
+<p>En Equal Earth, Brasil es casi cuatro veces más grande que Groenlandia, como en la realidad (8,5 contra 2,2 millones de km²); en Mercator, Groenlandia resulta cuatro veces más grande que Brasil. La primera columna merece una explicación: con coordenadas geográficas, sf no devuelve grados cuadrados sin sentido, sino que calcula el área sobre una esfera con la biblioteca s2, y el resultado es una buena aproximación. Pero una proyección proyectada adecuada sigue siendo la referencia: para medir áreas a escala mundial, una proyección <strong>equivalente</strong>, como Equal Earth; para medir en un país, su proyección local. La de Costa Rica es CR-SIRGAS / CRTM05 (EPSG:8908):</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>centroamerica_crtm05 <span class="ot">&lt;-</span> centroamerica <span class="sc">|&gt;</span></span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_transform</span>(<span class="dv">8908</span>) <span class="sc">|&gt;</span></span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">area_km2 =</span> <span class="fu">round</span>(<span class="fu">as.numeric</span>(<span class="fu">st_area</span>(geom)) <span class="sc">/</span> <span class="fl">1e6</span>))</span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a>centroamerica_crtm05 <span class="sc">|&gt;</span></span>
+<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_drop_geometry</span>() <span class="sc">|&gt;</span></span>
+<span id="cb45-7"><a href="#cb45-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(nombre, area_km2) <span class="sc">|&gt;</span></span>
+<span id="cb45-8"><a href="#cb45-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(area_km2))</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       nombre area_km2
+1   Nicaragua   128735
+2    Honduras   112497
+3   Guatemala   110073
+4      Panamá    74915
+5  Costa Rica    51152
+6      Belice    22433
+7 El Salvador    20679</code></pre>
+</div>
+</div>
+<p>Costa Rica mide unos 51 100 km², la cifra oficial. CRTM05 está diseñada para Costa Rica, y la deformación crece con la distancia a su meridiano central (−84°): el área de Guatemala, a unos 600 km, sale ya un 1 % mayor que en Equal Earth, y la de México, a más de 2 000 km, no sería confiable. La regla: medir en el SRC diseñado para la región de los datos.</p>
+<p><em>Ejercicios de esta sección: <a href="#ejercicios-src">ejercicios sobre sistemas de referencia de coordenadas</a>.</em></p>
+</section>
+<section id="unión-con-datos-tabulares" class="level2">
+<h2 class="anchored" data-anchor-id="unión-con-datos-tabulares">Unión con datos tabulares</h2>
+<p>Las capas de Natural Earth traen la geometría y unos pocos atributos; los indicadores actuales están en el CSV del Banco Mundial. Ambas fuentes identifican los países con códigos de tres letras, así que se unen con <a href="../../contenidos/iii-tidyverse/11-dplyr.html#unión-de-conjuntos-de-datos"><code>left_join()</code></a>, como cualquier par de tablas, con una regla: <strong>el objeto sf va a la izquierda</strong>. Si el objeto sf está a la derecha, el resultado es un data frame ordinario en el que la geometría es una columna más, sin funciones geoespaciales.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>indicadores <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="fu">paste0</span>(datos_bm, <span class="st">"indicadores-2024.csv"</span>))</span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>indicadores</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 217 × 11
+   codigo pais     region grupo_ingreso poblacion crecimiento_poblacion area_km2
+   &lt;chr&gt;  &lt;chr&gt;    &lt;chr&gt;  &lt;chr&gt;             &lt;dbl&gt;                 &lt;dbl&gt;    &lt;dbl&gt;
+ 1 ABW    Aruba    Améri… Ingreso alto     107995                  0.59     180 
+ 2 AFG    Afganis… Orien… Países de in…  42647492                  2.84  652230 
+ 3 AGO    Angola   Áfric… Países de in…  37885849                  3.04 1246700 
+ 4 ALB    Albania  Europ… Ingreso medi…   2377128                 -1.44   27400 
+ 5 AND    Andorra  Europ… Ingreso alto      81938                  1.33     470 
+ 6 ARE    Emirato… Orien… Ingreso alto   10986400                  4.68   71020 
+ 7 ARG    Argenti… Améri… Ingreso medi…  45696159                  0.35 2736690 
+ 8 ARM    Armenia  Europ… Ingreso medi…   3033500                  2.31   28199.
+ 9 ASM    Samoa A… Asia … Ingreso alto      46765                 -1.6      200 
+10 ATG    Antigua… Améri… Ingreso alto      93772                  0.49     440 
+# ℹ 207 more rows
+# ℹ 4 more variables: pib_per_capita &lt;dbl&gt;, esperanza_vida &lt;dbl&gt;,
+#   poblacion_urbana_pct &lt;dbl&gt;, usuarios_internet_pct &lt;dbl&gt;</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>paises_bm <span class="ot">&lt;-</span> paises_ee <span class="sc">|&gt;</span></span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(indicadores, <span class="at">by =</span> <span class="st">"codigo"</span>)</span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(paises_bm)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "sf"         "data.frame"</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">is.na</span>(paises_bm<span class="sc">$</span>poblacion))</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 10</code></pre>
+</div>
+</div>
+<p>Diez países quedaron sin datos del Banco Mundial. Como se advirtió en el capítulo de dplyr, una unión no falla cuando las claves no coinciden: deja <code>NA</code> en silencio. <a href="https://dplyr.tidyverse.org/reference/filter-joins.html"><code>anti_join()</code></a> muestra las filas sin pareja:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>paises_ee <span class="sc">|&gt;</span></span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_drop_geometry</span>() <span class="sc">|&gt;</span></span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">anti_join</span>(indicadores, <span class="at">by =</span> <span class="st">"codigo"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(codigo, nombre, poblacion_estimada)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   codigo                                   nombre poblacion_estimada
+1     SAH                        Sahara Occidental             603253
+2     FLK                           Islas Malvinas               3398
+3     ATF Tierras Australes y Antárticas Francesas                140
+4     PSX                                Palestina            4685306
+5     TWN                       República de China           23568378
+6     ATA                                Antártida               4490
+7     CYN      República Turca del Norte de Chipre             326000
+8     SOL                             Somalilandia            5096159
+9     KOS                                   Kosovo            1794248
+10    SDS                            Sudán del Sur           11062113</code></pre>
+</div>
+</div>
+<p>Son de dos clases. Algunos no están en el Banco Mundial (la Antártida, Taiwán, Somalilandia y otros territorios sin reconocimiento general). Pero Kosovo, Palestina y Sudán del Sur sí están: con <strong>otro código</strong> (<code>XKX</code>, <code>PSE</code> y <code>SSD</code> en lugar de <code>KOS</code>, <code>PSX</code> y <code>SDS</code>, como advierte el LEEME). Es el mismo problema de la unión por nombre del capítulo de dplyr: las claves que no coinciden se corrigen <strong>antes</strong> de unir, aquí con <a href="https://dplyr.tidyverse.org/reference/case_when.html"><code>case_when()</code></a>, que generaliza <code>if_else()</code> a varias condiciones:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>paises_ee <span class="ot">&lt;-</span> paises_ee <span class="sc">|&gt;</span></span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">codigo =</span> <span class="fu">case_when</span>(</span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a>    codigo <span class="sc">==</span> <span class="st">"KOS"</span> <span class="sc">~</span> <span class="st">"XKX"</span>,</span>
+<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a>    codigo <span class="sc">==</span> <span class="st">"PSX"</span> <span class="sc">~</span> <span class="st">"PSE"</span>,</span>
+<span id="cb55-5"><a href="#cb55-5" aria-hidden="true" tabindex="-1"></a>    codigo <span class="sc">==</span> <span class="st">"SDS"</span> <span class="sc">~</span> <span class="st">"SSD"</span>,</span>
+<span id="cb55-6"><a href="#cb55-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">.default =</span> codigo</span>
+<span id="cb55-7"><a href="#cb55-7" aria-hidden="true" tabindex="-1"></a>  ))</span>
+<span id="cb55-8"><a href="#cb55-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-9"><a href="#cb55-9" aria-hidden="true" tabindex="-1"></a>paises_bm <span class="ot">&lt;-</span> paises_ee <span class="sc">|&gt;</span></span>
+<span id="cb55-10"><a href="#cb55-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(indicadores, <span class="at">by =</span> <span class="st">"codigo"</span>)</span>
+<span id="cb55-11"><a href="#cb55-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-12"><a href="#cb55-12" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">is.na</span>(paises_bm<span class="sc">$</span>poblacion))</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 7</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>paises_bm<span class="sc">$</span>nombre[<span class="fu">is.na</span>(paises_bm<span class="sc">$</span>poblacion)]</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Sahara Occidental"                       
+[2] "Islas Malvinas"                          
+[3] "Tierras Australes y Antárticas Francesas"
+[4] "República de China"                      
+[5] "Antártida"                               
+[6] "República Turca del Norte de Chipre"     
+[7] "Somalilandia"                            </code></pre>
+</div>
+</div>
+<p>Los siete que quedan no tienen datos en la fuente: en los mapas aparecerán como «sin datos», lo que es correcto. Y la unión permite verificar las áreas calculadas contra la superficie que publica el Banco Mundial:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a>paises_bm <span class="ot">&lt;-</span> paises_bm <span class="sc">|&gt;</span></span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">area_calculada_km2 =</span> <span class="fu">round</span>(<span class="fu">as.numeric</span>(<span class="fu">st_area</span>(geom)) <span class="sc">/</span> <span class="fl">1e6</span>),</span>
+<span id="cb59-4"><a href="#cb59-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">diferencia_pct =</span> <span class="fu">round</span>((area_calculada_km2 <span class="sc">-</span> area_km2) <span class="sc">/</span> area_km2 <span class="sc">*</span> <span class="dv">100</span>, <span class="dv">1</span>)</span>
+<span id="cb59-5"><a href="#cb59-5" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb59-6"><a href="#cb59-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-7"><a href="#cb59-7" aria-hidden="true" tabindex="-1"></a>paises_bm <span class="sc">|&gt;</span></span>
+<span id="cb59-8"><a href="#cb59-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_drop_geometry</span>() <span class="sc">|&gt;</span></span>
+<span id="cb59-9"><a href="#cb59-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(nombre, area_calculada_km2, area_km2, diferencia_pct) <span class="sc">|&gt;</span></span>
+<span id="cb59-10"><a href="#cb59-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(<span class="fu">abs</span>(diferencia_pct))) <span class="sc">|&gt;</span></span>
+<span id="cb59-11"><a href="#cb59-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>()</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>             nombre area_calculada_km2 area_km2 diferencia_pct
+1       Groenlandia            2206879   410450          437.7
+2            Brunéi              10698     5270          103.0
+3           Bahamas              15592    10010           55.8
+4 Trinidad y Tobago               7742     5130           50.9
+5            Gambia              14029    10120           38.6
+6           Vanuatu               7489    12190          -38.6</code></pre>
+</div>
+</div>
+<p>La mitad de los países difiere menos de un 3 %, lo razonable para geometrías a 1:110 M. Los casos extremos tienen explicación: el Banco Mundial reporta la superficie <strong>terrestre</strong>, sin aguas interiores ni, en Groenlandia, la capa de hielo (410 000 km² de los 2,2 millones); y en las islas pequeñas, como Brunéi o Bahamas, la geometría a 1:110 M es demasiado gruesa. Verificar los datos aunque provengan de fuentes oficiales, y entender por qué difieren, es parte del trabajo.</p>
+<p><em>Ejercicios de esta sección: <a href="#ejercicios-coropletas">ejercicios sobre unión y coropletas</a>.</em></p>
+</section>
+<section id="mapas-de-coropletas" class="level2">
+<h2 class="anchored" data-anchor-id="mapas-de-coropletas">Mapas de coropletas</h2>
+<p>Un <a href="https://es.wikipedia.org/wiki/Mapa_coropl%C3%A9tico">mapa de coropletas</a> colorea cada polígono según el valor de una variable. En ggplot2 basta con mapear la variable a <code>fill</code>; la <strong>escala de color</strong> se elige como cualquier otra escala del <a href="../../contenidos/iii-tidyverse/12-ggplot2.html#escalas">capítulo de ggplot2</a>. El PIB per cápita, en un primer intento con <a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html"><code>scale_fill_viridis_c()</code></a>:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(paises_bm) <span class="sc">+</span></span>
+<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="fu">aes</span>(<span class="at">fill =</span> pib_per_capita), <span class="at">color =</span> <span class="st">"white"</span>, <span class="at">linewidth =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb61-3"><a href="#cb61-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_c</span>(<span class="at">option =</span> <span class="st">"mako"</span>, <span class="at">direction =</span> <span class="sc">-</span><span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb61-4"><a href="#cb61-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"PIB per cápita, 2024 (US$): primer intento"</span>) <span class="sc">+</span></span>
+<span id="cb61-5"><a href="#cb61-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_void</span>()</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="15-sf-datos-vectoriales_files/figure-html/coropletas-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Dos problemas. El mapa es casi todo del color más claro: unos pocos países muy ricos estiran la escala y el resto queda indistinguible, la misma asimetría que en el capítulo de ggplot2 obligó a usar escalas logarítmicas, y la solución es la misma: el argumento <code>transform = "log10"</code> de la escala. Y los países sin datos se dibujan en un gris oscuro que se confunde con los valores altos de la escala: <code>na.value</code> fija su color, con un gris claro que se distinga. Además, <code>labels</code> formatea los números de la leyenda y <code>labs()</code> le da nombre y unidades:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(paises_bm) <span class="sc">+</span></span>
+<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="fu">aes</span>(<span class="at">fill =</span> pib_per_capita), <span class="at">color =</span> <span class="st">"white"</span>, <span class="at">linewidth =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb62-3"><a href="#cb62-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_c</span>(</span>
+<span id="cb62-4"><a href="#cb62-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">option =</span> <span class="st">"mako"</span>,</span>
+<span id="cb62-5"><a href="#cb62-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">direction =</span> <span class="sc">-</span><span class="dv">1</span>,</span>
+<span id="cb62-6"><a href="#cb62-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">transform =</span> <span class="st">"log10"</span>,</span>
+<span id="cb62-7"><a href="#cb62-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">label_number</span>(<span class="at">big.mark =</span> <span class="st">" "</span>),</span>
+<span id="cb62-8"><a href="#cb62-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">na.value =</span> <span class="st">"gray85"</span></span>
+<span id="cb62-9"><a href="#cb62-9" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb62-10"><a href="#cb62-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb62-11"><a href="#cb62-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"PIB per cápita, 2024"</span>,</span>
+<span id="cb62-12"><a href="#cb62-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">"US$ por habitante</span><span class="sc">\n</span><span class="st">(escala logarítmica)"</span>,</span>
+<span id="cb62-13"><a href="#cb62-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">"Fuentes: Banco Mundial (2026) y Natural Earth (s. f.)"</span></span>
+<span id="cb62-14"><a href="#cb62-14" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb62-15"><a href="#cb62-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_void</span>()</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="15-sf-datos-vectoriales_files/figure-html/coropletas-log-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Ahora se lee el gradiente completo, de los 200 dólares de Burundi a los 140 000 de Luxemburgo, y la Antártida, Groenlandia y los demás países sin datos quedan en gris.</p>
+<section id="clasificación" class="level3">
+<h3 class="anchored" data-anchor-id="clasificación">Clasificación</h3>
+<p>La alternativa a la escala continua es <strong>clasificar</strong> los valores en pocas clases, cada una con un color, como hacen los SIG de escritorio y los mapas impresos. <a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html"><code>scale_fill_fermenter()</code></a> lo hace con las paletas de ColorBrewer: con <code>n.breaks</code> elige cortes «bonitos» (intervalos iguales en la escala, logarítmica si se indica <code>transform</code>), y con <code>breaks</code> acepta los cortes que se le den. Los <strong>cuantiles</strong> ponen la misma cantidad de países en cada clase y se calculan con <code>quantile()</code>:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a>cortes <span class="ot">&lt;-</span> <span class="fu">quantile</span>(paises_bm<span class="sc">$</span>pib_per_capita, <span class="at">probs =</span> <span class="fu">c</span>(<span class="fl">0.2</span>, <span class="fl">0.4</span>, <span class="fl">0.6</span>, <span class="fl">0.8</span>), <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a>cortes</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     20%      40%      60%      80% 
+ 1775.22  4536.68  9313.10 31668.04 </code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(paises_bm) <span class="sc">+</span></span>
+<span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="fu">aes</span>(<span class="at">fill =</span> pib_per_capita), <span class="at">color =</span> <span class="st">"white"</span>, <span class="at">linewidth =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb65-3"><a href="#cb65-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_fermenter</span>(</span>
+<span id="cb65-4"><a href="#cb65-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">palette =</span> <span class="st">"YlGnBu"</span>,</span>
+<span id="cb65-5"><a href="#cb65-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">direction =</span> <span class="dv">1</span>,</span>
+<span id="cb65-6"><a href="#cb65-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">breaks =</span> cortes,</span>
+<span id="cb65-7"><a href="#cb65-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">label_number</span>(<span class="at">big.mark =</span> <span class="st">" "</span>),</span>
+<span id="cb65-8"><a href="#cb65-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">na.value =</span> <span class="st">"gray85"</span></span>
+<span id="cb65-9"><a href="#cb65-9" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb65-10"><a href="#cb65-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb65-11"><a href="#cb65-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"PIB per cápita, 2024 (cuantiles)"</span>,</span>
+<span id="cb65-12"><a href="#cb65-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">"US$ por habitante"</span>,</span>
+<span id="cb65-13"><a href="#cb65-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">"Fuentes: Banco Mundial (2026) y Natural Earth (s. f.)"</span></span>
+<span id="cb65-14"><a href="#cb65-14" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb65-15"><a href="#cb65-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_void</span>()</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="15-sf-datos-vectoriales_files/figure-html/coropletas-clases-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Cada clase tiene unos 33 países, y los cortes (unos 1 800, 4 500, 9 300 y 31 700 dólares) resumen la distribución: tres de cada cinco países tienen un PIB per cápita menor de 9 300 dólares. La clasificación simplifica la lectura a costa de ocultar las diferencias dentro de cada clase; el método elegido cambia el mapa, por lo que debe indicarse en el título o en la leyenda.</p>
+</section>
+<section id="paletas-divergentes" class="level3">
+<h3 class="anchored" data-anchor-id="paletas-divergentes">Paletas divergentes</h3>
+<p>Para una variable con un valor central significativo, como el crecimiento de la población (positivo o negativo), lo adecuado es una paleta <strong>divergente</strong> (<code>"RdBu"</code>, <code>"PiYG"</code>, <code>"BrBG"</code>) centrada en ese valor. <a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html"><code>scale_fill_distiller()</code></a> usa esas paletas de forma continua; con <code>limits</code> simétricos respecto al cero, el blanco queda en el centro, y <code>oob = scales::squish</code> lleva al extremo los valores que se salen de los límites en lugar de omitirlos:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(paises_bm) <span class="sc">+</span></span>
+<span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="fu">aes</span>(<span class="at">fill =</span> crecimiento_poblacion), <span class="at">color =</span> <span class="st">"white"</span>, <span class="at">linewidth =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb66-3"><a href="#cb66-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_distiller</span>(</span>
+<span id="cb66-4"><a href="#cb66-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">palette =</span> <span class="st">"RdBu"</span>,</span>
+<span id="cb66-5"><a href="#cb66-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">direction =</span> <span class="dv">1</span>,</span>
+<span id="cb66-6"><a href="#cb66-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">limits =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">4</span>, <span class="dv">4</span>),</span>
+<span id="cb66-7"><a href="#cb66-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">oob =</span> scales<span class="sc">::</span>squish,</span>
+<span id="cb66-8"><a href="#cb66-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">na.value =</span> <span class="st">"gray85"</span></span>
+<span id="cb66-9"><a href="#cb66-9" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb66-10"><a href="#cb66-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb66-11"><a href="#cb66-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Crecimiento anual de la población, 2024"</span>,</span>
+<span id="cb66-12"><a href="#cb66-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">"% anual"</span>,</span>
+<span id="cb66-13"><a href="#cb66-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">"Fuentes: Banco Mundial (2026) y Natural Earth (s. f.)"</span></span>
+<span id="cb66-14"><a href="#cb66-14" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb66-15"><a href="#cb66-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_void</span>()</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="15-sf-datos-vectoriales_files/figure-html/coropletas-divergente-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>El patrón geográfico es claro: la población decrece (rojo) en Europa oriental y en Japón, y crece más rápido (azul intenso) en el África subsahariana y en la península arábiga. Por último, para una variable <strong>categórica</strong>, como el continente o el grupo de ingreso, la escala es discreta (<code>scale_fill_brewer()</code>, <code>scale_fill_viridis_d()</code> o <code>scale_fill_manual()</code>, con un color por categoría), lo que se practica en los ejercicios.</p>
+<p>Una advertencia de la cartografía temática: un mapa de coropletas debe mostrar <strong>variables normalizadas</strong> —densidades, tasas, porcentajes, valores per cápita—, no conteos absolutos. Un mapa de la población total colorea de forma más intensa los países más poblados, que suelen ser también los más grandes, y el ojo confunde el tamaño del polígono con la magnitud del fenómeno. Los conteos absolutos se representan mejor con símbolos proporcionales, que se construyen en el capítulo siguiente a partir de los centroides.</p>
+<p><em>Ejercicios de esta sección: <a href="#ejercicios-coropletas">ejercicios sobre unión y coropletas</a>.</em></p>
+</section>
+</section>
+<section id="escritura-de-capas" class="level2">
+<h2 class="anchored" data-anchor-id="escritura-de-capas">Escritura de capas</h2>
+<p><a href="https://r-spatial.github.io/sf/reference/st_write.html"><code>st_write()</code></a> guarda un objeto sf en el formato que indique la extensión del archivo. GeoPackage es la opción recomendada, porque conserva el SRC, los tipos de las columnas y los nombres largos; GeoJSON es útil para la web y, por su especificación, debe guardarse en WGS84. Los países de América del Sur con los indicadores, en los dos formatos (como con <code>ggsave()</code> en el capítulo de ggplot2, estos bloques se ejecutan una vez, llevan <code>eval: false</code> en el documento y los archivos quedan en la carpeta del proyecto):</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a>america_sur_bm <span class="ot">&lt;-</span> paises_bm <span class="sc">|&gt;</span></span>
+<span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(continente <span class="sc">==</span> <span class="st">"América del Sur"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb67-3"><a href="#cb67-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_transform</span>(<span class="dv">4326</span>)</span>
+<span id="cb67-4"><a href="#cb67-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-5"><a href="#cb67-5" aria-hidden="true" tabindex="-1"></a><span class="fu">st_write</span>(america_sur_bm, <span class="st">"america-sur.gpkg"</span>)</span>
+<span id="cb67-6"><a href="#cb67-6" aria-hidden="true" tabindex="-1"></a><span class="fu">st_write</span>(america_sur_bm, <span class="st">"america-sur.geojson"</span>)</span>
+<span id="cb67-7"><a href="#cb67-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-8"><a href="#cb67-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Comprobación: se vuelve a leer el GeoPackage</span></span>
+<span id="cb67-9"><a href="#cb67-9" aria-hidden="true" tabindex="-1"></a><span class="fu">st_read</span>(<span class="st">"america-sur.gpkg"</span>, <span class="at">quiet =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Si el archivo ya existe, <code>st_write()</code> se detiene con un error; <code>delete_dsn = TRUE</code> lo sobrescribe.</p>
+<p><em>Ejercicios de esta sección: <a href="#ejercicios-publicacion">ejercicios sobre publicación, asistentes y datos propios</a>.</em></p>
+</section>
+<section id="mapas-en-documentos-quarto" class="level2">
+<h2 class="anchored" data-anchor-id="mapas-en-documentos-quarto">Mapas en documentos Quarto</h2>
+<p>Un mapa de ggplot2 es una figura más: las <a href="../../contenidos/iii-tidyverse/12-ggplot2.html#gráficos-en-documentos-quarto">opciones de figura</a> de Quarto (<code>fig-cap</code>, <code>fig-alt</code>, <code>fig-width</code>, <code>fig-height</code>) funcionan igual y, con una etiqueta que empiece con <code>fig-</code>, el mapa se numera y se cita con <code>@fig-…</code>. Dos particularidades. Los mapas del mundo son más anchos que altos y quedan bien con <code>fig-height: 5</code>; los de un país suelen necesitar más alto. Y la lectura de las capas por URL ocurre en cada <em>Render</em>, lo que tarda unos segundos con los archivos del curso; con capas grandes (decenas de megabytes), conviene guardar una versión simplificada o recortada con <code>st_write()</code> y leerla desde el proyecto. Los mapas interactivos, con leaflet, siguen las reglas de los htmlwidgets del <a href="../../contenidos/iii-tidyverse/13-plotly-dt.html">capítulo de plotly y DT</a>.</p>
+<p><em>Ejercicios de esta sección: <a href="#ejercicios-publicacion">ejercicios sobre publicación, asistentes y datos propios</a>.</em></p>
+</section>
+<section id="asistentes-de-ia-para-generar-mapas" class="level2">
+<h2 class="anchored" data-anchor-id="asistentes-de-ia-para-generar-mapas">Asistentes de IA para generar mapas</h2>
+<p>Los <a href="../../contenidos/i-introduccion-ciencia-datos-programacion/05-asistentes-ia.html">lineamientos del curso</a> aplican: los asistentes de IA sirven para explicar, depurar, generar y verificar código, se declara su uso y se comprende todo lo que se entrega. Para generar código de mapas, el prompt debe describir el objeto sf —las columnas y, ahora, también el <strong>SRC</strong> y el tipo de geometría—, pedir el patrón del curso (ggplot2 con <code>geom_sf()</code>) y el resultado debe <strong>verificarse</strong> con tres comprobaciones específicas: que el código no mezcle SRC en operaciones espaciales (todas las capas en el mismo, reproyectadas antes de medir), que la escala de color sea adecuada a la distribución de la variable (logarítmica o clasificada si es asimétrica; divergente si tiene un valor central; discreta si es categórica) y que la leyenda tenga unidades. Un prompt de ejemplo, con las cuatro partes del capítulo de asistentes:</p>
+<blockquote class="blockquote">
+<p>Actúe como asistente de visualización de datos geoespaciales con R, sf y ggplot2 <strong>(rol)</strong>. Tengo un objeto sf llamado <code>paises_bm</code>, con un multipolígono por país del mundo en el SRC EPSG:8857 (Equal Earth) y las columnas <code>nombre</code> (texto), <code>continente</code> (texto), <code>poblacion</code> (entero) y <code>poblacion_urbana_pct</code> (decimal: porcentaje de población urbana en 2024, entre 0 y 100, con valores faltantes) <strong>(contexto)</strong>. Escriba el código de un mapa de coropletas del porcentaje de población urbana, con una paleta secuencial, los países sin datos en gris, leyenda con título y unidades, título, bordes blancos, fuente de los datos en la nota al pie y sin ejes <strong>(tarea)</strong>. Use <code>ggplot(paises_bm) + geom_sf(...)</code> y escalas de ggplot2; no use otros paquetes <strong>(formato)</strong>.</p>
+</blockquote>
+<p>Al verificar el código generado, además de las tres comprobaciones, compare el color de dos o tres países conocidos con sus valores en la tabla.</p>
+<p><em>Ejercicios de esta sección: <a href="#ejercicios-publicacion">ejercicios sobre publicación, asistentes y datos propios</a>.</em></p>
+</section>
+<section id="clínica-de-errores" class="level2">
+<h2 class="anchored" data-anchor-id="clínica-de-errores">Clínica de errores</h2>
+<p>La tabla 1 recoge los problemas más frecuentes al empezar con sf. El primero de la lista de síntomas sin mensaje merece verse una vez: con <code>plot()</code> de R base, dos capas en SRC distintos no se superponen y no hay ningún aviso; las ciudades en grados sobre los países en metros quedan todas amontonadas cerca del origen, a la escala de los grados. ggplot2 evita ese error al reproyectar, pero las operaciones espaciales del capítulo siguiente no.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">st_geometry</span>(paises_ee), <span class="at">col =</span> <span class="st">"#dce9f5"</span>)</span>
+<span id="cb68-2"><a href="#cb68-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">st_geometry</span>(ciudades), <span class="at">add =</span> <span class="cn">TRUE</span>, <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">pch =</span> <span class="dv">16</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="15-sf-datos-vectoriales_files/figure-html/error-src-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<figure style="text-align: center; margin: 20px 0;" class="figure">
+<figcaption>
+<strong>Tabla 1</strong>. Clínica de errores de sf. Fuente: elaboración propia.
+</figcaption>
+<table class="table table-bordered table-striped" style="margin: 0 auto;">
+<thead>
+<tr>
+<th>
+Mensaje o síntoma
+</th>
+<th>
+Causa
+</th>
+<th>
+Solución
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<code>there is no package called 'sf'</code>
+</td>
+<td>
+El paquete no está instalado.
+</td>
+<td>
+<code>install.packages("sf")</code> en la consola, una sola vez. Si la instalación falla en Linux, faltan GDAL, GEOS o PROJ en el sistema.
+</td>
+</tr>
+<tr>
+<td>
+<code>could not find function "st_read"</code>
+</td>
+<td>
+sf está instalado pero no cargado, o el <code>library(sf)</code> está después del bloque que falla.
+</td>
+<td>
+Agregar <code>library(sf)</code> al bloque de preparación.
+</td>
+</tr>
+<tr>
+<td>
+<code>Cannot open "https://…"; The file doesn't seem to exist.</code> con <code>HTTP error code : 404</code>
+</td>
+<td>
+La URL está mal escrita, o no es la URL cruda (<em>Raw</em>) del archivo.
+</td>
+<td>
+Probar la URL en el navegador: debe descargar el archivo, no mostrar una página de GitHub.
+</td>
+</tr>
+<tr>
+<td>
+<code>Opening layer failed</code>
+</td>
+<td>
+El argumento <code>layer</code> nombra una capa que el archivo no contiene.
+</td>
+<td>
+<code>st_layers("archivo.gpkg")</code> lista las capas disponibles.
+</td>
+</tr>
+<tr>
+<td>
+<code>plot()</code> dibuja muchos mapas pequeños
+</td>
+<td>
+Es el comportamiento de <code>plot()</code> con un objeto sf: un mapa por atributo.
+</td>
+<td>
+<code>plot(st_geometry(x))</code> o <code>x["columna"]</code>; para presentar, ggplot2.
+</td>
+</tr>
+<tr>
+<td>
+Con <code>plot(…, add = TRUE)</code>, la segunda capa no aparece o queda amontonada en un punto
+</td>
+<td>
+Capas en SRC distintos: no hay mensaje.
+</td>
+<td>
+Reproyectar con <code>st_transform()</code> al SRC de la primera capa.
+</td>
+</tr>
+<tr>
+<td>
+El mapa de ggplot2 es diminuto, o el mapa en Mercator es una franja
+</td>
+<td>
+La extensión incluye una geometría lejana (la Isla del Coco en los cantones) o la Antártida, que en Mercator se extiende al infinito.
+</td>
+<td>
+<code>coord_sf(xlim = …, ylim = …)</code> con los límites en las unidades del SRC, o <code>filter()</code> para excluir la geometría.
+</td>
+</tr>
+<tr>
+<td>
+<code>Can't subset columns that don't exist</code> en <code>st_as_sf()</code>
+</td>
+<td>
+Los nombres de <code>coords</code> no son los de las columnas del data frame.
+</td>
+<td>
+Revisar los nombres con <code>names()</code>; en GBIF son <code>decimalLongitude</code> y <code>decimalLatitude</code>.
+</td>
+</tr>
+<tr>
+<td>
+<code>missing values in coordinates not allowed</code>
+</td>
+<td>
+Filas con <code>NA</code> en la longitud o la latitud.
+</td>
+<td>
+<code>filter(!is.na(longitud), !is.na(latitud))</code> antes de <code>st_as_sf()</code>.
+</td>
+</tr>
+<tr>
+<td>
+Los puntos aparecen en lugares absurdos (el océano, la Antártida)
+</td>
+<td>
+Las columnas de <code>coords</code> están al revés (latitud, longitud).
+</td>
+<td>
+El orden es <code>c("longitud", "latitud")</code>: x, y.
+</td>
+</tr>
+<tr>
+<td>
+<code>cannot transform sfc object with missing crs</code>
+</td>
+<td>
+El objeto no tiene SRC: se creó con <code>st_as_sf()</code> sin <code>crs</code>.
+</td>
+<td>
+Agregar <code>crs = 4326</code> (o el código que corresponda a las coordenadas).
+</td>
+</tr>
+<tr>
+<td>
+<code>st_crs(x) == st_crs(y) is not TRUE</code>
+</td>
+<td>
+Una operación espacial entre capas con SRC distintos.
+</td>
+<td>
+Reproyectar una de ellas con <code>st_transform()</code> al SRC de la otra.
+</td>
+</tr>
+<tr>
+<td>
+<code>stat_sf() requires the following missing aesthetics: geometry</code> después de una unión
+</td>
+<td>
+El objeto sf quedó a la derecha de <code>left_join()</code> y el resultado es un data frame común.
+</td>
+<td>
+El objeto sf va a la izquierda: <code>capa |&gt; left_join(tabla, by = …)</code>.
+</td>
+</tr>
+<tr>
+<td>
+La unión deja <code>NA</code> en las columnas nuevas
+</td>
+<td>
+Claves que no coinciden exactamente (códigos distintos, tildes, grafías).
+</td>
+<td>
+<code>anti_join()</code> en las dos direcciones; corregir con <code>case_when()</code> antes de unir.
+</td>
+</tr>
+<tr>
+<td>
+El mapa de coropletas es casi todo de un solo color
+</td>
+<td>
+Variable asimétrica con escala lineal.
+</td>
+<td>
+<code>transform = "log10"</code> en la escala, o clases con <code>scale_fill_fermenter()</code>.
+</td>
+</tr>
+<tr>
+<td>
+<code>Discrete value supplied to a continuous scale</code>
+</td>
+<td>
+Se mapeó una columna de texto a <code>fill</code> con una escala continua (viridis_c, fermenter, distiller).
+</td>
+<td>
+Usar una escala discreta (<code>scale_fill_viridis_d()</code>, <code>scale_fill_manual()</code>, <code>scale_fill_brewer()</code>).
+</td>
+</tr>
+<tr>
+<td>
+<code>Removed n rows containing missing values</code> en un mapa de coropletas
+</td>
+<td>
+Advertencia, no error: países sin datos en la variable mapeada.
+</td>
+<td>
+<code>na.value = "gray85"</code> en la escala, para que aparezcan como «sin datos».
+</td>
+</tr>
+<tr>
+<td>
+<code>Dataset already exists</code> en <code>st_write()</code>
+</td>
+<td>
+El archivo ya existe.
+</td>
+<td>
+<code>delete_dsn = TRUE</code> para sobrescribirlo.
+</td>
+</tr>
+<tr>
+<td>
+El <em>Render</em> tarda mucho o el HTML pesa decenas de megabytes
+</td>
+<td>
+Capas muy detalladas leídas y dibujadas en cada <em>Render</em>.
+</td>
+<td>
+Simplificar (<code>st_simplify()</code>) o recortar la capa, guardarla con <code>st_write()</code> y leer esa versión.
+</td>
+</tr>
+</tbody>
+</table>
+</figure>
+</section>
+<section id="resumen" class="level2">
+<h2 class="anchored" data-anchor-id="resumen">Resumen</h2>
+<ul>
+<li><strong>sf</strong> implementa el estándar Simple Features en R sobre GDAL, GEOS y PROJ. Un <strong>objeto sf es un data frame con una columna de geometrías</strong>: los verbos de dplyr funcionan y conservan la geometría; <code>st_drop_geometry()</code> la quita para trabajar solo con los atributos.</li>
+<li><code>st_read()</code> lee cualquier formato vectorial, desde rutas o URL; <code>st_write()</code> escribe, preferiblemente en <strong>GeoPackage</strong>. <code>st_geometry()</code>, <code>st_crs()</code> y <code>st_bbox()</code> describen la geometría, el SRC y la extensión. La <strong>escala</strong> de la capa determina su uso.</li>
+<li>Una tabla con coordenadas se convierte en puntos con <code>st_as_sf(coords = c("longitud", "latitud"), crs = 4326)</code>: en ese orden y con el SRC declarado; <code>st_coordinates()</code> hace el camino inverso.</li>
+<li><code>st_transform()</code> <strong>reproyecta</strong>. Un mapa del mundo se dibuja en una proyección (Equal Earth, EPSG:8857), no en WGS84; <code>st_area()</code> mide, con unidades, y se mide en una proyección equivalente a escala mundial o en la local del país (CR-SIRGAS / CRTM05 en Costa Rica). Para dibujar, ggplot2 reproyecta las capas por su cuenta; para las operaciones espaciales, deben estar en el mismo SRC.</li>
+<li><code>left_join()</code> une una capa con una tabla <strong>con el objeto sf a la izquierda</strong>; las claves que no coinciden (los códigos de Kosovo, Palestina y Sudán del Sur) se detectan con <code>anti_join()</code> y se corrigen antes de unir.</li>
+<li><code>geom_sf()</code> dibuja mapas con ggplot2, superponiendo capas con <code>data</code>; <code>coord_sf()</code> fija los límites o la proyección del dibujo. Un <strong>mapa de coropletas</strong> mapea una variable normalizada a <code>fill</code>, con una escala logarítmica si es asimétrica, clasificada con <code>scale_fill_fermenter()</code>, divergente con <code>scale_fill_distiller()</code> si tiene un valor central, y con <code>na.value</code> para los valores faltantes.</li>
+</ul>
+</section>
+<section id="ejercicios" class="level2">
+<h2 class="anchored" data-anchor-id="ejercicios">Ejercicios</h2>
+<p>Los ejercicios se agrupan según la sección del capítulo a la que corresponden y se resuelven en un documento Quarto nuevo del proyecto <code>pf0953</code>, <code>mapas.qmd</code>, con el mismo encabezado YAML de <code>graficos.qmd</code> y un bloque <code>preparacion</code> igual al del inicio del capítulo. Varios suponen ejecutados los bloques de las secciones anteriores (<code>paises</code>, <code>paises_ee</code> con los códigos corregidos, <code>centroamerica</code>, <code>centroamerica_crtm05</code>, <code>ciudades</code>, <code>indicadores</code> y <code>paises_bm</code>).</p>
+<section id="ejercicios-lectura" class="level3">
+<h3 class="anchored" data-anchor-id="ejercicios-lectura">Lectura y estructura</h3>
+<ol type="1">
+<li><p>Lea en un objeto <code>aeropuertos</code> la capa de aeropuertos de Natural Earth (<code>paste0(datos_ne, "aeropuertos.gpkg")</code>) e imprímalo. ¿Cuántas entidades y cuántos campos tiene, cuál es el tipo de geometría y cuál el SRC? Luego, con <code>paises</code>, cuente los países de cada continente: ¿cuál continente tiene más países en la capa?</p></li>
+<li><p>Obtenga en <code>africa</code> los países de África a partir de <code>paises_ee</code> y compruebe, imprimiendo el resultado, que sigue siendo un objeto sf, en Equal Earth, y que la extensión cambió. Luego, con <code>st_drop_geometry()</code>, <code>select()</code>, <code>arrange()</code> y <code>knitr::kable()</code>, muestre una tabla con los diez países más poblados del continente.</p></li>
+</ol>
+</section>
+<section id="ejercicios-puntos" class="level3">
+<h3 class="anchored" data-anchor-id="ejercicios-puntos">Puntos</h3>
+<ol start="3" type="1">
+<li><p>Construya a mano, con <code>tribble()</code>, una tabla con tres lugares que conozca (por ejemplo, su casa, la Escuela de Geografía y un sitio de interés), con columnas <code>nombre</code>, <code>longitud</code> y <code>latitud</code> obtenidas de Google Maps u OpenStreetMap, y conviértala en el objeto sf <code>lugares</code> con el SRC correcto. Dibújelo sobre <code>centroamerica</code> (o sobre <code>paises</code>, si los lugares están en otra región) y verifique que los puntos caen donde deben. Luego reproyecte <code>lugares</code> a CR-SIRGAS / CRTM05 (o al SRC proyectado de su país) y observe las coordenadas con <code>st_coordinates()</code>: ¿en qué unidades están y qué tan grandes son los números?</p></li>
+<li><p><strong>Prediga antes de ejecutar</strong>: ¿dónde quedan las ciudades si <code>st_as_sf()</code> recibe <code>coords = c("latitud", "longitud")</code>? Compruébelo con <code>st_bbox()</code> del resultado y explique los valores. Luego cree el objeto sin el argumento <code>crs</code>, consulte <code>st_crs()</code> e intente <code>st_transform(…, 8857)</code>: anote el mensaje de error y búsquelo en la clínica de errores.</p></li>
+</ol>
+</section>
+<section id="ejercicios-mapas" class="level3">
+<h3 class="anchored" data-anchor-id="ejercicios-mapas">Mapas</h3>
+<ol start="5" type="1">
+<li><p>Dibuje el mapa de <code>africa</code> (ejercicio 2) con los países en un color claro, los límites en blanco, las ciudades del continente encima (filtre <code>ciudades</code> por los códigos de país de <code>africa</code>), el nombre de cada país con <code>geom_sf_text()</code>, título y <code>theme_void()</code>. Recuerde que ggplot2 reproyecta las ciudades para dibujarlas. ¿Cuántos países tiene el continente en la capa y cuántas ciudades quedaron en el mapa?</p></li>
+<li><p><strong>Prediga antes de ejecutar</strong> qué dibuja cada instrucción: de qué color es cada país, cuántos colores hay y qué muestra la leyenda; luego ejecute:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(paises_ee) <span class="sc">+</span> <span class="fu">geom_sf</span>(<span class="fu">aes</span>(<span class="at">fill =</span> continente), <span class="at">color =</span> <span class="st">"white"</span>, <span class="at">linewidth =</span> <span class="fl">0.2</span>)</span>
+<span id="cb69-2"><a href="#cb69-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(paises_ee) <span class="sc">+</span> <span class="fu">geom_sf</span>(<span class="fu">aes</span>(<span class="at">fill =</span> poblacion_estimada), <span class="at">color =</span> <span class="st">"white"</span>, <span class="at">linewidth =</span> <span class="fl">0.2</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<details>
+<summary>
+<p>Después de ejecutar, haga clic aquí para ver la explicación</p>
+</summary>
+<p>Cuando <code>fill</code> es una columna de <strong>texto</strong>, ggplot2 usa una escala discreta: un color distinto por valor (ocho, uno por continente, con la paleta categórica por defecto) y una leyenda con la lista de categorías. Es la forma más rápida de ver a qué grupo pertenece cada polígono. Cuando es una columna <strong>numérica</strong>, usa una escala continua, con una barra de color; y como la población es muy asimétrica (China e India tienen más de mil millones de habitantes; la mitad de los países, menos de diez millones), casi todos los países quedan del color más oscuro y solo esos dos se distinguen: es la razón de las escalas logarítmicas y de las clases de la sección de coropletas.</p>
+</details></li>
+</ol>
+</section>
+<section id="ejercicios-src" class="level3">
+<h3 class="anchored" data-anchor-id="ejercicios-src">Sistemas de referencia de coordenadas</h3>
+<ol start="7" type="1">
+<li><p>Reproyecte <code>ciudades</code> a Web Mercator en <code>ciudades_merc</code> y a Equal Earth en <code>ciudades_ee</code>. Obtenga con <code>st_coordinates()</code> las coordenadas de San José de Costa Rica en los tres SRC y explique en el texto por qué los tres pares de números representan el mismo lugar.</p></li>
+<li><p>Una <code>centroamerica_crtm05</code> con los indicadores del Banco Mundial (por <code>codigo</code>, con el objeto sf a la izquierda; como las dos tablas tienen una columna <code>area_km2</code>, renombre antes la calculada, por ejemplo a <code>area_calculada_km2</code>) y agregue la columna <code>diferencia_pct</code> entre el área calculada en CRTM05 y la superficie terrestre del Banco Mundial. ¿En cuál país es mayor la diferencia y por qué? Pista: el Banco Mundial reporta superficie <strong>terrestre</strong>; piense qué tiene ese país que los demás no. Luego calcule el área de cada país también en Equal Earth y compárela con la de CRTM05: ¿cuánto de la diferencia se debe a la proyección y en cuál país es mayor ese efecto?</p></li>
+</ol>
+</section>
+<section id="ejercicios-coropletas" class="level3">
+<h3 class="anchored" data-anchor-id="ejercicios-coropletas">Unión y coropletas</h3>
+<ol start="9" type="1">
+<li><p>Dibuje un mapa de coropletas de la <strong>esperanza de vida</strong> de los países de América del Sur (filtre <code>paises_bm</code> por continente), con la paleta viridis, leyenda con unidades, los países sin datos en gris, el nombre de cada país con <code>geom_sf_text()</code> y título. ¿Cuál país tiene la mayor esperanza de vida y cuál la menor? Compruébelo con <code>arrange()</code> sobre la tabla.</p></li>
+<li><p>Dibuje un mapa de coropletas del porcentaje de personas que usan Internet (<code>usuarios_internet_pct</code> de <code>paises_bm</code>) clasificado en cinco clases por cuantiles con <code>scale_fill_fermenter()</code>, con la paleta <code>"YlGnBu"</code>, los países sin datos en gris, leyenda con título y unidades, y título. Compárelo con una versión de escala continua: ¿qué muestra la clasificación que la escala continua no, y viceversa?</p></li>
+<li><p>Dibuje un mapa de coropletas del <strong>porcentaje de población urbana</strong> (<code>poblacion_urbana_pct</code>) con la paleta divergente <code>"BrBG"</code> centrada en el 50 % (con <code>limits = c(0, 100)</code>, el centro de la paleta queda en 50). ¿En qué regiones del mundo predomina la población rural? Interprete el patrón geográfico en un párrafo.</p></li>
+</ol>
+</section>
+<section id="ejercicios-publicacion" class="level3">
+<h3 class="anchored" data-anchor-id="ejercicios-publicacion">Publicación, asistentes y datos propios</h3>
+<ol start="12" type="1">
+<li><p>Guarde <code>africa</code> con los indicadores del Banco Mundial (únalos primero, con los códigos ya corregidos) en un GeoPackage <code>africa.gpkg</code> y vuelva a leerlo en <code>africa_leido</code>. Compruebe que el SRC y la cantidad de entidades se conservaron. Luego dele al mapa del ejercicio 9 un bloque con etiqueta <code>fig-esperanza-vida</code>, <code>fig-cap</code>, <code>fig-alt</code> y <code>fig-height</code>, cítelo en el texto, procese <code>mapas.qmd</code> con <em>Render</em> y publíquelo en el repositorio <code>practica-quarto</code>, junto con los documentos anteriores.</p></li>
+<li><p>Pida a un asistente de IA el código del prompt de ejemplo de la sección de asistentes (coropletas de la población urbana) y verifíquelo: lea el código, compruebe que usa la columna indicada y no inventa otras, que los países sin datos aparecen en gris, que la leyenda tiene unidades, y compare el color de tres países con sus valores en <code>paises_bm</code>. Documente en el texto del documento el asistente, el prompt, el código y el resultado de las comprobaciones, como en la declaración de uso de IA de la tarea 2.</p></li>
+<li><p>Para la tarea 3, que agrega el componente geoespacial a los datos de su tema, cargue en un objeto sf la fuente que identificó en el ejercicio 6 del capítulo anterior (con <code>st_read()</code>, o con <code>st_as_sf()</code> si es un CSV con coordenadas), imprímalo, anote su SRC, su cantidad de entidades y su tipo de geometría, y dibújelo sobre la capa que corresponda a su extensión: <code>paises</code>, <code>centroamerica</code> o, para Costa Rica, los cantones del repositorio del curso (<code>https://raw.githubusercontent.com/pf0953-programacionr/2026-ii/main/datos/cantones.gpkg</code>, en CRTM05). Si sus datos son tabulares por país, cantón o provincia, únalos a la capa correspondiente y verifique la unión con <code>anti_join()</code>. Anote qué preguntas podría responder al combinarlos con otras capas.</p></li>
+</ol>
+</section>
+</section>
+<section id="referencias-bibliográficas" class="level2">
+<h2 class="anchored" data-anchor-id="referencias-bibliográficas">Referencias bibliográficas</h2>
+<p>Banco Mundial. (2026). <em>Indicadores del desarrollo mundial</em> [conjunto de datos]. Recuperado el 6 de octubre de 2026, de <a href="https://datos.bancomundial.org/" class="uri">https://datos.bancomundial.org/</a></p>
+<p>Lovelace, R., Nowosad, J., y Münchow, J. (2025). <em>Geocomputation with R</em> (2.ª ed.). Chapman and Hall/CRC. <a href="https://r.geocompx.org/" class="uri">https://r.geocompx.org/</a></p>
+<p>Natural Earth. (s. f.). <em>Natural Earth: Free vector and raster map data</em> [conjunto de datos]. Recuperado el 4 de octubre de 2026, de <a href="https://www.naturalearthdata.com/" class="uri">https://www.naturalearthdata.com/</a></p>
+<p>Pebesma, E. (2018). Simple features for R: Standardized support for spatial vector data. <em>The R Journal, 10</em>(1), 439–446. <a href="https://doi.org/10.32614/RJ-2018-009" class="uri">https://doi.org/10.32614/RJ-2018-009</a></p>
+<p>Pebesma, E. (s. f.). <em>sf: Simple features for R</em>. Recuperado el 11 de octubre de 2026, de <a href="https://r-spatial.github.io/sf/" class="uri">https://r-spatial.github.io/sf/</a></p>
+<p>Pebesma, E., y Bivand, R. (2023). <em>Spatial data science: With applications in R</em>. Chapman and Hall/CRC. <a href="https://r-spatial.org/book/" class="uri">https://r-spatial.org/book/</a></p>
+<p>Pebesma, E., y Bivand, R. (2026). <em>sf: Simple features for R</em> (versión 1.1-1) [paquete de R]. <a href="https://CRAN.R-project.org/package=sf" class="uri">https://CRAN.R-project.org/package=sf</a></p>
+<p>Wickham, H., Navarro, D., y Pedersen, T. L. (2025). Maps. En <em>ggplot2: Elegant graphics for data analysis</em> (3.ª ed.). <a href="https://ggplot2-book.org/maps" class="uri">https://ggplot2-book.org/maps</a></p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    // Ensure there is a toggle, if there isn't float one in the top right
+    if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+      const a = window.document.createElement('a');
+      a.classList.add('top-right');
+      a.classList.add('quarto-color-scheme-toggle');
+      a.href = "";
+      a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+      const i = window.document.createElement("i");
+      i.classList.add('bi');
+      a.appendChild(i);
+      window.document.body.appendChild(a);
+    }
+    setColorSchemeToggle(hasAlternateSentinel())
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copiado");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copiado");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/pf0953-programacionr\.github\.io\/2026-ii\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>Los contenidos de este curso, a menos que se especifique de otra forma, se comparten mediante una <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.es">licencia de Creative Commons Reconocimiento-CompartirIgual 4.0 Internacional</a>.</p>
+<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/pf0953-programacionr/2026-ii/blob/main/contenidos/iv-ecosistema-geoespacial-r/15-sf-datos-vectoriales.qmd" class="toc-action"><i class="bi bi-github"></i>Ver el código</a></li><li><a href="https://github.com/pf0953-programacionr/2026-ii/edit/main/contenidos/iv-ecosistema-geoespacial-r/15-sf-datos-vectoriales.qmd" class="toc-action"><i class="bi empty"></i>Editar esta página</a></li></ul></div></div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>
