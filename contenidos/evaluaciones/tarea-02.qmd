@@ -32,11 +32,9 @@ La entrega debe realizarse a través de la plataforma Mediación Virtual. **Para
 
 **Esta tarea es estrictamente individual**.
 
-Puede usar asistentes de inteligencia artificial para explicar, depurar, generar y verificar código, según los [lineamientos del curso](../i-introduccion-ciencia-datos-programacion/05-asistentes-ia.qmd): debe **declarar su uso** en una sección del documento (cuál herramienta, con qué propósito y en cuáles partes), comprender y ser capaz de explicar todo el código que entregue, y verificar los resultados. El profesor puede pedirle en clase que explique cualquier parte de su documento.
-
 ## Desarrollo
 
-A partir de los datos del tema elegido en la tarea 1 (u otros, si aquellos resultaron inadecuados; en ese caso, descríbalos en la introducción), desarrolle un documento Quarto con, como mínimo, los siguientes elementos:
+A partir de los datos del tema elegido en la tarea 1 (si no fueron descritos en la tarea 1, descríbalos en la introducción), desarrolle un documento Quarto con, como mínimo, los siguientes elementos:
 
 - **Encabezado YAML** con el título, su nombre como autor o autora, `lang: es`, `toc: true` y `embed-resources: true`, como en los documentos de las lecciones.
 - **Introducción**: el tema, las preguntas que se responden (al menos tres), la fuente de los datos, con su cita bibliográfica y su enlace, y una descripción de las variables principales. Puede reutilizar texto de la tarea 1.
@@ -49,7 +47,6 @@ A partir de los datos del tema elegido en la tarea 1 (u otros, si aquellos resul
 - **Al menos uno de los tres gráficos en versión interactiva** con `ggplotly()`, con una **etiqueta emergente** construida con la estética `text` que identifique cada observación (por ejemplo, su nombre y el valor con formato), en español y sin el logotipo de plotly.
 - **Conclusiones**: las respuestas a las preguntas de la introducción y sus limitaciones.
 - **Referencias bibliográficas** en formato APA 7, con las fuentes de los datos y cualquier otra fuente consultada.
-- **Declaración de uso de asistentes de IA**, o la indicación de que no se usaron.
 
 El documento debe ser **coherente** y estar **bien presentado**: encabezados que organicen las secciones, texto que explique el código y los resultados, bloques de código con etiquetas, y salidas legibles (sin tablas de cientos de filas impresas en el texto ni mensajes de carga de paquetes). Los gráficos deben estar en bloques con etiqueta `fig-` y `fig-cap`, de modo que Quarto los numere y puedan citarse en el texto.
 
@@ -64,7 +61,7 @@ Entre paréntesis, se muestra el porcentaje correspondiente a cada aspecto que s
 - (36 %) Gráficos de ggplot2, 12 % cada uno (geometría adecuada, corrección, título, etiquetas y unidades, fuente, leyenda de la figura e interpretación).
 - (9 %) Gráfico interactivo con plotly (conversión correcta y etiqueta emergente informativa).
 - (5 %) Conclusiones y referencias bibliográficas.
-- (5 %) Entrega correcta: repositorio con el `.qmd`, el `.html` y los datos accesibles, documento publicado en GitHub Pages, entrega de ambas direcciones y declaración de uso de IA.
+- (5 %) Entrega correcta: repositorio con el `.qmd`, el `.html` y los datos accesibles, documento publicado en GitHub Pages y entrega de ambas direcciones.
 
 ## Recursos
 
