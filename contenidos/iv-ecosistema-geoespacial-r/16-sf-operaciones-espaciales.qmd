@@ -1,0 +1,519 @@
+---
+title: "sf: operaciones espaciales"
+---
+
+## Trabajo previo
+
+### Lecturas
+
+Antes de la clase, revise las siguientes lecturas: los capítulos 3 y 4 de *Geocomputation with R*, asignados por el programa del curso. Del capítulo 3 interesa la sección 3.2 (operaciones con atributos de datos vectoriales, que repasa lo que ya se hizo con dplyr en el capítulo anterior); del capítulo 4, las secciones 4.2.1 a 4.2.5 (subconjuntos espaciales, relaciones topológicas, unión espacial y agregación espacial).
+
+Lovelace, R., Nowosad, J., y Münchow, J. (2025). Attribute data operations. En *Geocomputation with R* (2.ª ed.). Chapman and Hall/CRC. <https://r.geocompx.org/attr>
+
+Lovelace, R., Nowosad, J., y Münchow, J. (2025). Spatial data operations. En *Geocomputation with R* (2.ª ed.). Chapman and Hall/CRC. <https://r.geocompx.org/spatial-operations>
+
+### Otros recursos
+
+No hay que instalar nada nuevo: se usan sf y el tidyverse, como en el [capítulo anterior](15-sf-datos-vectoriales.qmd). La [hoja de referencia de sf](https://github.com/rstudio/cheatsheets/blob/main/sf.pdf) resume en una página las funciones de este capítulo, y la viñeta [Manipulating simple feature geometries](https://r-spatial.github.io/sf/articles/sf3.html), de la documentación de sf, las describe con ejemplos cortos.
+
+## Introducción
+
+En el capítulo anterior las capas se leyeron, se reproyectaron, se unieron con tablas por un código y se dibujaron. Las uniones fueron las de dplyr: dos tablas que comparten una clave. Pero la mayoría de las preguntas geográficas no tiene clave: ¿en qué cantón se registró cada félido?, ¿cuántos registros hay por cantón?, ¿cuáles cantones son vecinos de San José?, ¿qué se ha observado a menos de 20 km de la Escuela de Geografía? Las dos capas de cada pregunta no comparten ninguna columna; lo que comparten es el **espacio**, y la relación entre sus geometrías es la clave.
+
+Este capítulo presenta las **operaciones espaciales** de sf, agrupadas en cuatro familias: los **predicados espaciales**, que responden verdadero o falso sobre la relación entre dos geometrías (¿se intersecan?, ¿una contiene a la otra?); la **unión espacial**, que combina dos capas por esa relación, como `left_join()` lo hace por una clave; la **agregación espacial**, que une las geometrías de cada grupo; y las **medidas y geometrías derivadas** (centroides, zonas de influencia, distancias). Todas se apoyan en la biblioteca GEOS, la misma que usan QGIS y PostGIS, de modo que los resultados son los de un SIG de escritorio, pero en código reproducible.
+
+Los datos vuelven a Costa Rica: los polígonos de los 84 **cantones** y las 7 **provincias** del Instituto Geográfico Nacional (IGN), en CR-SIRGAS / CRTM05, y los **registros de presencia de félidos** silvestres (puma, jaguar, manigordo, caucel, león breñero y tigrillo) descargados de [GBIF](https://www.gbif.org/), como los del [ejemplo de la semana 1](../i-introduccion-ciencia-datos-programacion/02-ejemplo-procesos-ciencia-datos.qmd). Los tres archivos están en el directorio [`datos/`](https://github.com/pf0953-programacionr/2026-ii/tree/main/datos) del repositorio, descritos en su README. Y la regla más importante del capítulo anterior se vuelve aún más importante: toda operación entre dos capas exige que estén en el **mismo SRC**, y toda medida exige un SRC proyectado adecuado a la región.
+
+```{r}
+#| label: preparacion
+#| message: false
+library(tidyverse)
+library(sf)
+
+# Directorio de datos en el repositorio del curso
+datos <- "https://raw.githubusercontent.com/pf0953-programacionr/2026-ii/main/datos/"
+```
+
+## Carga de las capas
+
+Los cantones y las provincias son GeoPackages y se leen con `st_read()`, como en el capítulo anterior:
+
+```{r}
+#| label: st-read
+cantones <- st_read(paste0(datos, "cantones.gpkg"))
+provincias <- st_read(paste0(datos, "provincias.gpkg"), quiet = TRUE)
+```
+
+Los 84 cantones son multipolígonos en un SRC **proyectado**, CR-SIRGAS / CRTM05 (EPSG:8908), con la extensión en metros: el `xmin` de 156 000 corresponde a la Isla del Coco, a 500 km de la costa, que forma parte del cantón de Puntarenas. Las geometrías están simplificadas (tolerancia de 100 m) para que los mapas se dibujen rápido; sirven a escala nacional, no para mediciones precisas.
+
+### De una tabla con coordenadas a un objeto sf
+
+Los félidos, en cambio, llegan como la mayoría de los datos de puntos: un CSV con dos columnas de coordenadas, sin geometría. Es el caso de los registros de GBIF, de los datos de GPS, de estaciones o de encuestas, y de los que cada estudiante recopile para la tarea 3.
+
+```{r}
+#| label: felidos-csv
+#| message: false
+tabla_felidos <- read_csv(paste0(datos, "felidos.csv"))
+
+tabla_felidos
+```
+
+[`st_as_sf()`](https://r-spatial.github.io/sf/reference/st_as_sf.html) convierte el data frame en un objeto sf a partir de las columnas de coordenadas, indicadas en `coords`, y del SRC en que están esas coordenadas, en `crs`:
+
+```{r}
+#| label: st-as-sf
+felidos <- st_as_sf(
+  tabla_felidos,
+  coords = c("decimalLongitude", "decimalLatitude"),
+  crs = 4326
+)
+
+felidos
+```
+
+Las dos columnas de coordenadas desaparecieron y en su lugar hay una columna `geometry` con un punto por registro; el SRC es WGS 84 y la extensión está en grados. Dos detalles causan errores frecuentes. El orden en `coords` es **x, y**, es decir, **longitud, latitud**: al revés del «latitud, longitud» con que suelen escribirse las coordenadas, y si se invierte, los puntos caen en lugares absurdos. Y `crs` es indispensable: sin él, el objeto se crea, pero no tiene SRC, por lo que no se puede reproyectar ni combinar con otras capas. Los datos de GBIF, de GPS, de Google Maps y de casi cualquier fuente que hable de «latitud y longitud» están en WGS84, EPSG:4326. El camino inverso, de puntos a tabla, es [`st_coordinates()`](https://r-spatial.github.io/sf/reference/st_coordinates.html), que devuelve una matriz con las columnas `X` y `Y`.
+
+Las dos capas están en SRC distintos, y ggplot2 lo resolvería por su cuenta al dibujar. Pero las operaciones espaciales no: los félidos se reproyectan a CRTM05 de una vez, para que todo el capítulo trabaje en el mismo SRC proyectado, en metros:
+
+```{r}
+#| label: st-transform
+felidos <- st_transform(felidos, 8908)
+
+st_crs(felidos)$epsg == st_crs(cantones)$epsg
+```
+
+El mapa de las dos capas, con `coord_sf()` para excluir la Isla del Coco (los límites van en las unidades del SRC: metros):
+
+```{r}
+#| label: mapa-felidos
+#| fig-height: 6
+ggplot() +
+  geom_sf(data = cantones, fill = "#dce9f5", color = "white", linewidth = 0.3) +
+  geom_sf(data = felidos, aes(color = species), size = 1, alpha = 0.7) +
+  coord_sf(xlim = c(280000, 660000), ylim = c(880000, 1250000)) +
+  labs(
+    title = "Registros de presencia de félidos en Costa Rica",
+    color = "Especie",
+    caption = "Fuentes: GBIF (2026) e IGN (s. f.)"
+  ) +
+  theme_void()
+```
+
+Los registros se concentran en las zonas boscosas: la península de Osa, el Caribe norte, Guanacaste; el Valle Central casi no tiene. Son 1 041 registros de seis especies, en su gran mayoría observaciones humanas de la última década, con la provincia anotada a mano por quien publicó cada registro (en la columna `stateProvince`, que falta en muchos y está escrita de varias formas) y la localidad en texto libre. Las preguntas del capítulo empiezan aquí: ¿en qué cantón cae cada punto?
+
+*Ejercicios de esta sección: [ejercicios sobre carga y puntos](#ejercicios-carga).*
+
+## Predicados espaciales
+
+Un **predicado espacial** es una pregunta sobre la relación entre dos geometrías cuya respuesta es verdadero o falso: ¿se intersecan?, ¿una contiene a la otra?, ¿se tocan solo en el borde? Las relaciones posibles están definidas con precisión en el estándar del OGC (el modelo [DE-9IM](https://es.wikipedia.org/wiki/DE-9IM)) y sf las implementa como funciones `st_intersects()`, `st_within()`, `st_contains()`, `st_touches()`, etc. (tabla 1). Aplicadas a dos capas, devuelven, para cada geometría de la primera, la lista de las geometrías de la segunda con las que cumple la relación. Los cantones que interseca el cantón de San José:
+
+```{r}
+#| label: st-intersects
+san_jose <- filter(cantones, canton == "San José")
+
+st_intersects(cantones, san_jose)
+```
+
+El resultado es una lista de 84 elementos, uno por cantón, con el índice de la geometría de `san_jose` con que se interseca (el 1) o nada. Es una estructura incómoda para leer, y rara vez se usa directamente: lo útil es **filtrar** una capa con ella, lo que hace [`st_filter()`](https://r-spatial.github.io/sf/reference/st_join.html), el equivalente espacial de `filter()`. Recibe la capa, la geometría de referencia y el predicado (por defecto, `st_intersects`):
+
+```{r}
+#| label: st-filter
+vecinos <- st_filter(cantones, san_jose)
+
+vecinos$canton
+```
+
+San José más sus diez vecinos, tres de ellos de la provincia de Heredia. Una curiosidad instructiva: el predicado natural para «vecinos» sería `st_touches()` (comparten el borde, pero no el interior), y con estas capas devuelve **ningún** cantón. La simplificación de las geometrías desplazó los vértices unos metros, de modo que los polígonos vecinos se traslapan o se separan en lugar de compartir exactamente el límite; `st_intersects()` es más tolerante y por eso suele preferirse. Con geometrías sin simplificar, `st_touches()` da los vecinos exactos.
+
+La pregunta inversa, ¿qué puntos están dentro de este polígono?, es el mismo filtro con los puntos como capa y el polígono como referencia. Los félidos registrados en Sarapiquí:
+
+```{r}
+#| label: st-filter-puntos
+felidos_sarapiqui <- felidos |>
+  st_filter(filter(cantones, canton == "Sarapiquí"))
+
+nrow(felidos_sarapiqui)
+count(st_drop_geometry(felidos_sarapiqui), species, sort = TRUE)
+```
+
+<figure style="text-align: center; margin: 20px 0;">
+    <figcaption><strong>Tabla 1</strong>. Predicados espaciales más usados. Fuente: elaboración propia con base en Pebesma y Bivand (2023).</figcaption>
+    <table class="table table-bordered table-striped" style="margin: 0 auto;">
+    <thead>
+      <tr><th>Predicado</th><th>Verdadero cuando…</th><th>Uso típico</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><code>st_intersects()</code></td><td>comparten al menos un punto</td><td>el más general: cualquier contacto; el predeterminado de <code>st_filter()</code> y <code>st_join()</code></td></tr>
+      <tr><td><code>st_disjoint()</code></td><td>no comparten ningún punto (lo contrario de <code>st_intersects()</code>)</td><td>excluir lo que toca una zona</td></tr>
+      <tr><td><code>st_touches()</code></td><td>comparten puntos del borde, pero no del interior</td><td>vecinos, con geometrías exactas</td></tr>
+      <tr><td><code>st_within()</code></td><td>la primera está completamente dentro de la segunda</td><td>puntos dentro de un polígono</td></tr>
+      <tr><td><code>st_contains()</code></td><td>la primera contiene completamente a la segunda</td><td>el polígono que contiene un punto</td></tr>
+      <tr><td><code>st_crosses()</code></td><td>una línea atraviesa un polígono u otra línea</td><td>ríos y carreteras que cruzan regiones</td></tr>
+      <tr><td><code>st_overlaps()</code></td><td>dos geometrías de la misma dimensión se superponen parcialmente</td><td>polígonos que se traslapan</td></tr>
+      <tr><td><code>st_is_within_distance()</code></td><td>están a menos de una distancia dada (<code>dist</code>)</td><td>proximidad sin construir una zona de influencia</td></tr>
+    </tbody>
+    </table>
+</figure>
+
+*Ejercicios de esta sección: [ejercicios sobre predicados espaciales](#ejercicios-predicados).*
+
+## Unión espacial
+
+Filtrar responde una pregunta sobre **un** polígono. Para responderla sobre todos a la vez (¿en qué cantón está cada uno de los 1 041 registros?) está la **unión espacial**: [`st_join()`](https://r-spatial.github.io/sf/reference/st_join.html) combina dos objetos sf emparejando las filas cuyas geometrías cumplen un predicado, de modo que cada fila del resultado reúne los atributos de ambas capas. Es el `left_join()` del [capítulo de dplyr](../iii-tidyverse/11-dplyr.qmd#unión-de-conjuntos-de-datos), con la relación espacial como clave. Sus argumentos: las capas izquierda y derecha, `join` (el predicado; por defecto `st_intersects`) y `left` (`TRUE`, el valor predeterminado, conserva todas las filas de la izquierda, como `left_join()`; `FALSE` solo las emparejadas, como `inner_join()`). Los félidos con el cantón que los contiene:
+
+```{r}
+#| label: st-join
+felidos_cantones <- felidos |>
+  st_join(cantones, join = st_within)
+
+nrow(felidos_cantones)
+felidos_cantones |>
+  st_drop_geometry() |>
+  select(species, stateProvince, provincia, canton) |>
+  head()
+```
+
+Dos detalles del resultado. La geometría es la de la capa **izquierda** (los puntos); la de la derecha se descarta, y las columnas de la derecha (`codigo_provincia`, `provincia`, `codigo_canton`, `canton`) se agregan a cada punto. Y, como toda unión, se verifica: se conservaron los 1 041 registros, pero ¿cuántos quedaron sin cantón?
+
+```{r}
+#| label: sin-canton
+sum(is.na(felidos_cantones$canton))
+```
+
+Cuarenta y cuatro registros no caen dentro de ningún cantón. Están en la costa: a unos cientos de metros, y hasta 13 km, de la línea de costa simplificada de la capa del IGN (observaciones en playas, manglares y, en algunos casos, coordenadas imprecisas). Es la lección de la escala vista desde otro lado: los resultados de una unión espacial dependen de la precisión de las dos capas, y los no emparejados hay que explicarlos, no ignorarlos. En la sección sobre medidas se calcula a qué distancia de qué cantón quedaron.
+
+### Atributo contra posición
+
+Los registros traen la provincia como atributo (`stateProvince`, anotada por quien los publicó). ¿Coincide con la provincia que los contiene espacialmente?
+
+```{r}
+#| label: atributo-posicion
+felidos_cantones |>
+  st_drop_geometry() |>
+  filter(!is.na(provincia)) |>
+  count(coincide = stateProvince == provincia)
+```
+
+De los 997 registros con cantón, 417 no tienen provincia anotada y 45 tienen una **distinta** de la calculada. Algunas discrepancias son de grafía (`San Jose`, `Puntarenas Province`), que una limpieza con `case_when()` resolvería; otras son errores de quien anotó el registro (13 registros anotados en Guanacaste caen en Alajuela, en los cantones de Upala, San Ramón y San Carlos). La unión espacial sustituye el atributo, inconsistente, por un dato derivado de la posición, y es el modo usual de asignar una unidad territorial a los datos de puntos.
+
+### Conteo por polígono
+
+Con la unión hecha, contar es un `count()`, y el conteo se agrega a la capa de cantones con `left_join()`, por el código de cantón, **con el objeto sf a la izquierda** (regla del capítulo anterior) y con `replace_na()` para los cantones sin registros, que la unión deja en `NA`:
+
+```{r}
+#| label: conteo
+registros_canton <- felidos_cantones |>
+  st_drop_geometry() |>
+  count(codigo_canton, name = "registros")
+
+cantones <- cantones |>
+  left_join(registros_canton, by = "codigo_canton") |>
+  mutate(
+    registros = replace_na(registros, 0),
+    area_km2 = as.numeric(st_area(geom)) / 1e6,
+    registros_100km2 = registros / area_km2 * 100
+  )
+
+cantones |>
+  st_drop_geometry() |>
+  select(canton, provincia, registros, area_km2, registros_100km2) |>
+  arrange(desc(registros)) |>
+  head()
+```
+
+Pococí, Puerto Jiménez y San Carlos encabezan el conteo; 18 cantones, casi todos del Valle Central, no tienen ningún registro. Y, como se advirtió en el capítulo anterior, un mapa de coropletas muestra variables **normalizadas**: los registros por cada 100 km² y no el conteo, que favorece a los cantones grandes:
+
+```{r}
+#| label: coropletas
+#| fig-height: 6
+ggplot(cantones) +
+  geom_sf(aes(fill = registros_100km2), color = "white", linewidth = 0.3) +
+  scale_fill_viridis_c(option = "mako", direction = -1) +
+  coord_sf(xlim = c(280000, 660000), ylim = c(880000, 1250000)) +
+  labs(
+    title = "Registros de félidos por cantón",
+    fill = "Registros\npor 100 km²",
+    caption = "Fuentes: GBIF (2026) e IGN (s. f.)"
+  ) +
+  theme_void()
+```
+
+Puerto Jiménez, con la península de Osa, destaca con más de diez registros por cada 100 km². Pero el cantón más oscuro es Escazú, con cinco registros en 35 km²: la normalización tiene su propia trampa, los **denominadores pequeños**, que convierten unos pocos registros en una densidad alta (Monteverde, con cinco registros en 53 km², está en el mismo caso). Y el mapa mide el **esfuerzo de observación** tanto como la presencia de los animales: los registros de GBIF se concentran donde hay parques nacionales, estaciones biológicas y observadores. Las dos cosas deben decirse al interpretarlo.
+
+### El orden de las capas
+
+La unión espacial no es simétrica: `st_join(felidos, cantones)` y `st_join(cantones, felidos)` producen los mismos pares, pero con distinta geometría y distinto número de filas. En la segunda, la geometría es la de los cantones y cada cantón aparece **una vez por registro**:
+
+```{r}
+#| label: orden
+cantones_felidos <- cantones |>
+  select(canton) |>
+  st_join(felidos, join = st_contains)
+
+nrow(cantones_felidos)
+```
+
+Mil quince filas: una por cada par cantón-registro (997), más una por cada uno de los 18 cantones sin registros, que `left = TRUE` conserva; los cantones con varios registros se repiten. La regla práctica: a la **izquierda** va la capa cuyas filas se quieren conservar en el resultado, con su geometría; si lo que se quiere es un conteo por polígono, se une con los puntos a la izquierda y se cuenta, como arriba.
+
+*Ejercicios de esta sección: [ejercicios sobre unión espacial](#ejercicios-union).*
+
+## Agregación espacial
+
+En el capítulo anterior se adelantó que `summarize()` sobre un objeto sf **une las geometrías** de cada grupo. Es la **agregación espacial**: los cantones agrupados por provincia producen el polígono de cada provincia, y las columnas se resumen como en cualquier `group_by()`:
+
+```{r}
+#| label: summarize
+provincias_calculadas <- cantones |>
+  group_by(provincia) |>
+  summarize(
+    cantones = n(),
+    registros = sum(registros),
+    area_km2 = sum(area_km2)
+  )
+
+provincias_calculadas
+```
+
+Las fronteras cantonales interiores desaparecieron y cada provincia es un polígono o un multipolígono (Guanacaste y Puntarenas, con islas). El resultado equivale a la capa `provincias` del IGN, salvo por las diferencias mínimas que dejan los límites simplificados. Limón, con solo seis cantones, tiene la segunda cantidad de registros; San José, con veinte, una de las menores. La misma operación sin `group_by()` une **todas** las geometrías en una, el polígono del país, que también se obtiene con [`st_union()`](https://r-spatial.github.io/sf/reference/geos_combine.html).
+
+```{r}
+#| label: mapa-provincias
+#| fig-height: 6
+ggplot(provincias_calculadas) +
+  geom_sf(aes(fill = registros), color = "white", linewidth = 0.5) +
+  geom_sf_text(aes(label = provincia), size = 3) +
+  scale_fill_viridis_c(option = "mako", direction = -1) +
+  coord_sf(xlim = c(280000, 660000), ylim = c(880000, 1250000)) +
+  labs(
+    title = "Registros de félidos por provincia",
+    fill = "Registros",
+    caption = "Fuentes: GBIF (2026) e IGN (s. f.)"
+  ) +
+  theme_void()
+```
+
+*Ejercicios de esta sección: [ejercicios sobre agregación espacial](#ejercicios-agregacion).*
+
+## Medidas y geometrías derivadas
+
+El capítulo anterior midió áreas con `st_area()`. Las demás medidas y las geometrías derivadas siguen la misma regla: SRC proyectado, unidades del SRC (metros en CRTM05).
+
+### Centroides y símbolos proporcionales
+
+[`st_centroid()`](https://r-spatial.github.io/sf/reference/geos_unary.html) devuelve el centro de masa de cada geometría: una capa de puntos con los mismos atributos. Sirve para colocar etiquetas, para medir distancias entre polígonos y, sobre todo, para los **símbolos proporcionales**, la alternativa a las coropletas cuando la variable es un conteo absoluto: un círculo en el centro de cada cantón, con el tamaño mapeado a la cantidad de registros, no confunde el tamaño del polígono con la magnitud del fenómeno.
+
+```{r}
+#| label: st-centroid
+#| warning: false
+#| fig-height: 6
+centroides <- st_centroid(cantones)
+
+ggplot() +
+  geom_sf(data = cantones, fill = "#f0f0f0", color = "white", linewidth = 0.3) +
+  geom_sf(data = filter(centroides, registros > 0), aes(size = registros), color = "#005da4", alpha = 0.6) +
+  scale_size_area(max_size = 12) +
+  coord_sf(xlim = c(280000, 660000), ylim = c(880000, 1250000)) +
+  labs(
+    title = "Registros de félidos por cantón (símbolos proporcionales)",
+    size = "Registros",
+    caption = "Fuentes: GBIF (2026) e IGN (s. f.)"
+  ) +
+  theme_void()
+```
+
+`scale_size_area()` hace que el **área** del círculo, y no su radio, sea proporcional al valor, que es como el ojo compara tamaños. El mensaje `st_centroid assumes attributes are constant over geometries` recuerda que los atributos se copian a los puntos sin cambios (aquí se oculta con `warning: false`). Un detalle: el centroide de un polígono cóncavo o de un multipolígono puede caer **fuera** de él; en esta capa le ocurre al cantón de Alajuela, cuya forma alargada e irregular deja el centro de masa en Grecia. [`st_point_on_surface()`](https://r-spatial.github.io/sf/reference/geos_unary.html) garantiza un punto interior, y es lo que `geom_sf_text()` usa para colocar los rótulos.
+
+```{r}
+#| label: centroides-fuera
+dentro <- st_within(centroides, cantones, sparse = FALSE)
+
+cantones$canton[!diag(dentro)]
+```
+
+### Zonas de influencia
+
+[`st_buffer()`](https://r-spatial.github.io/sf/reference/geos_unary.html) construye el polígono de todos los puntos a menos de una distancia de la geometría: una **zona de influencia**, en las unidades del SRC. Combinada con un filtro espacial, responde preguntas de proximidad: ¿qué félidos se han registrado a menos de 20 km de la Escuela de Geografía? El punto se construye con `st_point()` (**longitud, latitud**, como siempre), se le asigna el SRC de las coordenadas y se reproyecta, porque la zona se mide en metros:
+
+```{r}
+#| label: st-buffer
+escuela <- st_sfc(st_point(c(-84.0512, 9.9377)), crs = 4326) |>
+  st_transform(8908)
+
+zona_20km <- st_buffer(escuela, dist = 20000)
+
+felidos_cerca <- st_filter(felidos, zona_20km)
+nrow(felidos_cerca)
+count(st_drop_geometry(felidos_cerca), species)
+```
+
+Dieciocho registros, incluidos tres de jaguar, a menos de 20 km de la Universidad (en las montañas que rodean el Valle Central). El mapa, con la zona y los cantones que toca:
+
+```{r}
+#| label: mapa-buffer
+#| fig-height: 6
+ggplot() +
+  geom_sf(data = st_filter(cantones, zona_20km), fill = "#dce9f5", color = "white") +
+  geom_sf(data = zona_20km, fill = "#005da4", alpha = 0.15, color = "#005da4") +
+  geom_sf(data = felidos_cerca, aes(color = species), size = 2) +
+  geom_sf(data = escuela, shape = 17, size = 3) +
+  labs(
+    title = "Félidos registrados a menos de 20 km de la Escuela de Geografía",
+    color = "Especie",
+    caption = "Fuentes: GBIF (2026) e IGN (s. f.)"
+  ) +
+  theme_void()
+```
+
+La zona de influencia de un punto es un círculo; la de una línea, una franja; la de un polígono, el polígono agrandado (y con una distancia negativa, encogido). Como la zona se construye en las unidades del SRC, conviene que este sea proyectado: en WGS84, la unidad de `dist` depende de la configuración de sf (la clínica de errores muestra qué ocurre).
+
+### Distancias
+
+[`st_distance()`](https://r-spatial.github.io/sf/reference/geos_measures.html) mide la distancia entre geometrías, con unidades, y [`st_nearest_feature()`](https://r-spatial.github.io/sf/reference/st_nearest_feature.html) devuelve, para cada geometría de una capa, el índice de la más cercana de otra. Juntas resuelven la cuenta pendiente de la unión espacial: ¿de qué cantón, y a qué distancia, quedaron los 44 registros que cayeron fuera de todo polígono?
+
+```{r}
+#| label: st-distance
+sin_canton <- filter(felidos_cantones, is.na(canton))
+
+mas_cercano <- st_nearest_feature(sin_canton, cantones)
+
+sin_canton |>
+  mutate(
+    canton_cercano = cantones$canton[mas_cercano],
+    distancia_km = as.numeric(st_distance(sin_canton, cantones[mas_cercano, ], by_element = TRUE)) / 1000
+  ) |>
+  st_drop_geometry() |>
+  count(canton_cercano, sort = TRUE) |>
+  head()
+```
+
+Los cantones más cercanos son Pococí, Puerto Jiménez, La Cruz y Osa, todos costeros, y las distancias van de unos cientos de metros a 13 km, lo que confirma la explicación: registros en playas, manglares y mar que la línea de costa simplificada deja fuera. Con `st_distance()` sin `by_element`, el resultado es una **matriz** de distancias entre todas las geometrías de las dos capas. `st_length()` mide líneas; y [`st_simplify()`](https://r-spatial.github.io/sf/reference/geos_unary.html), `st_convex_hull()` y `st_bbox()` producen otras geometrías derivadas con el mismo patrón.
+
+*Ejercicios de esta sección: [ejercicios sobre medidas y geometrías derivadas](#ejercicios-medidas).*
+
+## Asistentes de IA para generar operaciones espaciales
+
+Los [lineamientos del curso](../i-introduccion-ciencia-datos-programacion/05-asistentes-ia.qmd) y las pautas del [capítulo anterior](15-sf-datos-vectoriales.qmd#asistentes-de-ia-para-generar-mapas) aplican: describir las capas en el contexto (columnas, tipo de geometría y, sobre todo, el SRC de cada una), pedir el patrón del curso y verificar el resultado. Para las operaciones espaciales, las comprobaciones son cuatro: que las dos capas estén en el **mismo SRC** y que sea proyectado si se mide; que el **predicado** y el **orden de las capas** correspondan a la pregunta (`st_within` con los puntos a la izquierda para contarlos por polígono); que el número de filas del resultado sea el esperado (con `st_join()`, el de la capa izquierda) y que los no emparejados se expliquen; y que un par de resultados conocidos sean correctos (Sarapiquí tiene 53 registros). Un prompt de ejemplo:
+
+> Actúe como asistente de análisis de datos geoespaciales con R y sf **(rol)**. Tengo dos objetos sf en EPSG:8908: `felidos`, con 1 041 puntos de registros de presencia y las columnas `species` (texto) y `year` (entero), y `cantones`, con 84 multipolígonos y las columnas `codigo_canton` (entero) y `canton` (texto) **(contexto)**. Escriba el código que calcule, para cada cantón, cuántas especies distintas se han registrado, agregue esa columna a `cantones` (con cero para los cantones sin registros) y muestre los diez cantones con más especies **(tarea)**. Use `st_join()` con los puntos a la izquierda, `st_drop_geometry()`, `group_by()` y `summarize()` con `n_distinct()`, y `left_join()` con el objeto sf a la izquierda; agregue un comentario por paso **(formato)**.
+
+*Ejercicios de esta sección: [ejercicios sobre predicción, asistentes y tarea 3](#ejercicios-prediccion).*
+
+## Clínica de errores
+
+Los errores propios de las operaciones espaciales. El primero es el que el capítulo anterior anunció: a diferencia de ggplot2, las operaciones espaciales **no reproyectan** por su cuenta, y se detienen si las capas no comparten el SRC.
+
+```{r}
+#| label: error-src
+#| error: true
+felidos_wgs84 <- st_transform(felidos, 4326)
+
+st_filter(felidos_wgs84, san_jose)
+```
+
+El segundo es más sutil, porque no produce ningún mensaje. ¿En qué unidades está `dist` cuando la capa está en coordenadas geográficas? Quien piense «en grados» y pida una zona de 0,1° (unos 11 km) obtiene esto:
+
+```{r}
+#| label: error-buffer
+escuela_wgs84 <- st_transform(escuela, 4326)
+
+zona_dudosa <- st_buffer(escuela_wgs84, dist = 0.1)
+round(as.numeric(st_area(zona_dudosa)))
+```
+
+Un círculo de 0 m²: en las versiones recientes de sf, con `sf_use_s2()` activado (el mensaje de `library(sf)`), las zonas de influencia en coordenadas geográficas se calculan sobre la esfera y `dist` se interpreta en **metros**, así que la zona mide 0,1 m de radio. Con s2 desactivado, o en versiones anteriores, `dist` sí son grados, y sf advierte `st_buffer does not correctly buffer longitude/latitude data` porque el resultado es una elipse deformada. La unidad depende de la configuración: por eso la práctica del capítulo es reproyectar a un SRC proyectado y dar la distancia en metros, sin ambigüedad.
+
+<figure style="text-align: center; margin: 20px 0;">
+    <figcaption><strong>Tabla 2</strong>. Clínica de errores de las operaciones espaciales. Fuente: elaboración propia.</figcaption>
+    <table class="table table-bordered table-striped" style="margin: 0 auto;">
+    <thead>
+    <tr><th>Mensaje o síntoma</th><th>Causa</th><th>Solución</th></tr>
+    </thead>
+    <tbody>
+    <tr><td><code>st_crs(x) == st_crs(y) is not TRUE</code></td><td>Las dos capas de un filtro, una unión o una medida están en SRC distintos.</td><td>Reproyectar una de ellas con <code>st_transform()</code> al SRC de la otra; en este capítulo, todo en CRTM05 (8908).</td></tr>
+    <tr><td>La zona de influencia es minúscula o enorme, o <code>st_buffer does not correctly buffer longitude/latitude data</code></td><td>Zona de influencia en coordenadas geográficas: <code>dist</code> en metros con s2 activado, en grados sin él.</td><td>Reproyectar a un SRC proyectado y dar <code>dist</code> en metros.</td></tr>
+    <tr><td><code>st_centroid assumes attributes are constant over geometries</code></td><td>Advertencia, no error: los atributos se copian a los centroides.</td><td>Ninguna; <code>warning: false</code> en el bloque si molesta.</td></tr>
+    <tr><td><code>second argument should be of class sf</code> en <code>st_join()</code></td><td>La segunda capa es un data frame sin geometría (el CSV sin convertir con <code>st_as_sf()</code>).</td><td>Convertir con <code>st_as_sf()</code>, con <code>coords</code> y <code>crs</code>.</td></tr>
+    <tr><td><code>st_join()</code> devuelve más filas que la capa izquierda</td><td>Puntos en el límite entre dos polígonos, o polígonos a la izquierda con varios puntos cada uno.</td><td>Es el comportamiento esperado; para conteos, los puntos a la izquierda y <code>count()</code>.</td></tr>
+    <tr><td>Todos los cantones quedan con <code>NA</code> tras la unión espacial</td><td>Las capas no se traslapan: SRC distintos declarados iguales, o coordenadas al revés en <code>st_as_sf()</code>.</td><td>Dibujar las dos capas juntas con ggplot2 y revisar <code>st_bbox()</code> de cada una.</td></tr>
+    <tr><td><code>object &#39;registros&#39; not found</code> en el mapa de coropletas</td><td>La columna se agregó a otra copia de <code>cantones</code>, o el bloque <code>conteo</code> no se ejecutó.</td><td>Ejecutar los bloques en orden; <code>names(cantones)</code> para comprobar.</td></tr>
+    <tr><td><code>st_touches()</code> no devuelve vecinos</td><td>Geometrías simplificadas que ya no comparten exactamente el límite.</td><td><code>st_intersects()</code> y excluir la propia geometría.</td></tr>
+    <tr><td>El mapa es diminuto o la Isla del Coco ocupa la mitad</td><td>La extensión de los cantones incluye la isla.</td><td><code>coord_sf(xlim = c(280000, 660000), ylim = c(880000, 1250000))</code>.</td></tr>
+    <tr><td><code>summarize()</code> tarda mucho</td><td>Agregación espacial de muchos polígonos detallados.</td><td>Si solo interesan los atributos, <code>st_drop_geometry()</code> antes; si no, <code>st_simplify()</code> o paciencia.</td></tr>
+    <tr><td>Los símbolos proporcionales no se distinguen</td><td>Escala de tamaño por defecto (radio proporcional, pocos tamaños).</td><td><code>scale_size_area(max_size = …)</code>.</td></tr>
+    </tbody>
+    </table>
+</figure>
+
+## Resumen
+
+- Los **predicados espaciales** (`st_intersects()`, `st_within()`, `st_contains()`, `st_touches()`, `st_is_within_distance()`…) responden si dos geometrías cumplen una relación; `st_filter()` los usa para **filtrar** una capa con otra, como `filter()` lo hace con una condición.
+- La **unión espacial** `st_join()` combina dos capas por un predicado, como `left_join()` lo hace por una clave: conserva la geometría y las filas de la capa **izquierda**, agrega las columnas de la derecha y se verifica (filas sin pareja, filas repetidas). Para contar puntos por polígono: puntos a la izquierda, `st_drop_geometry()`, `count()` y `left_join()` al polígono. La posición sustituye al atributo anotado a mano.
+- `summarize()` sobre un objeto sf **agrega** las geometrías de cada grupo (los cantones en provincias); `st_union()` las une todas.
+- `st_centroid()` resume cada polígono en un punto (que puede caer fuera; `st_point_on_surface()` no), base de los **símbolos proporcionales** con `scale_size_area()`; `st_buffer()` construye **zonas de influencia**, en metros sobre un SRC proyectado; `st_distance()` y `st_nearest_feature()` miden y encuentran lo más cercano.
+- Toda operación entre dos capas exige el **mismo SRC**, y las medidas, un SRC **proyectado** adecuado a la región: `st_crs(x) == st_crs(y) is not TRUE` es el error que lo recuerda.
+
+## Ejercicios
+
+Los ejercicios se agrupan según la sección del capítulo a la que corresponden y se resuelven en un documento Quarto nuevo del proyecto `pf0953`, `felidos.qmd`, con el mismo encabezado YAML de `mapas.qmd` y un bloque `preparacion` igual al del inicio del capítulo. Varios suponen ejecutados los bloques de las secciones anteriores (`cantones` con las columnas `registros`, `area_km2` y `registros_100km2`; `felidos` en CRTM05; `felidos_cantones`; `centroides`; `escuela`).
+
+### Carga y puntos {#ejercicios-carga}
+
+1. Lea `cantones.csv` (población y área del INEC, del [capítulo de Fundamentos de R](../ii-lenguaje-programacion-r/07-fundamentos-r-i.qmd)) y únalo a `cantones` por el nombre del cantón, con el objeto sf a la izquierda. Verifique la unión con `anti_join()`: dos cantones tienen el nombre escrito de forma distinta en las dos fuentes (la advertencia del README de los datos lo explica). Corríjalos con `case_when()` antes de unir y dibuje un mapa de coropletas de la densidad de población (habitantes por km²), con escala logarítmica, sin la Isla del Coco.
+
+2. **Prediga antes de ejecutar**: ¿qué muestra `st_bbox()` de los félidos si `st_as_sf()` recibe `coords = c("decimalLatitude", "decimalLongitude")`? Compruébelo y dibuje el resultado sobre `cantones` (ggplot2 reproyecta para dibujar, pero los puntos caen donde las coordenadas invertidas indican). Luego intente `st_filter()` de ese objeto, sin reproyectar, con `san_jose`: anote el mensaje de error y búsquelo en la tabla 2.
+
+### Predicados espaciales {#ejercicios-predicados}
+
+3. Obtenga los cantones vecinos de **Limón** (con `st_filter()` y `st_intersects`) y dibújelos con el cantón en un color y los vecinos en otro, con el nombre de cada uno con `geom_sf_text()`. ¿Cuántos son y de qué provincias? Repita con `st_touches` y explique por qué cambia el resultado.
+
+4. Con `st_filter()`, obtenga los registros de **jaguar** (`Panthera onca`) en la provincia de Limón (use la capa `provincias`) y cuéntelos por año con `count()`. ¿En qué década se concentran? Compare con el total de registros de jaguar del país.
+
+### Unión espacial {#ejercicios-union}
+
+5. Calcule, con una unión espacial de `felidos` y `provincias`, cuántos registros de cada **especie** hay en cada provincia, y muestre el resultado como una tabla con `pivot_wider()` (una fila por provincia, una columna por especie) y `knitr::kable()`. ¿En qué provincia se ha registrado el tigrillo (`Leopardus tigrinus`)?
+
+6. Calcule, para cada cantón, la cantidad de **especies distintas** registradas (`n_distinct()`), agregue la columna a `cantones` con cero para los que no tienen registros y dibuje un mapa de coropletas con una escala discreta (la columna convertida con `factor()`, o `scale_fill_viridis_d()`). ¿Cuál es el único cantón con las seis especies? Es el ejercicio del prompt de la sección de asistentes: resuélvalo primero a mano.
+
+7. **Prediga antes de ejecutar**: ¿cuántas filas tiene cada uno de los tres resultados siguientes y por qué?
+
+    ```r
+    a <- st_join(felidos, select(cantones, canton), join = st_within)
+    b <- st_join(felidos, select(cantones, canton), join = st_within, left = FALSE)
+    c <- st_join(select(cantones, canton), felidos, join = st_contains, left = FALSE)
+    c(nrow(a), nrow(b), nrow(c))
+    ```
+
+    <details>
+    <summary>Después de ejecutar, haga clic aquí para ver la explicación</summary>
+    <code>a</code> tiene 1 041 filas: todos los registros, con el cantón en <code>NA</code> en los 44 que no caen en ningún polígono (<code>left = TRUE</code>, el valor predeterminado). <code>b</code> tiene 997: solo los registros con cantón (como <code>inner_join()</code>). <code>c</code> también tiene 997: una fila por cada par cantón-registro, con la geometría del cantón repetida tantas veces como registros contiene, y sin los 18 cantones sin registros, que <code>left = FALSE</code> descarta; con <code>left = TRUE</code> tendría 1 015.
+    </details>
+
+### Agregación espacial {#ejercicios-agregacion}
+
+8. Agregue los cantones por provincia **sin** la geometría (con `st_drop_geometry()` antes de `group_by()`) y compare el tiempo y el resultado con el bloque `summarize` del capítulo. Luego, con `st_union()` y `st_area()`, calcule el área total del país a partir de los cantones y compárela con la suma de las áreas de los cantones y con los 51 100 km² oficiales: ¿por qué difieren? Pista: la Isla del Coco y la simplificación.
+
+### Medidas y geometrías derivadas {#ejercicios-medidas}
+
+9. Construya una zona de influencia de **5 km** alrededor de los registros de **jaguar** (con `st_buffer()` sobre los puntos y `st_union()` para fundir los círculos) y calcule su área en km². Dibújela sobre los cantones, sin la Isla del Coco. ¿Qué porcentaje del territorio nacional cubre?
+
+10. Para cada cantón, calcule la distancia en km de su centroide al centroide de **San José** (`st_distance()` entre `centroides` y el centroide de San José) y muestre los cinco cantones más lejanos y los cinco más cercanos. ¿Cuál es el más lejano? ¿Y cuál cantón de la provincia de San José?
+
+### Predicción, asistentes y tarea 3 {#ejercicios-prediccion}
+
+11. Pida a un asistente de IA el código del prompt de ejemplo de la sección de asistentes (especies por cantón) y verifíquelo con las cuatro comprobaciones de esa sección: mismo SRC, predicado y orden de las capas, número de filas y un par de resultados conocidos (compárelos con su solución del ejercicio 6). Documente en el texto del documento el asistente, el prompt, el código y el resultado de las comprobaciones, como en la declaración de uso de IA de la tarea 2.
+
+12. Para la tarea 3, tome la capa de su tema del ejercicio 14 del [capítulo anterior](15-sf-datos-vectoriales.qmd#ejercicios-publicacion) y relaciónela espacialmente con otra: cuente sus entidades por cantón, provincia o país con una unión espacial; encuentre las más cercanas a un punto de interés; o construya una zona de influencia alrededor de ellas y determine qué contiene. Anote en el texto qué pregunta responde cada operación y en qué SRC la hizo. Publique `felidos.qmd` en el repositorio `practica-quarto`, junto con los documentos anteriores.
+
+## Referencias bibliográficas
+
+GBIF.org. (2026). *GBIF occurrence search: Felidae, Costa Rica* [conjunto de datos]. Recuperado el 11 de octubre de 2026, de <https://www.gbif.org/occurrence/search?country=CR&taxon_key=9703&has_coordinate=true&has_geospatial_issue=false>
+
+Instituto Geográfico Nacional. (s. f.). *Límite cantonal 1:5000 y Límite provincial 1:5000* [capas WFS]. Sistema Nacional de Información Territorial. Recuperado el 11 de octubre de 2026, de <https://geos.snitcr.go.cr/be/IGN_5_CO/wfs>
+
+Lovelace, R., Nowosad, J., y Münchow, J. (2025). *Geocomputation with R* (2.ª ed.). Chapman and Hall/CRC. <https://r.geocompx.org/>
+
+Pebesma, E. (s. f.). Manipulating simple feature geometries. En *sf: Simple features for R*. Recuperado el 22 de octubre de 2026, de <https://r-spatial.github.io/sf/articles/sf3.html>
+
+Pebesma, E., y Bivand, R. (2023). *Spatial data science: With applications in R*. Chapman and Hall/CRC. <https://r-spatial.org/book/>
+
+Pebesma, E., y Bivand, R. (2026). *sf: Simple features for R* (versión 1.1-1) [paquete de R]. <https://CRAN.R-project.org/package=sf>

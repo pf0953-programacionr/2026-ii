@@ -1,0 +1,1857 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>sf: operaciones espaciales – PF-0953 Programación en R - 2026-II</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../favicon.ico" rel="icon">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark-0a6b7249c26820e032cb0bd839ff02b1.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-4f3632f0866db833f55d269f2223b949.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark-acda045fd7e50dbf0b610784e976f157.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../../site_libs/bootstrap/bootstrap-4f3632f0866db833f55d269f2223b949.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "language": {
+    "search-no-results-text": "No se han encontrado resultados",
+    "search-matching-documents-text": "documentos encontrados",
+    "search-copy-link-title": "Copiar el enlace en la búsqueda",
+    "search-hide-matches-text": "Ocultar resultados adicionales",
+    "search-more-match-text": "resultado adicional en este documento",
+    "search-more-matches-text": "resultados adicionales en este documento",
+    "search-clear-button-title": "Borrar",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancelar",
+    "search-submit-button-title": "Enviar",
+    "search-label": "Buscar"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-sidebar docked nav-fixed quarto-light"><script id="quarto-html-before-body" type="application/javascript">
+    const toggleBodyColorMode = (bsSheetEl) => {
+      const mode = bsSheetEl.getAttribute("data-mode");
+      const bodyEl = window.document.querySelector("body");
+      if (mode === "dark") {
+        bodyEl.classList.add("quarto-dark");
+        bodyEl.classList.remove("quarto-light");
+      } else {
+        bodyEl.classList.add("quarto-light");
+        bodyEl.classList.remove("quarto-dark");
+      }
+    }
+    const toggleBodyColorPrimary = () => {
+      const bsSheetEl = window.document.querySelector("link#quarto-bootstrap:not([rel=disabled-stylesheet])");
+      if (bsSheetEl) {
+        toggleBodyColorMode(bsSheetEl);
+      }
+    }
+    const setColorSchemeToggle = (alternate) => {
+      const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+      for (let i=0; i < toggles.length; i++) {
+        const toggle = toggles[i];
+        if (toggle) {
+          if (alternate) {
+            toggle.classList.add("alternate");
+          } else {
+            toggle.classList.remove("alternate");
+          }
+        }
+      }
+    };
+    const toggleColorMode = (alternate) => {
+      // Switch the stylesheets
+      const primaryStylesheets = window.document.querySelectorAll('link.quarto-color-scheme:not(.quarto-color-alternate)');
+      const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+      manageTransitions('#quarto-margin-sidebar .nav-link', false);
+      if (alternate) {
+        // note: dark is layered on light, we don't disable primary!
+        enableStylesheet(alternateStylesheets);
+        for (const sheetNode of alternateStylesheets) {
+          if (sheetNode.id === "quarto-bootstrap") {
+            toggleBodyColorMode(sheetNode);
+          }
+        }
+      } else {
+        disableStylesheet(alternateStylesheets);
+        enableStylesheet(primaryStylesheets)
+        toggleBodyColorPrimary();
+      }
+      manageTransitions('#quarto-margin-sidebar .nav-link', true);
+      // Switch the toggles
+      setColorSchemeToggle(alternate)
+      // Hack to workaround the fact that safari doesn't
+      // properly recolor the scrollbar when toggling (#1455)
+      if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+        manageTransitions("body", false);
+        window.scrollTo(0, 1);
+        setTimeout(() => {
+          window.scrollTo(0, 0);
+          manageTransitions("body", true);
+        }, 40);
+      }
+    }
+    const disableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        stylesheet.rel = 'disabled-stylesheet';
+      }
+    }
+    const enableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        if(stylesheet.rel !== 'stylesheet') { // for Chrome, which will still FOUC without this check
+          stylesheet.rel = 'stylesheet';
+        }
+      }
+    }
+    const manageTransitions = (selector, allowTransitions) => {
+      const els = window.document.querySelectorAll(selector);
+      for (let i=0; i < els.length; i++) {
+        const el = els[i];
+        if (allowTransitions) {
+          el.classList.remove('notransition');
+        } else {
+          el.classList.add('notransition');
+        }
+      }
+    }
+    const isFileUrl = () => {
+      return window.location.protocol === 'file:';
+    }
+    const hasAlternateSentinel = () => {
+      let styleSentinel = getColorSchemeSentinel();
+      if (styleSentinel !== null) {
+        return styleSentinel === "alternate";
+      } else {
+        return false;
+      }
+    }
+    const setStyleSentinel = (alternate) => {
+      const value = alternate ? "alternate" : "default";
+      if (!isFileUrl()) {
+        window.localStorage.setItem("quarto-color-scheme", value);
+      } else {
+        localAlternateSentinel = value;
+      }
+    }
+    const getColorSchemeSentinel = () => {
+      if (!isFileUrl()) {
+        const storageValue = window.localStorage.getItem("quarto-color-scheme");
+        return storageValue != null ? storageValue : localAlternateSentinel;
+      } else {
+        return localAlternateSentinel;
+      }
+    }
+    const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+      const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+      const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+      let newTheme = '';
+      if(authorPrefersDark) {
+        newTheme = isAlternate ? baseTheme : alternateTheme;
+      } else {
+        newTheme = isAlternate ? alternateTheme : baseTheme;
+      }
+      const changeGiscusTheme = () => {
+        // From: https://github.com/giscus/giscus/issues/336
+        const sendMessage = (message) => {
+          const iframe = document.querySelector('iframe.giscus-frame');
+          if (!iframe) return;
+          iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+        }
+        sendMessage({
+          setConfig: {
+            theme: newTheme
+          }
+        });
+      }
+      const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+      if (isGiscussLoaded) {
+        changeGiscusTheme();
+      }
+    };
+    const authorPrefersDark = false;
+    const darkModeDefault = authorPrefersDark;
+      document.querySelector('link#quarto-text-highlighting-styles.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+      document.querySelector('link#quarto-bootstrap.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+    let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+    // Dark / light mode switch
+    window.quartoToggleColorScheme = () => {
+      // Read the current dark / light value
+      let toAlternate = !hasAlternateSentinel();
+      toggleColorMode(toAlternate);
+      setStyleSentinel(toAlternate);
+      toggleGiscusIfUsed(toAlternate, darkModeDefault);
+      window.dispatchEvent(new Event('resize'));
+    };
+    // Switch to dark mode if need be
+    if (hasAlternateSentinel()) {
+      toggleColorMode(true);
+    } else {
+      toggleColorMode(false);
+    }
+  </script>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../logo.svg" alt="" class="navbar-logo light-content">
+    <img src="../../logo-oscuro.svg" alt="" class="navbar-logo dark-content">
+    </a>
+  </div>
+        <div class="quarto-navbar-tools tools-end">
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Alternar modo oscuro"><i class="bi"></i></a>
+</div>
+          <div id="quarto-search" class="" title="Buscar"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../contenidos/iv-ecosistema-geoespacial-r/14-datos-geoespaciales.html">IV. El ecosistema geoespacial de R</a></li><li class="breadcrumb-item"><a href="../../contenidos/iv-ecosistema-geoespacial-r/16-sf-operaciones-espaciales.html">sf: operaciones espaciales</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../programa/programa.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Programa del curso</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">I. Introducción a la ciencia de datos y a la programación de computadoras</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../contenidos/i-introduccion-ciencia-datos-programacion/01-introduccion-ciencia-datos.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introducción a la ciencia de datos</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../contenidos/i-introduccion-ciencia-datos-programacion/02-ejemplo-procesos-ciencia-datos.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Ejemplo de procesos de ciencia de datos</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../contenidos/i-introduccion-ciencia-datos-programacion/03-markdown.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">El lenguaje de marcado Markdown</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../contenidos/i-introduccion-ciencia-datos-programacion/04-git-github.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Git, GitHub y GitHub Pages</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../contenidos/i-introduccion-ciencia-datos-programacion/05-asistentes-ia.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Asistentes de programación basados en inteligencia artificial</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">II. El lenguaje de programación R</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../contenidos/ii-lenguaje-programacion-r/06-introduccion-r.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introducción a R</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../contenidos/ii-lenguaje-programacion-r/07-fundamentos-r-i.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Fundamentos de R I: objetos, vectores y data frames</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../contenidos/ii-lenguaje-programacion-r/08-fundamentos-r-ii.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Fundamentos de R II: condicionales, ciclos y funciones</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../contenidos/ii-lenguaje-programacion-r/09-quarto.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Quarto: documentos computacionales</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">III. El conjunto de paquetes tidyverse</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../contenidos/iii-tidyverse/10-tidyverse.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">tidyverse: paquetes para ciencia de datos</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../contenidos/iii-tidyverse/11-dplyr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">dplyr: transformación de datos</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../contenidos/iii-tidyverse/12-ggplot2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">ggplot2: gramática de gráficos</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../contenidos/iii-tidyverse/13-plotly-dt.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">plotly y DT: gráficos y tablas interactivos</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">IV. El ecosistema geoespacial de R</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../contenidos/iv-ecosistema-geoespacial-r/14-datos-geoespaciales.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Datos geoespaciales: modelos, formatos y sistemas de referencia de coordenadas</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../contenidos/iv-ecosistema-geoespacial-r/15-sf-datos-vectoriales.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">sf: datos geoespaciales vectoriales</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../contenidos/iv-ecosistema-geoespacial-r/16-sf-operaciones-espaciales.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">sf: operaciones espaciales</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
+ <span class="menu-text">Evaluaciones</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../contenidos/evaluaciones/tarea-01.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Tarea 1</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../contenidos/evaluaciones/tarea-02.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Tarea 2</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true">
+ <span class="menu-text">Software</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../contenidos/software/r-rstudio.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">R y RStudio</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">En esta página</h2>
+   
+  <ul>
+  <li><a href="#trabajo-previo" id="toc-trabajo-previo" class="nav-link active" data-scroll-target="#trabajo-previo">Trabajo previo</a>
+  <ul class="collapse">
+  <li><a href="#lecturas" id="toc-lecturas" class="nav-link" data-scroll-target="#lecturas">Lecturas</a></li>
+  <li><a href="#otros-recursos" id="toc-otros-recursos" class="nav-link" data-scroll-target="#otros-recursos">Otros recursos</a></li>
+  </ul></li>
+  <li><a href="#introducción" id="toc-introducción" class="nav-link" data-scroll-target="#introducción">Introducción</a></li>
+  <li><a href="#carga-de-las-capas" id="toc-carga-de-las-capas" class="nav-link" data-scroll-target="#carga-de-las-capas">Carga de las capas</a>
+  <ul class="collapse">
+  <li><a href="#de-una-tabla-con-coordenadas-a-un-objeto-sf" id="toc-de-una-tabla-con-coordenadas-a-un-objeto-sf" class="nav-link" data-scroll-target="#de-una-tabla-con-coordenadas-a-un-objeto-sf">De una tabla con coordenadas a un objeto sf</a></li>
+  </ul></li>
+  <li><a href="#predicados-espaciales" id="toc-predicados-espaciales" class="nav-link" data-scroll-target="#predicados-espaciales">Predicados espaciales</a></li>
+  <li><a href="#unión-espacial" id="toc-unión-espacial" class="nav-link" data-scroll-target="#unión-espacial">Unión espacial</a>
+  <ul class="collapse">
+  <li><a href="#atributo-contra-posición" id="toc-atributo-contra-posición" class="nav-link" data-scroll-target="#atributo-contra-posición">Atributo contra posición</a></li>
+  <li><a href="#conteo-por-polígono" id="toc-conteo-por-polígono" class="nav-link" data-scroll-target="#conteo-por-polígono">Conteo por polígono</a></li>
+  <li><a href="#el-orden-de-las-capas" id="toc-el-orden-de-las-capas" class="nav-link" data-scroll-target="#el-orden-de-las-capas">El orden de las capas</a></li>
+  </ul></li>
+  <li><a href="#agregación-espacial" id="toc-agregación-espacial" class="nav-link" data-scroll-target="#agregación-espacial">Agregación espacial</a></li>
+  <li><a href="#medidas-y-geometrías-derivadas" id="toc-medidas-y-geometrías-derivadas" class="nav-link" data-scroll-target="#medidas-y-geometrías-derivadas">Medidas y geometrías derivadas</a>
+  <ul class="collapse">
+  <li><a href="#centroides-y-símbolos-proporcionales" id="toc-centroides-y-símbolos-proporcionales" class="nav-link" data-scroll-target="#centroides-y-símbolos-proporcionales">Centroides y símbolos proporcionales</a></li>
+  <li><a href="#zonas-de-influencia" id="toc-zonas-de-influencia" class="nav-link" data-scroll-target="#zonas-de-influencia">Zonas de influencia</a></li>
+  <li><a href="#distancias" id="toc-distancias" class="nav-link" data-scroll-target="#distancias">Distancias</a></li>
+  </ul></li>
+  <li><a href="#asistentes-de-ia-para-generar-operaciones-espaciales" id="toc-asistentes-de-ia-para-generar-operaciones-espaciales" class="nav-link" data-scroll-target="#asistentes-de-ia-para-generar-operaciones-espaciales">Asistentes de IA para generar operaciones espaciales</a></li>
+  <li><a href="#clínica-de-errores" id="toc-clínica-de-errores" class="nav-link" data-scroll-target="#clínica-de-errores">Clínica de errores</a></li>
+  <li><a href="#resumen" id="toc-resumen" class="nav-link" data-scroll-target="#resumen">Resumen</a></li>
+  <li><a href="#ejercicios" id="toc-ejercicios" class="nav-link" data-scroll-target="#ejercicios">Ejercicios</a>
+  <ul class="collapse">
+  <li><a href="#ejercicios-carga" id="toc-ejercicios-carga" class="nav-link" data-scroll-target="#ejercicios-carga">Carga y puntos</a></li>
+  <li><a href="#ejercicios-predicados" id="toc-ejercicios-predicados" class="nav-link" data-scroll-target="#ejercicios-predicados">Predicados espaciales</a></li>
+  <li><a href="#ejercicios-union" id="toc-ejercicios-union" class="nav-link" data-scroll-target="#ejercicios-union">Unión espacial</a></li>
+  <li><a href="#ejercicios-agregacion" id="toc-ejercicios-agregacion" class="nav-link" data-scroll-target="#ejercicios-agregacion">Agregación espacial</a></li>
+  <li><a href="#ejercicios-medidas" id="toc-ejercicios-medidas" class="nav-link" data-scroll-target="#ejercicios-medidas">Medidas y geometrías derivadas</a></li>
+  <li><a href="#ejercicios-prediccion" id="toc-ejercicios-prediccion" class="nav-link" data-scroll-target="#ejercicios-prediccion">Predicción, asistentes y tarea 3</a></li>
+  </ul></li>
+  <li><a href="#referencias-bibliográficas" id="toc-referencias-bibliográficas" class="nav-link" data-scroll-target="#referencias-bibliográficas">Referencias bibliográficas</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/pf0953-programacionr/2026-ii/blob/main/contenidos/iv-ecosistema-geoespacial-r/16-sf-operaciones-espaciales.qmd" class="toc-action"><i class="bi bi-github"></i>Ver el código</a></li><li><a href="https://github.com/pf0953-programacionr/2026-ii/edit/main/contenidos/iv-ecosistema-geoespacial-r/16-sf-operaciones-espaciales.qmd" class="toc-action"><i class="bi empty"></i>Editar esta página</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../contenidos/iv-ecosistema-geoespacial-r/14-datos-geoespaciales.html">IV. El ecosistema geoespacial de R</a></li><li class="breadcrumb-item"><a href="../../contenidos/iv-ecosistema-geoespacial-r/16-sf-operaciones-espaciales.html">sf: operaciones espaciales</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">sf: operaciones espaciales</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="trabajo-previo" class="level2">
+<h2 class="anchored" data-anchor-id="trabajo-previo">Trabajo previo</h2>
+<section id="lecturas" class="level3">
+<h3 class="anchored" data-anchor-id="lecturas">Lecturas</h3>
+<p>Antes de la clase, revise las siguientes lecturas: los capítulos 3 y 4 de <em>Geocomputation with R</em>, asignados por el programa del curso. Del capítulo 3 interesa la sección 3.2 (operaciones con atributos de datos vectoriales, que repasa lo que ya se hizo con dplyr en el capítulo anterior); del capítulo 4, las secciones 4.2.1 a 4.2.5 (subconjuntos espaciales, relaciones topológicas, unión espacial y agregación espacial).</p>
+<p>Lovelace, R., Nowosad, J., y Münchow, J. (2025). Attribute data operations. En <em>Geocomputation with R</em> (2.ª ed.). Chapman and Hall/CRC. <a href="https://r.geocompx.org/attr" class="uri">https://r.geocompx.org/attr</a></p>
+<p>Lovelace, R., Nowosad, J., y Münchow, J. (2025). Spatial data operations. En <em>Geocomputation with R</em> (2.ª ed.). Chapman and Hall/CRC. <a href="https://r.geocompx.org/spatial-operations" class="uri">https://r.geocompx.org/spatial-operations</a></p>
+</section>
+<section id="otros-recursos" class="level3">
+<h3 class="anchored" data-anchor-id="otros-recursos">Otros recursos</h3>
+<p>No hay que instalar nada nuevo: se usan sf y el tidyverse, como en el <a href="../../contenidos/iv-ecosistema-geoespacial-r/15-sf-datos-vectoriales.html">capítulo anterior</a>. La <a href="https://github.com/rstudio/cheatsheets/blob/main/sf.pdf">hoja de referencia de sf</a> resume en una página las funciones de este capítulo, y la viñeta <a href="https://r-spatial.github.io/sf/articles/sf3.html">Manipulating simple feature geometries</a>, de la documentación de sf, las describe con ejemplos cortos.</p>
+</section>
+</section>
+<section id="introducción" class="level2">
+<h2 class="anchored" data-anchor-id="introducción">Introducción</h2>
+<p>En el capítulo anterior las capas se leyeron, se reproyectaron, se unieron con tablas por un código y se dibujaron. Las uniones fueron las de dplyr: dos tablas que comparten una clave. Pero la mayoría de las preguntas geográficas no tiene clave: ¿en qué cantón se registró cada félido?, ¿cuántos registros hay por cantón?, ¿cuáles cantones son vecinos de San José?, ¿qué se ha observado a menos de 20 km de la Escuela de Geografía? Las dos capas de cada pregunta no comparten ninguna columna; lo que comparten es el <strong>espacio</strong>, y la relación entre sus geometrías es la clave.</p>
+<p>Este capítulo presenta las <strong>operaciones espaciales</strong> de sf, agrupadas en cuatro familias: los <strong>predicados espaciales</strong>, que responden verdadero o falso sobre la relación entre dos geometrías (¿se intersecan?, ¿una contiene a la otra?); la <strong>unión espacial</strong>, que combina dos capas por esa relación, como <code>left_join()</code> lo hace por una clave; la <strong>agregación espacial</strong>, que une las geometrías de cada grupo; y las <strong>medidas y geometrías derivadas</strong> (centroides, zonas de influencia, distancias). Todas se apoyan en la biblioteca GEOS, la misma que usan QGIS y PostGIS, de modo que los resultados son los de un SIG de escritorio, pero en código reproducible.</p>
+<p>Los datos vuelven a Costa Rica: los polígonos de los 84 <strong>cantones</strong> y las 7 <strong>provincias</strong> del Instituto Geográfico Nacional (IGN), en CR-SIRGAS / CRTM05, y los <strong>registros de presencia de félidos</strong> silvestres (puma, jaguar, manigordo, caucel, león breñero y tigrillo) descargados de <a href="https://www.gbif.org/">GBIF</a>, como los del <a href="../../contenidos/i-introduccion-ciencia-datos-programacion/02-ejemplo-procesos-ciencia-datos.html">ejemplo de la semana 1</a>. Los tres archivos están en el directorio <a href="https://github.com/pf0953-programacionr/2026-ii/tree/main/datos"><code>datos/</code></a> del repositorio, descritos en su README. Y la regla más importante del capítulo anterior se vuelve aún más importante: toda operación entre dos capas exige que estén en el <strong>mismo SRC</strong>, y toda medida exige un SRC proyectado adecuado a la región.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Directorio de datos en el repositorio del curso</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>datos <span class="ot">&lt;-</span> <span class="st">"https://raw.githubusercontent.com/pf0953-programacionr/2026-ii/main/datos/"</span></span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="carga-de-las-capas" class="level2">
+<h2 class="anchored" data-anchor-id="carga-de-las-capas">Carga de las capas</h2>
+<p>Los cantones y las provincias son GeoPackages y se leen con <code>st_read()</code>, como en el capítulo anterior:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>cantones <span class="ot">&lt;-</span> <span class="fu">st_read</span>(<span class="fu">paste0</span>(datos, <span class="st">"cantones.gpkg"</span>))</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Reading layer `cantones' from data source 
+  `https://raw.githubusercontent.com/pf0953-programacionr/2026-ii/main/datos/cantones.gpkg' 
+  using driver `GPKG'
+Simple feature collection with 84 features and 4 fields
+Geometry type: MULTIPOLYGON
+Dimension:     XY
+Bounding box:  xmin: 156147.8 ymin: 608898.4 xmax: 658877.1 ymax: 1241118
+Projected CRS: CR-SIRGAS / CRTM05</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>provincias <span class="ot">&lt;-</span> <span class="fu">st_read</span>(<span class="fu">paste0</span>(datos, <span class="st">"provincias.gpkg"</span>), <span class="at">quiet =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Los 84 cantones son multipolígonos en un SRC <strong>proyectado</strong>, CR-SIRGAS / CRTM05 (EPSG:8908), con la extensión en metros: el <code>xmin</code> de 156 000 corresponde a la Isla del Coco, a 500 km de la costa, que forma parte del cantón de Puntarenas. Las geometrías están simplificadas (tolerancia de 100 m) para que los mapas se dibujen rápido; sirven a escala nacional, no para mediciones precisas.</p>
+<section id="de-una-tabla-con-coordenadas-a-un-objeto-sf" class="level3">
+<h3 class="anchored" data-anchor-id="de-una-tabla-con-coordenadas-a-un-objeto-sf">De una tabla con coordenadas a un objeto sf</h3>
+<p>Los félidos, en cambio, llegan como la mayoría de los datos de puntos: un CSV con dos columnas de coordenadas, sin geometría. Es el caso de los registros de GBIF, de los datos de GPS, de estaciones o de encuestas, y de los que cada estudiante recopile para la tarea 3.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>tabla_felidos <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="fu">paste0</span>(datos, <span class="st">"felidos.csv"</span>))</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>tabla_felidos</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1,041 × 9
+       gbifID species       basisOfRecord eventDate  year stateProvince locality
+        &lt;dbl&gt; &lt;chr&gt;         &lt;chr&gt;         &lt;chr&gt;     &lt;dbl&gt; &lt;chr&gt;         &lt;chr&gt;   
+ 1  476859057 Leopardus pa… PRESERVED_SP… 1928       1928 Cartago       Turrial…
+ 2  476861450 Leopardus pa… PRESERVED_SP… 1928       1928 Cartago       Turrial…
+ 3 5146956266 Leopardus pa… PRESERVED_SP… 1932-01-…  1932 San Jose      vicinit…
+ 4 5147044265 Leopardus pa… PRESERVED_SP… 1932-06-…  1932 San Jose      vicinit…
+ 5 1122686047 Leopardus pa… PRESERVED_SP… 1958-06    1958 Limon         N/A     
+ 6   45869265 Leopardus pa… PRESERVED_SP… 1963-02-…  1963 Puntarenas P… Gromaco…
+ 7 1065425532 Leopardus pa… PRESERVED_SP… 1963-04-…  1963 Guanacaste P… San Jua…
+ 8 1065369705 Leopardus pa… PRESERVED_SP… 1964-10-…  1964 Puntarenas P… Potrero…
+ 9 4174649366 Leopardus pa… PRESERVED_SP… 1965-06-…  1965 Puntarenas    14 km N…
+10   45869301 Leopardus pa… PRESERVED_SP… 1965-06-…  1965 Puntarenas P… 14 km N…
+# ℹ 1,031 more rows
+# ℹ 2 more variables: decimalLongitude &lt;dbl&gt;, decimalLatitude &lt;dbl&gt;</code></pre>
+</div>
+</div>
+<p><a href="https://r-spatial.github.io/sf/reference/st_as_sf.html"><code>st_as_sf()</code></a> convierte el data frame en un objeto sf a partir de las columnas de coordenadas, indicadas en <code>coords</code>, y del SRC en que están esas coordenadas, en <code>crs</code>:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>felidos <span class="ot">&lt;-</span> <span class="fu">st_as_sf</span>(</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  tabla_felidos,</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">coords =</span> <span class="fu">c</span>(<span class="st">"decimalLongitude"</span>, <span class="st">"decimalLatitude"</span>),</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">crs =</span> <span class="dv">4326</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>felidos</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Simple feature collection with 1041 features and 7 fields
+Geometry type: POINT
+Dimension:     XY
+Bounding box:  xmin: -85.8 ymin: 8.268703 xmax: -82.61173 ymax: 11.17616
+Geodetic CRS:  WGS 84
+# A tibble: 1,041 × 8
+       gbifID species       basisOfRecord eventDate  year stateProvince locality
+ *      &lt;dbl&gt; &lt;chr&gt;         &lt;chr&gt;         &lt;chr&gt;     &lt;dbl&gt; &lt;chr&gt;         &lt;chr&gt;   
+ 1  476859057 Leopardus pa… PRESERVED_SP… 1928       1928 Cartago       Turrial…
+ 2  476861450 Leopardus pa… PRESERVED_SP… 1928       1928 Cartago       Turrial…
+ 3 5146956266 Leopardus pa… PRESERVED_SP… 1932-01-…  1932 San Jose      vicinit…
+ 4 5147044265 Leopardus pa… PRESERVED_SP… 1932-06-…  1932 San Jose      vicinit…
+ 5 1122686047 Leopardus pa… PRESERVED_SP… 1958-06    1958 Limon         N/A     
+ 6   45869265 Leopardus pa… PRESERVED_SP… 1963-02-…  1963 Puntarenas P… Gromaco…
+ 7 1065425532 Leopardus pa… PRESERVED_SP… 1963-04-…  1963 Guanacaste P… San Jua…
+ 8 1065369705 Leopardus pa… PRESERVED_SP… 1964-10-…  1964 Puntarenas P… Potrero…
+ 9 4174649366 Leopardus pa… PRESERVED_SP… 1965-06-…  1965 Puntarenas    14 km N…
+10   45869301 Leopardus pa… PRESERVED_SP… 1965-06-…  1965 Puntarenas P… 14 km N…
+# ℹ 1,031 more rows
+# ℹ 1 more variable: geometry &lt;POINT [°]&gt;</code></pre>
+</div>
+</div>
+<p>Las dos columnas de coordenadas desaparecieron y en su lugar hay una columna <code>geometry</code> con un punto por registro; el SRC es WGS 84 y la extensión está en grados. Dos detalles causan errores frecuentes. El orden en <code>coords</code> es <strong>x, y</strong>, es decir, <strong>longitud, latitud</strong>: al revés del «latitud, longitud» con que suelen escribirse las coordenadas, y si se invierte, los puntos caen en lugares absurdos. Y <code>crs</code> es indispensable: sin él, el objeto se crea, pero no tiene SRC, por lo que no se puede reproyectar ni combinar con otras capas. Los datos de GBIF, de GPS, de Google Maps y de casi cualquier fuente que hable de «latitud y longitud» están en WGS84, EPSG:4326. El camino inverso, de puntos a tabla, es <a href="https://r-spatial.github.io/sf/reference/st_coordinates.html"><code>st_coordinates()</code></a>, que devuelve una matriz con las columnas <code>X</code> y <code>Y</code>.</p>
+<p>Las dos capas están en SRC distintos, y ggplot2 lo resolvería por su cuenta al dibujar. Pero las operaciones espaciales no: los félidos se reproyectan a CRTM05 de una vez, para que todo el capítulo trabaje en el mismo SRC proyectado, en metros:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>felidos <span class="ot">&lt;-</span> <span class="fu">st_transform</span>(felidos, <span class="dv">8908</span>)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">st_crs</span>(felidos)<span class="sc">$</span>epsg <span class="sc">==</span> <span class="fu">st_crs</span>(cantones)<span class="sc">$</span>epsg</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] TRUE</code></pre>
+</div>
+</div>
+<p>El mapa de las dos capas, con <code>coord_sf()</code> para excluir la Isla del Coco (los límites van en las unidades del SRC: metros):</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">data =</span> cantones, <span class="at">fill =</span> <span class="st">"#dce9f5"</span>, <span class="at">color =</span> <span class="st">"white"</span>, <span class="at">linewidth =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">data =</span> felidos, <span class="fu">aes</span>(<span class="at">color =</span> species), <span class="at">size =</span> <span class="dv">1</span>, <span class="at">alpha =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_sf</span>(<span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">280000</span>, <span class="dv">660000</span>), <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">880000</span>, <span class="dv">1250000</span>)) <span class="sc">+</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Registros de presencia de félidos en Costa Rica"</span>,</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"Especie"</span>,</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">"Fuentes: GBIF (2026) e IGN (s. f.)"</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_void</span>()</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="16-sf-operaciones-espaciales_files/figure-html/mapa-felidos-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Los registros se concentran en las zonas boscosas: la península de Osa, el Caribe norte, Guanacaste; el Valle Central casi no tiene. Son 1 041 registros de seis especies, en su gran mayoría observaciones humanas de la última década, con la provincia anotada a mano por quien publicó cada registro (en la columna <code>stateProvince</code>, que falta en muchos y está escrita de varias formas) y la localidad en texto libre. Las preguntas del capítulo empiezan aquí: ¿en qué cantón cae cada punto?</p>
+<p><em>Ejercicios de esta sección: <a href="#ejercicios-carga">ejercicios sobre carga y puntos</a>.</em></p>
+</section>
+</section>
+<section id="predicados-espaciales" class="level2">
+<h2 class="anchored" data-anchor-id="predicados-espaciales">Predicados espaciales</h2>
+<p>Un <strong>predicado espacial</strong> es una pregunta sobre la relación entre dos geometrías cuya respuesta es verdadero o falso: ¿se intersecan?, ¿una contiene a la otra?, ¿se tocan solo en el borde? Las relaciones posibles están definidas con precisión en el estándar del OGC (el modelo <a href="https://es.wikipedia.org/wiki/DE-9IM">DE-9IM</a>) y sf las implementa como funciones <code>st_intersects()</code>, <code>st_within()</code>, <code>st_contains()</code>, <code>st_touches()</code>, etc. (tabla 1). Aplicadas a dos capas, devuelven, para cada geometría de la primera, la lista de las geometrías de la segunda con las que cumple la relación. Los cantones que interseca el cantón de San José:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>san_jose <span class="ot">&lt;-</span> <span class="fu">filter</span>(cantones, canton <span class="sc">==</span> <span class="st">"San José"</span>)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="fu">st_intersects</span>(cantones, san_jose)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Sparse geometry binary predicate list of length 84, where the predicate
+was `intersects'
+first 10 elements:
+ 1: 1
+ 2: 1
+ 3: 1
+ 4: (empty)
+ 5: (empty)
+ 6: (empty)
+ 7: (empty)
+ 8: 1
+ 9: (empty)
+ 10: 1</code></pre>
+</div>
+</div>
+<p>El resultado es una lista de 84 elementos, uno por cantón, con el índice de la geometría de <code>san_jose</code> con que se interseca (el 1) o nada. Es una estructura incómoda para leer, y rara vez se usa directamente: lo útil es <strong>filtrar</strong> una capa con ella, lo que hace <a href="https://r-spatial.github.io/sf/reference/st_join.html"><code>st_filter()</code></a>, el equivalente espacial de <code>filter()</code>. Recibe la capa, la geometría de referencia y el predicado (por defecto, <code>st_intersects</code>):</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>vecinos <span class="ot">&lt;-</span> <span class="fu">st_filter</span>(cantones, san_jose)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>vecinos<span class="sc">$</span>canton</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "San José"      "Escazú"        "Desamparados"  "Goicoechea"   
+ [5] "Alajuelita"    "Tibás"         "Montes de Oca" "Curridabat"   
+ [9] "Heredia"       "Santo Domingo" "Belén"        </code></pre>
+</div>
+</div>
+<p>San José más sus diez vecinos, tres de ellos de la provincia de Heredia. Una curiosidad instructiva: el predicado natural para «vecinos» sería <code>st_touches()</code> (comparten el borde, pero no el interior), y con estas capas devuelve <strong>ningún</strong> cantón. La simplificación de las geometrías desplazó los vértices unos metros, de modo que los polígonos vecinos se traslapan o se separan en lugar de compartir exactamente el límite; <code>st_intersects()</code> es más tolerante y por eso suele preferirse. Con geometrías sin simplificar, <code>st_touches()</code> da los vecinos exactos.</p>
+<p>La pregunta inversa, ¿qué puntos están dentro de este polígono?, es el mismo filtro con los puntos como capa y el polígono como referencia. Los félidos registrados en Sarapiquí:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>felidos_sarapiqui <span class="ot">&lt;-</span> felidos <span class="sc">|&gt;</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_filter</span>(<span class="fu">filter</span>(cantones, canton <span class="sc">==</span> <span class="st">"Sarapiquí"</span>))</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(felidos_sarapiqui)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 53</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">count</span>(<span class="fu">st_drop_geometry</span>(felidos_sarapiqui), species, <span class="at">sort =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 2
+  species                n
+  &lt;chr&gt;              &lt;int&gt;
+1 Leopardus pardalis    22
+2 Puma concolor         16
+3 Panthera onca         14
+4 Leopardus wiedii       1</code></pre>
+</div>
+</div>
+<figure style="text-align: center; margin: 20px 0;" class="figure">
+<figcaption>
+<strong>Tabla 1</strong>. Predicados espaciales más usados. Fuente: elaboración propia con base en Pebesma y Bivand (2023).
+</figcaption>
+<table class="table table-bordered table-striped" style="margin: 0 auto;">
+<thead>
+<tr>
+<th>
+Predicado
+</th>
+<th>
+Verdadero cuando…
+</th>
+<th>
+Uso típico
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<code>st_intersects()</code>
+</td>
+<td>
+comparten al menos un punto
+</td>
+<td>
+el más general: cualquier contacto; el predeterminado de <code>st_filter()</code> y <code>st_join()</code>
+</td>
+</tr>
+<tr>
+<td>
+<code>st_disjoint()</code>
+</td>
+<td>
+no comparten ningún punto (lo contrario de <code>st_intersects()</code>)
+</td>
+<td>
+excluir lo que toca una zona
+</td>
+</tr>
+<tr>
+<td>
+<code>st_touches()</code>
+</td>
+<td>
+comparten puntos del borde, pero no del interior
+</td>
+<td>
+vecinos, con geometrías exactas
+</td>
+</tr>
+<tr>
+<td>
+<code>st_within()</code>
+</td>
+<td>
+la primera está completamente dentro de la segunda
+</td>
+<td>
+puntos dentro de un polígono
+</td>
+</tr>
+<tr>
+<td>
+<code>st_contains()</code>
+</td>
+<td>
+la primera contiene completamente a la segunda
+</td>
+<td>
+el polígono que contiene un punto
+</td>
+</tr>
+<tr>
+<td>
+<code>st_crosses()</code>
+</td>
+<td>
+una línea atraviesa un polígono u otra línea
+</td>
+<td>
+ríos y carreteras que cruzan regiones
+</td>
+</tr>
+<tr>
+<td>
+<code>st_overlaps()</code>
+</td>
+<td>
+dos geometrías de la misma dimensión se superponen parcialmente
+</td>
+<td>
+polígonos que se traslapan
+</td>
+</tr>
+<tr>
+<td>
+<code>st_is_within_distance()</code>
+</td>
+<td>
+están a menos de una distancia dada (<code>dist</code>)
+</td>
+<td>
+proximidad sin construir una zona de influencia
+</td>
+</tr>
+</tbody>
+</table>
+</figure>
+<p><em>Ejercicios de esta sección: <a href="#ejercicios-predicados">ejercicios sobre predicados espaciales</a>.</em></p>
+</section>
+<section id="unión-espacial" class="level2">
+<h2 class="anchored" data-anchor-id="unión-espacial">Unión espacial</h2>
+<p>Filtrar responde una pregunta sobre <strong>un</strong> polígono. Para responderla sobre todos a la vez (¿en qué cantón está cada uno de los 1 041 registros?) está la <strong>unión espacial</strong>: <a href="https://r-spatial.github.io/sf/reference/st_join.html"><code>st_join()</code></a> combina dos objetos sf emparejando las filas cuyas geometrías cumplen un predicado, de modo que cada fila del resultado reúne los atributos de ambas capas. Es el <code>left_join()</code> del <a href="../../contenidos/iii-tidyverse/11-dplyr.html#unión-de-conjuntos-de-datos">capítulo de dplyr</a>, con la relación espacial como clave. Sus argumentos: las capas izquierda y derecha, <code>join</code> (el predicado; por defecto <code>st_intersects</code>) y <code>left</code> (<code>TRUE</code>, el valor predeterminado, conserva todas las filas de la izquierda, como <code>left_join()</code>; <code>FALSE</code> solo las emparejadas, como <code>inner_join()</code>). Los félidos con el cantón que los contiene:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>felidos_cantones <span class="ot">&lt;-</span> felidos <span class="sc">|&gt;</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_join</span>(cantones, <span class="at">join =</span> st_within)</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(felidos_cantones)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1041</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>felidos_cantones <span class="sc">|&gt;</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_drop_geometry</span>() <span class="sc">|&gt;</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(species, stateProvince, provincia, canton) <span class="sc">|&gt;</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>()</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 4
+  species            stateProvince       provincia  canton       
+  &lt;chr&gt;              &lt;chr&gt;               &lt;chr&gt;      &lt;chr&gt;        
+1 Leopardus pardalis Cartago             Cartago    Turrialba    
+2 Leopardus pardalis Cartago             Cartago    Turrialba    
+3 Leopardus pardalis San Jose            San José   San José     
+4 Leopardus pardalis San Jose            San José   Pérez Zeledón
+5 Leopardus pardalis Limon               &lt;NA&gt;       &lt;NA&gt;         
+6 Leopardus pardalis Puntarenas Province Puntarenas Coto Brus    </code></pre>
+</div>
+</div>
+<p>Dos detalles del resultado. La geometría es la de la capa <strong>izquierda</strong> (los puntos); la de la derecha se descarta, y las columnas de la derecha (<code>codigo_provincia</code>, <code>provincia</code>, <code>codigo_canton</code>, <code>canton</code>) se agregan a cada punto. Y, como toda unión, se verifica: se conservaron los 1 041 registros, pero ¿cuántos quedaron sin cantón?</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">is.na</span>(felidos_cantones<span class="sc">$</span>canton))</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 44</code></pre>
+</div>
+</div>
+<p>Cuarenta y cuatro registros no caen dentro de ningún cantón. Están en la costa: a unos cientos de metros, y hasta 13 km, de la línea de costa simplificada de la capa del IGN (observaciones en playas, manglares y, en algunos casos, coordenadas imprecisas). Es la lección de la escala vista desde otro lado: los resultados de una unión espacial dependen de la precisión de las dos capas, y los no emparejados hay que explicarlos, no ignorarlos. En la sección sobre medidas se calcula a qué distancia de qué cantón quedaron.</p>
+<section id="atributo-contra-posición" class="level3">
+<h3 class="anchored" data-anchor-id="atributo-contra-posición">Atributo contra posición</h3>
+<p>Los registros traen la provincia como atributo (<code>stateProvince</code>, anotada por quien los publicó). ¿Coincide con la provincia que los contiene espacialmente?</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>felidos_cantones <span class="sc">|&gt;</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_drop_geometry</span>() <span class="sc">|&gt;</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(provincia)) <span class="sc">|&gt;</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(<span class="at">coincide =</span> stateProvince <span class="sc">==</span> provincia)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 2
+  coincide     n
+  &lt;lgl&gt;    &lt;int&gt;
+1 FALSE       45
+2 TRUE       535
+3 NA         417</code></pre>
+</div>
+</div>
+<p>De los 997 registros con cantón, 417 no tienen provincia anotada y 45 tienen una <strong>distinta</strong> de la calculada. Algunas discrepancias son de grafía (<code>San Jose</code>, <code>Puntarenas Province</code>), que una limpieza con <code>case_when()</code> resolvería; otras son errores de quien anotó el registro (13 registros anotados en Guanacaste caen en Alajuela, en los cantones de Upala, San Ramón y San Carlos). La unión espacial sustituye el atributo, inconsistente, por un dato derivado de la posición, y es el modo usual de asignar una unidad territorial a los datos de puntos.</p>
+</section>
+<section id="conteo-por-polígono" class="level3">
+<h3 class="anchored" data-anchor-id="conteo-por-polígono">Conteo por polígono</h3>
+<p>Con la unión hecha, contar es un <code>count()</code>, y el conteo se agrega a la capa de cantones con <code>left_join()</code>, por el código de cantón, <strong>con el objeto sf a la izquierda</strong> (regla del capítulo anterior) y con <code>replace_na()</code> para los cantones sin registros, que la unión deja en <code>NA</code>:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>registros_canton <span class="ot">&lt;-</span> felidos_cantones <span class="sc">|&gt;</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_drop_geometry</span>() <span class="sc">|&gt;</span></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(codigo_canton, <span class="at">name =</span> <span class="st">"registros"</span>)</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>cantones <span class="ot">&lt;-</span> cantones <span class="sc">|&gt;</span></span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(registros_canton, <span class="at">by =</span> <span class="st">"codigo_canton"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">registros =</span> <span class="fu">replace_na</span>(registros, <span class="dv">0</span>),</span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">area_km2 =</span> <span class="fu">as.numeric</span>(<span class="fu">st_area</span>(geom)) <span class="sc">/</span> <span class="fl">1e6</span>,</span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">registros_100km2 =</span> registros <span class="sc">/</span> area_km2 <span class="sc">*</span> <span class="dv">100</span></span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a>cantones <span class="sc">|&gt;</span></span>
+<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_drop_geometry</span>() <span class="sc">|&gt;</span></span>
+<span id="cb28-15"><a href="#cb28-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(canton, provincia, registros, area_km2, registros_100km2) <span class="sc">|&gt;</span></span>
+<span id="cb28-16"><a href="#cb28-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(registros)) <span class="sc">|&gt;</span></span>
+<span id="cb28-17"><a href="#cb28-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>()</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>          canton  provincia registros  area_km2 registros_100km2
+1         Pococí      Limón        86 2188.6580         3.929348
+2 Puerto Jiménez Puntarenas        76  721.2092        10.537858
+3     San Carlos   Alajuela        68 3352.2804         2.028470
+4            Osa Puntarenas        54 1933.3930         2.793017
+5      Sarapiquí    Heredia        53 2143.2570         2.472872
+6      Siquirres      Limón        45  854.6812         5.265121</code></pre>
+</div>
+</div>
+<p>Pococí, Puerto Jiménez y San Carlos encabezan el conteo; 18 cantones, casi todos del Valle Central, no tienen ningún registro. Y, como se advirtió en el capítulo anterior, un mapa de coropletas muestra variables <strong>normalizadas</strong>: los registros por cada 100 km² y no el conteo, que favorece a los cantones grandes:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(cantones) <span class="sc">+</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="fu">aes</span>(<span class="at">fill =</span> registros_100km2), <span class="at">color =</span> <span class="st">"white"</span>, <span class="at">linewidth =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_c</span>(<span class="at">option =</span> <span class="st">"mako"</span>, <span class="at">direction =</span> <span class="sc">-</span><span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_sf</span>(<span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">280000</span>, <span class="dv">660000</span>), <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">880000</span>, <span class="dv">1250000</span>)) <span class="sc">+</span></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Registros de félidos por cantón"</span>,</span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">"Registros</span><span class="sc">\n</span><span class="st">por 100 km²"</span>,</span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">"Fuentes: GBIF (2026) e IGN (s. f.)"</span></span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_void</span>()</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="16-sf-operaciones-espaciales_files/figure-html/coropletas-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Puerto Jiménez, con la península de Osa, destaca con más de diez registros por cada 100 km². Pero el cantón más oscuro es Escazú, con cinco registros en 35 km²: la normalización tiene su propia trampa, los <strong>denominadores pequeños</strong>, que convierten unos pocos registros en una densidad alta (Monteverde, con cinco registros en 53 km², está en el mismo caso). Y el mapa mide el <strong>esfuerzo de observación</strong> tanto como la presencia de los animales: los registros de GBIF se concentran donde hay parques nacionales, estaciones biológicas y observadores. Las dos cosas deben decirse al interpretarlo.</p>
+</section>
+<section id="el-orden-de-las-capas" class="level3">
+<h3 class="anchored" data-anchor-id="el-orden-de-las-capas">El orden de las capas</h3>
+<p>La unión espacial no es simétrica: <code>st_join(felidos, cantones)</code> y <code>st_join(cantones, felidos)</code> producen los mismos pares, pero con distinta geometría y distinto número de filas. En la segunda, la geometría es la de los cantones y cada cantón aparece <strong>una vez por registro</strong>:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>cantones_felidos <span class="ot">&lt;-</span> cantones <span class="sc">|&gt;</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(canton) <span class="sc">|&gt;</span></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_join</span>(felidos, <span class="at">join =</span> st_contains)</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(cantones_felidos)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1015</code></pre>
+</div>
+</div>
+<p>Mil quince filas: una por cada par cantón-registro (997), más una por cada uno de los 18 cantones sin registros, que <code>left = TRUE</code> conserva; los cantones con varios registros se repiten. La regla práctica: a la <strong>izquierda</strong> va la capa cuyas filas se quieren conservar en el resultado, con su geometría; si lo que se quiere es un conteo por polígono, se une con los puntos a la izquierda y se cuenta, como arriba.</p>
+<p><em>Ejercicios de esta sección: <a href="#ejercicios-union">ejercicios sobre unión espacial</a>.</em></p>
+</section>
+</section>
+<section id="agregación-espacial" class="level2">
+<h2 class="anchored" data-anchor-id="agregación-espacial">Agregación espacial</h2>
+<p>En el capítulo anterior se adelantó que <code>summarize()</code> sobre un objeto sf <strong>une las geometrías</strong> de cada grupo. Es la <strong>agregación espacial</strong>: los cantones agrupados por provincia producen el polígono de cada provincia, y las columnas se resumen como en cualquier <code>group_by()</code>:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>provincias_calculadas <span class="ot">&lt;-</span> cantones <span class="sc">|&gt;</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(provincia) <span class="sc">|&gt;</span></span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(</span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">cantones =</span> <span class="fu">n</span>(),</span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">registros =</span> <span class="fu">sum</span>(registros),</span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">area_km2 =</span> <span class="fu">sum</span>(area_km2)</span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a>provincias_calculadas</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Simple feature collection with 7 features and 4 fields
+Geometry type: GEOMETRY
+Dimension:     XY
+Bounding box:  xmin: 156147.8 ymin: 608898.4 xmax: 658877.1 ymax: 1241118
+Projected CRS: CR-SIRGAS / CRTM05
+# A tibble: 7 × 5
+  provincia  cantones registros area_km2                                    geom
+  &lt;chr&gt;         &lt;int&gt;     &lt;int&gt;    &lt;dbl&gt;                          &lt;GEOMETRY [m]&gt;
+1 Alajuela         16       192    9773. POLYGON ((449297.4 1097375, 448984 109…
+2 Cartago           8        52    3092. POLYGON ((520156.3 1114996, 530335 111…
+3 Guanacaste       11       141   10200. MULTIPOLYGON (((370469.2 1112796, 3707…
+4 Heredia          10        63    2662. POLYGON ((487999.3 1101460, 487509.9 1…
+5 Limón             6       204    9178. POLYGON ((625670.2 1077968, 625801.3 1…
+6 Puntarenas       13       261   11302. MULTIPOLYGON (((159959.3 609495.8, 159…
+7 San José         20        84    4970. POLYGON ((482716 1064659, 482428.8 106…</code></pre>
+</div>
+</div>
+<p>Las fronteras cantonales interiores desaparecieron y cada provincia es un polígono o un multipolígono (Guanacaste y Puntarenas, con islas). El resultado equivale a la capa <code>provincias</code> del IGN, salvo por las diferencias mínimas que dejan los límites simplificados. Limón, con solo seis cantones, tiene la segunda cantidad de registros; San José, con veinte, una de las menores. La misma operación sin <code>group_by()</code> une <strong>todas</strong> las geometrías en una, el polígono del país, que también se obtiene con <a href="https://r-spatial.github.io/sf/reference/geos_combine.html"><code>st_union()</code></a>.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(provincias_calculadas) <span class="sc">+</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="fu">aes</span>(<span class="at">fill =</span> registros), <span class="at">color =</span> <span class="st">"white"</span>, <span class="at">linewidth =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> provincia), <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_c</span>(<span class="at">option =</span> <span class="st">"mako"</span>, <span class="at">direction =</span> <span class="sc">-</span><span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_sf</span>(<span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">280000</span>, <span class="dv">660000</span>), <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">880000</span>, <span class="dv">1250000</span>)) <span class="sc">+</span></span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Registros de félidos por provincia"</span>,</span>
+<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">"Registros"</span>,</span>
+<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">"Fuentes: GBIF (2026) e IGN (s. f.)"</span></span>
+<span id="cb35-10"><a href="#cb35-10" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb35-11"><a href="#cb35-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_void</span>()</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="16-sf-operaciones-espaciales_files/figure-html/mapa-provincias-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><em>Ejercicios de esta sección: <a href="#ejercicios-agregacion">ejercicios sobre agregación espacial</a>.</em></p>
+</section>
+<section id="medidas-y-geometrías-derivadas" class="level2">
+<h2 class="anchored" data-anchor-id="medidas-y-geometrías-derivadas">Medidas y geometrías derivadas</h2>
+<p>El capítulo anterior midió áreas con <code>st_area()</code>. Las demás medidas y las geometrías derivadas siguen la misma regla: SRC proyectado, unidades del SRC (metros en CRTM05).</p>
+<section id="centroides-y-símbolos-proporcionales" class="level3">
+<h3 class="anchored" data-anchor-id="centroides-y-símbolos-proporcionales">Centroides y símbolos proporcionales</h3>
+<p><a href="https://r-spatial.github.io/sf/reference/geos_unary.html"><code>st_centroid()</code></a> devuelve el centro de masa de cada geometría: una capa de puntos con los mismos atributos. Sirve para colocar etiquetas, para medir distancias entre polígonos y, sobre todo, para los <strong>símbolos proporcionales</strong>, la alternativa a las coropletas cuando la variable es un conteo absoluto: un círculo en el centro de cada cantón, con el tamaño mapeado a la cantidad de registros, no confunde el tamaño del polígono con la magnitud del fenómeno.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>centroides <span class="ot">&lt;-</span> <span class="fu">st_centroid</span>(cantones)</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">data =</span> cantones, <span class="at">fill =</span> <span class="st">"#f0f0f0"</span>, <span class="at">color =</span> <span class="st">"white"</span>, <span class="at">linewidth =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">data =</span> <span class="fu">filter</span>(centroides, registros <span class="sc">&gt;</span> <span class="dv">0</span>), <span class="fu">aes</span>(<span class="at">size =</span> registros), <span class="at">color =</span> <span class="st">"#005da4"</span>, <span class="at">alpha =</span> <span class="fl">0.6</span>) <span class="sc">+</span></span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_size_area</span>(<span class="at">max_size =</span> <span class="dv">12</span>) <span class="sc">+</span></span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_sf</span>(<span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">280000</span>, <span class="dv">660000</span>), <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">880000</span>, <span class="dv">1250000</span>)) <span class="sc">+</span></span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Registros de félidos por cantón (símbolos proporcionales)"</span>,</span>
+<span id="cb36-10"><a href="#cb36-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="st">"Registros"</span>,</span>
+<span id="cb36-11"><a href="#cb36-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">"Fuentes: GBIF (2026) e IGN (s. f.)"</span></span>
+<span id="cb36-12"><a href="#cb36-12" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb36-13"><a href="#cb36-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_void</span>()</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="16-sf-operaciones-espaciales_files/figure-html/st-centroid-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><code>scale_size_area()</code> hace que el <strong>área</strong> del círculo, y no su radio, sea proporcional al valor, que es como el ojo compara tamaños. El mensaje <code>st_centroid assumes attributes are constant over geometries</code> recuerda que los atributos se copian a los puntos sin cambios (aquí se oculta con <code>warning: false</code>). Un detalle: el centroide de un polígono cóncavo o de un multipolígono puede caer <strong>fuera</strong> de él; en esta capa le ocurre al cantón de Alajuela, cuya forma alargada e irregular deja el centro de masa en Grecia. <a href="https://r-spatial.github.io/sf/reference/geos_unary.html"><code>st_point_on_surface()</code></a> garantiza un punto interior, y es lo que <code>geom_sf_text()</code> usa para colocar los rótulos.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>dentro <span class="ot">&lt;-</span> <span class="fu">st_within</span>(centroides, cantones, <span class="at">sparse =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>cantones<span class="sc">$</span>canton[<span class="sc">!</span><span class="fu">diag</span>(dentro)]</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Alajuela"</code></pre>
+</div>
+</div>
+</section>
+<section id="zonas-de-influencia" class="level3">
+<h3 class="anchored" data-anchor-id="zonas-de-influencia">Zonas de influencia</h3>
+<p><a href="https://r-spatial.github.io/sf/reference/geos_unary.html"><code>st_buffer()</code></a> construye el polígono de todos los puntos a menos de una distancia de la geometría: una <strong>zona de influencia</strong>, en las unidades del SRC. Combinada con un filtro espacial, responde preguntas de proximidad: ¿qué félidos se han registrado a menos de 20 km de la Escuela de Geografía? El punto se construye con <code>st_point()</code> (<strong>longitud, latitud</strong>, como siempre), se le asigna el SRC de las coordenadas y se reproyecta, porque la zona se mide en metros:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>escuela <span class="ot">&lt;-</span> <span class="fu">st_sfc</span>(<span class="fu">st_point</span>(<span class="fu">c</span>(<span class="sc">-</span><span class="fl">84.0512</span>, <span class="fl">9.9377</span>)), <span class="at">crs =</span> <span class="dv">4326</span>) <span class="sc">|&gt;</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_transform</span>(<span class="dv">8908</span>)</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>zona_20km <span class="ot">&lt;-</span> <span class="fu">st_buffer</span>(escuela, <span class="at">dist =</span> <span class="dv">20000</span>)</span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a>felidos_cerca <span class="ot">&lt;-</span> <span class="fu">st_filter</span>(felidos, zona_20km)</span>
+<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(felidos_cerca)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 18</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">count</span>(<span class="fu">st_drop_geometry</span>(felidos_cerca), species)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 2
+  species                n
+  &lt;chr&gt;              &lt;int&gt;
+1 Leopardus pardalis     2
+2 Leopardus wiedii       4
+3 Panthera onca          3
+4 Puma concolor          9</code></pre>
+</div>
+</div>
+<p>Dieciocho registros, incluidos tres de jaguar, a menos de 20 km de la Universidad (en las montañas que rodean el Valle Central). El mapa, con la zona y los cantones que toca:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">data =</span> <span class="fu">st_filter</span>(cantones, zona_20km), <span class="at">fill =</span> <span class="st">"#dce9f5"</span>, <span class="at">color =</span> <span class="st">"white"</span>) <span class="sc">+</span></span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">data =</span> zona_20km, <span class="at">fill =</span> <span class="st">"#005da4"</span>, <span class="at">alpha =</span> <span class="fl">0.15</span>, <span class="at">color =</span> <span class="st">"#005da4"</span>) <span class="sc">+</span></span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">data =</span> felidos_cerca, <span class="fu">aes</span>(<span class="at">color =</span> species), <span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">data =</span> escuela, <span class="at">shape =</span> <span class="dv">17</span>, <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Félidos registrados a menos de 20 km de la Escuela de Geografía"</span>,</span>
+<span id="cb43-8"><a href="#cb43-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"Especie"</span>,</span>
+<span id="cb43-9"><a href="#cb43-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">"Fuentes: GBIF (2026) e IGN (s. f.)"</span></span>
+<span id="cb43-10"><a href="#cb43-10" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb43-11"><a href="#cb43-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_void</span>()</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="16-sf-operaciones-espaciales_files/figure-html/mapa-buffer-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>La zona de influencia de un punto es un círculo; la de una línea, una franja; la de un polígono, el polígono agrandado (y con una distancia negativa, encogido). Como la zona se construye en las unidades del SRC, conviene que este sea proyectado: en WGS84, la unidad de <code>dist</code> depende de la configuración de sf (la clínica de errores muestra qué ocurre).</p>
+</section>
+<section id="distancias" class="level3">
+<h3 class="anchored" data-anchor-id="distancias">Distancias</h3>
+<p><a href="https://r-spatial.github.io/sf/reference/geos_measures.html"><code>st_distance()</code></a> mide la distancia entre geometrías, con unidades, y <a href="https://r-spatial.github.io/sf/reference/st_nearest_feature.html"><code>st_nearest_feature()</code></a> devuelve, para cada geometría de una capa, el índice de la más cercana de otra. Juntas resuelven la cuenta pendiente de la unión espacial: ¿de qué cantón, y a qué distancia, quedaron los 44 registros que cayeron fuera de todo polígono?</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>sin_canton <span class="ot">&lt;-</span> <span class="fu">filter</span>(felidos_cantones, <span class="fu">is.na</span>(canton))</span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>mas_cercano <span class="ot">&lt;-</span> <span class="fu">st_nearest_feature</span>(sin_canton, cantones)</span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>sin_canton <span class="sc">|&gt;</span></span>
+<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb44-7"><a href="#cb44-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">canton_cercano =</span> cantones<span class="sc">$</span>canton[mas_cercano],</span>
+<span id="cb44-8"><a href="#cb44-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">distancia_km =</span> <span class="fu">as.numeric</span>(<span class="fu">st_distance</span>(sin_canton, cantones[mas_cercano, ], <span class="at">by_element =</span> <span class="cn">TRUE</span>)) <span class="sc">/</span> <span class="dv">1000</span></span>
+<span id="cb44-9"><a href="#cb44-9" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb44-10"><a href="#cb44-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_drop_geometry</span>() <span class="sc">|&gt;</span></span>
+<span id="cb44-11"><a href="#cb44-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(canton_cercano, <span class="at">sort =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb44-12"><a href="#cb44-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>()</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 2
+  canton_cercano     n
+  &lt;chr&gt;          &lt;int&gt;
+1 Pococí            11
+2 Puerto Jiménez     6
+3 La Cruz            5
+4 Osa                5
+5 Golfito            4
+6 Talamanca          4</code></pre>
+</div>
+</div>
+<p>Los cantones más cercanos son Pococí, Puerto Jiménez, La Cruz y Osa, todos costeros, y las distancias van de unos cientos de metros a 13 km, lo que confirma la explicación: registros en playas, manglares y mar que la línea de costa simplificada deja fuera. Con <code>st_distance()</code> sin <code>by_element</code>, el resultado es una <strong>matriz</strong> de distancias entre todas las geometrías de las dos capas. <code>st_length()</code> mide líneas; y <a href="https://r-spatial.github.io/sf/reference/geos_unary.html"><code>st_simplify()</code></a>, <code>st_convex_hull()</code> y <code>st_bbox()</code> producen otras geometrías derivadas con el mismo patrón.</p>
+<p><em>Ejercicios de esta sección: <a href="#ejercicios-medidas">ejercicios sobre medidas y geometrías derivadas</a>.</em></p>
+</section>
+</section>
+<section id="asistentes-de-ia-para-generar-operaciones-espaciales" class="level2">
+<h2 class="anchored" data-anchor-id="asistentes-de-ia-para-generar-operaciones-espaciales">Asistentes de IA para generar operaciones espaciales</h2>
+<p>Los <a href="../../contenidos/i-introduccion-ciencia-datos-programacion/05-asistentes-ia.html">lineamientos del curso</a> y las pautas del <a href="../../contenidos/iv-ecosistema-geoespacial-r/15-sf-datos-vectoriales.html#asistentes-de-ia-para-generar-mapas">capítulo anterior</a> aplican: describir las capas en el contexto (columnas, tipo de geometría y, sobre todo, el SRC de cada una), pedir el patrón del curso y verificar el resultado. Para las operaciones espaciales, las comprobaciones son cuatro: que las dos capas estén en el <strong>mismo SRC</strong> y que sea proyectado si se mide; que el <strong>predicado</strong> y el <strong>orden de las capas</strong> correspondan a la pregunta (<code>st_within</code> con los puntos a la izquierda para contarlos por polígono); que el número de filas del resultado sea el esperado (con <code>st_join()</code>, el de la capa izquierda) y que los no emparejados se expliquen; y que un par de resultados conocidos sean correctos (Sarapiquí tiene 53 registros). Un prompt de ejemplo:</p>
+<blockquote class="blockquote">
+<p>Actúe como asistente de análisis de datos geoespaciales con R y sf <strong>(rol)</strong>. Tengo dos objetos sf en EPSG:8908: <code>felidos</code>, con 1 041 puntos de registros de presencia y las columnas <code>species</code> (texto) y <code>year</code> (entero), y <code>cantones</code>, con 84 multipolígonos y las columnas <code>codigo_canton</code> (entero) y <code>canton</code> (texto) <strong>(contexto)</strong>. Escriba el código que calcule, para cada cantón, cuántas especies distintas se han registrado, agregue esa columna a <code>cantones</code> (con cero para los cantones sin registros) y muestre los diez cantones con más especies <strong>(tarea)</strong>. Use <code>st_join()</code> con los puntos a la izquierda, <code>st_drop_geometry()</code>, <code>group_by()</code> y <code>summarize()</code> con <code>n_distinct()</code>, y <code>left_join()</code> con el objeto sf a la izquierda; agregue un comentario por paso <strong>(formato)</strong>.</p>
+</blockquote>
+<p><em>Ejercicios de esta sección: <a href="#ejercicios-prediccion">ejercicios sobre predicción, asistentes y tarea 3</a>.</em></p>
+</section>
+<section id="clínica-de-errores" class="level2">
+<h2 class="anchored" data-anchor-id="clínica-de-errores">Clínica de errores</h2>
+<p>Los errores propios de las operaciones espaciales. El primero es el que el capítulo anterior anunció: a diferencia de ggplot2, las operaciones espaciales <strong>no reproyectan</strong> por su cuenta, y se detienen si las capas no comparten el SRC.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>felidos_wgs84 <span class="ot">&lt;-</span> <span class="fu">st_transform</span>(felidos, <span class="dv">4326</span>)</span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a><span class="fu">st_filter</span>(felidos_wgs84, san_jose)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-error">
+<pre><code>Error in `stopifnot()`:
+ℹ In argument: `&gt;...`.
+Caused by error in `st_geos_binop()`:
+! st_crs(x) == st_crs(y) is not TRUE</code></pre>
+</div>
+</div>
+<p>El segundo es más sutil, porque no produce ningún mensaje. ¿En qué unidades está <code>dist</code> cuando la capa está en coordenadas geográficas? Quien piense «en grados» y pida una zona de 0,1° (unos 11 km) obtiene esto:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>escuela_wgs84 <span class="ot">&lt;-</span> <span class="fu">st_transform</span>(escuela, <span class="dv">4326</span>)</span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>zona_dudosa <span class="ot">&lt;-</span> <span class="fu">st_buffer</span>(escuela_wgs84, <span class="at">dist =</span> <span class="fl">0.1</span>)</span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">as.numeric</span>(<span class="fu">st_area</span>(zona_dudosa)))</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0</code></pre>
+</div>
+</div>
+<p>Un círculo de 0 m²: en las versiones recientes de sf, con <code>sf_use_s2()</code> activado (el mensaje de <code>library(sf)</code>), las zonas de influencia en coordenadas geográficas se calculan sobre la esfera y <code>dist</code> se interpreta en <strong>metros</strong>, así que la zona mide 0,1 m de radio. Con s2 desactivado, o en versiones anteriores, <code>dist</code> sí son grados, y sf advierte <code>st_buffer does not correctly buffer longitude/latitude data</code> porque el resultado es una elipse deformada. La unidad depende de la configuración: por eso la práctica del capítulo es reproyectar a un SRC proyectado y dar la distancia en metros, sin ambigüedad.</p>
+<figure style="text-align: center; margin: 20px 0;" class="figure">
+<figcaption>
+<strong>Tabla 2</strong>. Clínica de errores de las operaciones espaciales. Fuente: elaboración propia.
+</figcaption>
+<table class="table table-bordered table-striped" style="margin: 0 auto;">
+<thead>
+<tr>
+<th>
+Mensaje o síntoma
+</th>
+<th>
+Causa
+</th>
+<th>
+Solución
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<code>st_crs(x) == st_crs(y) is not TRUE</code>
+</td>
+<td>
+Las dos capas de un filtro, una unión o una medida están en SRC distintos.
+</td>
+<td>
+Reproyectar una de ellas con <code>st_transform()</code> al SRC de la otra; en este capítulo, todo en CRTM05 (8908).
+</td>
+</tr>
+<tr>
+<td>
+La zona de influencia es minúscula o enorme, o <code>st_buffer does not correctly buffer longitude/latitude data</code>
+</td>
+<td>
+Zona de influencia en coordenadas geográficas: <code>dist</code> en metros con s2 activado, en grados sin él.
+</td>
+<td>
+Reproyectar a un SRC proyectado y dar <code>dist</code> en metros.
+</td>
+</tr>
+<tr>
+<td>
+<code>st_centroid assumes attributes are constant over geometries</code>
+</td>
+<td>
+Advertencia, no error: los atributos se copian a los centroides.
+</td>
+<td>
+Ninguna; <code>warning: false</code> en el bloque si molesta.
+</td>
+</tr>
+<tr>
+<td>
+<code>second argument should be of class sf</code> en <code>st_join()</code>
+</td>
+<td>
+La segunda capa es un data frame sin geometría (el CSV sin convertir con <code>st_as_sf()</code>).
+</td>
+<td>
+Convertir con <code>st_as_sf()</code>, con <code>coords</code> y <code>crs</code>.
+</td>
+</tr>
+<tr>
+<td>
+<code>st_join()</code> devuelve más filas que la capa izquierda
+</td>
+<td>
+Puntos en el límite entre dos polígonos, o polígonos a la izquierda con varios puntos cada uno.
+</td>
+<td>
+Es el comportamiento esperado; para conteos, los puntos a la izquierda y <code>count()</code>.
+</td>
+</tr>
+<tr>
+<td>
+Todos los cantones quedan con <code>NA</code> tras la unión espacial
+</td>
+<td>
+Las capas no se traslapan: SRC distintos declarados iguales, o coordenadas al revés en <code>st_as_sf()</code>.
+</td>
+<td>
+Dibujar las dos capas juntas con ggplot2 y revisar <code>st_bbox()</code> de cada una.
+</td>
+</tr>
+<tr>
+<td>
+<code>object 'registros' not found</code> en el mapa de coropletas
+</td>
+<td>
+La columna se agregó a otra copia de <code>cantones</code>, o el bloque <code>conteo</code> no se ejecutó.
+</td>
+<td>
+Ejecutar los bloques en orden; <code>names(cantones)</code> para comprobar.
+</td>
+</tr>
+<tr>
+<td>
+<code>st_touches()</code> no devuelve vecinos
+</td>
+<td>
+Geometrías simplificadas que ya no comparten exactamente el límite.
+</td>
+<td>
+<code>st_intersects()</code> y excluir la propia geometría.
+</td>
+</tr>
+<tr>
+<td>
+El mapa es diminuto o la Isla del Coco ocupa la mitad
+</td>
+<td>
+La extensión de los cantones incluye la isla.
+</td>
+<td>
+<code>coord_sf(xlim = c(280000, 660000), ylim = c(880000, 1250000))</code>.
+</td>
+</tr>
+<tr>
+<td>
+<code>summarize()</code> tarda mucho
+</td>
+<td>
+Agregación espacial de muchos polígonos detallados.
+</td>
+<td>
+Si solo interesan los atributos, <code>st_drop_geometry()</code> antes; si no, <code>st_simplify()</code> o paciencia.
+</td>
+</tr>
+<tr>
+<td>
+Los símbolos proporcionales no se distinguen
+</td>
+<td>
+Escala de tamaño por defecto (radio proporcional, pocos tamaños).
+</td>
+<td>
+<code>scale_size_area(max_size = …)</code>.
+</td>
+</tr>
+</tbody>
+</table>
+</figure>
+</section>
+<section id="resumen" class="level2">
+<h2 class="anchored" data-anchor-id="resumen">Resumen</h2>
+<ul>
+<li>Los <strong>predicados espaciales</strong> (<code>st_intersects()</code>, <code>st_within()</code>, <code>st_contains()</code>, <code>st_touches()</code>, <code>st_is_within_distance()</code>…) responden si dos geometrías cumplen una relación; <code>st_filter()</code> los usa para <strong>filtrar</strong> una capa con otra, como <code>filter()</code> lo hace con una condición.</li>
+<li>La <strong>unión espacial</strong> <code>st_join()</code> combina dos capas por un predicado, como <code>left_join()</code> lo hace por una clave: conserva la geometría y las filas de la capa <strong>izquierda</strong>, agrega las columnas de la derecha y se verifica (filas sin pareja, filas repetidas). Para contar puntos por polígono: puntos a la izquierda, <code>st_drop_geometry()</code>, <code>count()</code> y <code>left_join()</code> al polígono. La posición sustituye al atributo anotado a mano.</li>
+<li><code>summarize()</code> sobre un objeto sf <strong>agrega</strong> las geometrías de cada grupo (los cantones en provincias); <code>st_union()</code> las une todas.</li>
+<li><code>st_centroid()</code> resume cada polígono en un punto (que puede caer fuera; <code>st_point_on_surface()</code> no), base de los <strong>símbolos proporcionales</strong> con <code>scale_size_area()</code>; <code>st_buffer()</code> construye <strong>zonas de influencia</strong>, en metros sobre un SRC proyectado; <code>st_distance()</code> y <code>st_nearest_feature()</code> miden y encuentran lo más cercano.</li>
+<li>Toda operación entre dos capas exige el <strong>mismo SRC</strong>, y las medidas, un SRC <strong>proyectado</strong> adecuado a la región: <code>st_crs(x) == st_crs(y) is not TRUE</code> es el error que lo recuerda.</li>
+</ul>
+</section>
+<section id="ejercicios" class="level2">
+<h2 class="anchored" data-anchor-id="ejercicios">Ejercicios</h2>
+<p>Los ejercicios se agrupan según la sección del capítulo a la que corresponden y se resuelven en un documento Quarto nuevo del proyecto <code>pf0953</code>, <code>felidos.qmd</code>, con el mismo encabezado YAML de <code>mapas.qmd</code> y un bloque <code>preparacion</code> igual al del inicio del capítulo. Varios suponen ejecutados los bloques de las secciones anteriores (<code>cantones</code> con las columnas <code>registros</code>, <code>area_km2</code> y <code>registros_100km2</code>; <code>felidos</code> en CRTM05; <code>felidos_cantones</code>; <code>centroides</code>; <code>escuela</code>).</p>
+<section id="ejercicios-carga" class="level3">
+<h3 class="anchored" data-anchor-id="ejercicios-carga">Carga y puntos</h3>
+<ol type="1">
+<li><p>Lea <code>cantones.csv</code> (población y área del INEC, del <a href="../../contenidos/ii-lenguaje-programacion-r/07-fundamentos-r-i.html">capítulo de Fundamentos de R</a>) y únalo a <code>cantones</code> por el nombre del cantón, con el objeto sf a la izquierda. Verifique la unión con <code>anti_join()</code>: dos cantones tienen el nombre escrito de forma distinta en las dos fuentes (la advertencia del README de los datos lo explica). Corríjalos con <code>case_when()</code> antes de unir y dibuje un mapa de coropletas de la densidad de población (habitantes por km²), con escala logarítmica, sin la Isla del Coco.</p></li>
+<li><p><strong>Prediga antes de ejecutar</strong>: ¿qué muestra <code>st_bbox()</code> de los félidos si <code>st_as_sf()</code> recibe <code>coords = c("decimalLatitude", "decimalLongitude")</code>? Compruébelo y dibuje el resultado sobre <code>cantones</code> (ggplot2 reproyecta para dibujar, pero los puntos caen donde las coordenadas invertidas indican). Luego intente <code>st_filter()</code> de ese objeto, sin reproyectar, con <code>san_jose</code>: anote el mensaje de error y búsquelo en la tabla 2.</p></li>
+</ol>
+</section>
+<section id="ejercicios-predicados" class="level3">
+<h3 class="anchored" data-anchor-id="ejercicios-predicados">Predicados espaciales</h3>
+<ol start="3" type="1">
+<li><p>Obtenga los cantones vecinos de <strong>Limón</strong> (con <code>st_filter()</code> y <code>st_intersects</code>) y dibújelos con el cantón en un color y los vecinos en otro, con el nombre de cada uno con <code>geom_sf_text()</code>. ¿Cuántos son y de qué provincias? Repita con <code>st_touches</code> y explique por qué cambia el resultado.</p></li>
+<li><p>Con <code>st_filter()</code>, obtenga los registros de <strong>jaguar</strong> (<code>Panthera onca</code>) en la provincia de Limón (use la capa <code>provincias</code>) y cuéntelos por año con <code>count()</code>. ¿En qué década se concentran? Compare con el total de registros de jaguar del país.</p></li>
+</ol>
+</section>
+<section id="ejercicios-union" class="level3">
+<h3 class="anchored" data-anchor-id="ejercicios-union">Unión espacial</h3>
+<ol start="5" type="1">
+<li><p>Calcule, con una unión espacial de <code>felidos</code> y <code>provincias</code>, cuántos registros de cada <strong>especie</strong> hay en cada provincia, y muestre el resultado como una tabla con <code>pivot_wider()</code> (una fila por provincia, una columna por especie) y <code>knitr::kable()</code>. ¿En qué provincia se ha registrado el tigrillo (<code>Leopardus tigrinus</code>)?</p></li>
+<li><p>Calcule, para cada cantón, la cantidad de <strong>especies distintas</strong> registradas (<code>n_distinct()</code>), agregue la columna a <code>cantones</code> con cero para los que no tienen registros y dibuje un mapa de coropletas con una escala discreta (la columna convertida con <code>factor()</code>, o <code>scale_fill_viridis_d()</code>). ¿Cuál es el único cantón con las seis especies? Es el ejercicio del prompt de la sección de asistentes: resuélvalo primero a mano.</p></li>
+<li><p><strong>Prediga antes de ejecutar</strong>: ¿cuántas filas tiene cada uno de los tres resultados siguientes y por qué?</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>a <span class="ot">&lt;-</span> <span class="fu">st_join</span>(felidos, <span class="fu">select</span>(cantones, canton), <span class="at">join =</span> st_within)</span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>b <span class="ot">&lt;-</span> <span class="fu">st_join</span>(felidos, <span class="fu">select</span>(cantones, canton), <span class="at">join =</span> st_within, <span class="at">left =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>c <span class="ot">&lt;-</span> <span class="fu">st_join</span>(<span class="fu">select</span>(cantones, canton), felidos, <span class="at">join =</span> st_contains, <span class="at">left =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="fu">nrow</span>(a), <span class="fu">nrow</span>(b), <span class="fu">nrow</span>(c))</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<details>
+<summary>
+<p>Después de ejecutar, haga clic aquí para ver la explicación</p>
+</summary>
+<p><code>a</code> tiene 1 041 filas: todos los registros, con el cantón en <code>NA</code> en los 44 que no caen en ningún polígono (<code>left = TRUE</code>, el valor predeterminado). <code>b</code> tiene 997: solo los registros con cantón (como <code>inner_join()</code>). <code>c</code> también tiene 997: una fila por cada par cantón-registro, con la geometría del cantón repetida tantas veces como registros contiene, y sin los 18 cantones sin registros, que <code>left = FALSE</code> descarta; con <code>left = TRUE</code> tendría 1 015.</p>
+</details></li>
+</ol>
+</section>
+<section id="ejercicios-agregacion" class="level3">
+<h3 class="anchored" data-anchor-id="ejercicios-agregacion">Agregación espacial</h3>
+<ol start="8" type="1">
+<li>Agregue los cantones por provincia <strong>sin</strong> la geometría (con <code>st_drop_geometry()</code> antes de <code>group_by()</code>) y compare el tiempo y el resultado con el bloque <code>summarize</code> del capítulo. Luego, con <code>st_union()</code> y <code>st_area()</code>, calcule el área total del país a partir de los cantones y compárela con la suma de las áreas de los cantones y con los 51 100 km² oficiales: ¿por qué difieren? Pista: la Isla del Coco y la simplificación.</li>
+</ol>
+</section>
+<section id="ejercicios-medidas" class="level3">
+<h3 class="anchored" data-anchor-id="ejercicios-medidas">Medidas y geometrías derivadas</h3>
+<ol start="9" type="1">
+<li><p>Construya una zona de influencia de <strong>5 km</strong> alrededor de los registros de <strong>jaguar</strong> (con <code>st_buffer()</code> sobre los puntos y <code>st_union()</code> para fundir los círculos) y calcule su área en km². Dibújela sobre los cantones, sin la Isla del Coco. ¿Qué porcentaje del territorio nacional cubre?</p></li>
+<li><p>Para cada cantón, calcule la distancia en km de su centroide al centroide de <strong>San José</strong> (<code>st_distance()</code> entre <code>centroides</code> y el centroide de San José) y muestre los cinco cantones más lejanos y los cinco más cercanos. ¿Cuál es el más lejano? ¿Y cuál cantón de la provincia de San José?</p></li>
+</ol>
+</section>
+<section id="ejercicios-prediccion" class="level3">
+<h3 class="anchored" data-anchor-id="ejercicios-prediccion">Predicción, asistentes y tarea 3</h3>
+<ol start="11" type="1">
+<li><p>Pida a un asistente de IA el código del prompt de ejemplo de la sección de asistentes (especies por cantón) y verifíquelo con las cuatro comprobaciones de esa sección: mismo SRC, predicado y orden de las capas, número de filas y un par de resultados conocidos (compárelos con su solución del ejercicio 6). Documente en el texto del documento el asistente, el prompt, el código y el resultado de las comprobaciones, como en la declaración de uso de IA de la tarea 2.</p></li>
+<li><p>Para la tarea 3, tome la capa de su tema del ejercicio 14 del <a href="../../contenidos/iv-ecosistema-geoespacial-r/15-sf-datos-vectoriales.html#ejercicios-publicacion">capítulo anterior</a> y relaciónela espacialmente con otra: cuente sus entidades por cantón, provincia o país con una unión espacial; encuentre las más cercanas a un punto de interés; o construya una zona de influencia alrededor de ellas y determine qué contiene. Anote en el texto qué pregunta responde cada operación y en qué SRC la hizo. Publique <code>felidos.qmd</code> en el repositorio <code>practica-quarto</code>, junto con los documentos anteriores.</p></li>
+</ol>
+</section>
+</section>
+<section id="referencias-bibliográficas" class="level2">
+<h2 class="anchored" data-anchor-id="referencias-bibliográficas">Referencias bibliográficas</h2>
+<p>GBIF.org. (2026). <em>GBIF occurrence search: Felidae, Costa Rica</em> [conjunto de datos]. Recuperado el 11 de octubre de 2026, de <a href="https://www.gbif.org/occurrence/search?country=CR&amp;taxon_key=9703&amp;has_coordinate=true&amp;has_geospatial_issue=false" class="uri">https://www.gbif.org/occurrence/search?country=CR&amp;taxon_key=9703&amp;has_coordinate=true&amp;has_geospatial_issue=false</a></p>
+<p>Instituto Geográfico Nacional. (s. f.). <em>Límite cantonal 1:5000 y Límite provincial 1:5000</em> [capas WFS]. Sistema Nacional de Información Territorial. Recuperado el 11 de octubre de 2026, de <a href="https://geos.snitcr.go.cr/be/IGN_5_CO/wfs" class="uri">https://geos.snitcr.go.cr/be/IGN_5_CO/wfs</a></p>
+<p>Lovelace, R., Nowosad, J., y Münchow, J. (2025). <em>Geocomputation with R</em> (2.ª ed.). Chapman and Hall/CRC. <a href="https://r.geocompx.org/" class="uri">https://r.geocompx.org/</a></p>
+<p>Pebesma, E. (s. f.). Manipulating simple feature geometries. En <em>sf: Simple features for R</em>. Recuperado el 22 de octubre de 2026, de <a href="https://r-spatial.github.io/sf/articles/sf3.html" class="uri">https://r-spatial.github.io/sf/articles/sf3.html</a></p>
+<p>Pebesma, E., y Bivand, R. (2023). <em>Spatial data science: With applications in R</em>. Chapman and Hall/CRC. <a href="https://r-spatial.org/book/" class="uri">https://r-spatial.org/book/</a></p>
+<p>Pebesma, E., y Bivand, R. (2026). <em>sf: Simple features for R</em> (versión 1.1-1) [paquete de R]. <a href="https://CRAN.R-project.org/package=sf" class="uri">https://CRAN.R-project.org/package=sf</a></p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    // Ensure there is a toggle, if there isn't float one in the top right
+    if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+      const a = window.document.createElement('a');
+      a.classList.add('top-right');
+      a.classList.add('quarto-color-scheme-toggle');
+      a.href = "";
+      a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+      const i = window.document.createElement("i");
+      i.classList.add('bi');
+      a.appendChild(i);
+      window.document.body.appendChild(a);
+    }
+    setColorSchemeToggle(hasAlternateSentinel())
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copiado");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copiado");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/pf0953-programacionr\.github\.io\/2026-ii\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>Los contenidos de este curso, a menos que se especifique de otra forma, se comparten mediante una <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.es">licencia de Creative Commons Reconocimiento-CompartirIgual 4.0 Internacional</a>.</p>
+<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/pf0953-programacionr/2026-ii/blob/main/contenidos/iv-ecosistema-geoespacial-r/16-sf-operaciones-espaciales.qmd" class="toc-action"><i class="bi bi-github"></i>Ver el código</a></li><li><a href="https://github.com/pf0953-programacionr/2026-ii/edit/main/contenidos/iv-ecosistema-geoespacial-r/16-sf-operaciones-espaciales.qmd" class="toc-action"><i class="bi empty"></i>Editar esta página</a></li></ul></div></div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>
