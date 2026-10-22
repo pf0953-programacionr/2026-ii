@@ -26,7 +26,7 @@ La idea central del paquete cabe en una frase: **un objeto sf es un data frame c
 
 Los datos de este capítulo cambian de escala. En lugar de los cantones de Costa Rica, se usan los **países del mundo** de [Natural Earth](https://www.naturalearthdata.com/), un conjunto de datos cartográficos de dominio público con capas de países, ciudades, aeropuertos, ríos y lagos a varias escalas, y los **indicadores del desarrollo mundial** del [Banco Mundial](https://datos.bancomundial.org/), con una fila por país. Ambos están preparados para el curso en los directorios [`datos/natural-earth/`](https://github.com/pf0953-programacionr/2026-ii/tree/main/datos/natural-earth) y [`datos/banco-mundial/`](https://github.com/pf0953-programacionr/2026-ii/tree/main/datos/banco-mundial) del repositorio, cada uno con un LEEME que describe sus archivos y variables. La escala mundial tiene una ventaja didáctica: con datos de todo el planeta, las consecuencias de elegir un sistema de referencia de coordenadas u otro se ven a simple vista en el mapa —un país que parece el doble de grande, un mapa estirado—, mientras que a la escala de un país solo se notan al medir. Los cantones de Costa Rica, con sus polígonos, y los registros de presencia de félidos de GBIF vuelven en el capítulo siguiente, con las operaciones espaciales, y en la tarea 3.
 
-Este capítulo cubre lo que hace falta para empezar: leer una capa, entender su estructura, dibujarla con ggplot2, convertir una tabla con coordenadas en puntos, manejar el SRC, unir la capa con datos tabulares y producir un mapa de coropletas. El capítulo siguiente trata las operaciones espaciales (relaciones entre capas, uniones espaciales, zonas de influencia, agregación) y, más adelante, el de leaflet produce mapas interactivos a partir de los mismos objetos.
+Este capítulo cubre lo que hace falta para empezar: leer una capa, entender su estructura, dibujarla con ggplot2, manejar el SRC, unir la capa con datos tabulares y producir un mapa de coropletas. La lectura complementaria del final amplía con la conversión de una tabla con coordenadas en puntos (que el capítulo siguiente retoma con los félidos de GBIF), la medición en la proyección local de Costa Rica, la clasificación y las paletas divergentes de las coropletas, y la escritura de capas. El [capítulo siguiente](16-sf-operaciones-espaciales.qmd) trata las operaciones espaciales (relaciones entre capas, uniones espaciales, zonas de influencia, agregación) y, más adelante, el de leaflet produce mapas interactivos a partir de los mismos objetos.
 
 ```{r}
 #| label: preparacion
@@ -138,57 +138,20 @@ Para ver solo las geometrías se le pasa `st_geometry()`, y para un solo atribut
 
 *Ejercicios de esta sección: [ejercicios sobre lectura y estructura](#ejercicios-lectura).*
 
-## De una tabla con coordenadas a un objeto sf
-
-Los datos de puntos rara vez llegan como capa geoespacial: lo usual es un CSV con dos columnas de coordenadas, como los registros de GBIF de la [semana 1](../i-introduccion-ciencia-datos-programacion/02-ejemplo-procesos-ciencia-datos.qmd), las ciudades de Natural Earth del repositorio, los datos de estaciones o de encuestas, o los que cada estudiante recopile para la tarea 3.
-
-```{r}
-#| label: ciudades-csv
-#| message: false
-tabla_ciudades <- read_csv(paste0(datos_ne, "ciudades.csv"))
-
-tabla_ciudades
-```
-
-[`st_as_sf()`](https://r-spatial.github.io/sf/reference/st_as_sf.html) convierte el data frame en un objeto sf a partir de las columnas de coordenadas, indicadas en `coords`, y del SRC en que están esas coordenadas, en `crs`:
-
-```{r}
-#| label: st-as-sf
-ciudades <- st_as_sf(
-  tabla_ciudades,
-  coords = c("longitud", "latitud"),
-  crs = 4326
-)
-
-ciudades
-```
-
-Las dos columnas de coordenadas desaparecieron y en su lugar hay una columna `geometry` con un punto por ciudad; el SRC es WGS 84 y la extensión está en grados. Dos detalles causan errores frecuentes. El orden en `coords` es **x, y**, es decir, **longitud, latitud**: al revés del «latitud, longitud» con que suelen escribirse las coordenadas, y si se invierte, las ciudades caen en lugares absurdos. Y `crs` es indispensable: sin él, el objeto se crea, pero no tiene SRC, por lo que no se puede reproyectar ni combinar con otras capas. Los datos de GBIF, de GPS, de Google Maps y de casi cualquier fuente que hable de «latitud y longitud» están en WGS84, EPSG:4326. El camino inverso, de puntos a tabla, es [`st_coordinates()`](https://r-spatial.github.io/sf/reference/st_coordinates.html), que devuelve una matriz con las columnas `X` y `Y`:
-
-```{r}
-#| label: st-coordinates
-ciudades |>
-  filter(nombre == "San José") |>
-  st_coordinates()
-```
-
-*Ejercicios de esta sección: [ejercicios sobre puntos](#ejercicios-puntos).*
-
 ## Mapas con ggplot2
 
-Para comunicar, el mapa se construye con lo aprendido en el [capítulo de ggplot2](../iii-tidyverse/12-ggplot2.qmd) y una geometría nueva, [`geom_sf()`](https://ggplot2.tidyverse.org/reference/ggsf.html), que dibuja puntos, líneas o polígonos según lo que contenga la columna de geometrías, sin que haga falta mapear `x` ni `y`. Los argumentos son los de siempre: `fill` para el relleno de los polígonos, `color` para sus bordes o para los puntos, `linewidth` para el grosor de la línea, `size` para el tamaño de los puntos y `alpha` para la transparencia. Y, como las capas de puntos y texto del capítulo de ggplot2, cada `geom_sf()` puede tener sus propios datos, lo que permite **superponer capas**. Los países con las ciudades encima:
+Para comunicar, el mapa se construye con lo aprendido en el [capítulo de ggplot2](../iii-tidyverse/12-ggplot2.qmd) y una geometría nueva, [`geom_sf()`](https://ggplot2.tidyverse.org/reference/ggsf.html), que dibuja puntos, líneas o polígonos según lo que contenga la columna de geometrías, sin que haga falta mapear `x` ni `y`. Los argumentos son los de siempre: `fill` para el relleno de los polígonos, `color` para sus bordes o para los puntos, `linewidth` para el grosor de la línea, `size` para el tamaño de los puntos y `alpha` para la transparencia. Los países del mundo:
 
 ```{r}
 #| label: geom-sf
 #| fig-height: 5
 ggplot() +
   geom_sf(data = paises, fill = "#dce9f5", color = "white", linewidth = 0.2) +
-  geom_sf(data = ciudades, color = "#d97b1b", size = 0.8) +
-  labs(title = "Países y ciudades principales del mundo (Natural Earth, 1:110 M)") +
+  labs(title = "Países del mundo (Natural Earth, 1:110 M)") +
   theme_minimal()
 ```
 
-Como en cualquier gráfico de ggplot2, `fill = "#dce9f5"`, fuera de `aes()`, **fija** el relleno; `aes(fill = continente)` lo **mapearía** a una columna y produciría una leyenda, como se hace en la sección de coropletas. Los ejes muestran la **retícula** (*graticule*) de longitud y latitud; `theme_void()` la quita por completo, lo que es habitual en los mapas temáticos, y [`geom_sf_text()`](https://ggplot2.tidyverse.org/reference/ggsf.html) (o `geom_sf_label()`, con fondo) escribe rótulos en un punto interior de cada polígono, lo que se practica en los ejercicios.
+Como en cualquier gráfico de ggplot2, `fill = "#dce9f5"`, fuera de `aes()`, **fija** el relleno; `aes(fill = continente)` lo **mapearía** a una columna y produciría una leyenda, como se hace en la sección de coropletas. Y, como las capas de puntos y texto del capítulo de ggplot2, cada `geom_sf()` puede tener sus propios datos (`data =`), lo que permite **superponer capas**: el bloque `escalas` de la sección anterior dibuja así las dos versiones de Costa Rica, y la lectura complementaria pone las ciudades sobre los países. Los ejes muestran la **retícula** (*graticule*) de longitud y latitud; `theme_void()` la quita por completo, lo que es habitual en los mapas temáticos, y [`geom_sf_text()`](https://ggplot2.tidyverse.org/reference/ggsf.html) (o `geom_sf_label()`, con fondo) escribe rótulos en un punto interior de cada polígono, lo que se practica en los ejercicios.
 
 El mapa, sin embargo, tiene un defecto: está «estirado». Es el aspecto de un SRC geográfico dibujado directamente, con un grado de longitud tan ancho como uno de latitud en toda la figura, lo que deforma todo lo que está lejos del ecuador. Un mapa del mundo se dibuja en una proyección.
 
@@ -248,21 +211,7 @@ tibble(
 )
 ```
 
-En Equal Earth, Brasil es casi cuatro veces más grande que Groenlandia, como en la realidad (8,5 contra 2,2 millones de km²); en Mercator, Groenlandia resulta cuatro veces más grande que Brasil. La primera columna merece una explicación: con coordenadas geográficas, sf no devuelve grados cuadrados sin sentido, sino que calcula el área sobre una esfera con la biblioteca s2, y el resultado es una buena aproximación. Pero una proyección proyectada adecuada sigue siendo la referencia: para medir áreas a escala mundial, una proyección **equivalente**, como Equal Earth; para medir en un país, su proyección local. La de Costa Rica es CR-SIRGAS / CRTM05 (EPSG:8908):
-
-```{r}
-#| label: crtm05
-centroamerica_crtm05 <- centroamerica |>
-  st_transform(8908) |>
-  mutate(area_km2 = round(as.numeric(st_area(geom)) / 1e6))
-
-centroamerica_crtm05 |>
-  st_drop_geometry() |>
-  select(nombre, area_km2) |>
-  arrange(desc(area_km2))
-```
-
-Costa Rica mide unos 51 100 km², la cifra oficial. CRTM05 está diseñada para Costa Rica, y la deformación crece con la distancia a su meridiano central (−84°): el área de Guatemala, a unos 600 km, sale ya un 1 % mayor que en Equal Earth, y la de México, a más de 2 000 km, no sería confiable. La regla: medir en el SRC diseñado para la región de los datos.
+En Equal Earth, Brasil es casi cuatro veces más grande que Groenlandia, como en la realidad (8,5 contra 2,2 millones de km²); en Mercator, Groenlandia resulta cuatro veces más grande que Brasil. La primera columna merece una explicación: con coordenadas geográficas, sf no devuelve grados cuadrados sin sentido, sino que calcula el área sobre una esfera con la biblioteca s2, y el resultado es una buena aproximación. Pero una proyección adecuada sigue siendo la referencia: para medir áreas a escala mundial, una proyección **equivalente**, como Equal Earth; para medir en un país, su proyección local, como se muestra en la lectura complementaria con CR-SIRGAS / CRTM05, la de Costa Rica.
 
 *Ejercicios de esta sección: [ejercicios sobre sistemas de referencia de coordenadas](#ejercicios-src).*
 
@@ -316,24 +265,7 @@ sum(is.na(paises_bm$poblacion))
 paises_bm$nombre[is.na(paises_bm$poblacion)]
 ```
 
-Los siete que quedan no tienen datos en la fuente: en los mapas aparecerán como «sin datos», lo que es correcto. Y la unión permite verificar las áreas calculadas contra la superficie que publica el Banco Mundial:
-
-```{r}
-#| label: areas-comparacion
-paises_bm <- paises_bm |>
-  mutate(
-    area_calculada_km2 = round(as.numeric(st_area(geom)) / 1e6),
-    diferencia_pct = round((area_calculada_km2 - area_km2) / area_km2 * 100, 1)
-  )
-
-paises_bm |>
-  st_drop_geometry() |>
-  select(nombre, area_calculada_km2, area_km2, diferencia_pct) |>
-  arrange(desc(abs(diferencia_pct))) |>
-  head()
-```
-
-La mitad de los países difiere menos de un 3 %, lo razonable para geometrías a 1:110 M. Los casos extremos tienen explicación: el Banco Mundial reporta la superficie **terrestre**, sin aguas interiores ni, en Groenlandia, la capa de hielo (410 000 km² de los 2,2 millones); y en las islas pequeñas, como Brunéi o Bahamas, la geometría a 1:110 M es demasiado gruesa. Verificar los datos aunque provengan de fuentes oficiales, y entender por qué difieren, es parte del trabajo.
+Los siete que quedan no tienen datos en la fuente: en los mapas aparecerán como «sin datos», lo que es correcto. La lectura complementaria usa la unión para verificar las áreas calculadas contra la superficie que publica el Banco Mundial.
 
 *Ejercicios de esta sección: [ejercicios sobre unión y coropletas](#ejercicios-coropletas).*
 
@@ -373,9 +305,118 @@ ggplot(paises_bm) +
   theme_void()
 ```
 
-Ahora se lee el gradiente completo, de los 200 dólares de Burundi a los 140 000 de Luxemburgo, y la Antártida, Groenlandia y los demás países sin datos quedan en gris.
+Ahora se lee el gradiente completo, de los 200 dólares de Burundi a los 140 000 de Luxemburgo, y la Antártida, Groenlandia y los demás países sin datos quedan en gris. La escala continua es una de las opciones: la lectura complementaria muestra la **clasificación** en pocas clases, con `scale_fill_fermenter()`, y las paletas **divergentes** para variables con un valor central, con `scale_fill_distiller()`. Para una variable **categórica**, como el continente o el grupo de ingreso, la escala es discreta (`scale_fill_brewer()`, `scale_fill_viridis_d()` o `scale_fill_manual()`, con un color por categoría), lo que se practica en los ejercicios.
 
-### Clasificación
+Una advertencia de la cartografía temática: un mapa de coropletas debe mostrar **variables normalizadas** —densidades, tasas, porcentajes, valores per cápita—, no conteos absolutos. Un mapa de la población total colorea de forma más intensa los países más poblados, que suelen ser también los más grandes, y el ojo confunde el tamaño del polígono con la magnitud del fenómeno. Los conteos absolutos se representan mejor con símbolos proporcionales, que se construyen en el capítulo siguiente a partir de los centroides.
+
+*Ejercicios de esta sección: [ejercicios sobre unión y coropletas](#ejercicios-coropletas).*
+
+## Mapas en documentos Quarto
+
+Un mapa de ggplot2 es una figura más: las [opciones de figura](../iii-tidyverse/12-ggplot2.qmd#gráficos-en-documentos-quarto) de Quarto (`fig-cap`, `fig-alt`, `fig-width`, `fig-height`) funcionan igual y, con una etiqueta que empiece con `fig-`, el mapa se numera y se cita con `@fig-…`. Dos particularidades. Los mapas del mundo son más anchos que altos y quedan bien con `fig-height: 5`; los de un país suelen necesitar más alto. Y la lectura de las capas por URL ocurre en cada *Render*, lo que tarda unos segundos con los archivos del curso; con capas grandes (decenas de megabytes), conviene guardar una versión simplificada o recortada con `st_write()` (lectura complementaria) y leerla desde el proyecto. Los mapas interactivos, con leaflet, siguen las reglas de los htmlwidgets del [capítulo de plotly y DT](../iii-tidyverse/13-plotly-dt.qmd).
+
+*Ejercicios de esta sección: [ejercicios sobre publicación, asistentes y datos propios](#ejercicios-publicacion).*
+
+## Asistentes de IA para generar mapas
+
+Los [lineamientos del curso](../i-introduccion-ciencia-datos-programacion/05-asistentes-ia.qmd) aplican: los asistentes de IA sirven para explicar, depurar, generar y verificar código, se declara su uso y se comprende todo lo que se entrega. Para generar código de mapas, el prompt debe describir el objeto sf —las columnas y, ahora, también el **SRC** y el tipo de geometría—, pedir el patrón del curso (ggplot2 con `geom_sf()`) y el resultado debe **verificarse** con tres comprobaciones específicas: que el código no mezcle SRC en operaciones espaciales (todas las capas en el mismo, reproyectadas antes de medir), que la escala de color sea adecuada a la distribución de la variable (logarítmica o clasificada si es asimétrica; divergente si tiene un valor central; discreta si es categórica) y que la leyenda tenga unidades. Un prompt de ejemplo, con las cuatro partes del capítulo de asistentes:
+
+> Actúe como asistente de visualización de datos geoespaciales con R, sf y ggplot2 **(rol)**. Tengo un objeto sf llamado `paises_bm`, con un multipolígono por país del mundo en el SRC EPSG:8857 (Equal Earth) y las columnas `nombre` (texto), `continente` (texto), `poblacion` (entero) y `poblacion_urbana_pct` (decimal: porcentaje de población urbana en 2024, entre 0 y 100, con valores faltantes) **(contexto)**. Escriba el código de un mapa de coropletas del porcentaje de población urbana, con una paleta secuencial, los países sin datos en gris, leyenda con título y unidades, título, bordes blancos, fuente de los datos en la nota al pie y sin ejes **(tarea)**. Use `ggplot(paises_bm) + geom_sf(...)` y escalas de ggplot2; no use otros paquetes **(formato)**.
+
+Al verificar el código generado, además de las tres comprobaciones, compare el color de dos o tres países conocidos con sus valores en la tabla.
+
+*Ejercicios de esta sección: [ejercicios sobre publicación, asistentes y datos propios](#ejercicios-publicacion).*
+
+## Lectura complementaria
+
+Las secciones siguientes no se ven en clase. Conviene leerlas —la conversión de una tabla con coordenadas en puntos es el primer paso del capítulo siguiente y de la tarea 3— y volver a ellas cuando el trabajo las necesite; sus ejercicios son opcionales.
+
+### De una tabla con coordenadas a un objeto sf
+
+Los datos de puntos rara vez llegan como capa geoespacial: lo usual es un CSV con dos columnas de coordenadas, como los registros de GBIF de la [semana 1](../i-introduccion-ciencia-datos-programacion/02-ejemplo-procesos-ciencia-datos.qmd), las ciudades de Natural Earth del repositorio, los datos de estaciones o de encuestas, o los que cada estudiante recopile para la tarea 3.
+
+```{r}
+#| label: ciudades-csv
+#| message: false
+tabla_ciudades <- read_csv(paste0(datos_ne, "ciudades.csv"))
+
+tabla_ciudades
+```
+
+[`st_as_sf()`](https://r-spatial.github.io/sf/reference/st_as_sf.html) convierte el data frame en un objeto sf a partir de las columnas de coordenadas, indicadas en `coords`, y del SRC en que están esas coordenadas, en `crs`:
+
+```{r}
+#| label: st-as-sf
+ciudades <- st_as_sf(
+  tabla_ciudades,
+  coords = c("longitud", "latitud"),
+  crs = 4326
+)
+
+ciudades
+```
+
+Las dos columnas de coordenadas desaparecieron y en su lugar hay una columna `geometry` con un punto por ciudad; el SRC es WGS 84 y la extensión está en grados. Dos detalles causan errores frecuentes. El orden en `coords` es **x, y**, es decir, **longitud, latitud**: al revés del «latitud, longitud» con que suelen escribirse las coordenadas, y si se invierte, las ciudades caen en lugares absurdos. Y `crs` es indispensable: sin él, el objeto se crea, pero no tiene SRC, por lo que no se puede reproyectar ni combinar con otras capas. Los datos de GBIF, de GPS, de Google Maps y de casi cualquier fuente que hable de «latitud y longitud» están en WGS84, EPSG:4326. El camino inverso, de puntos a tabla, es [`st_coordinates()`](https://r-spatial.github.io/sf/reference/st_coordinates.html), que devuelve una matriz con las columnas `X` y `Y`:
+
+```{r}
+#| label: st-coordinates
+ciudades |>
+  filter(nombre == "San José") |>
+  st_coordinates()
+```
+
+Con las ciudades como capa de puntos, el mapa de países se completa con una segunda capa encima, cada una con sus propios datos:
+
+```{r}
+#| label: geom-sf-ciudades
+#| fig-height: 5
+ggplot() +
+  geom_sf(data = paises, fill = "#dce9f5", color = "white", linewidth = 0.2) +
+  geom_sf(data = ciudades, color = "#d97b1b", size = 0.8) +
+  labs(title = "Países y ciudades principales del mundo (Natural Earth, 1:110 M)") +
+  theme_minimal()
+```
+
+### Medición en la proyección local
+
+La sección sobre SRC midió a escala mundial. Para medir en un país se usa su proyección local; la de Costa Rica es CR-SIRGAS / CRTM05 (EPSG:8908), en la que están las capas del IGN del capítulo siguiente:
+
+```{r}
+#| label: crtm05
+centroamerica_crtm05 <- centroamerica |>
+  st_transform(8908) |>
+  mutate(area_km2 = round(as.numeric(st_area(geom)) / 1e6))
+
+centroamerica_crtm05 |>
+  st_drop_geometry() |>
+  select(nombre, area_km2) |>
+  arrange(desc(area_km2))
+```
+
+Costa Rica mide unos 51 100 km², la cifra oficial. CRTM05 está diseñada para Costa Rica, y la deformación crece con la distancia a su meridiano central (−84°): el área de Guatemala, a unos 600 km, sale ya un 1 % mayor que en Equal Earth, y la de México, a más de 2 000 km, no sería confiable. La regla: medir en el SRC diseñado para la región de los datos.
+
+### Verificación de las áreas con el Banco Mundial
+
+La unión con los indicadores permite verificar las áreas calculadas contra la superficie que publica el Banco Mundial:
+
+```{r}
+#| label: areas-comparacion
+paises_bm <- paises_bm |>
+  mutate(
+    area_calculada_km2 = round(as.numeric(st_area(geom)) / 1e6),
+    diferencia_pct = round((area_calculada_km2 - area_km2) / area_km2 * 100, 1)
+  )
+
+paises_bm |>
+  st_drop_geometry() |>
+  select(nombre, area_calculada_km2, area_km2, diferencia_pct) |>
+  arrange(desc(abs(diferencia_pct))) |>
+  head()
+```
+
+La mitad de los países difiere menos de un 3 %, lo razonable para geometrías a 1:110 M. Los casos extremos tienen explicación: el Banco Mundial reporta la superficie **terrestre**, sin aguas interiores ni, en Groenlandia, la capa de hielo (410 000 km² de los 2,2 millones); y en las islas pequeñas, como Brunéi o Bahamas, la geometría a 1:110 M es demasiado gruesa. Verificar los datos aunque provengan de fuentes oficiales, y entender por qué difieren, es parte del trabajo.
+
+### Clasificación de las coropletas
 
 La alternativa a la escala continua es **clasificar** los valores en pocas clases, cada una con un color, como hacen los SIG de escritorio y los mapas impresos. [`scale_fill_fermenter()`](https://ggplot2.tidyverse.org/reference/scale_brewer.html) lo hace con las paletas de ColorBrewer: con `n.breaks` elige cortes «bonitos» (intervalos iguales en la escala, logarítmica si se indica `transform`), y con `breaks` acepta los cortes que se le den. Los **cuantiles** ponen la misma cantidad de países en cada clase y se calculan con `quantile()`:
 
@@ -428,13 +469,9 @@ ggplot(paises_bm) +
   theme_void()
 ```
 
-El patrón geográfico es claro: la población decrece (rojo) en Europa oriental y en Japón, y crece más rápido (azul intenso) en el África subsahariana y en la península arábiga. Por último, para una variable **categórica**, como el continente o el grupo de ingreso, la escala es discreta (`scale_fill_brewer()`, `scale_fill_viridis_d()` o `scale_fill_manual()`, con un color por categoría), lo que se practica en los ejercicios.
+El patrón geográfico es claro: la población decrece (rojo) en Europa oriental y en Japón, y crece más rápido (azul intenso) en el África subsahariana y en la península arábiga.
 
-Una advertencia de la cartografía temática: un mapa de coropletas debe mostrar **variables normalizadas** —densidades, tasas, porcentajes, valores per cápita—, no conteos absolutos. Un mapa de la población total colorea de forma más intensa los países más poblados, que suelen ser también los más grandes, y el ojo confunde el tamaño del polígono con la magnitud del fenómeno. Los conteos absolutos se representan mejor con símbolos proporcionales, que se construyen en el capítulo siguiente a partir de los centroides.
-
-*Ejercicios de esta sección: [ejercicios sobre unión y coropletas](#ejercicios-coropletas).*
-
-## Escritura de capas
+### Escritura de capas
 
 [`st_write()`](https://r-spatial.github.io/sf/reference/st_write.html) guarda un objeto sf en el formato que indique la extensión del archivo. GeoPackage es la opción recomendada, porque conserva el SRC, los tipos de las columnas y los nombres largos; GeoJSON es útil para la web y, por su especificación, debe guardarse en WGS84. Los países de América del Sur con los indicadores, en los dos formatos (como con `ggsave()` en el capítulo de ggplot2, estos bloques se ejecutan una vez, llevan `eval: false` en el documento y los archivos quedan en la carpeta del proyecto):
 
@@ -453,24 +490,6 @@ st_read("america-sur.gpkg", quiet = TRUE)
 ```
 
 Si el archivo ya existe, `st_write()` se detiene con un error; `delete_dsn = TRUE` lo sobrescribe.
-
-*Ejercicios de esta sección: [ejercicios sobre publicación, asistentes y datos propios](#ejercicios-publicacion).*
-
-## Mapas en documentos Quarto
-
-Un mapa de ggplot2 es una figura más: las [opciones de figura](../iii-tidyverse/12-ggplot2.qmd#gráficos-en-documentos-quarto) de Quarto (`fig-cap`, `fig-alt`, `fig-width`, `fig-height`) funcionan igual y, con una etiqueta que empiece con `fig-`, el mapa se numera y se cita con `@fig-…`. Dos particularidades. Los mapas del mundo son más anchos que altos y quedan bien con `fig-height: 5`; los de un país suelen necesitar más alto. Y la lectura de las capas por URL ocurre en cada *Render*, lo que tarda unos segundos con los archivos del curso; con capas grandes (decenas de megabytes), conviene guardar una versión simplificada o recortada con `st_write()` y leerla desde el proyecto. Los mapas interactivos, con leaflet, siguen las reglas de los htmlwidgets del [capítulo de plotly y DT](../iii-tidyverse/13-plotly-dt.qmd).
-
-*Ejercicios de esta sección: [ejercicios sobre publicación, asistentes y datos propios](#ejercicios-publicacion).*
-
-## Asistentes de IA para generar mapas
-
-Los [lineamientos del curso](../i-introduccion-ciencia-datos-programacion/05-asistentes-ia.qmd) aplican: los asistentes de IA sirven para explicar, depurar, generar y verificar código, se declara su uso y se comprende todo lo que se entrega. Para generar código de mapas, el prompt debe describir el objeto sf —las columnas y, ahora, también el **SRC** y el tipo de geometría—, pedir el patrón del curso (ggplot2 con `geom_sf()`) y el resultado debe **verificarse** con tres comprobaciones específicas: que el código no mezcle SRC en operaciones espaciales (todas las capas en el mismo, reproyectadas antes de medir), que la escala de color sea adecuada a la distribución de la variable (logarítmica o clasificada si es asimétrica; divergente si tiene un valor central; discreta si es categórica) y que la leyenda tenga unidades. Un prompt de ejemplo, con las cuatro partes del capítulo de asistentes:
-
-> Actúe como asistente de visualización de datos geoespaciales con R, sf y ggplot2 **(rol)**. Tengo un objeto sf llamado `paises_bm`, con un multipolígono por país del mundo en el SRC EPSG:8857 (Equal Earth) y las columnas `nombre` (texto), `continente` (texto), `poblacion` (entero) y `poblacion_urbana_pct` (decimal: porcentaje de población urbana en 2024, entre 0 y 100, con valores faltantes) **(contexto)**. Escriba el código de un mapa de coropletas del porcentaje de población urbana, con una paleta secuencial, los países sin datos en gris, leyenda con título y unidades, título, bordes blancos, fuente de los datos en la nota al pie y sin ejes **(tarea)**. Use `ggplot(paises_bm) + geom_sf(...)` y escalas de ggplot2; no use otros paquetes **(formato)**.
-
-Al verificar el código generado, además de las tres comprobaciones, compare el color de dos o tres países conocidos con sus valores en la tabla.
-
-*Ejercicios de esta sección: [ejercicios sobre publicación, asistentes y datos propios](#ejercicios-publicacion).*
 
 ## Clínica de errores
 
@@ -515,15 +534,15 @@ plot(st_geometry(ciudades), add = TRUE, col = "red", pch = 16)
 ## Resumen
 
 - **sf** implementa el estándar Simple Features en R sobre GDAL, GEOS y PROJ. Un **objeto sf es un data frame con una columna de geometrías**: los verbos de dplyr funcionan y conservan la geometría; `st_drop_geometry()` la quita para trabajar solo con los atributos.
-- `st_read()` lee cualquier formato vectorial, desde rutas o URL; `st_write()` escribe, preferiblemente en **GeoPackage**. `st_geometry()`, `st_crs()` y `st_bbox()` describen la geometría, el SRC y la extensión. La **escala** de la capa determina su uso.
-- Una tabla con coordenadas se convierte en puntos con `st_as_sf(coords = c("longitud", "latitud"), crs = 4326)`: en ese orden y con el SRC declarado; `st_coordinates()` hace el camino inverso.
-- `st_transform()` **reproyecta**. Un mapa del mundo se dibuja en una proyección (Equal Earth, EPSG:8857), no en WGS84; `st_area()` mide, con unidades, y se mide en una proyección equivalente a escala mundial o en la local del país (CR-SIRGAS / CRTM05 en Costa Rica). Para dibujar, ggplot2 reproyecta las capas por su cuenta; para las operaciones espaciales, deben estar en el mismo SRC.
+- `st_read()` lee cualquier formato vectorial, desde rutas o URL. `st_geometry()`, `st_crs()` y `st_bbox()` describen la geometría, el SRC y la extensión. La **escala** de la capa determina su uso.
+- Lectura complementaria: una tabla con coordenadas se convierte en puntos con `st_as_sf(coords = c("longitud", "latitud"), crs = 4326)`: en ese orden y con el SRC declarado; `st_coordinates()` hace el camino inverso. En Costa Rica se mide en CR-SIRGAS / CRTM05; las coropletas se clasifican con `scale_fill_fermenter()` y usan paletas divergentes con `scale_fill_distiller()`; `st_write()` guarda capas, preferiblemente en GeoPackage.
+- `st_transform()` **reproyecta**. Un mapa del mundo se dibuja en una proyección (Equal Earth, EPSG:8857), no en WGS84; `st_area()` mide, con unidades, y se mide en una proyección equivalente a escala mundial o en la local del país. Para dibujar, ggplot2 reproyecta las capas por su cuenta; para las operaciones espaciales, deben estar en el mismo SRC.
 - `left_join()` une una capa con una tabla **con el objeto sf a la izquierda**; las claves que no coinciden (los códigos de Kosovo, Palestina y Sudán del Sur) se detectan con `anti_join()` y se corrigen antes de unir.
-- `geom_sf()` dibuja mapas con ggplot2, superponiendo capas con `data`; `coord_sf()` fija los límites o la proyección del dibujo. Un **mapa de coropletas** mapea una variable normalizada a `fill`, con una escala logarítmica si es asimétrica, clasificada con `scale_fill_fermenter()`, divergente con `scale_fill_distiller()` si tiene un valor central, y con `na.value` para los valores faltantes.
+- `geom_sf()` dibuja mapas con ggplot2, superponiendo capas con `data`; `coord_sf()` fija los límites o la proyección del dibujo. Un **mapa de coropletas** mapea una variable normalizada a `fill`, con una escala logarítmica si es asimétrica, discreta si es categórica, y con `na.value` para los valores faltantes.
 
 ## Ejercicios
 
-Los ejercicios se agrupan según la sección del capítulo a la que corresponden y se resuelven en un documento Quarto nuevo del proyecto `pf0953`, `mapas.qmd`, con el mismo encabezado YAML de `graficos.qmd` y un bloque `preparacion` igual al del inicio del capítulo. Varios suponen ejecutados los bloques de las secciones anteriores (`paises`, `paises_ee` con los códigos corregidos, `centroamerica`, `centroamerica_crtm05`, `ciudades`, `indicadores` y `paises_bm`).
+Los ejercicios se agrupan según la sección del capítulo a la que corresponden y se resuelven en un documento Quarto nuevo del proyecto `pf0953`, `mapas.qmd`, con el mismo encabezado YAML de `graficos.qmd` y un bloque `preparacion` igual al del inicio del capítulo. Varios suponen ejecutados los bloques de las secciones anteriores (`paises`, `paises_ee` con los códigos corregidos, `centroamerica`, `indicadores` y `paises_bm`; los de la lectura complementaria, además, `ciudades` y `centroamerica_crtm05`). Los ejercicios de las secciones de la lectura complementaria (3, 4, 7, 8, 10, 11 y la primera parte del 12) son opcionales.
 
 ### Lectura y estructura {#ejercicios-lectura}
 
@@ -531,7 +550,7 @@ Los ejercicios se agrupan según la sección del capítulo a la que corresponden
 
 2. Obtenga en `africa` los países de África a partir de `paises_ee` y compruebe, imprimiendo el resultado, que sigue siendo un objeto sf, en Equal Earth, y que la extensión cambió. Luego, con `st_drop_geometry()`, `select()`, `arrange()` y `knitr::kable()`, muestre una tabla con los diez países más poblados del continente.
 
-### Puntos {#ejercicios-puntos}
+### Puntos (lectura complementaria) {#ejercicios-puntos}
 
 3. Construya a mano, con `tribble()`, una tabla con tres lugares que conozca (por ejemplo, su casa, la Escuela de Geografía y un sitio de interés), con columnas `nombre`, `longitud` y `latitud` obtenidas de Google Maps u OpenStreetMap, y conviértala en el objeto sf `lugares` con el SRC correcto. Dibújelo sobre `centroamerica` (o sobre `paises`, si los lugares están en otra región) y verifique que los puntos caen donde deben. Luego reproyecte `lugares` a CR-SIRGAS / CRTM05 (o al SRC proyectado de su país) y observe las coordenadas con `st_coordinates()`: ¿en qué unidades están y qué tan grandes son los números?
 
@@ -539,7 +558,7 @@ Los ejercicios se agrupan según la sección del capítulo a la que corresponden
 
 ### Mapas {#ejercicios-mapas}
 
-5. Dibuje el mapa de `africa` (ejercicio 2) con los países en un color claro, los límites en blanco, las ciudades del continente encima (filtre `ciudades` por los códigos de país de `africa`), el nombre de cada país con `geom_sf_text()`, título y `theme_void()`. Recuerde que ggplot2 reproyecta las ciudades para dibujarlas. ¿Cuántos países tiene el continente en la capa y cuántas ciudades quedaron en el mapa?
+5. Dibuje el mapa de `africa` (ejercicio 2) con los países en un color claro, los límites en blanco, el nombre de cada país con `geom_sf_text()`, título y `theme_void()`. Si hizo la lectura complementaria, agregue las ciudades del continente encima (filtre `ciudades` por los códigos de país de `africa`; ggplot2 las reproyecta para dibujarlas). ¿Cuántos países tiene el continente en la capa?
 
 6. **Prediga antes de ejecutar** qué dibuja cada instrucción: de qué color es cada país, cuántos colores hay y qué muestra la leyenda; luego ejecute:
 
@@ -555,21 +574,21 @@ Los ejercicios se agrupan según la sección del capítulo a la que corresponden
 
 ### Sistemas de referencia de coordenadas {#ejercicios-src}
 
-7. Reproyecte `ciudades` a Web Mercator en `ciudades_merc` y a Equal Earth en `ciudades_ee`. Obtenga con `st_coordinates()` las coordenadas de San José de Costa Rica en los tres SRC y explique en el texto por qué los tres pares de números representan el mismo lugar.
+7. (Lectura complementaria) Reproyecte `ciudades` a Web Mercator en `ciudades_merc` y a Equal Earth en `ciudades_ee`. Obtenga con `st_coordinates()` las coordenadas de San José de Costa Rica en los tres SRC y explique en el texto por qué los tres pares de números representan el mismo lugar.
 
-8. Una `centroamerica_crtm05` con los indicadores del Banco Mundial (por `codigo`, con el objeto sf a la izquierda; como las dos tablas tienen una columna `area_km2`, renombre antes la calculada, por ejemplo a `area_calculada_km2`) y agregue la columna `diferencia_pct` entre el área calculada en CRTM05 y la superficie terrestre del Banco Mundial. ¿En cuál país es mayor la diferencia y por qué? Pista: el Banco Mundial reporta superficie **terrestre**; piense qué tiene ese país que los demás no. Luego calcule el área de cada país también en Equal Earth y compárela con la de CRTM05: ¿cuánto de la diferencia se debe a la proyección y en cuál país es mayor ese efecto?
+8. (Lectura complementaria) Una `centroamerica_crtm05` con los indicadores del Banco Mundial (por `codigo`, con el objeto sf a la izquierda; como las dos tablas tienen una columna `area_km2`, renombre antes la calculada, por ejemplo a `area_calculada_km2`) y agregue la columna `diferencia_pct` entre el área calculada en CRTM05 y la superficie terrestre del Banco Mundial. ¿En cuál país es mayor la diferencia y por qué? Pista: el Banco Mundial reporta superficie **terrestre**; piense qué tiene ese país que los demás no. Luego calcule el área de cada país también en Equal Earth y compárela con la de CRTM05: ¿cuánto de la diferencia se debe a la proyección y en cuál país es mayor ese efecto?
 
 ### Unión y coropletas {#ejercicios-coropletas}
 
 9. Dibuje un mapa de coropletas de la **esperanza de vida** de los países de América del Sur (filtre `paises_bm` por continente), con la paleta viridis, leyenda con unidades, los países sin datos en gris, el nombre de cada país con `geom_sf_text()` y título. ¿Cuál país tiene la mayor esperanza de vida y cuál la menor? Compruébelo con `arrange()` sobre la tabla.
 
-10. Dibuje un mapa de coropletas del porcentaje de personas que usan Internet (`usuarios_internet_pct` de `paises_bm`) clasificado en cinco clases por cuantiles con `scale_fill_fermenter()`, con la paleta `"YlGnBu"`, los países sin datos en gris, leyenda con título y unidades, y título. Compárelo con una versión de escala continua: ¿qué muestra la clasificación que la escala continua no, y viceversa?
+10. (Lectura complementaria) Dibuje un mapa de coropletas del porcentaje de personas que usan Internet (`usuarios_internet_pct` de `paises_bm`) clasificado en cinco clases por cuantiles con `scale_fill_fermenter()`, con la paleta `"YlGnBu"`, los países sin datos en gris, leyenda con título y unidades, y título. Compárelo con una versión de escala continua: ¿qué muestra la clasificación que la escala continua no, y viceversa?
 
-11. Dibuje un mapa de coropletas del **porcentaje de población urbana** (`poblacion_urbana_pct`) con la paleta divergente `"BrBG"` centrada en el 50 % (con `limits = c(0, 100)`, el centro de la paleta queda en 50). ¿En qué regiones del mundo predomina la población rural? Interprete el patrón geográfico en un párrafo.
+11. (Lectura complementaria) Dibuje un mapa de coropletas del **porcentaje de población urbana** (`poblacion_urbana_pct`) con la paleta divergente `"BrBG"` centrada en el 50 % (con `limits = c(0, 100)`, el centro de la paleta queda en 50). ¿En qué regiones del mundo predomina la población rural? Interprete el patrón geográfico en un párrafo.
 
 ### Publicación, asistentes y datos propios {#ejercicios-publicacion}
 
-12. Guarde `africa` con los indicadores del Banco Mundial (únalos primero, con los códigos ya corregidos) en un GeoPackage `africa.gpkg` y vuelva a leerlo en `africa_leido`. Compruebe que el SRC y la cantidad de entidades se conservaron. Luego dele al mapa del ejercicio 9 un bloque con etiqueta `fig-esperanza-vida`, `fig-cap`, `fig-alt` y `fig-height`, cítelo en el texto, procese `mapas.qmd` con *Render* y publíquelo en el repositorio `practica-quarto`, junto con los documentos anteriores.
+12. (Primera parte, lectura complementaria) Guarde `africa` con los indicadores del Banco Mundial (únalos primero, con los códigos ya corregidos) en un GeoPackage `africa.gpkg` y vuelva a leerlo en `africa_leido`. Compruebe que el SRC y la cantidad de entidades se conservaron. Luego, para todos, dele al mapa del ejercicio 9 un bloque con etiqueta `fig-esperanza-vida`, `fig-cap`, `fig-alt` y `fig-height`, cítelo en el texto, procese `mapas.qmd` con *Render* y publíquelo en el repositorio `practica-quarto`, junto con los documentos anteriores.
 
 13. Pida a un asistente de IA el código del prompt de ejemplo de la sección de asistentes (coropletas de la población urbana) y verifíquelo: lea el código, compruebe que usa la columna indicada y no inventa otras, que los países sin datos aparecen en gris, que la leyenda tiene unidades, y compare el color de tres países con sus valores en `paises_bm`. Documente en el texto del documento el asistente, el prompt, el código y el resultado de las comprobaciones, como en la declaración de uso de IA de la tarea 2.
 
