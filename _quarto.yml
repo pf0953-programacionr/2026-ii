@@ -67,6 +67,7 @@ website:
           - contenidos/iv-ecosistema-geoespacial-r/14-datos-geoespaciales.qmd
           - contenidos/iv-ecosistema-geoespacial-r/15-sf-datos-vectoriales.qmd
           - contenidos/iv-ecosistema-geoespacial-r/16-sf-operaciones-espaciales.qmd
+          - contenidos/iv-ecosistema-geoespacial-r/17-leaflet-mapas-web.qmd
       - section: "Evaluaciones"
         contents:
           - contenidos/evaluaciones/tarea-01.qmd
