@@ -1,0 +1,87 @@
+---
+title: Tarea 3
+---
+
+La tercera tarea del curso es un ejercicio **individual**, con un valor del **20 %** de la calificación final, según lo establecido en el [programa del curso](../../programa/programa.md). Su propósito es incorporar **datos geoespaciales** al tema elegido: leerlos con el paquete sf, relacionarlos con otra capa mediante una unión tabular o espacial y presentarlos en **mapas**, en el documento computacional de Quarto de la tarea 2, ampliado y publicado en Internet. Es la tercera y última aproximación al proyecto final: las tablas, los gráficos y los mapas de este documento son los componentes que la aplicación shiny del proyecto hará interactivos.
+
+## Fecha y hora límite de entrega
+
+Lunes 16 de noviembre de 2026, 11:59 p.m.
+
+## Objetivos
+
+Cada estudiante debe mostrar que es capaz de:
+
+1. Leer capas vectoriales con **sf** (con `st_read()`, o con `st_as_sf()` a partir de una tabla con coordenadas), explorar su estructura y conocer y transformar su **sistema de referencia de coordenadas** (SRC) con `st_crs()` y `st_transform()`.
+2. Relacionar los datos del tema con otra capa mediante una **unión tabular** (`left_join()`) o una **operación espacial** (`st_join()`, `st_filter()`, `st_buffer()`, `st_distance()` u otra), y resumir el resultado con **dplyr**.
+3. Elaborar **mapas temáticos** con **ggplot2** (`geom_sf()`) o con **leaflet**, adecuados a la pregunta que responden, con título, leyenda y fuente, y con la simbología apropiada al tipo de variable.
+4. Integrar los mapas con las tablas y los gráficos de la tarea 2 en un documento computacional de **Quarto** coherente, con referencias bibliográficas.
+5. Publicar el documento en un repositorio de GitHub y en GitHub Pages.
+
+## Entregables
+
+1. Dirección de un repositorio público en GitHub (ej. `https://github.com/usuario/tarea-03`) que contenga:
+    - El documento Quarto, `index.qmd`, y el archivo `index.html` generado por *Render* con `embed-resources: true`, como en los ejercicios de las lecciones.
+    - Los archivos de datos (CSV, GeoPackage, GeoJSON u otros) que el documento lee, salvo que se lean directamente desde una URL de la fuente original.
+    - Un archivo `README.md` breve con el título del trabajo, el nombre del autor o autora y el enlace al documento publicado.
+2. Dirección del documento publicado con GitHub Pages a partir de ese repositorio (ej. `https://usuario.github.io/tarea-03/`).
+
+La entrega debe realizarse a través de la plataforma Mediación Virtual. **Para que la tarea sea aceptada, deben entregarse ambas direcciones**. Los datos deben leerse desde una **URL** (la del archivo en el repositorio, con el botón *Raw* de GitHub, o la de la fuente original), como en la tarea 2 y en las lecciones, y no desde una ruta local de su computadora. Para las capas geoespaciales se recomiendan los formatos **GeoPackage** (`.gpkg`) o **GeoJSON**, que son de un solo archivo y se leen por URL con `st_read()`; si sus datos están en *shapefile*, conviértalos a GeoPackage con `st_write()` antes de subirlos.
+
+## Consideraciones adicionales
+
+**Esta tarea es estrictamente individual**.
+
+Puede usar asistentes de inteligencia artificial para explicar, depurar, generar y verificar código, según los [lineamientos del curso](../i-introduccion-ciencia-datos-programacion/05-asistentes-ia.qmd): debe **declarar su uso** en una sección del documento (cuál herramienta, con qué propósito y en cuáles partes), comprender y ser capaz de explicar todo el código que entregue, y verificar los resultados. El profesor puede pedirle en clase que explique cualquier parte de su documento.
+
+Si los datos de su tema **no tienen geometría propia**, hay dos caminos, vistos en las lecciones: si la tabla tiene columnas de **longitud y latitud**, se convierte en una capa de puntos con `st_as_sf()`; si está organizada por **unidad territorial** (país, provincia, cantón, distrito), se une por nombre o por código a una capa de esas unidades con `left_join()`, con el objeto sf a la izquierda. El repositorio del curso ofrece los países del mundo de Natural Earth y los cantones y provincias de Costa Rica del IGN (ver la sección de recursos). En cualquier caso, el documento debe explicar de dónde salen las geometrías.
+
+## Desarrollo
+
+A partir del documento de la tarea 2, copiado a un repositorio nuevo y **corregido según los comentarios recibidos**, desarrolle un documento Quarto con, como mínimo, los siguientes elementos:
+
+- **Encabezado YAML** con el título, su nombre como autor o autora, `lang: es`, `toc: true` y `embed-resources: true`, como en los documentos de las lecciones.
+- **Introducción** actualizada: el tema y las preguntas de la tarea 2, más al menos **una pregunta de carácter espacial** (dónde ocurre algo, en qué unidades territoriales se concentra, qué hay cerca de qué, cuánto abarca); la fuente de los datos geoespaciales, con su cita bibliográfica y su enlace; y una descripción de la capa: tipo de geometría, SRC, cantidad de entidades y atributos principales.
+- **Importación y preparación de los datos**: el bloque de carga de paquetes (con `message: false`) incluye ahora `sf` y, si se usa, `leaflet`; la lectura de la capa con `st_read()` desde una URL, o su construcción con `st_as_sf()` a partir de una tabla con coordenadas, indicando el `crs`; una exploración inicial (imprimir el objeto, `st_crs()`, `nrow()`, `st_geometry_type()`, `plot()` de la geometría); y las transformaciones necesarias, en particular las de **SRC** con `st_transform()`: en el texto se explica cuál SRC se usa para las operaciones (uno proyectado cuando se miden áreas o distancias) y cuál para los mapas (WGS84 en leaflet, como en las lecciones: «medir en CRTM05, dibujar en WGS84»).
+- **Al menos una relación con otra capa**, explicada en el texto (qué pregunta responde, en qué SRC se hizo y por qué): una **unión tabular** entre los datos del tema y una capa de unidades territoriales (`left_join()` con el sf a la izquierda, comprobando con `anti_join()` las entidades que no coinciden), o una **operación espacial** (unión espacial con `st_join()` y conteo por unidad territorial, filtrado espacial con `st_filter()`, zona de influencia con `st_buffer()`, distancias con `st_distance()` o `st_nearest_feature()`, agregación con `summarize()`), seguida de un resumen con los verbos de dplyr.
+- **Al menos dos mapas**, cada uno elaborado, a su elección, con **ggplot2** (`geom_sf()`) o con **leaflet**; los dos pueden ser del mismo tipo, aunque se valora que haya uno de cada uno, porque el proyecto final usa leaflet. Al menos uno de los dos debe ser un **mapa temático** que represente una variable: coropletas de una variable **normalizada** (densidad, tasa, porcentaje, registros por 100 km²), símbolos proporcionales de un conteo, o puntos coloreados por categoría. Cada mapa debe tener:
+    - En ggplot2: la capa de referencia de fondo (países, provincias, cantones) y la capa del tema; **título**, **leyenda** con nombre y unidades, y la **fuente** en `caption` o en `fig-cap`; una extensión adecuada (`coord_sf()`) y un SRC adecuado a esa extensión, explicado en el texto; y una etiqueta `fig-` con `fig-cap`, para que Quarto lo numere.
+    - En leaflet: todas las capas en **WGS84**; al menos **dos mapas base** de uso libre, con atribución, seleccionables en el **control de capas**; la capa del tema con estilo, **etiqueta emergente** (`label`) con sus atributos principales y, si conviene, ventana emergente (`popup`); **leyenda** cuando el color represente una variable (con `colorFactor()`, `colorNumeric()`, `colorBin()` o `colorQuantile()`); la **barra de escala**; y agrupamiento de marcadores si la capa tiene muchos puntos.
+    - En ambos casos, un párrafo de **interpretación**: qué muestra el mapa y qué se observa en los datos.
+- **Tablas y gráficos de la tarea 2**, conservados y corregidos: al menos una tabla interactiva con DT y los tres gráficos de ggplot2, uno de ellos interactivo con plotly. Se recomienda que al menos uno de ellos presente el resultado de la relación con la otra capa (por ejemplo, una tabla o un gráfico de barras por cantón, provincia o país).
+- **Conclusiones**: las respuestas a las preguntas de la introducción, incluida la espacial, y sus limitaciones.
+- **Referencias bibliográficas** en formato APA 7, con las fuentes de los datos, incluidas las geoespaciales (por ejemplo, el IGN, Natural Earth o GBIF, citados como en las lecciones), y cualquier otra fuente consultada.
+- **Declaración de uso de asistentes de IA**, o la indicación de que no se usaron.
+
+El documento debe ser **coherente** y estar **bien presentado**: encabezados que organicen las secciones, texto que explique el código y los resultados, bloques de código con etiquetas, y salidas legibles (sin tablas de cientos de filas impresas en el texto, sin mensajes de carga de paquetes y sin las advertencias de `st_read()` o `st_centroid()`, que se ocultan con `quiet = TRUE` o `warning: false`). Los mapas de leaflet solo funcionan en HTML y necesitan conexión a Internet para los mapas base; si una capa es muy pesada, simplifíquela con `st_simplify()` y quite con `select()` las columnas que el mapa no usa, como se indica en el capítulo de leaflet.
+
+## Calificación
+
+Entre paréntesis, se muestra el porcentaje correspondiente a cada aspecto que se calificará:
+
+- (10 %) Coherencia y presentación general del documento (estructura, encabezados, texto, etiquetas de los bloques, salidas legibles).
+- (10 %) Introducción: pregunta espacial, fuente de los datos geoespaciales con su cita y descripción de la capa (geometría, SRC, entidades, atributos).
+- (15 %) Importación y preparación de los datos geoespaciales (lectura con sf desde una URL o conversión con `st_as_sf()`, exploración, SRC explicado y transformado cuando corresponde).
+- (15 %) Relación con otra capa (unión tabular o operación espacial correcta, en el SRC adecuado, resumida con dplyr y explicada en el texto).
+- (30 %) Mapas, 15 % cada uno (tipo de mapa y simbología adecuados a la variable, corrección del SRC y de la extensión, título, leyenda, fuente y demás elementos requeridos según se haga con ggplot2 o con leaflet, e interpretación).
+- (10 %) Tablas y gráficos de la tarea 2 conservados, corregidos e integrados en el documento.
+- (5 %) Conclusiones y referencias bibliográficas.
+- (5 %) Entrega correcta: repositorio con el `.qmd`, el `.html` y los datos accesibles, documento publicado en GitHub Pages, entrega de ambas direcciones y declaración de uso de IA.
+
+## Recursos
+
+Los contenidos evaluados en esta tarea se cubrieron en las siguientes lecciones del sitio del curso:
+
+- [Datos geoespaciales: modelos, formatos y sistemas de referencia de coordenadas](../iv-ecosistema-geoespacial-r/14-datos-geoespaciales.qmd), para describir la capa y elegir el SRC.
+- [sf: datos geoespaciales vectoriales](../iv-ecosistema-geoespacial-r/15-sf-datos-vectoriales.qmd), con la lectura de capas, el SRC, la unión tabular y los mapas de coropletas con ggplot2; su lectura complementaria incluye `st_as_sf()`, `st_write()` y los mapas por cuantiles.
+- [sf: operaciones espaciales](../iv-ecosistema-geoespacial-r/16-sf-operaciones-espaciales.qmd), con la unión espacial, el conteo por unidad territorial, los centroides, las zonas de influencia y las distancias.
+- [leaflet: mapas web interactivos](../iv-ecosistema-geoespacial-r/17-leaflet-mapas-web.qmd), con los mapas base, las capas vectoriales, las coropletas, el control de capas y la publicación.
+
+Los ejercicios con los datos de su tema que cierran esos capítulos (el 14 del de sf I, el 12 del de sf II y el 13 del de leaflet) son el punto de partida de esta tarea: si los hizo, ya tiene buena parte del trabajo.
+
+Capas de referencia disponibles en el repositorio del curso, que se leen por URL como en las lecciones:
+
+- Países del mundo de Natural Earth (`https://raw.githubusercontent.com/pf0953-programacionr/2026-ii/main/datos/natural-earth/`, en WGS84), con los indicadores del Banco Mundial en `datos/banco-mundial/`.
+- Cantones y provincias de Costa Rica del IGN (`https://raw.githubusercontent.com/pf0953-programacionr/2026-ii/main/datos/cantones.gpkg` y `provincias.gpkg`, en CRTM05, EPSG:8908), y la población y el área de los cantones del INEC en `datos/cantones.csv`.
+
+Otras fuentes de datos geoespaciales de uso libre: el [SNIT](https://www.snitcr.go.cr/) del IGN (cartografía oficial de Costa Rica por WFS y WMS), [GBIF](https://www.gbif.org/) (registros de presencia de especies, descargables como CSV con coordenadas), [Natural Earth](https://www.naturalearthdata.com/) y [GADM](https://gadm.org/) (divisiones administrativas de todos los países), y los portales de datos abiertos de las instituciones. Para subir un archivo al repositorio sin la línea de comandos: *Add file > Upload files*, arrastre el archivo y confirme con *Commit changes*; luego ábralo, haga clic en *Raw* y copie la dirección: esa es la URL que se pasa a `st_read()` o a `read_csv()`.
