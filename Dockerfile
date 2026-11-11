@@ -19,4 +19,6 @@ RUN R -e "if (!requireNamespace('pak', quietly = TRUE)) install.packages('pak', 
 # - DT 0.34.0: tablas interactivas
 # - rgbif 3.8.5: acceso a la API de GBIF
 # - leaflet.extras 2.0.2: complementos para mapas de leaflet
-RUN R -e "pak::pak(c('here@1.0.2', 'plotly@4.12.1', 'DT@0.34.0', 'rgbif@3.8.5', 'leaflet.extras@2.0.2'))"
+# - rsconnect 1.11.2: publicación de aplicaciones shiny en shinyapps.io
+#   (shiny y bslib ya vienen en la imagen base)
+RUN R -e "pak::pak(c('here@1.0.2', 'plotly@4.12.1', 'DT@0.34.0', 'rgbif@3.8.5', 'leaflet.extras@2.0.2', 'rsconnect@1.11.2'))"

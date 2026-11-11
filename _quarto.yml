@@ -68,11 +68,15 @@ website:
           - contenidos/iv-ecosistema-geoespacial-r/15-sf-datos-vectoriales.qmd
           - contenidos/iv-ecosistema-geoespacial-r/16-sf-operaciones-espaciales.qmd
           - contenidos/iv-ecosistema-geoespacial-r/17-leaflet-mapas-web.qmd
+      - section: "V. Tableros de control y aplicaciones interactivas"
+        contents:
+          - contenidos/v-tableros-aplicaciones-interactivas/18-shiny.qmd
       - section: "Evaluaciones"
         contents:
           - contenidos/evaluaciones/tarea-01.qmd
           - contenidos/evaluaciones/tarea-02.qmd
           - contenidos/evaluaciones/tarea-03.qmd
+          - contenidos/evaluaciones/proyecto-final.qmd
       - section: "Software"
         contents:
           - contenidos/software/r-rstudio.qmd
