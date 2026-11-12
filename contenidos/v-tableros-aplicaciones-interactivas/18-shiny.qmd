@@ -57,6 +57,46 @@ Un documento HTML publicado en GitHub Pages es un archivo: el navegador lo desca
 - El **cliente** es el navegador de quien usa la aplicación. Muestra la interfaz de usuario y envía al servidor el valor de cada control cuando cambia.
 - El **servidor** es un proceso de R, en su computadora durante el desarrollo y en un servicio como shinyapps.io cuando la aplicación se publica. Recibe los valores, ejecuta el código de R y devuelve los resultados (un texto, una tabla, un gráfico, un mapa), que el navegador coloca en su lugar.
 
+La figura 2 muestra esa conversación en la primera aplicación del capítulo, que cuenta los registros de la especie elegida en una lista de selección: al abrirla, el navegador pide la página y el servidor le envía la interfaz; después, cada cambio en la lista viaja al servidor como un valor (`input$especie`) y regresa como un resultado (`output$conteo`), sin que la página se vuelva a cargar.
+
+```{=html}
+<!-- En el tema oscuro, mermaid deja en gris oscuro los mensajes y las
+     flechas de los diagramas de secuencia: se igualan al color del texto -->
+<style>
+  #diagrama-cliente-servidor .messageText {
+    fill: var(--bs-body-color) !important;
+    stroke: none !important;
+  }
+  #diagrama-cliente-servidor .messageLine0,
+  #diagrama-cliente-servidor .messageLine1 {
+    stroke: var(--bs-body-color) !important;
+  }
+  #diagrama-cliente-servidor #arrowhead path {
+    fill: var(--bs-body-color) !important;
+    stroke: var(--bs-body-color) !important;
+  }
+</style>
+```
+
+::: {#diagrama-cliente-servidor style="text-align: center; margin: 20px 0;"}
+
+```{mermaid}
+sequenceDiagram
+  participant C as Cliente<br>(navegador)
+  participant S as Servidor<br>(proceso de R)
+  C->>S: Abre la dirección de la aplicación
+  S-->>C: Interfaz de usuario (página HTML)
+  Note over C: La persona elige<br>Panthera onca en la lista
+  C->>S: input$especie = "Panthera onca"
+  Note over S: Ejecuta el código de R<br>(filtra y cuenta los registros)
+  S-->>C: output$conteo = "Panthera onca: 246 registros de presencia"
+  Note over C: Muestra el texto<br>en su lugar
+```
+
+**Figura 2**. Cliente y servidor en una aplicación shiny: el navegador envía los valores de los controles de entrada y el proceso de R devuelve las salidas calculadas. Fuente: elaboración propia.
+
+:::
+
 De ahí salen las dos consecuencias prácticas del capítulo: una aplicación shiny **no puede publicarse en GitHub Pages**, que solo sirve archivos, y mientras se ejecuta en RStudio **la consola queda ocupada** atendiéndola.
 
 ### Las tres partes del código
@@ -194,7 +234,7 @@ Tres cosas distinguen a una expresión reactiva de una variable corriente:
 
 El filtro tiene además un detalle de diseño. Cada lista de selección ofrece la opción `"Todas"`, que no es un valor de los datos: por eso el filtro de cada control solo se aplica, con un `if`, cuando se eligió otra cosa. El resultado de la expresión es su última línea, `filtrados`, como en una función.
 
-El conjunto de dependencias forma el **grafo reactivo** de la aplicación (figura 2): las entradas a la izquierda, las salidas a la derecha y, en medio, la expresión reactiva. Shiny lo construye solo, observando qué usa cada bloque, y lo recorre en cada cambio: si cambia la especie, se recalcula `felidos_filtrados()` y, después, todas las salidas que la usan.
+El conjunto de dependencias forma el **grafo reactivo** de la aplicación (figura 3): las entradas a la izquierda, las salidas a la derecha y, en medio, la expresión reactiva. Shiny lo construye solo, observando qué usa cada bloque, y lo recorre en cada cambio: si cambia la especie, se recalcula `felidos_filtrados()` y, después, todas las salidas que la usan.
 
 ::: {style="text-align: center; margin: 20px 0;"}
 
@@ -208,7 +248,7 @@ flowchart LR
   R --> T["Tabla<br>output$tabla"]
 ```
 
-**Figura 2**. Grafo reactivo de la aplicación de félidos: los controles de entrada alimentan la expresión reactiva, cuyo resultado comparten todas las salidas. Fuente: elaboración propia.
+**Figura 3**. Grafo reactivo de la aplicación de félidos: los controles de entrada alimentan la expresión reactiva, cuyo resultado comparten todas las salidas. Fuente: elaboración propia.
 
 :::
 

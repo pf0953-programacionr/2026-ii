@@ -655,6 +655,47 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>El <strong>cliente</strong> es el navegador de quien usa la aplicación. Muestra la interfaz de usuario y envía al servidor el valor de cada control cuando cambia.</li>
 <li>El <strong>servidor</strong> es un proceso de R, en su computadora durante el desarrollo y en un servicio como shinyapps.io cuando la aplicación se publica. Recibe los valores, ejecuta el código de R y devuelve los resultados (un texto, una tabla, un gráfico, un mapa), que el navegador coloca en su lugar.</li>
 </ul>
+<p>La figura 2 muestra esa conversación en la primera aplicación del capítulo, que cuenta los registros de la especie elegida en una lista de selección: al abrirla, el navegador pide la página y el servidor le envía la interfaz; después, cada cambio en la lista viaja al servidor como un valor (<code>input$especie</code>) y regresa como un resultado (<code>output$conteo</code>), sin que la página se vuelva a cargar.</p>
+<!-- En el tema oscuro, mermaid deja en gris oscuro los mensajes y las
+     flechas de los diagramas de secuencia: se igualan al color del texto -->
+<style>
+  #diagrama-cliente-servidor .messageText {
+    fill: var(--bs-body-color) !important;
+    stroke: none !important;
+  }
+  #diagrama-cliente-servidor .messageLine0,
+  #diagrama-cliente-servidor .messageLine1 {
+    stroke: var(--bs-body-color) !important;
+  }
+  #diagrama-cliente-servidor #arrowhead path {
+    fill: var(--bs-body-color) !important;
+    stroke: var(--bs-body-color) !important;
+  }
+</style>
+<div id="diagrama-cliente-servidor" style="text-align: center; margin: 20px 0;">
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">sequenceDiagram
+  participant C as Cliente&lt;br&gt;(navegador)
+  participant S as Servidor&lt;br&gt;(proceso de R)
+  C-&gt;&gt;S: Abre la dirección de la aplicación
+  S--&gt;&gt;C: Interfaz de usuario (página HTML)
+  Note over C: La persona elige&lt;br&gt;Panthera onca en la lista
+  C-&gt;&gt;S: input$especie = "Panthera onca"
+  Note over S: Ejecuta el código de R&lt;br&gt;(filtra y cuenta los registros)
+  S--&gt;&gt;C: output$conteo = "Panthera onca: 246 registros de presencia"
+  Note over C: Muestra el texto&lt;br&gt;en su lugar
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+<p><strong>Figura 2</strong>. Cliente y servidor en una aplicación shiny: el navegador envía los valores de los controles de entrada y el proceso de R devuelve las salidas calculadas. Fuente: elaboración propia.</p>
+</div>
 <p>De ahí salen las dos consecuencias prácticas del capítulo: una aplicación shiny <strong>no puede publicarse en GitHub Pages</strong>, que solo sirve archivos, y mientras se ejecuta en RStudio <strong>la consola queda ocupada</strong> atendiéndola.</p>
 </section>
 <section id="las-tres-partes-del-código" class="level3">
@@ -1039,7 +1080,7 @@ Con <code>observeEvent()</code> o <code>bindEvent()</code>
 <li>Solo puede usarse <strong>dentro de otro contexto reactivo</strong>: una función <code>render…()</code> u otra <code>reactive()</code>. Lo mismo vale para <code>input$…</code>: leerlo directamente en el cuerpo de <code>server</code>, fuera de esos contextos, es un error.</li>
 </ul>
 <p>El filtro tiene además un detalle de diseño. Cada lista de selección ofrece la opción <code>"Todas"</code>, que no es un valor de los datos: por eso el filtro de cada control solo se aplica, con un <code>if</code>, cuando se eligió otra cosa. El resultado de la expresión es su última línea, <code>filtrados</code>, como en una función.</p>
-<p>El conjunto de dependencias forma el <strong>grafo reactivo</strong> de la aplicación (figura 2): las entradas a la izquierda, las salidas a la derecha y, en medio, la expresión reactiva. Shiny lo construye solo, observando qué usa cada bloque, y lo recorre en cada cambio: si cambia la especie, se recalcula <code>felidos_filtrados()</code> y, después, todas las salidas que la usan.</p>
+<p>El conjunto de dependencias forma el <strong>grafo reactivo</strong> de la aplicación (figura 3): las entradas a la izquierda, las salidas a la derecha y, en medio, la expresión reactiva. Shiny lo construye solo, observando qué usa cada bloque, y lo recorre en cada cambio: si cambia la especie, se recalcula <code>felidos_filtrados()</code> y, después, todas las salidas que la usan.</p>
 <div style="text-align: center; margin: 20px 0;">
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
@@ -1059,7 +1100,7 @@ Con <code>observeEvent()</code> o <code>bindEvent()</code>
 </div>
 </div>
 </div>
-<p><strong>Figura 2</strong>. Grafo reactivo de la aplicación de félidos: los controles de entrada alimentan la expresión reactiva, cuyo resultado comparten todas las salidas. Fuente: elaboración propia.</p>
+<p><strong>Figura 3</strong>. Grafo reactivo de la aplicación de félidos: los controles de entrada alimentan la expresión reactiva, cuyo resultado comparten todas las salidas. Fuente: elaboración propia.</p>
 </div>
 </section>
 <section id="dónde-se-ejecuta-cada-parte" class="level3">
