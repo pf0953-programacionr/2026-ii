@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://pf0953-programacionr.github.io/2026-ii/contenidos/evaluaciones/tarea-01.html</loc>
-    <lastmod>2026-09-03T05:00:20.780Z</lastmod>
+    <loc>https://pf0953-programacionr.github.io/2026-ii/contenidos/evaluaciones/proyecto-final-aplicacion.html</loc>
+    <lastmod>2026-11-18T23:06:16.593Z</lastmod>
   </url>
   <url>
-    <loc>https://pf0953-programacionr.github.io/2026-ii/contenidos/evaluaciones/tarea-03.html</loc>
-    <lastmod>2026-11-03T17:46:36.055Z</lastmod>
+    <loc>https://pf0953-programacionr.github.io/2026-ii/contenidos/evaluaciones/tarea-02.html</loc>
+    <lastmod>2026-10-15T22:12:56.934Z</lastmod>
+  </url>
+  <url>
+    <loc>https://pf0953-programacionr.github.io/2026-ii/contenidos/evaluaciones/proyecto-final.html</loc>
+    <lastmod>2026-11-18T23:06:16.591Z</lastmod>
   </url>
   <url>
     <loc>https://pf0953-programacionr.github.io/2026-ii/contenidos/software/r-rstudio.html</loc>
@@ -90,14 +94,18 @@
   </url>
   <url>
     <loc>https://pf0953-programacionr.github.io/2026-ii/contenidos/v-tableros-aplicaciones-interactivas/18-shiny.html</loc>
-    <lastmod>2026-11-12T20:52:02.675Z</lastmod>
+    <lastmod>2026-11-12T20:53:07.930Z</lastmod>
   </url>
   <url>
-    <loc>https://pf0953-programacionr.github.io/2026-ii/contenidos/evaluaciones/proyecto-final.html</loc>
-    <lastmod>2026-11-11T16:43:04.469Z</lastmod>
+    <loc>https://pf0953-programacionr.github.io/2026-ii/contenidos/evaluaciones/proyecto-final-documento.html</loc>
+    <lastmod>2026-11-18T23:06:16.595Z</lastmod>
   </url>
   <url>
-    <loc>https://pf0953-programacionr.github.io/2026-ii/contenidos/evaluaciones/tarea-02.html</loc>
-    <lastmod>2026-10-15T22:12:56.934Z</lastmod>
+    <loc>https://pf0953-programacionr.github.io/2026-ii/contenidos/evaluaciones/tarea-03.html</loc>
+    <lastmod>2026-11-03T17:46:36.055Z</lastmod>
+  </url>
+  <url>
+    <loc>https://pf0953-programacionr.github.io/2026-ii/contenidos/evaluaciones/tarea-01.html</loc>
+    <lastmod>2026-09-03T05:00:20.780Z</lastmod>
   </url>
 </urlset>

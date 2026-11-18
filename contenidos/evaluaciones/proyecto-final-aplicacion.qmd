@@ -1,0 +1,117 @@
+---
+title: "Proyecto final: aplicación web y presentación oral"
+---
+
+La primera entrega del [proyecto final](proyecto-final.qmd) del curso es un trabajo **individual** que reúne dos componentes: una **aplicación web interactiva**, desarrollada con shiny y publicada en Internet, con un valor del **25 %** de la calificación final, y una **presentación oral** sincrónica, por videoconferencia, de la aplicación y de los resultados, con un valor del **10 %**, según lo establecido en el [programa del curso](../../programa/programa.md). La segunda entrega, el [documento computacional](proyecto-final-documento.qmd), tiene su propio enunciado.
+
+La aplicación reúne, con controles que los filtren, las tablas, los gráficos y los mapas construidos en las tareas 2 y 3: permite a una persona explorar los datos de su tema y responder las preguntas planteadas en las tareas.
+
+## Fechas y horas límite de entrega
+
+| Componente | Valor en la calificación final | Fecha y hora límite |
+|---|---|---|
+| Aplicación web interactiva desarrollada con shiny, publicada en Internet | 25 % | Jueves 26 de noviembre de 2026, 11:59 p.m. |
+| Presentación oral sincrónica, por videoconferencia | 10 % | Jueves 26 de noviembre de 2026, en el horario de la clase |
+
+## Objetivos
+
+Cada estudiante debe mostrar que es capaz de:
+
+1. Desarrollar una **aplicación shiny** con una interfaz de bslib, controles de entrada adecuados a las variables, una expresión reactiva y salidas tabulares, gráficas y geoespaciales que respondan a los controles.
+2. Preparar los datos de su tema, incluidos los geoespaciales, de modo que la aplicación arranque y responda con rapidez.
+3. **Publicar** la aplicación en shinyapps.io y su código en GitHub.
+4. **Presentar** oralmente la aplicación, explicar su código y responder preguntas sobre ella.
+
+## Entregables
+
+La entrega se realiza a través de la plataforma Mediación Virtual, en la actividad correspondiente.
+
+**Aplicación web**. Dos direcciones:
+
+- La de un repositorio **público** en GitHub (ej. `https://github.com/usuario/proyecto-final`), con la carpeta `aplicacion/` y el archivo `README.md`.
+- La de la aplicación publicada en shinyapps.io (ej. `https://usuario.shinyapps.io/proyecto-final/`).
+
+Todo el proyecto vive en ese repositorio, con la siguiente estructura (los archivos `index.qmd` e `index.html` corresponden a la segunda entrega, el [documento computacional](proyecto-final-documento.qmd)):
+
+```text
+proyecto-final/
+├── README.md        título, autor o autora, enlaces a la aplicación y al documento
+├── aplicacion/
+│   ├── app.R        la aplicación shiny
+│   └── datos/       archivos de datos que la aplicación lee (si no los lee de una URL)
+├── index.qmd        el documento computacional (segunda entrega)
+└── index.html       generado por Render, publicado con GitHub Pages (segunda entrega)
+```
+
+El archivo `README.md` contiene el título del proyecto, su nombre, una descripción de dos o tres líneas, los enlaces a la aplicación y (cuando esté listo) al documento, las fuentes de los datos y la declaración de uso de asistentes de IA.
+
+**Presentación oral**. No requiere entregar nada: se presenta la aplicación publicada, en vivo, en el horario de la clase. Las diapositivas son opcionales.
+
+**Para que la aplicación sea aceptada, deben entregarse ambas direcciones**, y la aplicación debe estar publicada y en funcionamiento en el momento de la presentación, aunque el plazo de entrega de las direcciones cierre a las 11:59 p.m. de ese día.
+
+## Consideraciones adicionales
+
+**El proyecto es estrictamente individual**.
+
+Puede usar asistentes de inteligencia artificial para explicar, depurar, generar y verificar código, según los [lineamientos del curso](../i-introduccion-ciencia-datos-programacion/05-asistentes-ia.qmd): debe **declarar su uso** (cuál herramienta, con qué propósito y en cuáles partes) en el archivo `README.md`; comprender y ser capaz de explicar todo el código que entregue; y verificar los resultados. En la presentación oral se le pedirá que **muestre y explique partes del código** de su aplicación: una aplicación que funciona y que su autor o autora no puede explicar no cumple los objetivos del proyecto.
+
+El tema y los datos son los de las tareas, **corregidos según los comentarios recibidos**. Si necesita cambiarlos o ampliarlos, consúltelo con el profesor antes del 19 de noviembre. El programa del curso permite desarrollar la aplicación con «shiny o un marco de trabajo similar»: si quiere usar una variante distinta de la vista en clase (por ejemplo, un tablero de Quarto con `server: shiny`), consúltelo también antes de esa fecha; los requisitos son los mismos.
+
+El **token** de su cuenta de shinyapps.io es una contraseña: no debe aparecer en `app.R` ni en ningún archivo del repositorio.
+
+## Desarrollo
+
+### Aplicación web interactiva
+
+Desarrolle una aplicación shiny, en un archivo `app.R`, sobre los datos de su tema. Como mínimo, debe tener los siguientes elementos:
+
+- **Datos preparados fuera del servidor**: la lectura de los datos y toda la preparación que no depende de los controles (conversión a sf, transformación del SRC, uniones, columnas calculadas) se hacen antes de la interfaz, una sola vez. Los datos se leen desde una **URL** o desde archivos de la carpeta `aplicacion/datos/` con **rutas relativas**; no hay rutas de su computadora ni `setwd()`. Las capas geoespaciales están en WGS84 para el mapa y, si son pesadas, simplificadas.
+- **Interfaz con bslib**: una página con título y barra lateral (`page_sidebar()`), las salidas organizadas en tarjetas (`card()`) con encabezado, y al menos **una caja de valor** (`value_box()`) con un indicador que cambie con los filtros. Las fuentes de los datos deben estar visibles en la aplicación.
+- **Al menos dos controles de entrada**, de tipos adecuados a las variables que filtran (lista de selección, botones de opción, casillas, deslizador, rango de fechas), con etiquetas claras y con las opciones calculadas a partir de los datos.
+- **Una expresión reactiva** (`reactive()`) que aplique los filtros y que compartan las salidas.
+- **Al menos una tabla interactiva** con DT (`renderDT()`), con nombres de columnas legibles.
+- **Al menos un gráfico interactivo** con plotly (`renderPlotly()`), con título o encabezado, ejes con nombre y unidades, y etiqueta emergente.
+- **Al menos un mapa web** con leaflet (`renderLeaflet()`), con mapa base de uso libre, la capa del tema con estilo y etiqueta emergente, leyenda cuando el color represente una variable y control de capas o barra de escala.
+- Las tres salidas **responden a los controles**, y la aplicación maneja las combinaciones sin datos (`validate(need())`) sin mostrar errores.
+
+La aplicación debe estar **publicada en shinyapps.io** y su código en la carpeta `aplicacion/` del repositorio.
+
+### Presentación oral
+
+Cada estudiante presenta su proyecto en la clase del 26 de noviembre, por videoconferencia, en **10 minutos**, seguidos de hasta 5 minutos de preguntas del profesor y del grupo. El orden de las presentaciones se publicará en Mediación Virtual. La presentación se hace **sobre la aplicación publicada y el código**, compartiendo la pantalla. Se sugiere la siguiente distribución:
+
+1. El tema, las preguntas y los datos: de dónde salen, qué contienen y cómo se prepararon (2 minutos).
+2. **Demostración** de la aplicación publicada: qué hace cada control y qué muestra cada salida, con dos o tres combinaciones de filtros que respondan las preguntas (4 minutos).
+3. Un vistazo al **código**: la expresión reactiva y una de las salidas (2 minutos).
+4. Hallazgos, limitaciones y lo que se haría con más tiempo (2 minutos).
+
+## Calificación
+
+Cada componente se califica sobre 100 y pesa en la calificación final del curso según la tabla de la sección de fechas. Entre paréntesis, se muestra el porcentaje correspondiente a cada aspecto que se calificará.
+
+**Aplicación web interactiva (25 % de la calificación final)**
+
+- (10 %) Entrega correcta: repositorio con la estructura indicada, `README.md` completo con la declaración de uso de IA, aplicación publicada y en funcionamiento, entrega de ambas direcciones.
+- (15 %) Datos: preparación fuera del servidor, lectura por URL o por rutas relativas, SRC correcto, arranque y respuesta en un tiempo razonable.
+- (15 %) Controles de entrada: al menos dos, adecuados a las variables, con etiquetas claras y opciones calculadas de los datos.
+- (15 %) Reactividad: expresión reactiva compartida por las salidas, todas las salidas responden a los controles, combinaciones sin datos manejadas.
+- (15 %) Mapa web (capa del tema con estilo, etiquetas, leyenda y demás elementos requeridos; adecuado a la pregunta que responde).
+- (10 %) Gráfico interactivo (tipo de gráfico adecuado a las variables, ejes, etiqueta emergente).
+- (10 %) Tabla interactiva (columnas pertinentes y con nombres legibles).
+- (10 %) Diseño de la interfaz: organización con bslib, caja o cajas de valor, títulos, fuentes de los datos visibles, textos sin nombres de columnas ni de objetos a la vista.
+
+**Presentación oral (10 % de la calificación final)**
+
+- (20 %) Tema, preguntas y datos presentados con claridad.
+- (30 %) Demostración de la aplicación: funcionamiento de los controles y de las salidas, y uso de la aplicación para responder las preguntas.
+- (25 %) Explicación del código y respuestas a las preguntas.
+- (15 %) Hallazgos y limitaciones.
+- (10 %) Uso del tiempo y claridad de la exposición.
+
+## Recursos
+
+- [shiny: aplicaciones web interactivas](../v-tableros-aplicaciones-interactivas/18-shiny.qmd): la estructura de la aplicación, los controles, la reactividad, las salidas, el diseño con bslib y la publicación en shinyapps.io. La aplicación de ejemplo, con su código por pasos, está en la carpeta [`aplicaciones/`](https://github.com/pf0953-programacionr/2026-ii/tree/main/aplicaciones) del repositorio del curso; el ejercicio 12 de ese capítulo es el punto de partida de su aplicación.
+- [plotly y DT](../iii-tidyverse/13-plotly-dt.qmd), [sf: operaciones espaciales](../iv-ecosistema-geoespacial-r/16-sf-operaciones-espaciales.qmd) y [leaflet](../iv-ecosistema-geoespacial-r/17-leaflet-mapas-web.qmd), para las salidas y la preparación de los datos.
+- Los enunciados de las tareas [1](tarea-01.qmd), [2](tarea-02.qmd) y [3](tarea-03.qmd) y los comentarios que recibió en cada una.
+
+Para organizar el repositorio: cree el repositorio `proyecto-final` en GitHub; en su computadora, cree un proyecto de RStudio con ese nombre y, dentro, la carpeta `aplicacion` con el archivo `app.R`. La aplicación se publica desde la consola con `rsconnect::deployApp("aplicacion", appName = "proyecto-final")`, y los archivos se suben al repositorio como en las tareas (*Add file* > *Upload files*; para subir una carpeta, arrástrela completa a esa página).

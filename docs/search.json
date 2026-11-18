@@ -1,178 +1,189 @@
 [
   {
-    "objectID": "contenidos/evaluaciones/tarea-01.html",
-    "href": "contenidos/evaluaciones/tarea-01.html",
-    "title": "Tarea 1",
+    "objectID": "contenidos/evaluaciones/proyecto-final-aplicacion.html",
+    "href": "contenidos/evaluaciones/proyecto-final-aplicacion.html",
+    "title": "Proyecto final: aplicación web y presentación oral",
     "section": "",
-    "text": "La primera tarea del curso es un ejercicio individual, con un valor del 15 % de la calificación final, según lo establecido en el programa del curso. Su propósito es elegir el tema que cada estudiante desarrollará de manera incremental en las tareas 2 y 3 y en el proyecto final, y presentarlo en un sitio web escrito en Markdown y publicado en Internet.",
+    "text": "La primera entrega del proyecto final del curso es un trabajo individual que reúne dos componentes: una aplicación web interactiva, desarrollada con shiny y publicada en Internet, con un valor del 25 % de la calificación final, y una presentación oral sincrónica, por videoconferencia, de la aplicación y de los resultados, con un valor del 10 %, según lo establecido en el programa del curso. La segunda entrega, el documento computacional, tiene su propio enunciado.\nLa aplicación reúne, con controles que los filtren, las tablas, los gráficos y los mapas construidos en las tareas 2 y 3: permite a una persona explorar los datos de su tema y responder las preguntas planteadas en las tareas.",
     "crumbs": [
       "Evaluaciones",
-      "Tarea 1"
+      "Proyecto final: aplicación web y presentación oral"
     ]
   },
   {
-    "objectID": "contenidos/evaluaciones/tarea-01.html#fecha-y-hora-límite-de-entrega",
-    "href": "contenidos/evaluaciones/tarea-01.html#fecha-y-hora-límite-de-entrega",
-    "title": "Tarea 1",
-    "section": "Fecha y hora límite de entrega",
-    "text": "Fecha y hora límite de entrega\nViernes 11 de setiembre de 2026, 11:59 p.m.",
+    "objectID": "contenidos/evaluaciones/proyecto-final-aplicacion.html#fechas-y-horas-límite-de-entrega",
+    "href": "contenidos/evaluaciones/proyecto-final-aplicacion.html#fechas-y-horas-límite-de-entrega",
+    "title": "Proyecto final: aplicación web y presentación oral",
+    "section": "Fechas y horas límite de entrega",
+    "text": "Fechas y horas límite de entrega\n\n\n\n\n\n\n\n\nComponente\nValor en la calificación final\nFecha y hora límite\n\n\n\n\nAplicación web interactiva desarrollada con shiny, publicada en Internet\n25 %\nJueves 26 de noviembre de 2026, 11:59 p.m.\n\n\nPresentación oral sincrónica, por videoconferencia\n10 %\nJueves 26 de noviembre de 2026, en el horario de la clase",
     "crumbs": [
       "Evaluaciones",
-      "Tarea 1"
+      "Proyecto final: aplicación web y presentación oral"
     ]
   },
   {
-    "objectID": "contenidos/evaluaciones/tarea-01.html#objetivos",
-    "href": "contenidos/evaluaciones/tarea-01.html#objetivos",
-    "title": "Tarea 1",
+    "objectID": "contenidos/evaluaciones/proyecto-final-aplicacion.html#objetivos",
+    "href": "contenidos/evaluaciones/proyecto-final-aplicacion.html#objetivos",
+    "title": "Proyecto final: aplicación web y presentación oral",
     "section": "Objetivos",
-    "text": "Objetivos\nCada estudiante debe mostrar que es capaz de:\n\nEscribir documentos en el lenguaje de marcado Markdown.\nManejar repositorios en GitHub.\nPublicar sitios web con GitHub Pages.\nElegir un tema de su interés, con datos disponibles —incluidos datos geoespaciales—, apto para desarrollarse durante el resto del curso.",
+    "text": "Objetivos\nCada estudiante debe mostrar que es capaz de:\n\nDesarrollar una aplicación shiny con una interfaz de bslib, controles de entrada adecuados a las variables, una expresión reactiva y salidas tabulares, gráficas y geoespaciales que respondan a los controles.\nPreparar los datos de su tema, incluidos los geoespaciales, de modo que la aplicación arranque y responda con rapidez.\nPublicar la aplicación en shinyapps.io y su código en GitHub.\nPresentar oralmente la aplicación, explicar su código y responder preguntas sobre ella.",
     "crumbs": [
       "Evaluaciones",
-      "Tarea 1"
+      "Proyecto final: aplicación web y presentación oral"
     ]
   },
   {
-    "objectID": "contenidos/evaluaciones/tarea-01.html#entregables",
-    "href": "contenidos/evaluaciones/tarea-01.html#entregables",
-    "title": "Tarea 1",
+    "objectID": "contenidos/evaluaciones/proyecto-final-aplicacion.html#entregables",
+    "href": "contenidos/evaluaciones/proyecto-final-aplicacion.html#entregables",
+    "title": "Proyecto final: aplicación web y presentación oral",
     "section": "Entregables",
-    "text": "Entregables\n\nDirección de un repositorio en GitHub (ej. https://github.com/usuario/tarea-01) que contenga un documento escrito en Markdown llamado README.md, con el contenido especificado en la sección Desarrollo.\nDirección del sitio web publicado con GitHub Pages a partir de ese repositorio (ej. https://usuario.github.io/tarea-01/).\n\nLa entrega debe realizarse a través de la plataforma Mediación Virtual. Para que la tarea sea aceptada, deben entregarse ambas direcciones.",
+    "text": "Entregables\nLa entrega se realiza a través de la plataforma Mediación Virtual, en la actividad correspondiente.\nAplicación web. Dos direcciones:\n\nLa de un repositorio público en GitHub (ej. https://github.com/usuario/proyecto-final), con la carpeta aplicacion/ y el archivo README.md.\nLa de la aplicación publicada en shinyapps.io (ej. https://usuario.shinyapps.io/proyecto-final/).\n\nTodo el proyecto vive en ese repositorio, con la siguiente estructura (los archivos index.qmd e index.html corresponden a la segunda entrega, el documento computacional):\nproyecto-final/\n├── README.md        título, autor o autora, enlaces a la aplicación y al documento\n├── aplicacion/\n│   ├── app.R        la aplicación shiny\n│   └── datos/       archivos de datos que la aplicación lee (si no los lee de una URL)\n├── index.qmd        el documento computacional (segunda entrega)\n└── index.html       generado por Render, publicado con GitHub Pages (segunda entrega)\nEl archivo README.md contiene el título del proyecto, su nombre, una descripción de dos o tres líneas, los enlaces a la aplicación y (cuando esté listo) al documento, las fuentes de los datos y la declaración de uso de asistentes de IA.\nPresentación oral. No requiere entregar nada: se presenta la aplicación publicada, en vivo, en el horario de la clase. Las diapositivas son opcionales.\nPara que la aplicación sea aceptada, deben entregarse ambas direcciones, y la aplicación debe estar publicada y en funcionamiento en el momento de la presentación, aunque el plazo de entrega de las direcciones cierre a las 11:59 p.m. de ese día.",
     "crumbs": [
       "Evaluaciones",
-      "Tarea 1"
+      "Proyecto final: aplicación web y presentación oral"
     ]
   },
   {
-    "objectID": "contenidos/evaluaciones/tarea-01.html#consideraciones-adicionales",
-    "href": "contenidos/evaluaciones/tarea-01.html#consideraciones-adicionales",
-    "title": "Tarea 1",
+    "objectID": "contenidos/evaluaciones/proyecto-final-aplicacion.html#consideraciones-adicionales",
+    "href": "contenidos/evaluaciones/proyecto-final-aplicacion.html#consideraciones-adicionales",
+    "title": "Proyecto final: aplicación web y presentación oral",
     "section": "Consideraciones adicionales",
-    "text": "Consideraciones adicionales\nEsta tarea es estrictamente individual.",
+    "text": "Consideraciones adicionales\nEl proyecto es estrictamente individual.\nPuede usar asistentes de inteligencia artificial para explicar, depurar, generar y verificar código, según los lineamientos del curso: debe declarar su uso (cuál herramienta, con qué propósito y en cuáles partes) en el archivo README.md; comprender y ser capaz de explicar todo el código que entregue; y verificar los resultados. En la presentación oral se le pedirá que muestre y explique partes del código de su aplicación: una aplicación que funciona y que su autor o autora no puede explicar no cumple los objetivos del proyecto.\nEl tema y los datos son los de las tareas, corregidos según los comentarios recibidos. Si necesita cambiarlos o ampliarlos, consúltelo con el profesor antes del 19 de noviembre. El programa del curso permite desarrollar la aplicación con «shiny o un marco de trabajo similar»: si quiere usar una variante distinta de la vista en clase (por ejemplo, un tablero de Quarto con server: shiny), consúltelo también antes de esa fecha; los requisitos son los mismos.\nEl token de su cuenta de shinyapps.io es una contraseña: no debe aparecer en app.R ni en ningún archivo del repositorio.",
     "crumbs": [
       "Evaluaciones",
-      "Tarea 1"
+      "Proyecto final: aplicación web y presentación oral"
     ]
   },
   {
-    "objectID": "contenidos/evaluaciones/tarea-01.html#desarrollo",
-    "href": "contenidos/evaluaciones/tarea-01.html#desarrollo",
-    "title": "Tarea 1",
+    "objectID": "contenidos/evaluaciones/proyecto-final-aplicacion.html#desarrollo",
+    "href": "contenidos/evaluaciones/proyecto-final-aplicacion.html#desarrollo",
+    "title": "Proyecto final: aplicación web y presentación oral",
     "section": "Desarrollo",
-    "text": "Desarrollo\nDebe desarrollar con Markdown un sitio web sobre un tema de su elección (ej. su [posible] trabajo final de graduación, un proyecto de otro curso u otra temática geográfica de su interés) que luego pueda desarrollar como proyecto final de este curso. Es importante que el tema cuente con datos disponibles —incluidos datos geoespaciales— y con algunos problemas a resolver o preguntas a contestar con esos datos: en las siguientes tareas y en el proyecto final esos datos se procesarán y visualizarán con R.\nEl sitio debe contener, como mínimo, los siguientes elementos:\n\nEncabezados (por lo menos de niveles uno y dos).\nTexto (por lo menos 750 palabras). Puede elegir la estructura que considere adecuada, pero incluya:\n\nDescripción general del tema.\nDescripción de los datos, de sus fuentes (con los enlaces respectivos) y de sus principales variables.\nProblemas que desea resolver o preguntas que espera contestar con los datos.\n\nNegritas (por lo menos una palabra).\nItálicas (por lo menos una palabra).\nListas (al menos una, ya sea numerada o no numerada).\nImágenes (al menos dos).\nHipervínculos (al menos dos).\n\nAgregue las citas bibliográficas que sean necesarias, en formato APA 7. Puede utilizar imágenes de fuentes externas, pero debe dar los créditos apropiados (proporcionar la cita bibliográfica o al menos un enlace a la fuente).\nEl contenido del sitio debe ser coherente y estar bien presentado.",
+    "text": "Desarrollo\n\nAplicación web interactiva\nDesarrolle una aplicación shiny, en un archivo app.R, sobre los datos de su tema. Como mínimo, debe tener los siguientes elementos:\n\nDatos preparados fuera del servidor: la lectura de los datos y toda la preparación que no depende de los controles (conversión a sf, transformación del SRC, uniones, columnas calculadas) se hacen antes de la interfaz, una sola vez. Los datos se leen desde una URL o desde archivos de la carpeta aplicacion/datos/ con rutas relativas; no hay rutas de su computadora ni setwd(). Las capas geoespaciales están en WGS84 para el mapa y, si son pesadas, simplificadas.\nInterfaz con bslib: una página con título y barra lateral (page_sidebar()), las salidas organizadas en tarjetas (card()) con encabezado, y al menos una caja de valor (value_box()) con un indicador que cambie con los filtros. Las fuentes de los datos deben estar visibles en la aplicación.\nAl menos dos controles de entrada, de tipos adecuados a las variables que filtran (lista de selección, botones de opción, casillas, deslizador, rango de fechas), con etiquetas claras y con las opciones calculadas a partir de los datos.\nUna expresión reactiva (reactive()) que aplique los filtros y que compartan las salidas.\nAl menos una tabla interactiva con DT (renderDT()), con nombres de columnas legibles.\nAl menos un gráfico interactivo con plotly (renderPlotly()), con título o encabezado, ejes con nombre y unidades, y etiqueta emergente.\nAl menos un mapa web con leaflet (renderLeaflet()), con mapa base de uso libre, la capa del tema con estilo y etiqueta emergente, leyenda cuando el color represente una variable y control de capas o barra de escala.\nLas tres salidas responden a los controles, y la aplicación maneja las combinaciones sin datos (validate(need())) sin mostrar errores.\n\nLa aplicación debe estar publicada en shinyapps.io y su código en la carpeta aplicacion/ del repositorio.\n\n\nPresentación oral\nCada estudiante presenta su proyecto en la clase del 26 de noviembre, por videoconferencia, en 10 minutos, seguidos de hasta 5 minutos de preguntas del profesor y del grupo. El orden de las presentaciones se publicará en Mediación Virtual. La presentación se hace sobre la aplicación publicada y el código, compartiendo la pantalla. Se sugiere la siguiente distribución:\n\nEl tema, las preguntas y los datos: de dónde salen, qué contienen y cómo se prepararon (2 minutos).\nDemostración de la aplicación publicada: qué hace cada control y qué muestra cada salida, con dos o tres combinaciones de filtros que respondan las preguntas (4 minutos).\nUn vistazo al código: la expresión reactiva y una de las salidas (2 minutos).\nHallazgos, limitaciones y lo que se haría con más tiempo (2 minutos).",
     "crumbs": [
       "Evaluaciones",
-      "Tarea 1"
+      "Proyecto final: aplicación web y presentación oral"
     ]
   },
   {
-    "objectID": "contenidos/evaluaciones/tarea-01.html#calificación",
-    "href": "contenidos/evaluaciones/tarea-01.html#calificación",
-    "title": "Tarea 1",
+    "objectID": "contenidos/evaluaciones/proyecto-final-aplicacion.html#calificación",
+    "href": "contenidos/evaluaciones/proyecto-final-aplicacion.html#calificación",
+    "title": "Proyecto final: aplicación web y presentación oral",
     "section": "Calificación",
-    "text": "Calificación\nEntre paréntesis, se muestra el porcentaje correspondiente a cada aspecto que se calificará:\n\n(10 %) Coherencia y presentación general del sitio web.\nElementos de Markdown:\n\n(25 %) Texto (extensión y descripción del tema, de los datos y de las preguntas).\n(5 %) Encabezados.\n(5 %) Negritas.\n(5 %) Itálicas.\n(10 %) Listas.\n(15 %) Imágenes (con sus créditos).\n(15 %) Hipervínculos.\n\n(10 %) Publicación correcta del sitio en GitHub Pages y entrega de ambas direcciones.",
+    "text": "Calificación\nCada componente se califica sobre 100 y pesa en la calificación final del curso según la tabla de la sección de fechas. Entre paréntesis, se muestra el porcentaje correspondiente a cada aspecto que se calificará.\nAplicación web interactiva (25 % de la calificación final)\n\n(10 %) Entrega correcta: repositorio con la estructura indicada, README.md completo con la declaración de uso de IA, aplicación publicada y en funcionamiento, entrega de ambas direcciones.\n(15 %) Datos: preparación fuera del servidor, lectura por URL o por rutas relativas, SRC correcto, arranque y respuesta en un tiempo razonable.\n(15 %) Controles de entrada: al menos dos, adecuados a las variables, con etiquetas claras y opciones calculadas de los datos.\n(15 %) Reactividad: expresión reactiva compartida por las salidas, todas las salidas responden a los controles, combinaciones sin datos manejadas.\n(15 %) Mapa web (capa del tema con estilo, etiquetas, leyenda y demás elementos requeridos; adecuado a la pregunta que responde).\n(10 %) Gráfico interactivo (tipo de gráfico adecuado a las variables, ejes, etiqueta emergente).\n(10 %) Tabla interactiva (columnas pertinentes y con nombres legibles).\n(10 %) Diseño de la interfaz: organización con bslib, caja o cajas de valor, títulos, fuentes de los datos visibles, textos sin nombres de columnas ni de objetos a la vista.\n\nPresentación oral (10 % de la calificación final)\n\n(20 %) Tema, preguntas y datos presentados con claridad.\n(30 %) Demostración de la aplicación: funcionamiento de los controles y de las salidas, y uso de la aplicación para responder las preguntas.\n(25 %) Explicación del código y respuestas a las preguntas.\n(15 %) Hallazgos y limitaciones.\n(10 %) Uso del tiempo y claridad de la exposición.",
     "crumbs": [
       "Evaluaciones",
-      "Tarea 1"
+      "Proyecto final: aplicación web y presentación oral"
     ]
   },
   {
-    "objectID": "contenidos/evaluaciones/tarea-01.html#recursos",
-    "href": "contenidos/evaluaciones/tarea-01.html#recursos",
-    "title": "Tarea 1",
+    "objectID": "contenidos/evaluaciones/proyecto-final-aplicacion.html#recursos",
+    "href": "contenidos/evaluaciones/proyecto-final-aplicacion.html#recursos",
+    "title": "Proyecto final: aplicación web y presentación oral",
     "section": "Recursos",
-    "text": "Recursos\nLos contenidos evaluados en esta tarea se cubrieron en las siguientes lecciones del sitio del curso:\n\nEl lenguaje de marcado Markdown\nGit, GitHub y GitHub Pages, que incluye la activación de GitHub Pages en la configuración del repositorio (Settings &gt; Pages).",
+    "text": "Recursos\n\nshiny: aplicaciones web interactivas: la estructura de la aplicación, los controles, la reactividad, las salidas, el diseño con bslib y la publicación en shinyapps.io. La aplicación de ejemplo, con su código por pasos, está en la carpeta aplicaciones/ del repositorio del curso; el ejercicio 12 de ese capítulo es el punto de partida de su aplicación.\nplotly y DT, sf: operaciones espaciales y leaflet, para las salidas y la preparación de los datos.\nLos enunciados de las tareas 1, 2 y 3 y los comentarios que recibió en cada una.\n\nPara organizar el repositorio: cree el repositorio proyecto-final en GitHub; en su computadora, cree un proyecto de RStudio con ese nombre y, dentro, la carpeta aplicacion con el archivo app.R. La aplicación se publica desde la consola con rsconnect::deployApp(\"aplicacion\", appName = \"proyecto-final\"), y los archivos se suben al repositorio como en las tareas (Add file &gt; Upload files; para subir una carpeta, arrástrela completa a esa página).",
     "crumbs": [
       "Evaluaciones",
-      "Tarea 1"
+      "Proyecto final: aplicación web y presentación oral"
     ]
   },
   {
-    "objectID": "contenidos/evaluaciones/tarea-03.html",
-    "href": "contenidos/evaluaciones/tarea-03.html",
-    "title": "Tarea 3",
+    "objectID": "contenidos/evaluaciones/tarea-02.html",
+    "href": "contenidos/evaluaciones/tarea-02.html",
+    "title": "Tarea 2",
     "section": "",
-    "text": "La tercera tarea del curso es un ejercicio individual, con un valor del 20 % de la calificación final, según lo establecido en el programa del curso. Su propósito es incorporar datos geoespaciales al tema elegido: leerlos con el paquete sf, relacionarlos con otra capa mediante una unión tabular o espacial y presentarlos en mapas, en el documento computacional de Quarto de la tarea 2, ampliado y publicado en Internet. Es la tercera y última aproximación al proyecto final: las tablas, los gráficos y los mapas de este documento son los componentes que la aplicación shiny del proyecto hará interactivos.",
+    "text": "La segunda tarea del curso es un ejercicio individual, con un valor del 15 % de la calificación final, según lo establecido en el programa del curso. Su propósito es procesar con los paquetes del tidyverse los datos del tema elegido en la tarea 1 y presentar los resultados en tablas y gráficos, en un documento computacional de Quarto publicado en Internet. Es la segunda aproximación al proyecto final: el documento que se entrega aquí se ampliará con datos geoespaciales en la tarea 3.",
     "crumbs": [
       "Evaluaciones",
-      "Tarea 3"
+      "Tarea 2"
     ]
   },
   {
-    "objectID": "contenidos/evaluaciones/tarea-03.html#fecha-y-hora-límite-de-entrega",
-    "href": "contenidos/evaluaciones/tarea-03.html#fecha-y-hora-límite-de-entrega",
-    "title": "Tarea 3",
+    "objectID": "contenidos/evaluaciones/tarea-02.html#fecha-y-hora-límite-de-entrega",
+    "href": "contenidos/evaluaciones/tarea-02.html#fecha-y-hora-límite-de-entrega",
+    "title": "Tarea 2",
     "section": "Fecha y hora límite de entrega",
-    "text": "Fecha y hora límite de entrega\nLunes 16 de noviembre de 2026, 11:59 p.m.",
+    "text": "Fecha y hora límite de entrega\nLunes 26 de octubre de 2026, 11:59 p.m.",
     "crumbs": [
       "Evaluaciones",
-      "Tarea 3"
+      "Tarea 2"
     ]
   },
   {
-    "objectID": "contenidos/evaluaciones/tarea-03.html#objetivos",
-    "href": "contenidos/evaluaciones/tarea-03.html#objetivos",
-    "title": "Tarea 3",
+    "objectID": "contenidos/evaluaciones/tarea-02.html#objetivos",
+    "href": "contenidos/evaluaciones/tarea-02.html#objetivos",
+    "title": "Tarea 2",
     "section": "Objetivos",
-    "text": "Objetivos\nCada estudiante debe mostrar que es capaz de:\n\nLeer capas vectoriales con sf (con st_read(), o con st_as_sf() a partir de una tabla con coordenadas), explorar su estructura y conocer y transformar su sistema de referencia de coordenadas (SRC) con st_crs() y st_transform().\nRelacionar los datos del tema con otra capa mediante una unión tabular (left_join()) o una operación espacial (st_join(), st_filter(), st_buffer(), st_distance() u otra), y resumir el resultado con dplyr.\nElaborar mapas temáticos con ggplot2 (geom_sf()) o con leaflet, adecuados a la pregunta que responden, con título, leyenda y fuente, y con la simbología apropiada al tipo de variable.\nIntegrar los mapas con las tablas y los gráficos de la tarea 2 en un documento computacional de Quarto coherente, con referencias bibliográficas.\nPublicar el documento en un repositorio de GitHub y en GitHub Pages.",
+    "text": "Objetivos\nCada estudiante debe mostrar que es capaz de:\n\nImportar, explorar, transformar y resumir datos tabulares con los paquetes readr y dplyr.\nElaborar gráficos con ggplot2, adecuados a la pregunta que responden y con título, etiquetas y unidades, y convertirlos en interactivos con plotly.\nPresentar datos en tablas interactivas con DT.\nIntegrar código, resultados y texto interpretativo en un documento computacional de Quarto, con referencias bibliográficas.\nPublicar el documento en un repositorio de GitHub y en GitHub Pages.",
     "crumbs": [
       "Evaluaciones",
-      "Tarea 3"
+      "Tarea 2"
     ]
   },
   {
-    "objectID": "contenidos/evaluaciones/tarea-03.html#entregables",
-    "href": "contenidos/evaluaciones/tarea-03.html#entregables",
-    "title": "Tarea 3",
+    "objectID": "contenidos/evaluaciones/tarea-02.html#entregables",
+    "href": "contenidos/evaluaciones/tarea-02.html#entregables",
+    "title": "Tarea 2",
     "section": "Entregables",
-    "text": "Entregables\n\nDirección de un repositorio público en GitHub (ej. https://github.com/usuario/tarea-03) que contenga:\n\nEl documento Quarto, index.qmd, y el archivo index.html generado por Render con embed-resources: true, como en los ejercicios de las lecciones.\nLos archivos de datos (CSV, GeoPackage, GeoJSON u otros) que el documento lee, salvo que se lean directamente desde una URL de la fuente original.\nUn archivo README.md breve con el título del trabajo, el nombre del autor o autora y el enlace al documento publicado.\n\nDirección del documento publicado con GitHub Pages a partir de ese repositorio (ej. https://usuario.github.io/tarea-03/).\n\nLa entrega debe realizarse a través de la plataforma Mediación Virtual. Para que la tarea sea aceptada, deben entregarse ambas direcciones. Los datos deben leerse desde una URL (la del archivo en el repositorio, con el botón Raw de GitHub, o la de la fuente original), como en la tarea 2 y en las lecciones, y no desde una ruta local de su computadora. Para las capas geoespaciales se recomiendan los formatos GeoPackage (.gpkg) o GeoJSON, que son de un solo archivo y se leen por URL con st_read(); si sus datos están en shapefile, conviértalos a GeoPackage con st_write() antes de subirlos.",
+    "text": "Entregables\n\nDirección de un repositorio público en GitHub (ej. https://github.com/usuario/tarea-02) que contenga:\n\nEl documento Quarto, index.qmd, y el archivo index.html generado por Render con embed-resources: true, como en los ejercicios de las lecciones.\nLos archivos de datos (CSV, Excel u otros) que el documento lee, salvo que se lean directamente desde una URL de la fuente original.\nUn archivo README.md breve con el título del trabajo, el nombre del autor o autora y el enlace al documento publicado.\n\nDirección del documento publicado con GitHub Pages a partir de ese repositorio (ej. https://usuario.github.io/tarea-02/).\n\nLa entrega debe realizarse a través de la plataforma Mediación Virtual. Para que la tarea sea aceptada, deben entregarse ambas direcciones. El documento debe leer los datos desde una URL (la del archivo en el repositorio, con el botón Raw de GitHub, o la de la fuente original), no desde una ruta local de su computadora, para que pueda reproducirse en cualquier lugar.",
     "crumbs": [
       "Evaluaciones",
-      "Tarea 3"
+      "Tarea 2"
     ]
   },
   {
-    "objectID": "contenidos/evaluaciones/tarea-03.html#consideraciones-adicionales",
-    "href": "contenidos/evaluaciones/tarea-03.html#consideraciones-adicionales",
-    "title": "Tarea 3",
+    "objectID": "contenidos/evaluaciones/tarea-02.html#consideraciones-adicionales",
+    "href": "contenidos/evaluaciones/tarea-02.html#consideraciones-adicionales",
+    "title": "Tarea 2",
     "section": "Consideraciones adicionales",
-    "text": "Consideraciones adicionales\nEsta tarea es estrictamente individual.\nPuede usar asistentes de inteligencia artificial para explicar, depurar, generar y verificar código, según los lineamientos del curso: debe declarar su uso en una sección del documento (cuál herramienta, con qué propósito y en cuáles partes), comprender y ser capaz de explicar todo el código que entregue, y verificar los resultados. El profesor puede pedirle en clase que explique cualquier parte de su documento.\nSi los datos de su tema no tienen geometría propia, hay dos caminos, vistos en las lecciones: si la tabla tiene columnas de longitud y latitud, se convierte en una capa de puntos con st_as_sf(); si está organizada por unidad territorial (país, provincia, cantón, distrito), se une por nombre o por código a una capa de esas unidades con left_join(), con el objeto sf a la izquierda. El repositorio del curso ofrece los países del mundo de Natural Earth y los cantones y provincias de Costa Rica del IGN (ver la sección de recursos). En cualquier caso, el documento debe explicar de dónde salen las geometrías.",
+    "text": "Consideraciones adicionales\nEsta tarea es estrictamente individual.\nPuede usar asistentes de inteligencia artificial para explicar, depurar, generar y verificar código, según los lineamientos del curso: debe declarar su uso en una sección del documento (cuál herramienta, con qué propósito y en cuáles partes), comprender y ser capaz de explicar todo el código que entregue, y verificar los resultados. El profesor puede pedirle en clase que explique cualquier parte de su documento.",
     "crumbs": [
       "Evaluaciones",
-      "Tarea 3"
+      "Tarea 2"
     ]
   },
   {
-    "objectID": "contenidos/evaluaciones/tarea-03.html#desarrollo",
-    "href": "contenidos/evaluaciones/tarea-03.html#desarrollo",
-    "title": "Tarea 3",
+    "objectID": "contenidos/evaluaciones/tarea-02.html#desarrollo",
+    "href": "contenidos/evaluaciones/tarea-02.html#desarrollo",
+    "title": "Tarea 2",
     "section": "Desarrollo",
-    "text": "Desarrollo\nA partir del documento de la tarea 2, copiado a un repositorio nuevo y corregido según los comentarios recibidos, desarrolle un documento Quarto con, como mínimo, los siguientes elementos:\n\nEncabezado YAML con el título, su nombre como autor o autora, lang: es, toc: true y embed-resources: true, como en los documentos de las lecciones.\nIntroducción actualizada: el tema y las preguntas de la tarea 2, más al menos una pregunta de carácter espacial (dónde ocurre algo, en qué unidades territoriales se concentra, qué hay cerca de qué, cuánto abarca); la fuente de los datos geoespaciales, con su cita bibliográfica y su enlace; y una descripción de la capa: tipo de geometría, SRC, cantidad de entidades y atributos principales.\nImportación y preparación de los datos: el bloque de carga de paquetes (con message: false) incluye ahora sf y, si se usa, leaflet; la lectura de la capa con st_read() desde una URL, o su construcción con st_as_sf() a partir de una tabla con coordenadas, indicando el crs; una exploración inicial (imprimir el objeto, st_crs(), nrow(), st_geometry_type(), plot() de la geometría); y las transformaciones necesarias, en particular las de SRC con st_transform(): en el texto se explica cuál SRC se usa para las operaciones (uno proyectado cuando se miden áreas o distancias) y cuál para los mapas (WGS84 en leaflet, como en las lecciones: «medir en CRTM05, dibujar en WGS84»).\nAl menos una relación con otra capa, explicada en el texto (qué pregunta responde, en qué SRC se hizo y por qué): una unión tabular entre los datos del tema y una capa de unidades territoriales (left_join() con el sf a la izquierda, comprobando con anti_join() las entidades que no coinciden), o una operación espacial (unión espacial con st_join() y conteo por unidad territorial, filtrado espacial con st_filter(), zona de influencia con st_buffer(), distancias con st_distance() o st_nearest_feature(), agregación con summarize()), seguida de un resumen con los verbos de dplyr.\nAl menos dos mapas, cada uno elaborado, a su elección, con ggplot2 (geom_sf()) o con leaflet; los dos pueden ser del mismo tipo, aunque se valora que haya uno de cada uno, porque el proyecto final usa leaflet. Al menos uno de los dos debe ser un mapa temático que represente una variable: coropletas de una variable normalizada (densidad, tasa, porcentaje, registros por 100 km²), símbolos proporcionales de un conteo, o puntos coloreados por categoría. Cada mapa debe tener:\n\nEn ggplot2: la capa de referencia de fondo (países, provincias, cantones) y la capa del tema; título, leyenda con nombre y unidades, y la fuente en caption o en fig-cap; una extensión adecuada (coord_sf()) y un SRC adecuado a esa extensión, explicado en el texto; y una etiqueta fig- con fig-cap, para que Quarto lo numere.\nEn leaflet: todas las capas en WGS84; al menos dos mapas base de uso libre, con atribución, seleccionables en el control de capas; la capa del tema con estilo, etiqueta emergente (label) con sus atributos principales y, si conviene, ventana emergente (popup); leyenda cuando el color represente una variable (con colorFactor(), colorNumeric(), colorBin() o colorQuantile()); la barra de escala; y agrupamiento de marcadores si la capa tiene muchos puntos.\nEn ambos casos, un párrafo de interpretación: qué muestra el mapa y qué se observa en los datos.\n\nTablas y gráficos de la tarea 2, conservados y corregidos: al menos una tabla interactiva con DT y los tres gráficos de ggplot2, uno de ellos interactivo con plotly. Se recomienda que al menos uno de ellos presente el resultado de la relación con la otra capa (por ejemplo, una tabla o un gráfico de barras por cantón, provincia o país).\nConclusiones: las respuestas a las preguntas de la introducción, incluida la espacial, y sus limitaciones.\nReferencias bibliográficas en formato APA 7, con las fuentes de los datos, incluidas las geoespaciales (por ejemplo, el IGN, Natural Earth o GBIF, citados como en las lecciones), y cualquier otra fuente consultada.\nDeclaración de uso de asistentes de IA, o la indicación de que no se usaron.\n\nEl documento debe ser coherente y estar bien presentado: encabezados que organicen las secciones, texto que explique el código y los resultados, bloques de código con etiquetas, y salidas legibles (sin tablas de cientos de filas impresas en el texto, sin mensajes de carga de paquetes y sin las advertencias de st_read() o st_centroid(), que se ocultan con quiet = TRUE o warning: false). Los mapas de leaflet solo funcionan en HTML y necesitan conexión a Internet para los mapas base; si una capa es muy pesada, simplifíquela con st_simplify() y quite con select() las columnas que el mapa no usa, como se indica en el capítulo de leaflet.",
+    "text": "Desarrollo\nA partir de los datos del tema elegido en la tarea 1 (si no fueron descritos en la tarea 1, descríbalos en la introducción), desarrolle un documento Quarto con, como mínimo, los siguientes elementos:\n\nEncabezado YAML con el título, su nombre como autor o autora, lang: es, toc: true y embed-resources: true, como en los documentos de las lecciones.\nIntroducción: el tema, las preguntas que se responden (al menos tres), la fuente de los datos, con su cita bibliográfica y su enlace, y una descripción de las variables principales. Puede reutilizar texto de la tarea 1.\nImportación y preparación de los datos: un bloque que cargue los paquetes (con message: false), lectura con read_csv() (o la función de readr o readxl que corresponda) desde una URL, exploración inicial (dim(), glimpse() o head()) y las transformaciones que el análisis requiera con los verbos de dplyr (select(), filter(), mutate(), arrange(), group_by() y summarize(), left_join()), encadenadas con el pipe. Cada transformación se explica brevemente en el texto: qué hace y por qué.\nAl menos una tabla interactiva con DT, con los datos o con un resumen de ellos obtenido mediante agrupación, filtrado o conteo: sin números de fila, con nombres de columna en español, con los controles en español y con los números formateados (separador de miles y cantidad de decimales adecuada). Debe ir acompañada de un párrafo que diga qué muestra. Las tablas pequeñas pueden presentarse también con knitr::kable().\nAl menos tres gráficos de ggplot2, cada uno con:\n\nUn tipo adecuado a la pregunta que responde (dispersión, barras, histograma, caja, líneas u otro), según la tabla 3 del capítulo de ggplot2. Los tres deben ser de geometrías distintas.\nTítulo descriptivo, etiquetas de los ejes con unidades, nombre de la leyenda si la hay, y la fuente de los datos en caption o en fig-cap.\nUn párrafo de interpretación: qué muestra el gráfico y qué se observa en los datos.\n\nAl menos uno de los tres gráficos en versión interactiva con ggplotly(), con una etiqueta emergente construida con la estética text que identifique cada observación (por ejemplo, su nombre y el valor con formato), en español y sin el logotipo de plotly.\nConclusiones: las respuestas a las preguntas de la introducción y sus limitaciones.\nReferencias bibliográficas en formato APA 7, con las fuentes de los datos y cualquier otra fuente consultada.\nDeclaración de uso de asistentes de IA, o la indicación de que no se usaron.\n\nEl documento debe ser coherente y estar bien presentado: encabezados que organicen las secciones, texto que explique el código y los resultados, bloques de código con etiquetas, y salidas legibles (sin tablas de cientos de filas impresas en el texto ni mensajes de carga de paquetes). Los gráficos deben estar en bloques con etiqueta fig- y fig-cap, de modo que Quarto los numere y puedan citarse en el texto.",
     "crumbs": [
       "Evaluaciones",
-      "Tarea 3"
+      "Tarea 2"
     ]
   },
   {
-    "objectID": "contenidos/evaluaciones/tarea-03.html#calificación",
-    "href": "contenidos/evaluaciones/tarea-03.html#calificación",
-    "title": "Tarea 3",
+    "objectID": "contenidos/evaluaciones/tarea-02.html#calificación",
+    "href": "contenidos/evaluaciones/tarea-02.html#calificación",
+    "title": "Tarea 2",
     "section": "Calificación",
-    "text": "Calificación\nEntre paréntesis, se muestra el porcentaje correspondiente a cada aspecto que se calificará:\n\n(10 %) Coherencia y presentación general del documento (estructura, encabezados, texto, etiquetas de los bloques, salidas legibles).\n(10 %) Introducción: pregunta espacial, fuente de los datos geoespaciales con su cita y descripción de la capa (geometría, SRC, entidades, atributos).\n(15 %) Importación y preparación de los datos geoespaciales (lectura con sf desde una URL o conversión con st_as_sf(), exploración, SRC explicado y transformado cuando corresponde).\n(15 %) Relación con otra capa (unión tabular o operación espacial correcta, en el SRC adecuado, resumida con dplyr y explicada en el texto).\n(30 %) Mapas, 15 % cada uno (tipo de mapa y simbología adecuados a la variable, corrección del SRC y de la extensión, título, leyenda, fuente y demás elementos requeridos según se haga con ggplot2 o con leaflet, e interpretación).\n(10 %) Tablas y gráficos de la tarea 2 conservados, corregidos e integrados en el documento.\n(5 %) Conclusiones y referencias bibliográficas.\n(5 %) Entrega correcta: repositorio con el .qmd, el .html y los datos accesibles, documento publicado en GitHub Pages, entrega de ambas direcciones y declaración de uso de IA.",
+    "text": "Calificación\nEntre paréntesis, se muestra el porcentaje correspondiente a cada aspecto que se calificará:\n\n(10 %) Coherencia y presentación general del documento (estructura, encabezados, texto, etiquetas de los bloques, salidas legibles).\n(10 %) Introducción: tema, preguntas, fuentes de los datos con sus citas y descripción de las variables.\n(15 %) Importación y preparación de los datos (lectura desde una URL, exploración y transformaciones con dplyr explicadas).\n(10 %) Tabla interactiva con DT (contenido, opciones, formato e interpretación).\n(36 %) Gráficos de ggplot2, 12 % cada uno (geometría adecuada, corrección, título, etiquetas y unidades, fuente, leyenda de la figura e interpretación).\n(9 %) Gráfico interactivo con plotly (conversión correcta y etiqueta emergente informativa).\n(5 %) Conclusiones y referencias bibliográficas.\n(5 %) Entrega correcta: repositorio con el .qmd, el .html y los datos accesibles, documento publicado en GitHub Pages, entrega de ambas direcciones y declaración de uso de IA.",
     "crumbs": [
       "Evaluaciones",
-      "Tarea 3"
+      "Tarea 2"
     ]
   },
   {
-    "objectID": "contenidos/evaluaciones/tarea-03.html#recursos",
-    "href": "contenidos/evaluaciones/tarea-03.html#recursos",
-    "title": "Tarea 3",
+    "objectID": "contenidos/evaluaciones/tarea-02.html#recursos",
+    "href": "contenidos/evaluaciones/tarea-02.html#recursos",
+    "title": "Tarea 2",
     "section": "Recursos",
-    "text": "Recursos\nLos contenidos evaluados en esta tarea se cubrieron en las siguientes lecciones del sitio del curso:\n\nDatos geoespaciales: modelos, formatos y sistemas de referencia de coordenadas, para describir la capa y elegir el SRC.\nsf: datos geoespaciales vectoriales, con la lectura de capas, el SRC, la unión tabular y los mapas de coropletas con ggplot2; su lectura complementaria incluye st_as_sf(), st_write() y los mapas por cuantiles.\nsf: operaciones espaciales, con la unión espacial, el conteo por unidad territorial, los centroides, las zonas de influencia y las distancias.\nleaflet: mapas web interactivos, con los mapas base, las capas vectoriales, las coropletas, el control de capas y la publicación.\n\nLos ejercicios con los datos de su tema que cierran esos capítulos (el 14 del de sf I, el 12 del de sf II y el 13 del de leaflet) son el punto de partida de esta tarea: si los hizo, ya tiene buena parte del trabajo.\nCapas de referencia disponibles en el repositorio del curso, que se leen por URL como en las lecciones:\n\nPaíses del mundo de Natural Earth (https://raw.githubusercontent.com/pf0953-programacionr/2026-ii/main/datos/natural-earth/, en WGS84), con los indicadores del Banco Mundial en datos/banco-mundial/.\nCantones y provincias de Costa Rica del IGN (https://raw.githubusercontent.com/pf0953-programacionr/2026-ii/main/datos/cantones.gpkg y provincias.gpkg, en CRTM05, EPSG:8908), y la población y el área de los cantones del INEC en datos/cantones.csv.\n\nOtras fuentes de datos geoespaciales de uso libre: el SNIT del IGN (cartografía oficial de Costa Rica por WFS y WMS), GBIF (registros de presencia de especies, descargables como CSV con coordenadas), Natural Earth y GADM (divisiones administrativas de todos los países), y los portales de datos abiertos de las instituciones. Para subir un archivo al repositorio sin la línea de comandos: Add file &gt; Upload files, arrastre el archivo y confirme con Commit changes; luego ábralo, haga clic en Raw y copie la dirección: esa es la URL que se pasa a st_read() o a read_csv().",
+    "text": "Recursos\nLos contenidos evaluados en esta tarea se cubrieron en las siguientes lecciones del sitio del curso:\n\nQuarto: documentos computacionales, que incluye la publicación en GitHub Pages y la clínica de errores de Render.\ntidyverse: paquetes para ciencia de datos, con la importación de datos con readr.\ndplyr: transformación de datos.\nggplot2: gramática de gráficos, con la tabla de geometrías y las opciones de figura de Quarto.\nplotly y DT: gráficos y tablas interactivos.\n\nLos ejercicios con los datos de su tema que cierran esos capítulos (el 10 del de dplyr, el 11 del de ggplot2 y el 9 del de plotly y DT) son el punto de partida de esta tarea: si los hizo, ya tiene buena parte del trabajo.\nPara subir un archivo de datos a GitHub sin la línea de comandos: en el repositorio, botón Add file &gt; Upload files, arrastre el archivo y confirme con Commit changes. Luego abra el archivo, haga clic en Raw y copie la dirección del navegador: esa es la URL que se pasa a read_csv(). Si los datos están en Excel, lo más sencillo es convertirlos a CSV (Archivo &gt; Guardar como) antes de subirlos.",
     "crumbs": [
       "Evaluaciones",
-      "Tarea 3"
+      "Tarea 2"
+    ]
+  },
+  {
+    "objectID": "contenidos/evaluaciones/proyecto-final.html",
+    "href": "contenidos/evaluaciones/proyecto-final.html",
+    "title": "Proyecto final",
+    "section": "",
+    "text": "El proyecto final es un trabajo individual, con un valor del 50 % de la calificación final, según lo establecido en el programa del curso. Su propósito es sintetizar lo aprendido en el curso mediante el desarrollo del tema elegido para las tareas en tres productos: (1) una aplicación web interactiva, desarrollada con shiny y publicada en Internet, con visualizaciones tabulares, gráficas y geoespaciales; (2) una presentación oral sincrónica, por videoconferencia, de la aplicación y de los resultados; y (3) un documento computacional de Quarto, con estructura de artículo, que documente el proceso de desarrollo, los datos y métodos utilizados y los principales hallazgos. Las tres tareas fueron aproximaciones a este proyecto: la descripción del tema y de sus datos (tarea 1), las tablas y los gráficos (tarea 2) y los datos geoespaciales y los mapas (tarea 3) son los componentes que la aplicación hace interactivos y que el documento explica.\nEl proyecto se entrega en dos partes, cada una con su propio enunciado:\n\n\n\nEntrega\nComponentes\nValor en la calificación final\nFecha y hora límite\n\n\n\n\nAplicación web y presentación oral\nAplicación web interactiva desarrollada con shiny, publicada en Internet\n25 %\nJueves 26 de noviembre de 2026, 11:59 p.m.\n\n\n\nPresentación oral sincrónica, por videoconferencia\n10 %\nJueves 26 de noviembre de 2026, en el horario de la clase\n\n\nDocumento computacional\nDocumento computacional de Quarto con estructura de artículo (examen final en modalidad «para la casa»)\n15 %\nMiércoles 2 de diciembre de 2026, 11:59 p.m.\n\n\n\nEl proyecto es estrictamente individual y se desarrolla sobre el tema y los datos de las tareas 1, 2 y 3, corregidos según los comentarios recibidos. Los entregables, el desarrollo, la calificación y las condiciones de uso de asistentes de inteligencia artificial de cada parte se detallan en su enunciado.",
+    "crumbs": [
+      "Evaluaciones",
+      "Proyecto final"
     ]
   },
   {
@@ -2546,190 +2557,267 @@
     ]
   },
   {
-    "objectID": "contenidos/evaluaciones/proyecto-final.html",
-    "href": "contenidos/evaluaciones/proyecto-final.html",
-    "title": "Proyecto final",
+    "objectID": "contenidos/evaluaciones/proyecto-final-documento.html",
+    "href": "contenidos/evaluaciones/proyecto-final-documento.html",
+    "title": "Proyecto final: documento computacional",
     "section": "",
-    "text": "El proyecto final es un trabajo individual, con un valor del 50 % de la calificación final, según lo establecido en el programa del curso. Su propósito es sintetizar lo aprendido en el curso: desarrollar el tema elegido para las tareas en una aplicación web interactiva, presentarla oralmente y documentarla en un documento computacional con estructura de artículo. Las tres tareas fueron aproximaciones a este proyecto: la descripción del tema y de sus datos (tarea 1), las tablas y los gráficos (tarea 2) y los datos geoespaciales y los mapas (tarea 3) son los componentes que la aplicación hace interactivos y que el documento explica.",
+    "text": "La segunda entrega del proyecto final del curso es un trabajo individual, con un valor del 15 % de la calificación final, que se presenta como examen final en modalidad «para la casa», según lo establecido en el programa del curso. Consiste en un documento computacional de Quarto, con estructura de artículo, que documenta el proceso de desarrollo del proyecto, los datos y métodos utilizados y los principales hallazgos. Se elabora después de la primera entrega, la aplicación web y la presentación oral, y describe esa aplicación en una de sus secciones.",
     "crumbs": [
       "Evaluaciones",
-      "Proyecto final"
+      "Proyecto final: documento computacional"
     ]
   },
   {
-    "objectID": "contenidos/evaluaciones/proyecto-final.html#componentes-y-fechas",
-    "href": "contenidos/evaluaciones/proyecto-final.html#componentes-y-fechas",
-    "title": "Proyecto final",
-    "section": "Componentes y fechas",
-    "text": "Componentes y fechas\n\n\n\n\n\n\n\n\nComponente\nValor\nFecha\n\n\n\n\nAplicación web interactiva desarrollada con shiny, publicada en Internet\n25 %\nJueves 26 de noviembre de 2026, 5:00 p.m. (antes del inicio de la clase)\n\n\nPresentación oral sincrónica, por videoconferencia\n10 %\nJueves 26 de noviembre de 2026, en el horario de la clase\n\n\nDocumento computacional de Quarto con estructura de artículo\n15 %\nViernes 4 de diciembre de 2026, 11:59 p.m.",
-    "crumbs": [
-      "Evaluaciones",
-      "Proyecto final"
-    ]
-  },
-  {
-    "objectID": "contenidos/evaluaciones/proyecto-final.html#objetivos",
-    "href": "contenidos/evaluaciones/proyecto-final.html#objetivos",
-    "title": "Proyecto final",
-    "section": "Objetivos",
-    "text": "Objetivos\nCada estudiante debe mostrar que es capaz de:\n\nDesarrollar una aplicación shiny con una interfaz de bslib, controles de entrada adecuados a las variables, una expresión reactiva y salidas tabulares, gráficas y geoespaciales que respondan a los controles.\nPreparar los datos de su tema, incluidos los geoespaciales, de modo que la aplicación arranque y responda con rapidez.\nPublicar la aplicación en shinyapps.io y su código en GitHub.\nPresentar oralmente la aplicación, explicar su código y responder preguntas sobre ella.\nDocumentar el proceso de desarrollo, los datos y métodos utilizados y los principales hallazgos en un documento computacional reproducible, con estructura de artículo y referencias bibliográficas.",
-    "crumbs": [
-      "Evaluaciones",
-      "Proyecto final"
-    ]
-  },
-  {
-    "objectID": "contenidos/evaluaciones/proyecto-final.html#entregables",
-    "href": "contenidos/evaluaciones/proyecto-final.html#entregables",
-    "title": "Proyecto final",
-    "section": "Entregables",
-    "text": "Entregables\nTodo el proyecto vive en un solo repositorio público en GitHub (ej. https://github.com/usuario/proyecto-final), con la siguiente estructura:\nproyecto-final/\n├── README.md        título, autor o autora, enlaces a la aplicación y al documento\n├── aplicacion/\n│   ├── app.R        la aplicación shiny\n│   └── datos/       archivos de datos que la aplicación lee (si no los lee de una URL)\n├── index.qmd        el documento computacional\n└── index.html       generado por Render, publicado con GitHub Pages\nEl jueves 26 de noviembre, antes de la clase, se entregan en Mediación Virtual:\n\nLa dirección del repositorio en GitHub, con la carpeta aplicacion/ y el archivo README.md.\nLa dirección de la aplicación publicada en shinyapps.io (ej. https://usuario.shinyapps.io/proyecto-final/).\n\nEl viernes 4 de diciembre se entrega en Mediación Virtual:\n\nLa dirección del documento publicado con GitHub Pages a partir del mismo repositorio (ej. https://usuario.github.io/proyecto-final/), con index.qmd e index.html en el repositorio.\n\nPara que cada componente sea aceptado, deben entregarse sus direcciones, y la aplicación debe estar publicada y en funcionamiento en el momento de la presentación.",
-    "crumbs": [
-      "Evaluaciones",
-      "Proyecto final"
-    ]
-  },
-  {
-    "objectID": "contenidos/evaluaciones/proyecto-final.html#consideraciones-adicionales",
-    "href": "contenidos/evaluaciones/proyecto-final.html#consideraciones-adicionales",
-    "title": "Proyecto final",
-    "section": "Consideraciones adicionales",
-    "text": "Consideraciones adicionales\nEl proyecto es estrictamente individual.\nPuede usar asistentes de inteligencia artificial para explicar, depurar, generar y verificar código, según los lineamientos del curso: debe declarar su uso (cuál herramienta, con qué propósito y en cuáles partes) en el archivo README.md, para la aplicación, y en una sección del documento; comprender y ser capaz de explicar todo el código que entregue; y verificar los resultados. En la presentación oral se le pedirá que muestre y explique partes del código de su aplicación: una aplicación que funciona y que su autor o autora no puede explicar no cumple los objetivos del proyecto.\nEl tema y los datos son los de las tareas, corregidos según los comentarios recibidos. Si necesita cambiarlos o ampliarlos, consúltelo con el profesor antes del 19 de noviembre. El programa del curso permite desarrollar la aplicación con «shiny o un marco de trabajo similar»: si quiere usar una variante distinta de la vista en clase (por ejemplo, un tablero de Quarto con server: shiny), consúltelo también antes de esa fecha; los requisitos son los mismos.\nEl token de su cuenta de shinyapps.io es una contraseña: no debe aparecer en app.R ni en ningún archivo del repositorio.",
-    "crumbs": [
-      "Evaluaciones",
-      "Proyecto final"
-    ]
-  },
-  {
-    "objectID": "contenidos/evaluaciones/proyecto-final.html#aplicación-web-interactiva-25",
-    "href": "contenidos/evaluaciones/proyecto-final.html#aplicación-web-interactiva-25",
-    "title": "Proyecto final",
-    "section": "Aplicación web interactiva (25 %)",
-    "text": "Aplicación web interactiva (25 %)\nDesarrolle una aplicación shiny, en un archivo app.R, que permita a una persona explorar los datos de su tema y responder las preguntas planteadas en las tareas. Como mínimo, debe tener los siguientes elementos:\n\nDatos preparados fuera del servidor: la lectura de los datos y toda la preparación que no depende de los controles (conversión a sf, transformación del SRC, uniones, columnas calculadas) se hacen antes de la interfaz, una sola vez. Los datos se leen desde una URL o desde archivos de la carpeta aplicacion/datos/ con rutas relativas; no hay rutas de su computadora ni setwd(). Las capas geoespaciales están en WGS84 para el mapa y, si son pesadas, simplificadas.\nInterfaz con bslib: una página con título y barra lateral (page_sidebar()), las salidas organizadas en tarjetas (card()) con encabezado, y al menos una caja de valor (value_box()) con un indicador que cambie con los filtros. Las fuentes de los datos deben estar visibles en la aplicación.\nAl menos dos controles de entrada, de tipos adecuados a las variables que filtran (lista de selección, botones de opción, casillas, deslizador, rango de fechas), con etiquetas claras y con las opciones calculadas a partir de los datos.\nUna expresión reactiva (reactive()) que aplique los filtros y que compartan las salidas.\nAl menos una tabla interactiva con DT (renderDT()), con nombres de columnas legibles.\nAl menos un gráfico interactivo con plotly (renderPlotly()), con título o encabezado, ejes con nombre y unidades, y etiqueta emergente.\nAl menos un mapa web con leaflet (renderLeaflet()), con mapa base de uso libre, la capa del tema con estilo y etiqueta emergente, leyenda cuando el color represente una variable y control de capas o barra de escala.\nLas tres salidas responden a los controles, y la aplicación maneja las combinaciones sin datos (validate(need())) sin mostrar errores.\n\nLa aplicación debe estar publicada en shinyapps.io y su código en la carpeta aplicacion/ del repositorio. El archivo README.md contiene el título del proyecto, su nombre, una descripción de dos o tres líneas, los enlaces a la aplicación y (cuando esté listo) al documento, las fuentes de los datos y la declaración de uso de asistentes de IA.\n\nCalificación de la aplicación\nEntre paréntesis, se muestra el porcentaje correspondiente a cada aspecto que se calificará:\n\n(10 %) Entrega correcta: repositorio con la estructura indicada, README.md completo con la declaración de uso de IA, aplicación publicada y en funcionamiento, entrega de ambas direcciones.\n(15 %) Datos: preparación fuera del servidor, lectura por URL o por rutas relativas, SRC correcto, arranque y respuesta en un tiempo razonable.\n(15 %) Controles de entrada: al menos dos, adecuados a las variables, con etiquetas claras y opciones calculadas de los datos.\n(15 %) Reactividad: expresión reactiva compartida por las salidas, todas las salidas responden a los controles, combinaciones sin datos manejadas.\n(15 %) Mapa web (capa del tema con estilo, etiquetas, leyenda y demás elementos requeridos; adecuado a la pregunta que responde).\n(10 %) Gráfico interactivo (tipo de gráfico adecuado a las variables, ejes, etiqueta emergente).\n(10 %) Tabla interactiva (columnas pertinentes y con nombres legibles).\n(10 %) Diseño de la interfaz: organización con bslib, caja o cajas de valor, títulos, fuentes de los datos visibles, textos sin nombres de columnas ni de objetos a la vista.",
-    "crumbs": [
-      "Evaluaciones",
-      "Proyecto final"
-    ]
-  },
-  {
-    "objectID": "contenidos/evaluaciones/proyecto-final.html#presentación-oral-10",
-    "href": "contenidos/evaluaciones/proyecto-final.html#presentación-oral-10",
-    "title": "Proyecto final",
-    "section": "Presentación oral (10 %)",
-    "text": "Presentación oral (10 %)\nCada estudiante presenta su proyecto en la clase del 26 de noviembre, por videoconferencia, en 10 minutos, seguidos de hasta 5 minutos de preguntas del profesor y del grupo. El orden de las presentaciones se publicará en Mediación Virtual. La presentación se hace sobre la aplicación publicada y el código, compartiendo la pantalla; las diapositivas son opcionales. Se sugiere la siguiente distribución:\n\nEl tema, las preguntas y los datos: de dónde salen, qué contienen y cómo se prepararon (2 minutos).\nDemostración de la aplicación publicada: qué hace cada control y qué muestra cada salida, con dos o tres combinaciones de filtros que respondan las preguntas (4 minutos).\nUn vistazo al código: la expresión reactiva y una de las salidas (2 minutos).\nHallazgos, limitaciones y lo que se haría con más tiempo (2 minutos).\n\n\nCalificación de la presentación\n\n(20 %) Tema, preguntas y datos presentados con claridad.\n(30 %) Demostración de la aplicación: funcionamiento de los controles y de las salidas, y uso de la aplicación para responder las preguntas.\n(25 %) Explicación del código y respuestas a las preguntas.\n(15 %) Hallazgos y limitaciones.\n(10 %) Uso del tiempo y claridad de la exposición.",
-    "crumbs": [
-      "Evaluaciones",
-      "Proyecto final"
-    ]
-  },
-  {
-    "objectID": "contenidos/evaluaciones/proyecto-final.html#documento-computacional-15",
-    "href": "contenidos/evaluaciones/proyecto-final.html#documento-computacional-15",
-    "title": "Proyecto final",
-    "section": "Documento computacional (15 %)",
-    "text": "Documento computacional (15 %)\nDesarrolle un documento Quarto, index.qmd, con estructura de artículo, que documente el proyecto. Es la versión final del documento de las tareas 2 y 3, reorganizado: ya no es un recorrido por las técnicas, sino un texto que plantea preguntas, describe datos y métodos, y presenta e interpreta resultados. Es también reproducible: los resultados (tablas, gráficos y mapas) se calculan en el propio documento, con el código plegado para que no interrumpa la lectura. Como mínimo, debe tener los siguientes elementos:\n\nEncabezado YAML con el título, su nombre como autor o autora, la fecha, lang: es, toc: true, embed-resources: true y code-fold: true.\nResumen, de 150 a 250 palabras: el tema, los datos, lo que se hizo y los principales hallazgos.\nIntroducción: el tema y su contexto, con al menos dos referencias bibliográficas además de las fuentes de los datos, y las preguntas que el proyecto busca responder, incluida al menos una de carácter espacial.\nDatos y métodos: las fuentes de los datos, con sus citas; la descripción de los conjuntos de datos (variables, cantidad de registros, tipo de geometría y SRC de las capas); la preparación que se les hizo y por qué; y la aplicación: su dirección, con un enlace, sus controles de entrada, su expresión reactiva y sus salidas, y las decisiones de diseño (por qué esos controles y esas visualizaciones). Se recomienda incluir una captura de pantalla de la aplicación, con su fig-cap.\nResultados: los hallazgos, organizados según las preguntas de la introducción, cada uno sustentado en una tabla, un gráfico o un mapa calculado en el documento (al menos una tabla, dos gráficos y dos mapas en total, con sus etiquetas tbl- o fig- y sus leyendas), y con un texto que los interprete.\nDiscusión y conclusiones: las respuestas a las preguntas, las limitaciones de los datos y del análisis, y las mejoras posibles de la aplicación.\nReferencias bibliográficas en formato APA 7, con las fuentes de los datos y los paquetes principales.\nDeclaración de uso de asistentes de IA, o la indicación de que no se usaron.\n\nEl documento debe leerse como un texto continuo, de entre 1 500 y 3 000 palabras sin contar el código, y estar bien presentado: sin mensajes ni advertencias de R, sin tablas de cientos de filas impresas y sin nombres de columnas o de objetos en los títulos y las leyendas.\n\nCalificación del documento\n\n(10 %) Presentación general y estructura de artículo (encabezados, texto continuo, código plegado, salidas legibles).\n(10 %) Resumen.\n(15 %) Introducción: tema, contexto con referencias y preguntas.\n(25 %) Datos y métodos: fuentes, descripción y preparación de los datos, y descripción de la aplicación y de sus decisiones de diseño.\n(25 %) Resultados: tablas, gráficos y mapas correctos y adecuados, e interpretación.\n(10 %) Discusión y conclusiones.\n(5 %) Referencias bibliográficas, declaración de uso de IA y entrega correcta (documento publicado en GitHub Pages, .qmd y .html en el repositorio).",
-    "crumbs": [
-      "Evaluaciones",
-      "Proyecto final"
-    ]
-  },
-  {
-    "objectID": "contenidos/evaluaciones/proyecto-final.html#recursos",
-    "href": "contenidos/evaluaciones/proyecto-final.html#recursos",
-    "title": "Proyecto final",
-    "section": "Recursos",
-    "text": "Recursos\n\nshiny: aplicaciones web interactivas: la estructura de la aplicación, los controles, la reactividad, las salidas, el diseño con bslib y la publicación en shinyapps.io. La aplicación de ejemplo, con su código por pasos, está en la carpeta aplicaciones/ del repositorio del curso; el ejercicio 12 de ese capítulo es el punto de partida de su aplicación.\nplotly y DT, sf: operaciones espaciales y leaflet, para las salidas y la preparación de los datos.\nQuarto: documentos computacionales, para el documento; la opción code-fold pliega el código.\nLos enunciados de las tareas 1, 2 y 3 y los comentarios que recibió en cada una.\n\nPara organizar el repositorio: cree el repositorio proyecto-final en GitHub; en su computadora, cree un proyecto de RStudio con ese nombre y, dentro, la carpeta aplicacion con el archivo app.R. La aplicación se publica desde la consola con rsconnect::deployApp(\"aplicacion\", appName = \"proyecto-final\"), y los archivos se suben al repositorio como en las tareas (Add file &gt; Upload files; para subir una carpeta, arrástrela completa a esa página). GitHub Pages se activa sobre la rama main y la carpeta raíz, donde está index.html.",
-    "crumbs": [
-      "Evaluaciones",
-      "Proyecto final"
-    ]
-  },
-  {
-    "objectID": "contenidos/evaluaciones/tarea-02.html",
-    "href": "contenidos/evaluaciones/tarea-02.html",
-    "title": "Tarea 2",
-    "section": "",
-    "text": "La segunda tarea del curso es un ejercicio individual, con un valor del 15 % de la calificación final, según lo establecido en el programa del curso. Su propósito es procesar con los paquetes del tidyverse los datos del tema elegido en la tarea 1 y presentar los resultados en tablas y gráficos, en un documento computacional de Quarto publicado en Internet. Es la segunda aproximación al proyecto final: el documento que se entrega aquí se ampliará con datos geoespaciales en la tarea 3.",
-    "crumbs": [
-      "Evaluaciones",
-      "Tarea 2"
-    ]
-  },
-  {
-    "objectID": "contenidos/evaluaciones/tarea-02.html#fecha-y-hora-límite-de-entrega",
-    "href": "contenidos/evaluaciones/tarea-02.html#fecha-y-hora-límite-de-entrega",
-    "title": "Tarea 2",
+    "objectID": "contenidos/evaluaciones/proyecto-final-documento.html#fecha-y-hora-límite-de-entrega",
+    "href": "contenidos/evaluaciones/proyecto-final-documento.html#fecha-y-hora-límite-de-entrega",
+    "title": "Proyecto final: documento computacional",
     "section": "Fecha y hora límite de entrega",
-    "text": "Fecha y hora límite de entrega\nLunes 26 de octubre de 2026, 11:59 p.m.",
+    "text": "Fecha y hora límite de entrega\nMiércoles 2 de diciembre de 2026, 11:59 p.m.",
     "crumbs": [
       "Evaluaciones",
-      "Tarea 2"
+      "Proyecto final: documento computacional"
     ]
   },
   {
-    "objectID": "contenidos/evaluaciones/tarea-02.html#objetivos",
-    "href": "contenidos/evaluaciones/tarea-02.html#objetivos",
-    "title": "Tarea 2",
+    "objectID": "contenidos/evaluaciones/proyecto-final-documento.html#objetivos",
+    "href": "contenidos/evaluaciones/proyecto-final-documento.html#objetivos",
+    "title": "Proyecto final: documento computacional",
     "section": "Objetivos",
-    "text": "Objetivos\nCada estudiante debe mostrar que es capaz de:\n\nImportar, explorar, transformar y resumir datos tabulares con los paquetes readr y dplyr.\nElaborar gráficos con ggplot2, adecuados a la pregunta que responden y con título, etiquetas y unidades, y convertirlos en interactivos con plotly.\nPresentar datos en tablas interactivas con DT.\nIntegrar código, resultados y texto interpretativo en un documento computacional de Quarto, con referencias bibliográficas.\nPublicar el documento en un repositorio de GitHub y en GitHub Pages.",
+    "text": "Objetivos\nCada estudiante debe mostrar que es capaz de:\n\nDocumentar el proceso de desarrollo, los datos y métodos utilizados y los principales hallazgos en un documento computacional reproducible, con estructura de artículo y referencias bibliográficas.",
     "crumbs": [
       "Evaluaciones",
-      "Tarea 2"
+      "Proyecto final: documento computacional"
     ]
   },
   {
-    "objectID": "contenidos/evaluaciones/tarea-02.html#entregables",
-    "href": "contenidos/evaluaciones/tarea-02.html#entregables",
-    "title": "Tarea 2",
+    "objectID": "contenidos/evaluaciones/proyecto-final-documento.html#entregables",
+    "href": "contenidos/evaluaciones/proyecto-final-documento.html#entregables",
+    "title": "Proyecto final: documento computacional",
     "section": "Entregables",
-    "text": "Entregables\n\nDirección de un repositorio público en GitHub (ej. https://github.com/usuario/tarea-02) que contenga:\n\nEl documento Quarto, index.qmd, y el archivo index.html generado por Render con embed-resources: true, como en los ejercicios de las lecciones.\nLos archivos de datos (CSV, Excel u otros) que el documento lee, salvo que se lean directamente desde una URL de la fuente original.\nUn archivo README.md breve con el título del trabajo, el nombre del autor o autora y el enlace al documento publicado.\n\nDirección del documento publicado con GitHub Pages a partir de ese repositorio (ej. https://usuario.github.io/tarea-02/).\n\nLa entrega debe realizarse a través de la plataforma Mediación Virtual. Para que la tarea sea aceptada, deben entregarse ambas direcciones. El documento debe leer los datos desde una URL (la del archivo en el repositorio, con el botón Raw de GitHub, o la de la fuente original), no desde una ruta local de su computadora, para que pueda reproducirse en cualquier lugar.",
+    "text": "Entregables\nLa entrega se realiza a través de la plataforma Mediación Virtual, en la actividad correspondiente.\nLa dirección del documento publicado con GitHub Pages (ej. https://usuario.github.io/proyecto-final/) a partir del mismo repositorio de la primera entrega, con los archivos index.qmd e index.html en la raíz:\nproyecto-final/\n├── README.md        título, autor o autora, enlaces a la aplicación y al documento\n├── aplicacion/      la aplicación shiny (primera entrega)\n├── index.qmd        el documento computacional\n└── index.html       generado por Render, publicado con GitHub Pages\nAl entregar, agregue el enlace al documento en el archivo README.md. Para que el documento sea aceptado, debe entregarse su dirección.",
     "crumbs": [
       "Evaluaciones",
-      "Tarea 2"
+      "Proyecto final: documento computacional"
     ]
   },
   {
-    "objectID": "contenidos/evaluaciones/tarea-02.html#consideraciones-adicionales",
-    "href": "contenidos/evaluaciones/tarea-02.html#consideraciones-adicionales",
-    "title": "Tarea 2",
+    "objectID": "contenidos/evaluaciones/proyecto-final-documento.html#consideraciones-adicionales",
+    "href": "contenidos/evaluaciones/proyecto-final-documento.html#consideraciones-adicionales",
+    "title": "Proyecto final: documento computacional",
     "section": "Consideraciones adicionales",
-    "text": "Consideraciones adicionales\nEsta tarea es estrictamente individual.\nPuede usar asistentes de inteligencia artificial para explicar, depurar, generar y verificar código, según los lineamientos del curso: debe declarar su uso en una sección del documento (cuál herramienta, con qué propósito y en cuáles partes), comprender y ser capaz de explicar todo el código que entregue, y verificar los resultados. El profesor puede pedirle en clase que explique cualquier parte de su documento.",
+    "text": "Consideraciones adicionales\nEl proyecto es estrictamente individual y se desarrolla sobre el tema y los datos de las tareas, corregidos según los comentarios recibidos.\nPuede usar asistentes de inteligencia artificial para explicar, depurar, generar y verificar código, según los lineamientos del curso: debe declarar su uso (cuál herramienta, con qué propósito y en cuáles partes) en una sección del documento; comprender y ser capaz de explicar todo el código que entregue; y verificar los resultados.",
     "crumbs": [
       "Evaluaciones",
-      "Tarea 2"
+      "Proyecto final: documento computacional"
     ]
   },
   {
-    "objectID": "contenidos/evaluaciones/tarea-02.html#desarrollo",
-    "href": "contenidos/evaluaciones/tarea-02.html#desarrollo",
-    "title": "Tarea 2",
+    "objectID": "contenidos/evaluaciones/proyecto-final-documento.html#desarrollo",
+    "href": "contenidos/evaluaciones/proyecto-final-documento.html#desarrollo",
+    "title": "Proyecto final: documento computacional",
     "section": "Desarrollo",
-    "text": "Desarrollo\nA partir de los datos del tema elegido en la tarea 1 (si no fueron descritos en la tarea 1, descríbalos en la introducción), desarrolle un documento Quarto con, como mínimo, los siguientes elementos:\n\nEncabezado YAML con el título, su nombre como autor o autora, lang: es, toc: true y embed-resources: true, como en los documentos de las lecciones.\nIntroducción: el tema, las preguntas que se responden (al menos tres), la fuente de los datos, con su cita bibliográfica y su enlace, y una descripción de las variables principales. Puede reutilizar texto de la tarea 1.\nImportación y preparación de los datos: un bloque que cargue los paquetes (con message: false), lectura con read_csv() (o la función de readr o readxl que corresponda) desde una URL, exploración inicial (dim(), glimpse() o head()) y las transformaciones que el análisis requiera con los verbos de dplyr (select(), filter(), mutate(), arrange(), group_by() y summarize(), left_join()), encadenadas con el pipe. Cada transformación se explica brevemente en el texto: qué hace y por qué.\nAl menos una tabla interactiva con DT, con los datos o con un resumen de ellos obtenido mediante agrupación, filtrado o conteo: sin números de fila, con nombres de columna en español, con los controles en español y con los números formateados (separador de miles y cantidad de decimales adecuada). Debe ir acompañada de un párrafo que diga qué muestra. Las tablas pequeñas pueden presentarse también con knitr::kable().\nAl menos tres gráficos de ggplot2, cada uno con:\n\nUn tipo adecuado a la pregunta que responde (dispersión, barras, histograma, caja, líneas u otro), según la tabla 3 del capítulo de ggplot2. Los tres deben ser de geometrías distintas.\nTítulo descriptivo, etiquetas de los ejes con unidades, nombre de la leyenda si la hay, y la fuente de los datos en caption o en fig-cap.\nUn párrafo de interpretación: qué muestra el gráfico y qué se observa en los datos.\n\nAl menos uno de los tres gráficos en versión interactiva con ggplotly(), con una etiqueta emergente construida con la estética text que identifique cada observación (por ejemplo, su nombre y el valor con formato), en español y sin el logotipo de plotly.\nConclusiones: las respuestas a las preguntas de la introducción y sus limitaciones.\nReferencias bibliográficas en formato APA 7, con las fuentes de los datos y cualquier otra fuente consultada.\nDeclaración de uso de asistentes de IA, o la indicación de que no se usaron.\n\nEl documento debe ser coherente y estar bien presentado: encabezados que organicen las secciones, texto que explique el código y los resultados, bloques de código con etiquetas, y salidas legibles (sin tablas de cientos de filas impresas en el texto ni mensajes de carga de paquetes). Los gráficos deben estar en bloques con etiqueta fig- y fig-cap, de modo que Quarto los numere y puedan citarse en el texto.",
+    "text": "Desarrollo\nDesarrolle un documento Quarto, index.qmd, con estructura de artículo, que documente el proyecto. Es la versión final del documento de las tareas 2 y 3, reorganizado: ya no es un recorrido por las técnicas, sino un texto que plantea preguntas, describe datos y métodos, y presenta e interpreta resultados. Es también reproducible: los resultados (tablas, gráficos y mapas) se calculan en el propio documento, con el código plegado para que no interrumpa la lectura. Como mínimo, debe tener los siguientes elementos:\n\nEncabezado YAML con el título, su nombre como autor o autora, la fecha, lang: es, toc: true, embed-resources: true y code-fold: true.\nResumen, de 150 a 250 palabras: el tema, los datos, lo que se hizo y los principales hallazgos.\nIntroducción: el tema y su contexto, con al menos dos referencias bibliográficas además de las fuentes de los datos, y las preguntas que el proyecto busca responder, incluida al menos una de carácter espacial.\nDatos y métodos: las fuentes de los datos, con sus citas; la descripción de los conjuntos de datos (variables, cantidad de registros, tipo de geometría y SRC de las capas); la preparación que se les hizo y por qué; y la aplicación: su dirección, con un enlace, sus controles de entrada, su expresión reactiva y sus salidas, y las decisiones de diseño (por qué esos controles y esas visualizaciones). Se recomienda incluir una captura de pantalla de la aplicación, con su fig-cap.\nResultados: los hallazgos, organizados según las preguntas de la introducción, cada uno sustentado en una tabla, un gráfico o un mapa calculado en el documento (al menos una tabla, dos gráficos y dos mapas en total, con sus etiquetas tbl- o fig- y sus leyendas), y con un texto que los interprete.\nDiscusión y conclusiones: las respuestas a las preguntas, las limitaciones de los datos y del análisis, y las mejoras posibles de la aplicación.\nReferencias bibliográficas en formato APA 7, con las fuentes de los datos y los paquetes principales.\nDeclaración de uso de asistentes de IA, o la indicación de que no se usaron.\n\nEl documento debe leerse como un texto continuo, de entre 1 500 y 3 000 palabras sin contar el código, y estar bien presentado: sin mensajes ni advertencias de R, sin tablas de cientos de filas impresas y sin nombres de columnas o de objetos en los títulos y las leyendas.",
     "crumbs": [
       "Evaluaciones",
-      "Tarea 2"
+      "Proyecto final: documento computacional"
     ]
   },
   {
-    "objectID": "contenidos/evaluaciones/tarea-02.html#calificación",
-    "href": "contenidos/evaluaciones/tarea-02.html#calificación",
-    "title": "Tarea 2",
+    "objectID": "contenidos/evaluaciones/proyecto-final-documento.html#calificación",
+    "href": "contenidos/evaluaciones/proyecto-final-documento.html#calificación",
+    "title": "Proyecto final: documento computacional",
     "section": "Calificación",
-    "text": "Calificación\nEntre paréntesis, se muestra el porcentaje correspondiente a cada aspecto que se calificará:\n\n(10 %) Coherencia y presentación general del documento (estructura, encabezados, texto, etiquetas de los bloques, salidas legibles).\n(10 %) Introducción: tema, preguntas, fuentes de los datos con sus citas y descripción de las variables.\n(15 %) Importación y preparación de los datos (lectura desde una URL, exploración y transformaciones con dplyr explicadas).\n(10 %) Tabla interactiva con DT (contenido, opciones, formato e interpretación).\n(36 %) Gráficos de ggplot2, 12 % cada uno (geometría adecuada, corrección, título, etiquetas y unidades, fuente, leyenda de la figura e interpretación).\n(9 %) Gráfico interactivo con plotly (conversión correcta y etiqueta emergente informativa).\n(5 %) Conclusiones y referencias bibliográficas.\n(5 %) Entrega correcta: repositorio con el .qmd, el .html y los datos accesibles, documento publicado en GitHub Pages, entrega de ambas direcciones y declaración de uso de IA.",
+    "text": "Calificación\nEl documento se califica sobre 100. Entre paréntesis, se muestra el porcentaje correspondiente a cada aspecto que se calificará.\n\n(10 %) Presentación general y estructura de artículo (encabezados, texto continuo, código plegado, salidas legibles).\n(10 %) Resumen.\n(15 %) Introducción: tema, contexto con referencias y preguntas.\n(25 %) Datos y métodos: fuentes, descripción y preparación de los datos, y descripción de la aplicación y de sus decisiones de diseño.\n(25 %) Resultados: tablas, gráficos y mapas correctos y adecuados, e interpretación.\n(10 %) Discusión y conclusiones.\n(5 %) Referencias bibliográficas, declaración de uso de IA y entrega correcta (documento publicado en GitHub Pages, .qmd y .html en el repositorio).",
     "crumbs": [
       "Evaluaciones",
-      "Tarea 2"
+      "Proyecto final: documento computacional"
     ]
   },
   {
-    "objectID": "contenidos/evaluaciones/tarea-02.html#recursos",
-    "href": "contenidos/evaluaciones/tarea-02.html#recursos",
-    "title": "Tarea 2",
+    "objectID": "contenidos/evaluaciones/proyecto-final-documento.html#recursos",
+    "href": "contenidos/evaluaciones/proyecto-final-documento.html#recursos",
+    "title": "Proyecto final: documento computacional",
     "section": "Recursos",
-    "text": "Recursos\nLos contenidos evaluados en esta tarea se cubrieron en las siguientes lecciones del sitio del curso:\n\nQuarto: documentos computacionales, que incluye la publicación en GitHub Pages y la clínica de errores de Render.\ntidyverse: paquetes para ciencia de datos, con la importación de datos con readr.\ndplyr: transformación de datos.\nggplot2: gramática de gráficos, con la tabla de geometrías y las opciones de figura de Quarto.\nplotly y DT: gráficos y tablas interactivos.\n\nLos ejercicios con los datos de su tema que cierran esos capítulos (el 10 del de dplyr, el 11 del de ggplot2 y el 9 del de plotly y DT) son el punto de partida de esta tarea: si los hizo, ya tiene buena parte del trabajo.\nPara subir un archivo de datos a GitHub sin la línea de comandos: en el repositorio, botón Add file &gt; Upload files, arrastre el archivo y confirme con Commit changes. Luego abra el archivo, haga clic en Raw y copie la dirección del navegador: esa es la URL que se pasa a read_csv(). Si los datos están en Excel, lo más sencillo es convertirlos a CSV (Archivo &gt; Guardar como) antes de subirlos.",
+    "text": "Recursos\n\nQuarto: documentos computacionales, para el documento y su publicación en GitHub Pages; la opción code-fold pliega el código.\nplotly y DT, sf: operaciones espaciales y leaflet, para las tablas, los gráficos y los mapas.\nLos enunciados de las tareas 2 y 3, cuyos productos se reutilizan y actualizan en el documento, y los comentarios que recibió en cada una.\n\nGitHub Pages se activa sobre la rama main y la carpeta raíz del repositorio, donde está index.html.",
     "crumbs": [
       "Evaluaciones",
-      "Tarea 2"
+      "Proyecto final: documento computacional"
+    ]
+  },
+  {
+    "objectID": "contenidos/evaluaciones/tarea-03.html",
+    "href": "contenidos/evaluaciones/tarea-03.html",
+    "title": "Tarea 3",
+    "section": "",
+    "text": "La tercera tarea del curso es un ejercicio individual, con un valor del 20 % de la calificación final, según lo establecido en el programa del curso. Su propósito es incorporar datos geoespaciales al tema elegido: leerlos con el paquete sf, relacionarlos con otra capa mediante una unión tabular o espacial y presentarlos en mapas, en el documento computacional de Quarto de la tarea 2, ampliado y publicado en Internet. Es la tercera y última aproximación al proyecto final: las tablas, los gráficos y los mapas de este documento son los componentes que la aplicación shiny del proyecto hará interactivos.",
+    "crumbs": [
+      "Evaluaciones",
+      "Tarea 3"
+    ]
+  },
+  {
+    "objectID": "contenidos/evaluaciones/tarea-03.html#fecha-y-hora-límite-de-entrega",
+    "href": "contenidos/evaluaciones/tarea-03.html#fecha-y-hora-límite-de-entrega",
+    "title": "Tarea 3",
+    "section": "Fecha y hora límite de entrega",
+    "text": "Fecha y hora límite de entrega\nLunes 16 de noviembre de 2026, 11:59 p.m.",
+    "crumbs": [
+      "Evaluaciones",
+      "Tarea 3"
+    ]
+  },
+  {
+    "objectID": "contenidos/evaluaciones/tarea-03.html#objetivos",
+    "href": "contenidos/evaluaciones/tarea-03.html#objetivos",
+    "title": "Tarea 3",
+    "section": "Objetivos",
+    "text": "Objetivos\nCada estudiante debe mostrar que es capaz de:\n\nLeer capas vectoriales con sf (con st_read(), o con st_as_sf() a partir de una tabla con coordenadas), explorar su estructura y conocer y transformar su sistema de referencia de coordenadas (SRC) con st_crs() y st_transform().\nRelacionar los datos del tema con otra capa mediante una unión tabular (left_join()) o una operación espacial (st_join(), st_filter(), st_buffer(), st_distance() u otra), y resumir el resultado con dplyr.\nElaborar mapas temáticos con ggplot2 (geom_sf()) o con leaflet, adecuados a la pregunta que responden, con título, leyenda y fuente, y con la simbología apropiada al tipo de variable.\nIntegrar los mapas con las tablas y los gráficos de la tarea 2 en un documento computacional de Quarto coherente, con referencias bibliográficas.\nPublicar el documento en un repositorio de GitHub y en GitHub Pages.",
+    "crumbs": [
+      "Evaluaciones",
+      "Tarea 3"
+    ]
+  },
+  {
+    "objectID": "contenidos/evaluaciones/tarea-03.html#entregables",
+    "href": "contenidos/evaluaciones/tarea-03.html#entregables",
+    "title": "Tarea 3",
+    "section": "Entregables",
+    "text": "Entregables\n\nDirección de un repositorio público en GitHub (ej. https://github.com/usuario/tarea-03) que contenga:\n\nEl documento Quarto, index.qmd, y el archivo index.html generado por Render con embed-resources: true, como en los ejercicios de las lecciones.\nLos archivos de datos (CSV, GeoPackage, GeoJSON u otros) que el documento lee, salvo que se lean directamente desde una URL de la fuente original.\nUn archivo README.md breve con el título del trabajo, el nombre del autor o autora y el enlace al documento publicado.\n\nDirección del documento publicado con GitHub Pages a partir de ese repositorio (ej. https://usuario.github.io/tarea-03/).\n\nLa entrega debe realizarse a través de la plataforma Mediación Virtual. Para que la tarea sea aceptada, deben entregarse ambas direcciones. Los datos deben leerse desde una URL (la del archivo en el repositorio, con el botón Raw de GitHub, o la de la fuente original), como en la tarea 2 y en las lecciones, y no desde una ruta local de su computadora. Para las capas geoespaciales se recomiendan los formatos GeoPackage (.gpkg) o GeoJSON, que son de un solo archivo y se leen por URL con st_read(); si sus datos están en shapefile, conviértalos a GeoPackage con st_write() antes de subirlos.",
+    "crumbs": [
+      "Evaluaciones",
+      "Tarea 3"
+    ]
+  },
+  {
+    "objectID": "contenidos/evaluaciones/tarea-03.html#consideraciones-adicionales",
+    "href": "contenidos/evaluaciones/tarea-03.html#consideraciones-adicionales",
+    "title": "Tarea 3",
+    "section": "Consideraciones adicionales",
+    "text": "Consideraciones adicionales\nEsta tarea es estrictamente individual.\nPuede usar asistentes de inteligencia artificial para explicar, depurar, generar y verificar código, según los lineamientos del curso: debe declarar su uso en una sección del documento (cuál herramienta, con qué propósito y en cuáles partes), comprender y ser capaz de explicar todo el código que entregue, y verificar los resultados. El profesor puede pedirle en clase que explique cualquier parte de su documento.\nSi los datos de su tema no tienen geometría propia, hay dos caminos, vistos en las lecciones: si la tabla tiene columnas de longitud y latitud, se convierte en una capa de puntos con st_as_sf(); si está organizada por unidad territorial (país, provincia, cantón, distrito), se une por nombre o por código a una capa de esas unidades con left_join(), con el objeto sf a la izquierda. El repositorio del curso ofrece los países del mundo de Natural Earth y los cantones y provincias de Costa Rica del IGN (ver la sección de recursos). En cualquier caso, el documento debe explicar de dónde salen las geometrías.",
+    "crumbs": [
+      "Evaluaciones",
+      "Tarea 3"
+    ]
+  },
+  {
+    "objectID": "contenidos/evaluaciones/tarea-03.html#desarrollo",
+    "href": "contenidos/evaluaciones/tarea-03.html#desarrollo",
+    "title": "Tarea 3",
+    "section": "Desarrollo",
+    "text": "Desarrollo\nA partir del documento de la tarea 2, copiado a un repositorio nuevo y corregido según los comentarios recibidos, desarrolle un documento Quarto con, como mínimo, los siguientes elementos:\n\nEncabezado YAML con el título, su nombre como autor o autora, lang: es, toc: true y embed-resources: true, como en los documentos de las lecciones.\nIntroducción actualizada: el tema y las preguntas de la tarea 2, más al menos una pregunta de carácter espacial (dónde ocurre algo, en qué unidades territoriales se concentra, qué hay cerca de qué, cuánto abarca); la fuente de los datos geoespaciales, con su cita bibliográfica y su enlace; y una descripción de la capa: tipo de geometría, SRC, cantidad de entidades y atributos principales.\nImportación y preparación de los datos: el bloque de carga de paquetes (con message: false) incluye ahora sf y, si se usa, leaflet; la lectura de la capa con st_read() desde una URL, o su construcción con st_as_sf() a partir de una tabla con coordenadas, indicando el crs; una exploración inicial (imprimir el objeto, st_crs(), nrow(), st_geometry_type(), plot() de la geometría); y las transformaciones necesarias, en particular las de SRC con st_transform(): en el texto se explica cuál SRC se usa para las operaciones (uno proyectado cuando se miden áreas o distancias) y cuál para los mapas (WGS84 en leaflet, como en las lecciones: «medir en CRTM05, dibujar en WGS84»).\nAl menos una relación con otra capa, explicada en el texto (qué pregunta responde, en qué SRC se hizo y por qué): una unión tabular entre los datos del tema y una capa de unidades territoriales (left_join() con el sf a la izquierda, comprobando con anti_join() las entidades que no coinciden), o una operación espacial (unión espacial con st_join() y conteo por unidad territorial, filtrado espacial con st_filter(), zona de influencia con st_buffer(), distancias con st_distance() o st_nearest_feature(), agregación con summarize()), seguida de un resumen con los verbos de dplyr.\nAl menos dos mapas, cada uno elaborado, a su elección, con ggplot2 (geom_sf()) o con leaflet; los dos pueden ser del mismo tipo, aunque se valora que haya uno de cada uno, porque el proyecto final usa leaflet. Al menos uno de los dos debe ser un mapa temático que represente una variable: coropletas de una variable normalizada (densidad, tasa, porcentaje, registros por 100 km²), símbolos proporcionales de un conteo, o puntos coloreados por categoría. Cada mapa debe tener:\n\nEn ggplot2: la capa de referencia de fondo (países, provincias, cantones) y la capa del tema; título, leyenda con nombre y unidades, y la fuente en caption o en fig-cap; una extensión adecuada (coord_sf()) y un SRC adecuado a esa extensión, explicado en el texto; y una etiqueta fig- con fig-cap, para que Quarto lo numere.\nEn leaflet: todas las capas en WGS84; al menos dos mapas base de uso libre, con atribución, seleccionables en el control de capas; la capa del tema con estilo, etiqueta emergente (label) con sus atributos principales y, si conviene, ventana emergente (popup); leyenda cuando el color represente una variable (con colorFactor(), colorNumeric(), colorBin() o colorQuantile()); la barra de escala; y agrupamiento de marcadores si la capa tiene muchos puntos.\nEn ambos casos, un párrafo de interpretación: qué muestra el mapa y qué se observa en los datos.\n\nTablas y gráficos de la tarea 2, conservados y corregidos: al menos una tabla interactiva con DT y los tres gráficos de ggplot2, uno de ellos interactivo con plotly. Se recomienda que al menos uno de ellos presente el resultado de la relación con la otra capa (por ejemplo, una tabla o un gráfico de barras por cantón, provincia o país).\nConclusiones: las respuestas a las preguntas de la introducción, incluida la espacial, y sus limitaciones.\nReferencias bibliográficas en formato APA 7, con las fuentes de los datos, incluidas las geoespaciales (por ejemplo, el IGN, Natural Earth o GBIF, citados como en las lecciones), y cualquier otra fuente consultada.\nDeclaración de uso de asistentes de IA, o la indicación de que no se usaron.\n\nEl documento debe ser coherente y estar bien presentado: encabezados que organicen las secciones, texto que explique el código y los resultados, bloques de código con etiquetas, y salidas legibles (sin tablas de cientos de filas impresas en el texto, sin mensajes de carga de paquetes y sin las advertencias de st_read() o st_centroid(), que se ocultan con quiet = TRUE o warning: false). Los mapas de leaflet solo funcionan en HTML y necesitan conexión a Internet para los mapas base; si una capa es muy pesada, simplifíquela con st_simplify() y quite con select() las columnas que el mapa no usa, como se indica en el capítulo de leaflet.",
+    "crumbs": [
+      "Evaluaciones",
+      "Tarea 3"
+    ]
+  },
+  {
+    "objectID": "contenidos/evaluaciones/tarea-03.html#calificación",
+    "href": "contenidos/evaluaciones/tarea-03.html#calificación",
+    "title": "Tarea 3",
+    "section": "Calificación",
+    "text": "Calificación\nEntre paréntesis, se muestra el porcentaje correspondiente a cada aspecto que se calificará:\n\n(10 %) Coherencia y presentación general del documento (estructura, encabezados, texto, etiquetas de los bloques, salidas legibles).\n(10 %) Introducción: pregunta espacial, fuente de los datos geoespaciales con su cita y descripción de la capa (geometría, SRC, entidades, atributos).\n(15 %) Importación y preparación de los datos geoespaciales (lectura con sf desde una URL o conversión con st_as_sf(), exploración, SRC explicado y transformado cuando corresponde).\n(15 %) Relación con otra capa (unión tabular o operación espacial correcta, en el SRC adecuado, resumida con dplyr y explicada en el texto).\n(30 %) Mapas, 15 % cada uno (tipo de mapa y simbología adecuados a la variable, corrección del SRC y de la extensión, título, leyenda, fuente y demás elementos requeridos según se haga con ggplot2 o con leaflet, e interpretación).\n(10 %) Tablas y gráficos de la tarea 2 conservados, corregidos e integrados en el documento.\n(5 %) Conclusiones y referencias bibliográficas.\n(5 %) Entrega correcta: repositorio con el .qmd, el .html y los datos accesibles, documento publicado en GitHub Pages, entrega de ambas direcciones y declaración de uso de IA.",
+    "crumbs": [
+      "Evaluaciones",
+      "Tarea 3"
+    ]
+  },
+  {
+    "objectID": "contenidos/evaluaciones/tarea-03.html#recursos",
+    "href": "contenidos/evaluaciones/tarea-03.html#recursos",
+    "title": "Tarea 3",
+    "section": "Recursos",
+    "text": "Recursos\nLos contenidos evaluados en esta tarea se cubrieron en las siguientes lecciones del sitio del curso:\n\nDatos geoespaciales: modelos, formatos y sistemas de referencia de coordenadas, para describir la capa y elegir el SRC.\nsf: datos geoespaciales vectoriales, con la lectura de capas, el SRC, la unión tabular y los mapas de coropletas con ggplot2; su lectura complementaria incluye st_as_sf(), st_write() y los mapas por cuantiles.\nsf: operaciones espaciales, con la unión espacial, el conteo por unidad territorial, los centroides, las zonas de influencia y las distancias.\nleaflet: mapas web interactivos, con los mapas base, las capas vectoriales, las coropletas, el control de capas y la publicación.\n\nLos ejercicios con los datos de su tema que cierran esos capítulos (el 14 del de sf I, el 12 del de sf II y el 13 del de leaflet) son el punto de partida de esta tarea: si los hizo, ya tiene buena parte del trabajo.\nCapas de referencia disponibles en el repositorio del curso, que se leen por URL como en las lecciones:\n\nPaíses del mundo de Natural Earth (https://raw.githubusercontent.com/pf0953-programacionr/2026-ii/main/datos/natural-earth/, en WGS84), con los indicadores del Banco Mundial en datos/banco-mundial/.\nCantones y provincias de Costa Rica del IGN (https://raw.githubusercontent.com/pf0953-programacionr/2026-ii/main/datos/cantones.gpkg y provincias.gpkg, en CRTM05, EPSG:8908), y la población y el área de los cantones del INEC en datos/cantones.csv.\n\nOtras fuentes de datos geoespaciales de uso libre: el SNIT del IGN (cartografía oficial de Costa Rica por WFS y WMS), GBIF (registros de presencia de especies, descargables como CSV con coordenadas), Natural Earth y GADM (divisiones administrativas de todos los países), y los portales de datos abiertos de las instituciones. Para subir un archivo al repositorio sin la línea de comandos: Add file &gt; Upload files, arrastre el archivo y confirme con Commit changes; luego ábralo, haga clic en Raw y copie la dirección: esa es la URL que se pasa a st_read() o a read_csv().",
+    "crumbs": [
+      "Evaluaciones",
+      "Tarea 3"
+    ]
+  },
+  {
+    "objectID": "contenidos/evaluaciones/tarea-01.html",
+    "href": "contenidos/evaluaciones/tarea-01.html",
+    "title": "Tarea 1",
+    "section": "",
+    "text": "La primera tarea del curso es un ejercicio individual, con un valor del 15 % de la calificación final, según lo establecido en el programa del curso. Su propósito es elegir el tema que cada estudiante desarrollará de manera incremental en las tareas 2 y 3 y en el proyecto final, y presentarlo en un sitio web escrito en Markdown y publicado en Internet.",
+    "crumbs": [
+      "Evaluaciones",
+      "Tarea 1"
+    ]
+  },
+  {
+    "objectID": "contenidos/evaluaciones/tarea-01.html#fecha-y-hora-límite-de-entrega",
+    "href": "contenidos/evaluaciones/tarea-01.html#fecha-y-hora-límite-de-entrega",
+    "title": "Tarea 1",
+    "section": "Fecha y hora límite de entrega",
+    "text": "Fecha y hora límite de entrega\nViernes 11 de setiembre de 2026, 11:59 p.m.",
+    "crumbs": [
+      "Evaluaciones",
+      "Tarea 1"
+    ]
+  },
+  {
+    "objectID": "contenidos/evaluaciones/tarea-01.html#objetivos",
+    "href": "contenidos/evaluaciones/tarea-01.html#objetivos",
+    "title": "Tarea 1",
+    "section": "Objetivos",
+    "text": "Objetivos\nCada estudiante debe mostrar que es capaz de:\n\nEscribir documentos en el lenguaje de marcado Markdown.\nManejar repositorios en GitHub.\nPublicar sitios web con GitHub Pages.\nElegir un tema de su interés, con datos disponibles —incluidos datos geoespaciales—, apto para desarrollarse durante el resto del curso.",
+    "crumbs": [
+      "Evaluaciones",
+      "Tarea 1"
+    ]
+  },
+  {
+    "objectID": "contenidos/evaluaciones/tarea-01.html#entregables",
+    "href": "contenidos/evaluaciones/tarea-01.html#entregables",
+    "title": "Tarea 1",
+    "section": "Entregables",
+    "text": "Entregables\n\nDirección de un repositorio en GitHub (ej. https://github.com/usuario/tarea-01) que contenga un documento escrito en Markdown llamado README.md, con el contenido especificado en la sección Desarrollo.\nDirección del sitio web publicado con GitHub Pages a partir de ese repositorio (ej. https://usuario.github.io/tarea-01/).\n\nLa entrega debe realizarse a través de la plataforma Mediación Virtual. Para que la tarea sea aceptada, deben entregarse ambas direcciones.",
+    "crumbs": [
+      "Evaluaciones",
+      "Tarea 1"
+    ]
+  },
+  {
+    "objectID": "contenidos/evaluaciones/tarea-01.html#consideraciones-adicionales",
+    "href": "contenidos/evaluaciones/tarea-01.html#consideraciones-adicionales",
+    "title": "Tarea 1",
+    "section": "Consideraciones adicionales",
+    "text": "Consideraciones adicionales\nEsta tarea es estrictamente individual.",
+    "crumbs": [
+      "Evaluaciones",
+      "Tarea 1"
+    ]
+  },
+  {
+    "objectID": "contenidos/evaluaciones/tarea-01.html#desarrollo",
+    "href": "contenidos/evaluaciones/tarea-01.html#desarrollo",
+    "title": "Tarea 1",
+    "section": "Desarrollo",
+    "text": "Desarrollo\nDebe desarrollar con Markdown un sitio web sobre un tema de su elección (ej. su [posible] trabajo final de graduación, un proyecto de otro curso u otra temática geográfica de su interés) que luego pueda desarrollar como proyecto final de este curso. Es importante que el tema cuente con datos disponibles —incluidos datos geoespaciales— y con algunos problemas a resolver o preguntas a contestar con esos datos: en las siguientes tareas y en el proyecto final esos datos se procesarán y visualizarán con R.\nEl sitio debe contener, como mínimo, los siguientes elementos:\n\nEncabezados (por lo menos de niveles uno y dos).\nTexto (por lo menos 750 palabras). Puede elegir la estructura que considere adecuada, pero incluya:\n\nDescripción general del tema.\nDescripción de los datos, de sus fuentes (con los enlaces respectivos) y de sus principales variables.\nProblemas que desea resolver o preguntas que espera contestar con los datos.\n\nNegritas (por lo menos una palabra).\nItálicas (por lo menos una palabra).\nListas (al menos una, ya sea numerada o no numerada).\nImágenes (al menos dos).\nHipervínculos (al menos dos).\n\nAgregue las citas bibliográficas que sean necesarias, en formato APA 7. Puede utilizar imágenes de fuentes externas, pero debe dar los créditos apropiados (proporcionar la cita bibliográfica o al menos un enlace a la fuente).\nEl contenido del sitio debe ser coherente y estar bien presentado.",
+    "crumbs": [
+      "Evaluaciones",
+      "Tarea 1"
+    ]
+  },
+  {
+    "objectID": "contenidos/evaluaciones/tarea-01.html#calificación",
+    "href": "contenidos/evaluaciones/tarea-01.html#calificación",
+    "title": "Tarea 1",
+    "section": "Calificación",
+    "text": "Calificación\nEntre paréntesis, se muestra el porcentaje correspondiente a cada aspecto que se calificará:\n\n(10 %) Coherencia y presentación general del sitio web.\nElementos de Markdown:\n\n(25 %) Texto (extensión y descripción del tema, de los datos y de las preguntas).\n(5 %) Encabezados.\n(5 %) Negritas.\n(5 %) Itálicas.\n(10 %) Listas.\n(15 %) Imágenes (con sus créditos).\n(15 %) Hipervínculos.\n\n(10 %) Publicación correcta del sitio en GitHub Pages y entrega de ambas direcciones.",
+    "crumbs": [
+      "Evaluaciones",
+      "Tarea 1"
+    ]
+  },
+  {
+    "objectID": "contenidos/evaluaciones/tarea-01.html#recursos",
+    "href": "contenidos/evaluaciones/tarea-01.html#recursos",
+    "title": "Tarea 1",
+    "section": "Recursos",
+    "text": "Recursos\nLos contenidos evaluados en esta tarea se cubrieron en las siguientes lecciones del sitio del curso:\n\nEl lenguaje de marcado Markdown\nGit, GitHub y GitHub Pages, que incluye la activación de GitHub Pages en la configuración del repositorio (Settings &gt; Pages).",
+    "crumbs": [
+      "Evaluaciones",
+      "Tarea 1"
     ]
   }
 ]
