@@ -77,6 +77,8 @@ website:
           - contenidos/evaluaciones/tarea-02.qmd
           - contenidos/evaluaciones/tarea-03.qmd
           - contenidos/evaluaciones/proyecto-final.qmd
+          - contenidos/evaluaciones/proyecto-final-aplicacion.qmd
+          - contenidos/evaluaciones/proyecto-final-documento.qmd
       - section: "Software"
         contents:
           - contenidos/software/r-rstudio.qmd
