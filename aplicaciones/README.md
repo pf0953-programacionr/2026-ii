@@ -9,6 +9,9 @@ y por provincia, en cajas de valor, un mapa, un gráfico y una tabla.
 - `pasos/paso-1/app.R` a `pasos/paso-4/app.R`: las versiones intermedias que
   el capítulo construye (estructura mínima; expresión reactiva y tabla;
   gráfico; mapa).
+- `felidos-anios/app.R`: la aplicación terminada con un deslizador de rango
+  de años, el ejemplo del capítulo 19,
+  [«Asistentes de IA en el desarrollo de una aplicación shiny»](https://pf0953-programacionr.github.io/2026-ii/contenidos/v-tableros-aplicaciones-interactivas/19-asistentes-ia-aplicaciones.html).
 
 El capítulo incluye estos archivos tal como están (opción `file` de los
 bloques de código), de modo que lo que se muestra en el sitio es lo que se

@@ -71,6 +71,7 @@ website:
       - section: "V. Tableros de control y aplicaciones interactivas"
         contents:
           - contenidos/v-tableros-aplicaciones-interactivas/18-shiny.qmd
+          - contenidos/v-tableros-aplicaciones-interactivas/19-asistentes-ia-aplicaciones.qmd
       - section: "Evaluaciones"
         contents:
           - contenidos/evaluaciones/tarea-01.qmd
