@@ -2,11 +2,11 @@
 title: "Proyecto final: documento computacional"
 ---
 
-La segunda entrega del [proyecto final](proyecto-final.qmd) del curso es un trabajo **individual**, con un valor del **15 %** de la calificación final, que se presenta como examen final en modalidad «para la casa», según lo establecido en el [programa del curso](../../programa/programa.md). Consiste en un **documento computacional** de Quarto, con estructura de artículo, que documenta el proceso de desarrollo del proyecto, los datos y métodos utilizados y los principales hallazgos. Se elabora después de la primera entrega, la [aplicación web y la presentación oral](proyecto-final-aplicacion.qmd), y describe esa aplicación en una de sus secciones.
+La segunda entrega del [proyecto final](proyecto-final.qmd) del curso es un trabajo **individual**, con un valor del **15 %** de la calificación final, que se presenta como examen final en modalidad «para la casa», según lo establecido en el [programa del curso](../../programa/programa.md). Consiste en un **documento computacional** de Quarto, con estructura de artículo, que documenta el proceso de desarrollo del proyecto, los datos y métodos utilizados y los principales hallazgos. Tiene la misma fecha límite que la primera entrega, la [aplicación web](proyecto-final-aplicacion.qmd), y describe esa aplicación en una de sus secciones.
 
 ## Fecha y hora límite de entrega
 
-Miércoles 2 de diciembre de 2026, 11:59 p.m.
+Jueves 3 de diciembre de 2026, 11:59 p.m.
 
 ## Objetivos
 

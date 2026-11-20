@@ -10,7 +10,7 @@ La aplicación reúne, con controles que los filtren, las tablas, los gráficos 
 
 | Componente | Valor en la calificación final | Fecha y hora límite |
 |---|---|---|
-| Aplicación web interactiva desarrollada con shiny, publicada en Internet | 25 % | Jueves 26 de noviembre de 2026, 11:59 p.m. |
+| Aplicación web interactiva desarrollada con shiny, publicada en Internet | 25 % | Jueves 3 de diciembre de 2026, 11:59 p.m. |
 | Presentación oral sincrónica, por videoconferencia | 10 % | Jueves 26 de noviembre de 2026, en el horario de la clase |
 
 ## Objetivos
@@ -47,7 +47,7 @@ El archivo `README.md` contiene el título del proyecto, su nombre, una descripc
 
 **Presentación oral**. No requiere entregar nada: se presenta la aplicación publicada, en vivo, en el horario de la clase. Las diapositivas son opcionales.
 
-**Para que la aplicación sea aceptada, deben entregarse ambas direcciones**, y la aplicación debe estar publicada y en funcionamiento en el momento de la presentación, aunque el plazo de entrega de las direcciones cierre a las 11:59 p.m. de ese día.
+**Para que la aplicación sea aceptada, deben entregarse ambas direcciones**, y la aplicación debe estar publicada y en funcionamiento en el momento de la presentación, el 26 de noviembre, aunque el plazo de entrega de las direcciones cierre el 3 de diciembre. Entre una fecha y otra puede mejorarla, por ejemplo con las observaciones que reciba en la presentación: se califica la versión publicada al cierre del plazo.
 
 ## Consideraciones adicionales
 
