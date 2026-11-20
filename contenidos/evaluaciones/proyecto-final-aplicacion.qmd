@@ -11,7 +11,7 @@ La aplicación reúne, con controles que los filtren, las tablas, los gráficos 
 | Componente | Valor en la calificación final | Fecha y hora límite |
 |---|---|---|
 | Aplicación web interactiva desarrollada con shiny, publicada en Internet | 25 % | Jueves 3 de diciembre de 2026, 11:59 p.m. |
-| Presentación oral sincrónica, por videoconferencia | 10 % | Jueves 26 de noviembre de 2026, en el horario de la clase |
+| Presentación oral sincrónica, por videoconferencia | 10 % | Jueves 3 de diciembre de 2026, en el horario de la clase (5:00 p.m.) |
 
 ## Objetivos
 
@@ -47,7 +47,7 @@ El archivo `README.md` contiene el título del proyecto, su nombre, una descripc
 
 **Presentación oral**. No requiere entregar nada: se presenta la aplicación publicada, en vivo, en el horario de la clase. Las diapositivas son opcionales.
 
-**Para que la aplicación sea aceptada, deben entregarse ambas direcciones**, y la aplicación debe estar publicada y en funcionamiento en el momento de la presentación, el 26 de noviembre, aunque el plazo de entrega de las direcciones cierre el 3 de diciembre. Entre una fecha y otra puede mejorarla, por ejemplo con las observaciones que reciba en la presentación: se califica la versión publicada al cierre del plazo.
+**Para que la aplicación sea aceptada, deben entregarse ambas direcciones**, y la aplicación debe estar publicada y en funcionamiento en el momento de la presentación, aunque el plazo de entrega de las direcciones cierre a las 11:59 p.m. de ese día.
 
 ## Consideraciones adicionales
 
@@ -78,7 +78,7 @@ La aplicación debe estar **publicada en shinyapps.io** y su código en la carpe
 
 ### Presentación oral
 
-Cada estudiante presenta su proyecto en la clase del 26 de noviembre, por videoconferencia, en **10 minutos**, seguidos de hasta 5 minutos de preguntas del profesor y del grupo. El orden de las presentaciones se publicará en Mediación Virtual. La presentación se hace **sobre la aplicación publicada y el código**, compartiendo la pantalla. Se sugiere la siguiente distribución:
+Cada estudiante presenta su proyecto el jueves 3 de diciembre, en el horario de la clase y por videoconferencia, en **10 minutos**, seguidos de hasta 5 minutos de preguntas del profesor y del grupo. El orden de las presentaciones se publicará en Mediación Virtual. La presentación se hace **sobre la aplicación publicada y el código**, compartiendo la pantalla. Se sugiere la siguiente distribución:
 
 1. El tema, las preguntas y los datos: de dónde salen, qué contienen y cómo se prepararon (2 minutos).
 2. **Demostración** de la aplicación publicada: qué hace cada control y qué muestra cada salida, con dos o tres combinaciones de filtros que respondan las preguntas (4 minutos).
