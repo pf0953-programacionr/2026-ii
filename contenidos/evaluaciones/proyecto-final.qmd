@@ -8,8 +8,8 @@ El proyecto se entrega en dos partes, cada una con su propio enunciado:
 
 | Entrega | Componentes | Valor en la calificación final | Fecha y hora límite |
 |---|---|---|---|
-| [Aplicación web y presentación oral](proyecto-final-aplicacion.qmd) | Aplicación web interactiva desarrollada con shiny, publicada en Internet | 25 % | Jueves 26 de noviembre de 2026, 11:59 p.m. |
-| | Presentación oral sincrónica, por videoconferencia | 10 % | Jueves 26 de noviembre de 2026, en el horario de la clase |
-| [Documento computacional](proyecto-final-documento.qmd) | Documento computacional de Quarto con estructura de artículo (examen final en modalidad «para la casa») | 15 % | Miércoles 2 de diciembre de 2026, 11:59 p.m. |
+| [Aplicación web y presentación oral](proyecto-final-aplicacion.qmd) | Aplicación web interactiva desarrollada con shiny, publicada en Internet | 25 % | Jueves 3 de diciembre de 2026, 11:59 p.m. |
+| | Presentación oral sincrónica, por videoconferencia | 10 % | Jueves 3 de diciembre de 2026, en el horario de la clase (5:00 p.m.) |
+| [Documento computacional](proyecto-final-documento.qmd) | Documento computacional de Quarto con estructura de artículo (examen final en modalidad «para la casa») | 15 % | Jueves 3 de diciembre de 2026, 11:59 p.m. |
 
 **El proyecto es estrictamente individual** y se desarrolla sobre el tema y los datos de las tareas 1, 2 y 3, **corregidos según los comentarios recibidos**. Los entregables, el desarrollo, la calificación y las condiciones de uso de asistentes de inteligencia artificial de cada parte se detallan en su enunciado.
